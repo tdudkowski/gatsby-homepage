@@ -3,7 +3,7 @@ const path = require(`path`)
 module.exports = {
     siteMetadata: {
         title: `Tadeusz Dudkowski Homepage :// `,
-        titleTemplate:`Tadeusz Dudkowski | http://dygresje.info`,
+        titleTemplate: `Tadeusz Dudkowski | http://dygresje.info`,
         author: `Tadeusz Dudkowski`,
         description: `Tadeusz Dudkowski strona domowa: turystyka, Niemcy, Brandenburgia, Saksonia, Berlin, Drezno; programowanie, IT, HTML, CSS, JavaScript, React, GatsbyJS; Deutsch, Francais`,
         url: "https://dygresje.info",
@@ -12,6 +12,7 @@ module.exports = {
         twitterUsername: "@tdudkowski",
         facebookFanpage: "https://www.facebook.com/dygresje.info",
     },
+    pathPrefix: "/gatsby-homepage",
     plugins: [
         `gatsby-plugin-react-helmet`,
         `gatsby-plugin-catch-links`,
