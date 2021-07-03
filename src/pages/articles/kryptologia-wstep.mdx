@@ -1,0 +1,441 @@
+---
+title: "Kryptologia - wstęp"
+comment: ""
+section: "it"
+subsection: "kryptologia"
+---
+
+### Wstęp
+
+- Autor nie ponosi odpowiedzialności za jakiekolwiek problemy wynikłe z zastosowania podanych tu informacji.
+- Niniejszy tekst ma charakter wylącznie edukacyjny.
+- Wszelkie prawa zastrzeżone.
+
+Dokument ten powstał pierwotnie jako poradnik szyfrowania PGP (w praktyce: GPG) do prywatnego użytku na konkretnych przykładach, takich jak tworzenie i zarządzanie kluczami oraz zastosowaniu w kliencie poczty (Thunderbird) i IM (Jabber/Psi). Przy okazji chciałem wyjaśnić kilka innych rzeczy, no i tak wyszło... 
+W tej chwili jest nieco chaotyczny, jest tu trochę niezręczności, chaosu i prawdopodobnie błędów, będzie rozwijany w miarę potrzeb. 
+Wiem, że pisanie "wszystkie prawa zastrzeżone" odnośnie tekstu, który w dużej cześci składa się z cytatów (w tym z tekstów opublikowanych na otwartej licencji) nie jest fair, ale jest to tymczasowe. Obiecuję, że najpóźniej do wersji 1.0 wszystko co pożyczyłem od społeczności oddam, w najlepszej formie jaką będę mógł zrobić. Nie chcę publikować na otwartej licencji tekstu niepełnego, w którym prawdopodobnie są błędy. 
+Myślę, że rzucając się na taki temat padłem ofiarą entuzjazmu, no ale taka jest kryptografia: _just for fun_. 
+
+Fragment [wywiadu z Michałem Zalewskim](http://www.oreillynet.com/pub/a/security/2005/08/25/zalewski.html?page=2):
+
+Pytanie: 
+HTTP does not use crypto, while HTTPS does. Do you think that in the future we'll use crypto for every single connection?
+
+Odpowiedź: 
+Well, because of the shortcomings of TCP (and the increasing ease of blindly tampering with the data as bandwidth increases and new attacks are discussed), almost all communications, even nominally of little relevance, should be either encrypted or cryptographically tamper-proofed by now. 
+Unfortunately, this is a complex and costly process, and implementing advanced cryptography may introduce new flaws elsewhere. Furthermore, unless carefully engineered, it may remain susceptible to disruptions on underlying layers, replay attacks, etc. Last but not least, end users simply don't understand encryption and PKI, and hence can be easily tricked to ignore or bypass our sophisticated protections. 
+In other words, "perfect world" solutions may be not really that desirable or easy to implement, and we might have to stick with simpler short-term options and strategies for now. 
+
+### Podstawowe pojęcia
+
+_Kryptografia_ to dziedzina wiedzy poświęcona metodom utajniania informacji. Dokonuje się to poprzez zmianę jej postaci - z otwartej, czytelnej i dostępnej dla wszystkich w niezrozumiałą, którą można odczytać tylko posiadając dodatkowe dane (które w założeniu są dostępne tylko dla docelowego odbiorcy). 
+Celem tej zmiany jest ukrycie danych przed dostępem osób niepowołanych. W zaszyfrowanej postaci mogą być bezpiecznie przechowywane i transmitowane. 
+
+Proces ukrywania informacji w celu uczynienia jej nieczytelnej bez specjalnej wiedzy to _szyfrowanie_ - zamienia jawną postać (tekst jawny) w nieczytelną (szyfrogram, kryptogram). Odwrotny proces, odtwarzania jawnej postaci z szyfrogramu to _deszyfrowanie_). 
+W języku angielskim: encription, enciphering vs. decryption, deciphering. 
+
+Jawna (oryginalna, pierwotna) postać informacji przed zaszyfrowaniem to _tekst jawny_ a tajna, po zaszyfrowaniu to _szyfrogram_. Za wyjątkiem szyfrów jednostronnych szyfrogram powinien zawierać wszystkie informacje z jawnego tekstu ale w postaci nieodróżnialnej od szumu. 
+Marian Rejewski używał w swoich pracach określeń kler na tekst jawny i krypt na tekst tajny.
+Po angielsku: plaintext vs. ciphertext, cyphertext, cryptogram. 
+
+Metoda użyta do tej zamiany to oczywiście _szyfr_, czyli procedura (algorytm) takiego przekształcania wiadomości, żeby (szyfrowanie) była ona niemożliwa, lub bardzo trudna do odczytania przez każdego, kto nie posiada odpowiedniego klucza oraz znajomości tego algorytmu, oraz (odszyfrowanie) umożliwiała odtworzenie piewotnej postaci informacji z szyfrogramu. 
+Po angielsku: cipher, cypher, encipherment 
+
+Kryptosystem_ to zestaw opisanych przez protokoły kryptograficzne szczegółów działania systemu, zawierający szyfry (algorytmy kryptograficzne), zarządzanie kluczami i sposób postępowania użytkownika i inne procedury, a także całą dokumentację, materiały treningowe. W całości tworzy kompletne narzędzie, z którym ma do czynienia końcowy użytkownik.
+Jednym z najpopularniejszych obecnie kryptosystemów jest PGP. 
+
+Najczęściej szyfr używa dodatkowych parametrów, które zawiera tzw. _klucz_. Te parametry ostatecznie, w unikalny dla danego klucza sposób określają sposób przetworzenia danych. Bez klucza szyfr nie może zostać użyty ani do szyfrowania, ani do rozszyfrowania. 
+Zwykle będziemy mieli do czynienia z sytuacją, kiedy szyfr (czyli sam algorytm przekształcenia) jest jawny i opublikowany, natomiast unikalny klucz deszyfrujący jest tajny. 
+
+Szukaniem słabości rozwiązań kryptograficznych zajmuje się _kryptoanaliza_. 
+Sztuka łamania tych zabezpieczeń to kryptoanaliza. Obie czasem są gupowane razem jako kryptologia, chociaż w praktyce również i kryptografia jest używana w tym znaczeniu, nieformalny skrót "krypto". 
+
+Kryptologia jest ogólniejszym pojęciem i dzieli się na: 
+
+- kryptografia - ochrona danych przez szyfrowanie
+- kryptoanaliza - badanie słabości kryptografii
+- steganografia - ochrona tajnych danych przez ukrycie ich isnienia
+- analiza ruchu (traffic analysis) - zajmuje się wzorcami komunikacji w celu odczytania tajnych danych.
+
+Kryptologia jest interdyscyplinarnym przedmiotem łączącym wiele dziedzin. Przed komputeryzacją była ściśle związana z lingwistyką, ale obecnie jest to głównie matematyka, szczególnie tzw. matematyka dyskretna: teoria liczb, teoria informacji, złożoność obliczeniowa (computational complexity[?]), statystyka i kombinatoryka. 
+
+Wynalezienie kryptografii asymetrycznej (1976) umożliwiło nowe zastosowania. Obecnie metody kryptograficzne są stosowane nie tylko do utajnienia informacji - cztery najważniejsze zastosowania:
+
+- poufność (tajność) - tylko autoryzowany odbiorca jest w stanie odczytać wiadomość z szyfrogamu, również niemożliwe jest uzyskanie żadnej znaczącej informacji o treści szyfrogramu
+- integralność - odbiorca może stwierdzić czy wiadomość nie została naruszona/zmieniona w czasie transmisji
+- uwierzytelnienie - odbiorca jest w stanie potwierdzić tożsamość nadawcy i zweryfikować czy to domniemany nadawca rzeczywiście wysłał wiadomość
+- niezaprzeczalność (ang. _non-repudiation_) - nadawca nie będzie w stanie zaprzeczyć, że wysłał wiadomość (niezaprzeczalność nadania), odebrał (niezaprzeczalność odbioru) itd...
+
+Zwykle używa się kilku na raz, np. w podpisie elektronicznym czy tworzeniu bezpiecznych kanałów komunikacji. 
+
+Znaczenie kryptografii w internecie wynika z samej natury przesyłanych nim informacji, które w łatwy sposób mogą być powielane, fałszowane tym bardziej, że nie są dostępne żadne zabezpieczenia natury fizycznej, a zapewnienie wiarygodności i poufności danych wciąż rośnie, wraz z rozwojem komercyjnej roli sieci. 
+
+### Konwencja: Alice i Bob
+
+W pracach kryptograficznych przyjęło się stosować pewną konwencję opisu sytuacji, dzięki której nie trzeba stosować trudnych do zrozumienia sformułowań w rodzaju "osoba A chce wysłać wiadomość do osoby B". 
+Uczestnicy komunikacji to najczęściej [Alicja i Bob](http://en.wikipedia.org/wiki/Alice_and_Bob). Przykład z Alice i Bob przyjął się ze względu na podobieństwo (Alice to 'osoba A', Bob to 'osoba B') i wygodę; natępne postacie biorące udział w komunikacji dobierane są według zasady: kolejna litera alfabetu/zmiana płci; czyli po Alice i Bob będzie Carol, Dave... (Schneier sugeruje, że nazwy tych postaci wzięte zostały z filmu ["Bob & Carol & Ted & Alice"](http://arxiv.org/pdf/cs.CR/0109089), [IMDB](http://www.imdb.com/title/tt0064100/)). 
+
+Najważniejsze:
+
+- Alicja i Bob - Alicja zazwyczaj chce wysłać wiadomość do Boba
+- Carol, Dave... - ewentualni następni uczestnicy komunikacji
+- Eve - podsłuchiwacz (ang. _eavesdropper_); pasywny napastnik, może podsłuchiwać wiadomości pomiędzy Alice i Bobem, ale nie może ich modyfikować
+- Mallory (czasem Mallet; prawdopodobnie od _malefactor_) - aktywny napastnik, w przeciwieństwie do Eve, Mallory może modyfikować wiadomości, zamieniać swoimi, jeszcze raz wysyłać stare itp.; stanowi dużo większy problem niż Eve
+- Trent - (_trusted Trent_) zaufany rozjemca/arbitrator, neutralna trzecia strona, której rola różni się zależnie od kontekstu
+
+Inne:
+
+- Isaac - ISP
+- Ivan - wystawca (ang. _an issuer_); w kryptografii finansowej
+- Justin - prawnik (z ang. _the justice system_)
+- Matilda - handlowiec; w kryptografii finansowej
+- Peggy (czasem Pat, Vanna - asystent z Koła Fortuny - lub Victor [$]) - osoba sprawdzająca (imię na P: ang. _a prover_) lub weryfikująca (imię na V: ang. _a verifier_), często musi zareagować w jakiś sposób by pokazać, że zamierzona transakcja rzeczywiście miała miejsce; postacie czesto spotykane w tzw. dowodach bez przekazywania informacji (ang. _zero-knowledge proofs_)
+- Plod - oficer policji (czasem urzędnik celny lub pracownik wywiadu)
+- Oscar - przeciwnik, zwykle odpowiednik Mallory'ego
+- Trudy - napastnik, bardziej niebezpieczny niż Eve, ponieważ może modyfikować wiadomości w czasie transmisji; Alice i Bob powinni być w stanie wykryć taką modyfikację i zignorować ją lub odzyskać oryginalną wiadomość pomimo zniekształceń, jeśli nie mogą tego zrobić Trudy może spowodować poważne szkody
+- Walter - strażnik (z ang. _warden_), może być czasem potrzebny do ochrony Alice i Boba
+- Arthur i Merlin - w IPS ([Interactive_proof_system](http://en.wikipedia.org/wiki/Interactive_proof_system)), osoba sprawdzająca (ang. _prover_) ma nieograniczoną moc obliczeniową i stąd nawiązanie do Merlina potęznego czarownika, orzeka on o prawdzie stanowiska/twierdzenia, a Arthur, mądry król, zadaje mu pytania. Te dwie postacie zapoczątkowały dwie bardziej złożone klasy, nazwane MA i AM ([Arthur-Merlin_protocol](http://en.wikipedia.org/wiki/Arthur-Merlin_protocol)).
+
+### Rodzaje szyfrów
+
+#### Klasyfikacja
+
+Używane dawniej szyfry określane są jako klasyczne i ze względu na postęp technologiczny są całkowicie odmienne od współczesnych. Wszystkie z dzisiejszego punktu widzenia są proste i łatwe do złamania. W XX wieku weszły w użycie trochę bardziej skomplikowane maszyny walcowe, ale wspołczesna kryptografia zaczyna się dopiero po WWII wraz z pracami Shannona i użyciem komputerów. 
+
+- klasyczne:
+  - zastąpienie (substitution)
+  - przestawienie (transposition)
+- maszyny walcowe (rotor machines)
+- współczesne:
+  - symetryczne (DES i AES)
+    - blokowe
+    - strumieniowe
+  - asymetryczne
+  - jednostronne
+
+Osobnym szyfrem w swojej klasie jest _one time pad_ (OTP). 
+
+#### Szyfr symetryczny
+
+Używa tego samego klucza do szyfrowania i odszyfrowania treści (lub dokładniej: klucz deszyfrujący jest łatwy do odtworzenia z klucza szyfrującego). Jego zalety to prostota i szybkość. 
+Słabą stroną tej metody jest konieczność przesłania klucza - umożliwiającego dostęp do zawartości - od nadawcy do odbiorcy. Klucz musiał byc ich wspólną tajemnicą. 
+Od utrzymania klucza w sekrecie i jego bezpiecznej i niezakłóconej dystrybucji zależało sprawne funkcjonowanie systemu. Zapewnienie sprawnego funkcjonowania kanału dystrybucji było zawsze trudnym zadaniem szczególnie jeśli ilość uczestników komunikacji rosła ponad pewną niewielką liczbę a klucze musiały być zmieniane w małych odcinkach czasu. 
+Inne określenia: szyfr klucza prywatnego/jednego/pojedynczego (private-key, one-key, single-key)
+
+Schemat:
+
+```
+tekst jawny >--[klucz tajny]--> szyfrogram >--[klucz tajny]--> tekst jawny
+```
+
+Założenia:
+
+- klucz jest znany tylko nadawcy i odbiorcy
+- istnieje bezpieczna - poza normalnym trybem komunikacji - droga wymiany kluczy
+
+Szyfry symetryczne dzieli się na dwa rodzaje: 
+
+blokowe (DES, IDEA, AES)
+
+Procedury, które w jednym przejściu operują na blokach znaków zwykle o określonej wielkości, szyfrując niewielkie bloki danych - współcześnie jest to najczęściej 128 bitów (AES), choć do niedawna przeważały 64-bitowe bloki (DES, 3DES, Blowfish, IDEA).
+
+Klucze są znacznie mniejsze, mają zwykle od 128 do 256 bitów, przy czym wartości mniejsze od 80 (DES - 56) są uważane za niewystarczające. Typowy szyfr blokowy składa się z kilkunastu dość prostych rund przekształcających blok. Operacje używane w tych szyfrach są zwykle proste, ale są mocno zróżnicowane, np. używa się dodawania, XOR, przesunięć cyklicznych, różnego typu S-BOX-ów, mnożenia modulo liczb pierwszych itd. Już kilka rund takich operacji zupełnie zaburza jakikolwiek porządek i jest bardzo trudne do analizowania. 
+Ponieważ szyfr blokowy szyfruje jedynie niewielką ilość informacji, używane są różne tryby szyfrowania, które umożliwiają szyfrowanie większych wiadomości. 
+Niektóre z trybów szyfrów blokowych - CFB, OFB, CTR - działają jako szyfry strumieniowe, generując strumień szyfrujący i XOR-ując dane. 
+Zależnie od trybu działania mogą być zaimplementowane jako samosynchronizujące się szyfry strumieniowe (tryb CFB)
+
+strumieniowe (RC4)
+
+Szyfry strumieniowe szyfrują każdy znak tekstu jawnego osobno, generując znak strumienia szyfrującego i przekształcając go na przykład z użyciem funkcji XOR go ze znakiem danych, w związku z czym nie jest konieczne oczekiwanie na cały blok danych, jak w przypadku szyfrów blokowych. 
+Przekształcają ciągły strumień znaków szyfrując znak po znaku. 
+Popularne szyfry strumieniowe to A5/1 i A5/2 stosowane w telefonii komórkowej. Do szyfrów strumieniowych należą też historyczne szyfry polialfabetyczne i monoalfabetyczne. 
+Mogą również być zastosowane do przetwarzania pojedynczych bloków jawnego tekstu na raz. 
+
+Jak widać jest to dość ogólny podział, raczej określający domyślny tryb pracy.
+
+#### Szyfr asymetryczny
+
+W przeciwieństwie do szfrów symetrycznych używa się innych kluczy do szyfrowania, a innych do odszyfrowania. W najczęściej spotykanych zastosowaniach jest to para razem generowanych i powiązanych ze sobą matematycznie kluczy: jeden szyfruje, a drugi odszyfrowuje informacje - klucz, którym zaszyfrowano daną wiadomość nie umożliwia odczytania szyfrogramu, konieczny jest klucz drugi z pary. 
+Dzięki temu, treść zaszyfrowana jednym z tych kluczy może zostać rozszyfrowana tylko drugim z nich - nie ma więc potrzeby przesyłania tajnych kluczy - po prostu nadawca szyfruje wiadomość kluczem publicznym odbiorcy i tak zaszyfrowana wiadomość nie może zostać odszyfrowana żadnym innym jak tylko kluczem prywatnym odbiorcy, który - takie jest założenie - jest w jego wyłącznym posiadaniu. 
+
+Schemat:
+
+```
+tekst jawny >--[klucz publiczny]--> szyfrogram >--[klucz prywatny]--> tekst jawny
+```
+
+Założenia:
+
+- zaszyfrowaną kluczem publicznym informację można odszyfrować tylko kluczem prywatnym (a nie publicznym) i odwrotnie: jeśli do zaszyfrowania użyje się klucza prywatnego tylko używając klucza publicznego (a nie prywatnego) będzie można odszyfrować informację
+- z klucza publicznego nie da się wyprowadzić klucza prywatnego (lub jest to trudniejsze niż atak brute force) i na odwrót: znajomość klucza prywatnego nie pozwala odtworzyć klucza publicznego (z tym samym zastrzeżeniem)
+- jeden z kluczy (domyślnie: prywatny) jest w wyłącznej dyspozycji właściciela, dla większego bezpieczeństwa chroniony jest hasłem; drugi klucz (domyślnie: publiczny) jest dostępny dla wszystkich chcących wysyłać do właściciela kluczy zaszyfrowane informacje
+
+Szyfry asymetryczne opierają się na istnieniu pewnych trudnych do odwrócenia problemów matematycznych. Np. o wiele łatwiej jest pomnożyć przez siebie dwie duże liczby, niż rozłożyć dużą liczbę na czynniki (opiera się na tym system RSA). Jednak ta trudność faktoryzacji wynika z braku znajomości odpowiedniej metody, nie zostało udowodnione, że jest to rzeczywiście trudne. 
+Drugim popularnym systemem jest ElGamal, opierający się na trudności logarytmu dyskretnego. 
+Typowe rozmiary kluczy są rzędu 1024-2048 bitów dla np. RSA lub ok 512 bitów dla kryptografii na krzywych eliptycznych. W przypadku RSA złamane zostały klucze rozmiarów do ok. 500 bitów. 
+
+Kryptografia asymetryczna umożliwiła mechanizmy cyfrowych podpisów, dzięki którym można zapewnić z dużą pewnością (przy założeniu, że odpowiedni prywatny klucz nie został w żaden sposób "skompromitowany"), że wiadomość została wysłana przez nadawcę, który się pod nią podpisał. Właściwie użyte mechanizmy pozwalają uzyskać stopień pewności porównywalny lub większy niż podpis fizyczny. Przykładami protokołów podpisów cyfrowych są DSA i ElGamal. 
+Podpisy cyfrowe używane są głównie w PKI i mechanizmach bezpieczeństwa sieci. 
+
+Ze względu na wydajność najczęściej stosowane są metody hybrydowe. Samej kryptografii asymetrycznej używa się do utworzenia i wymiany kluczy symetrycznych, używanych do szyfrowania samej komunikacji w czasie danej sesji. Podobnie w podpisie cyfrowym - podpisywana jest nie sama wiadomość ale jej skrót. 
+
+Kryptografia krzywej eliptycznej może przełamać ten schemat. Uważa się jednak, że nie jest dość przetestowana. 
+
+#### Szyfr jednostronny
+
+Szyfr nieodwracalnie zamieniający tekst jawny w szyfrogram, odzyskanie jawnego tekstu z szyfrogramu jest niemożliwe. Musi być wydajny i deterministyczy. 
+Wbrew pozorom bardzo pożyteczny i znajdujący wiele zastosowań, najczęściej spotykany w fukcjach haszujących, które tworzą skrót (tzw. hasz). 
+najczęściej używany w uwierzytelnianiu i przy sprawdzaniu integralności danych. 
+Popularne: MD5 i SHA-1. 
+
+Schemat:
+
+```
+tekst jawny >--[funkcja haszująca]--> szyfrogram
+```
+      
+Założenia:
+
+- z dowolnej długości ciągu znaków tworzy zawsze tej samej długości hasz - nazywany też skrótem wiadomości (_message digest_) lub cyfrowym odciskiem palca (_digital fingerprint_)
+- chociaż jest łatwy do wyliczenia nie da się wykonać odwrotnej operacji, czyli mając skrót nie można odtworzyć informacji
+- każda informacja daje ten sam skrót unikalny tylko dla niej, czyli nie da się (lub jest to nieopłacalnie trudne) odnaleźć dwóch informacji dających identyczny skrót - taka sytuacja kiedy dwie wiadomości mają ten sam skrót (czyli tzw. kolizja) dyskwalifikuje szyfr, w praktyce oczywiście chodzi o łatwość znalezienia kolizji
+- nawet odnalezienie dwóch informacji dajacych podobne skróty nie powinno być wykonalne, atakujący nie może się dowiedzieć ze skrótu niczego; inaczej mówiąc najmniejsza nawet zmiana tekstu jawnego powinna dać zupełnie odmienny skrót
+
+Jeśli atakujący odtworzyłby pierwotną wiadomość lub mógł odnaleźć taką o identycznym skrócie, byłby w stanie zastępować autoryzowane wiadomości swoimi.
+
+MAC (_Message Authentication Code_) - podobny ale używa klucza do wyliczenia skrótu; jak sama nazwa wskazuje są najczęściej używane do uwierzytelnienia wiadomości; często są złożone z elementów takich jak szyfry blokowe, strumieniowe lub funkcje haszy bez klucza. 
+Z wiadomości i tajnego klucza generuje znacznik MAC (tzw. "MAC tag") taki, że trudne dla atakującego jest utworzenie poprawnej pary wiadomość-znacznik różnej od poprzednich [?]; używane są m.in. do ochrony przed fałszowaniem wiadomości. 
+Ma inne właściwości niż zwykły hasz, np. nie jest uważane za słabość, że jeśli ktoś znając klucz MAC może utworzyć dwie różne wiadomości o tym samym MAC. 
+
+CRC (_Checksums and Cyclic redundancy checks_) są całkiem różne od funkcji haszujących i używane są do innych zastosowań, jeśli są użyte do bezpieczeństwa są podatne na atak. Np. CRC był używany do integralności danych w WEP, ale został odkryty atak, który wykorzystywał linearność sumy kontrolnej. 
+
+Nie ma formalnych definicji które uchwyciłyby wszystkie pożądane właściwości funkcji haszujących; podstawowe: 
+
+- Preimage resistant (jednostronny[?] - powiązany ale trochę inny): dla danego _h_ powinno być trudne znalezienie takiego _m_, że _h = hash(m)_.
+- Second preimage resistant: dla danego _m1_, powinno być trudne znaleźć _m2_ (inne niż _m1_) takie, że hasz_(m1)_ = hasz_(m2)_.
+- Collision-resistant: powinno być trudne znaleźć dwie różne wiadomości _m1_ i _m2_ takie, że hash_(m1)_ = hash_(m2)_. Z powodu paradoksu urodzin funkcja haszująca musi mieć większy obraz niż jest wymagany dla preimage-resistance.
+
+Funkcja haszująca spełniając te kryteria nadal może mieć niepożadane właściwości, np. większość popularnych funkcji jest podatna na atak zwiększonej długości (_length-extension attack_): dla danego _h(m)_ i _len(m)_ ale nie _m_, przez wybranie odpowiedniego _m'_ atakujący może wyliczyć _h(m || m')_ gdzie || oznacza konkatenację, co może złamać prostsze mechanizmy uwierzytelnienia używające funkcji haszujących. Ten problem rozwiązuje HMAC. 
+
+Idealna funkcja haszująca powinna być maksymalnie "nudna": nie powinna mieć żadnych interesujących właściwości takich jak długość rozszerzenia (length extension) i jedyną różnicą od funkcji przypadkowej powinno być to, że jest deterministyczna i łatwa do wyliczenia. To kryterium jest trudne do formalnego wyrażenia. Najbliższy mu jest model przypadkowej wyroczni (_random oracle model_) - jest on idealizacją jakiej nie może zrealizować żadna prawdziwa funkcja haszująca. 
+
+Zastosowania funkcji haszujących. 
+
+- mechanizm zaangażowania (_commitment scheme_): Alice tworzy skrót rozwiązania (np. problemu, zadania) i przesyła go Bobowi, jeśli Bob wpadnie na nie póżniej będzie mógł potwierdzić, że Alice była pierwsza.
+- integralność danych (_message integrity_): ciągła kontrola jak Tripwire lub przed i po transmisji
+- wiarygodna identyfikacja pliku, weryfikacja hasła: przykładem jest sytuacja kiedy hasła zwykle są przechowywane w postaci skrótów, wpisywane hasło jest przeliczane na skrót i oba skróty są porównywane; zabezpiecza to przed sytuacją kiedy baza danych z wzorcami haseł zostanie przejęta przez napastnika, jeśli były przechowywane w postaci jawnego tekstu natychmiast narażone są wszystkie konta, jeśli były to skróty sytuacja jest o wiele lepsza
+- ze względu na wydajność większość algorytmów podpisu cyfrowego polega na tym, że to skrót wiadomości jest podpisywany
+- tworzenie pseudoprzypadkowych bitów
+- skróty są też używane do identyfikacji plików np. w sieciach P2P; w ed2k używa się nazwy i wielkości pliku zapewniając dostateczną ilość danych do zlokalizowania, pobrania i weryfikacji zawartości pliku.
+
+W 2005 najpopularniejsze algorytmy skrótów to SHA-1, MD5, RIPEMD-160. 
+W sierpniu 2004 znaleziono słabości w m.in. MD5, SHA-0 i RIPEMD. To poddaje pod znak zapytania długoterminowe bezpieczeństwo innych algorytmów, które z nich powstały: SHA-1, RIPEND-128, RIPEMD-160. Ani SHA-0 ani RIPEMD nie zostały szerzej zastosowane zanim nie zastąpiono je silniejszymi wersjami. 
+W styczniu 2005 zgłoszono atak na SHA-1. 
+
+Funkcja haszująca musi być w stanie przetworzyć dowolnej długości wiadomość w skrót o ustalonej długości, jest to osiągane przez dzielenie wejścia na jednakowej długości bloki i ich sekwencyjne przetwarzanie przy użyciu kompresji, ostatni przetwarzany blok zawiera również długość całej wiadomości. Jest to kluczowe dla bezpieczeństwa całego rozwiązania, znanego jako struktura Merkle-Damgard, używanje w najpowszechniejszych funkcjach (SHA-1, MD5). 
+
+```
+      [message ]  [message ]      [message ]
+      [block 1 ]  [block 2 ]      [block n ]
+        |      |           |
+        V      V           V
+
+|_ IV _| -> |_ f _| -> |_ f _| ... ... -> |_ f _| ->  |_ Hasz _|
+```
+
+Funkcja kompresji - _f_ - przetwarza stałej długości wejście w wyjście tego samego rozmiaru. Algorytm startuje z wartością początkową, wektorem inicjalizacji (_initialisation vector - IV_). Dla każdego następnego bloku wiadomości, kompresja bierze poprzedni rezultat, łączy go z blokiem i wylicza rezultat pośredni. Bity reprezentujące długość całej wiadomości są dołączone do wiadomości jako część ostatniego bloku. Wartość ostatniego bloku jest skrótem całej wiadomości.
+Popularność tego rozwiązania wynika z faktu, że Merkle i Damgard dowiedli, że funkcja kompresji jest odporna na kolizję (_collision-resistant_), a funkcja mieszająca przejmuję tą właściwość. Niestety ta konstrukcja ma również kilka niepożądanych właściwości/słabości: 
+
+- ataki na rozszerzenie długości (_length-extension attacks_) zawsze są możliwe
+- _second-preimage attacks_ przeciwko długim wiadomościom są zawsze dużo bardziej wydajne niż BF
+
+Lista kryptograficznych funkcji haszujących (niektóre z nich są znane jako niebezpieczne): HAVAL, MD2, MD4, MD5, N-Hash, RIPEMD-160, SHA (seria funkcji rozwijana przez NSA: SHA znany jest także jako SHA-0, SHA-1 i cztery smaki funkcji znanej jako SHA-2.), Snefru, Tiger, Whirlpool 
+
+### Kodowanie nie jest szyfrowaniem: szyfr vs kod
+
+Kody są metodą klasycznej kryptografii. Zastępują większe jednostki tekstu, najczęściej słowa lub wyrażenia (np. jabłecznik - atak o świcie), a szyfry modyfikują pojedyncze znaki. Tajna informacja w kodach to książka kodowa, która zawiera listę zamienników. 
+
+Kod jest metodą utajniania informacji przy użyciu książki kodowej z listą powszechnie używanych wyrażeń i słów powiązanych ze słowem kodowym, zakodowane wiadomości to _codetekst_ (tekst zakodowany). 
+Długo uważano kody za bezpieczniejsze od szyfrów ponieważ, jeśli twórcy książki kodowej dobrze wywiązali się ze swojego zadania, nie było wzorca transformacji, który mógłby być odkryty, ale z pojawieniem się automatycznego przetwarzania danych - komputerów - szyfry zdominowały kryptografię. 
+
+W potocznym rozumieniu (tajny) kod jest tym samym co szyfr, jednakże są to dwie zupełnie odmienne rzeczy. 
+Kody pracują na poziomie znaczenia, tzn. słowa lub frazy są konwertowane w coś innego - natomiast szyfry pracują na niższym poziomie: pojedynczych liter, znaków, małych grup liter lub współcześnie na pojedynczych bitach. Niektóre systemy używają zarówno kodu i szyfru (superszyfrowanie) dla zwiększenia bezpieczeństwa. 
+Kody mają własną terminologię analogiczną do szyfrów (_encoding_, _codetext_, _decoding_). Współcześnie są przestarzałe, wszystkie są podatne na kryptoanalizę, a korzystanie z książki kodów jest trudne i niewygodne. 
+Z tych powodów kody przestały być używane w kryptografii. 
+
+Kody jedno i dwu częściowe: 
+Książki kodowe - słowniki słów kodowych wyliczonych z ich odpowiednim jawnym tekstem, orginalnie kody miały słowa kodowe wyliczone w "porządku jawnego tekstu" np. w kodzie używającym liczbowych kodów jawny tekst zaczynający się od "a" miałby niskiej wartości grupę a zaczynający się od "z" wysokiej wartości - ta sama książka kodowa była używana do kodowania i dekodowania. 
+Ale ten mechanizm był podatny na złamanie bo cechował się pewną przewidywalnością, dzięki której można było zauważyć wzór i ujawnić jawny tekst lub jego część. 
+Żeby utrudnić takie działanie twórcy kodów wprowadzili brak powiązań pomiędzy słowami kodowymi a porządkiem pasującego tekstu, co oznaczało, że są potrzebne dwie książki kodowe: jedna [jawny tekst -> kod] a druga [kod -> jawny tekst], było to trudniejsze w realizacji i zapewnieniu bezpieczeństwa, ale też cięższe do złamania. 
+
+Kryptonaliza kodów 
+Złamanie prostego szyfru monoalfabetycznego jest łatwe, a nawet prosty kod jest trudny, rozszyfrowanie zakodowanej wiadomości przypomina tłumaczenie dokumentu z obcego języka z jednoczesnym tworzeniem słownika. 
+Ważną wskazówką może być to, że niektóre słowa pojawiają się częsciej niż inne. Pomaga to określić strukturę wiadomości w zdaniach jeśli nie w znaczeniu. Dalszy postęp w kryptoanalizie może zostać dokonany poprzez zbieranie wielu wiadomości zaszyfrowanych tym samym kodem i użyciu informacji z innych źródeł: szpiegów, gazet, rozmów na przyjęciach dyplomatycznych, miejsca lub czasu wysyłania wiadomości, adresata (analiza ruchu), wydarzeń mających miejsce przed i po wysłaniu wiadomości, zwykłego zachowania się ludzi wysyłających zakodowane wiadomości, itd. 
+Np. jeśli jakieś słowo kodowe znajduje się tylko w informacjach z konkretnej armii może oznaczać dowódcę. Słowo kodowe pojawiające się w wiadomościach o ataku na określone miejsce może oznaczać to miejsce. 
+Oczywiście można także użyć cribs i takie metody jak plant i sow[?], np. dokonując rajdu o określonym czasie i miejscu a potem analizując wiadomości. 
+Oczywiście można to zastosować i do szyfrów. 
+Najbardziej oczywistym i w zasadzie ostatnim najprostszym sposobem złamania kodu jest kradzież książki kodowej przez łapówkę, kradzież lub wypad - procedura gloryfikowana czasem jako "praktyczna kryptologia" i jest to słabość zarówno kodów jak i szyfrów, chociaż książki kodowe są generalnie większe i dłużej używane niż klucze szyfrów. Chociaż dobra książka kodowa jest trudniejsza do złamania niż szyfr, napisanie jej i dystrybucji jest bardzo kłopotliwa. 
+Konstruowanie nowego kodu jest jak pisanie nowego języka, jeśli zostanie złamany musi zostać napisany od nowa. W praktyce jeśli zostanie już rozpowszechniony jest ciągle modyfikowany, żeby utrudnić złamanie. 
+W miarę dystrybucji książki kodowej rosły szanse na jej przechwycenie, jeśli używały jej całe armie utrzymanie w tajemnicy było trudne. 
+Dla kontrastu: bezpieczeństwo szyfrów jest oparte na kluczu, jeśli zostanie ukradziony lub zdradzony dużo łatwiej go zmienić i rozprowadzić. 
+
+Superszyfrowanie (_superencipherment_) 
+Dość częste jest szyfrowanie zakodowanych wiadomości dla zapewnienia większego bezpieczeństwa, łatwo można to zrobić jeśli jest to kod numeryczny. 
+Dobry kod kompresuje wiadomość i zapewnia pewnego rodzaju automatyczną korektę błedów. 
+
+Książka kodowa 
+W kryptografii jest to dokument implementujący kod, zawiera tabelę kodowania i dekodowania, każde słowo, lub wyrażenie ma jeden lub więcej ciągów do zamiany., żeby można było rozszyfrować wiadomość zapisaną w kodzie identyczna kopia książki kodowej musi być na drugim końcu łączności. Dystrybucja i zapewnienie bezpieczeństwa jest szczególnie trudne w porównaniu z szyframi. 
+W dokumentach NSA czasem _"codebook" = 'block cipher'_; oraz _"combiner-type algorithm" = 'stream cipher'_. 
+
+### Szyfr klasyczny
+
+Kryptografia ma długą i barwną historię od szyfru Cezara do XXI w. Są dwie główne zasady w kryptografii klasycznej, pierwszą jest przestawienie, czyli zmiana pozycji liter w wiadomości jak w tym przykładzie:
+
+```
+  jawny tekst: THE PANEL IN THE WALL MOVES
+  zaszyfrowany: EHT LENAP NI EHT LLAW SEVOM
+```
+      
+
+lub w bardziej złożonym przestawieniu:
+
+```
+  THEPAN
+  ELINTH
+  EWALLM
+  OVESAA
+```
+
+weźmy kolumny:
+
+```
+  TEEO HLMV EIAE PNLS ATLA NHMA
+```
+
+dodatkowe litery są nazwane wypełniaczami spacji. Ideą przestawienia nie jest przypadkowość, ale zamiana tego w coś, co jest rozpoznawalne przy użyciu odwracalnego algorytmu (algorytm jest tylko procedurą odwracalną więc korespondent może czytać wiadomości). 
+
+Drugą zasadą jest zastąpienie, znaku, słowa lub nawet całego zdania. Slang jest taką formą szyfru. W czasie WWII _Navaho CodeTalkers_, język Navaho był prawie nieznany i wtedy niespisanym językiem, więc Japończycy nie mogli go rozszyfrować. 
+Klasycznym przykładem zastąpienia jest szyfr przesuniętego alfabetu 
+
+```
+  alfabet: ABCDEFGHIJKLMNOPQRSTUVWXYZ
+   szyfr1: BCDEFGHIJKLMNOPQRSTUVWXYZA
+  szyfr2: CDEFGHIJKLMNOPQRSTUVWXYZAB
+    itd...
+```
+
+Przykład (używając szyfru2)
+
+```
+jawny tekst: THE PANEL IN THE WALL MOVES
+zaszyfrowany: VJG RCPGN KP VJG YCNN OQXGU
+```
+
+Jeśli widzisz go pierwszy raz może wydawać się bezpieczny ale w rzeczywistości taki nie jest. W XVI i XVII wieku był najbezpieczniejszy (głównie dlatego, że było dużo analfabetów), ale w XVIII (X) wieku odkryto sposób na złamanie tego szyfru przy pomocy analizy częstotliwościowej. 
+
+analiza częstotliwościowa (Frequency Analysis) 
+W szyfrze przesuwanego alfabetu lub prostym przypadkowym, każda litera po prostu zastępuje inną. Słabość tego rozwiązania jest w tym, że w każdym języku jedne litery występują częsciej niż inne i po prostu licząc częstość występowania można odkryć wzór zastąpienia. 
+
+```
+   zaszyfrowane: VJG TCKP KP URCKP
+```
+
+Załóżmy, że wiemy iż jest to tekst w języku anglielskim. Najpierw spójrz na krótkie słowa z ograniczonym wyborem słów: np. "KP" może być at, by to, in etc. Dokonajmy wyboru i zamieńmy K na I a P na N
+
+```
+   zaszyfrowane: VJG TCIN IN URCIN
+```
+
+Następnie wybierzemy VJG które najprawdopodobniej jest "the"..
+
+```
+   zaszyfrowane: THE TCIN IN URCIN
+```
+
+Jest to dużo łatwiejsze w dłuższych tekstach, tutaj jawnym tekstem jest "THE RAIN IN SPAIN"
+
+Bezpieczniejsze są szyfry używające przestawienia i zastąpienia (_transposed substition cipher_). 
+Weźmy powyższe 
+
+```
+    Encrypted:VJG RCPGN KP VJG YCNN OQXGU
+```
+
+teraz przestawmy to w spiralę
+
+```
+     VJGRC
+     NNOQP
+     CAAXG
+     YUNGN
+     GJVPK
+```
+
+wiadomość zaczyna się w górnym prawym rogu i zawija do środka, znowu AA jest wypełniaczem, teraz weźmy kolumny:
+
+```
+    VNCYG JNAUJ GOANV RQXGP CPGNK
+```
+
+Teraz jest to bardziej odporne na analizę częstotliwościową.
+
+### Klucz
+
+Klucz (ang. _key_) - w kryptografii informacja umożliwiająca wykonywanie pewnej czynności kryptograficznej - szyfrowania, deszyfrowania, podpisywania, weryfikacji podpisu itp.
+
+Część informacji, która kontroluje działanie algorytmu kryptograficznego. W szyfrowaniu klucz jest parametrem określającym konkretną transformację jawnego tekstu w szyfrogram, a w deszyfrowaniu na odwrót. Klucze są także używane w innych kryptograficznych algorytmach np. cyfrowych podpisach i MAC. Można o nich myśleć jak o swego rodzaju argumentach funkcji.
+Dla dobrze zaprojektowanego algorytmu szyfrowanie tego samego tekstu z innym kluczem powinno spowodować powstanie całkowicie odmiennego szyfrogramu i podobnie odszyfrowanie przy pomocy nieprawidłowego klucza powinno wygenerować szum. Jeśli klucz deszyfrujący jest utracony zaszyfrowane dane powinne pozostać nie do odzyskania, przynajmniej dla dobrej jakości algorytmów i dostatecznie dużej wielkości kluczy.
+
+Kryptografia symetryczna
+W kryptografii symetrycznej klucz służy do szyfrowania i deszyfrowania wiadomości. Do obu tych czynności używa się tego samego klucza, dlatego powinien być znany tylko uczestnikom komunikacji. Taki klucz jest przypisany do danej komunikacji, nie do posiadacza, dlatego zwykle do każdego połączenia jest generowany nowy klucz. Może do tego służyć np. (oparty na kryptografii asymetrycznej) protokół Diffiego-Hellmana.
+
+Kryptografia asymetryczna
+W kryptosystemach asymetrycznych wyróżniamy klucz publiczny oraz prywatny. Ten pierwszy może być zupełnie jawny, drugi powiniem znać tylko właściciel. Matematyczna konstrukcja kluczy powinna być taka, żeby wygenerowanie prywatnego na podstawie publicznego było jak najtrudniejsze obliczeniowo. Zależnie od kryptosystemu, wygenerowanie klucza publicznego na podstawie prywatnego również może być trudne (RSA), lub trywialne (ElGamal).
+Dwie najważniejsze funkcje kryptografii asymetrycznej to:
+
+- szyfrowanie - wtedy klucz publiczny służy do szyfrowania, a prywatny do deszyfrowania
+- podpisy cyfrowe - klucz prywatny służy do generacji podpisów, klucz publiczny do ich weryfikacji
+
+Klucze asymetryczne są zwykle przypisane do uczestnika (osoby, programu itp.), nie do kanału komunikacji.
+Dwa najpopularniejsze systemy kryptografii asymetrycznej to RSA i ElGamal. Inne to m.in. DSA i ECC.
+
+Tajemnica
+Projektując systemy bezpieczeństwa mądrze jest założyć, że szczegóły algorytmu są już znane atakującemu, zasadą znaną jako prawo Kerckhoffsa - "_only secrecy of the key provides security_", lub "_the enemy knows the system_". Historia kryptografi wielokrotnie dowiodła, że trudno jest utrzymać w tajemnicy szczegóły szeroko używanego algorytmu. Klucz jest dużo łatwiejszy do ochrony (jest to zwykle niewielka ilość danych) niż algorytm szyfrowania i łatwiejszy do zmiany jeśli zostanie przechwycony, tak więc bezpieczeństwo jest majczęsciej zależne od utrzymania w tajemnicy klucza.
+I to zadanie (_key management_) jest jednym z najtrudniejszych problemów w praktycznej kryptografii, atakujący który przechwyci klucz (ukradnie, wymusi, znajdzie w śmieciach, zastosuje socjotechnikę lub znajdzie na karteczce Post-it) może odzyskać orginalne dane z szyfrogramu.
+
+Rozmiar klucza
+Dla OTP klucz musi być przynajmniej tak samo długi jak wiadomość. W innych systemach wiadomość może być dużo dłuższa niż klucz, który jednak musi być dość długi by atakujący nie mógł wypróbować wszystkich możliwych kombinacji.
+Dla algorytmu symetrycznego minimum to 80 bitów a 128 uważany jest za bardzo silny.
+W kryptografii asymetrycznej klucze mają pewną matematyczną strukturę, np. w RSA jest produktem dwóch liczb pierwszych. Wymagają większej długości klucza niż systemy symetryczne dla zapewnienia takiego samego stopnia bezpieczeństwa. Sugerowana długość klucza dla systemów bazujących na faktoringu to 3072 bity co daje porównywalną siłę z 128 bitowym kluczem symetrycznym.
+Kryptografia krzywej eliptycznej może pozwolić na zmiejszenie tej wielkości, ale te algorytmy są znane krótko i obecne oceny trudności wyszukania takiego klucza mogą się zmienić. Ostatnio wiadomość zaszyfrowana 109-bitowym kluczem krzywej aliptycznej została złamana BF, obecna reguła kciuka nakazuje ECC klucz 2x długi jak klucz symetryczny dla tego samego stopnia bezpieczeństwa.
+Poza przypadkowym OTP bezpieczeństwo tych systemów nie zostało dowiedzione matematycznie, więc przełom matematyczny może zamienić wszystko co jest zaszyfrowane w otwartą książkę. Jest to jeszcze jeden powód do wybierania dłuższych kluczy.
+
+Wybór klucza
+Żeby ochronić przed odgadnięciem klucza, klucze muszą być generowane przypadkowo i zawierać dostateczną entropię. Generowanie bezpiecznych kluczy jest dużym problemem.
+RFC 1750, Randomness Recommendations for Security.
+Czasem używa się rozwiązań które pobierają entropię z otoczenia, z takich nieprzewidywalnych operacji jak ruch głowicy HDD, do wygenerowania mniejszych kluczy zwykła kostka może zapewnić dostateczne źródło przypadkowości.
+Dobrze zaprojektowane kryptosystemy najpierw używają KDA, który dodaje soli i zmniejsza lub zwiększa to do pożądanej długości klucza, np. zmniejszając długą frazę hasła do 128 bitowej wartości właściwej do użycia w szyfrze blokowym.
+
+### Prawo Kerckhoffsa (_Kerckhoffs' law_)
+
+Auguste Kerckhoffs w XIX wieku wprowadził do kryptografii tzw. prawo Kerckhoffsa (określane również jako założenie, aksjomat lub zasada): "kryptosystem powinien byc bezpieczny nawet jeśli wszystko na jego temat (oprócz klucza) jest publicznie znane". 
+Przeformułował je później - prawdopodobnie niezależnie - Claude Shannon jako _the enemy knows the system_ (wróg zna system - jest to tzw. maksyma Shannona). 
+Jest szeroko uznawana w kryptografii w przeciwieństwie do _security through obscurity_ (bezpieczeństwo przez ukrywanie). 
+
+Zgodnie z tym większość cywilnej kryptografii używa publicznie znanych algorytmów. Dla kontrastu: szyfry używane do ochrony tajemnic rządowych i wojskowych czasem są trzymane w tajemnicy. 
+Prawo to jest jedną z sześciu zasad projektowych wyłożonych przez Kerckhoffsa dla szyfrów wojskowych: 
+
+1. System musi być praktycznie - jeśli nie matematycznie - nierozszyfrowywalny (_indecipherable_).
+2. Nie można wymagać trzymania go w tajemnicy, a poznanie go przez nieprzyjaciela nie może spowodować kłopotów.
+3. Jego klucz musi być przekazywalny (_communicable_) i zachowywalny (_retainable_) bez pomocy pisanych zapisków oraz możliwy do zmiany (_changeable or modifiable_) kiedy zechcą tego korespondenci.
+4. Musi być możliwy do zastosowania (_applicable_) w korespondencji telegraficznej
+5. Musi być przenośny (_portable_), a jego używanie nie może wymagać uczestnictwa kilku ludzi
+6. Na koniec, koniecznie, biorąc pod uwagę okoliczności w jakich musi być stosowany, system musi być łatwy w użyciu, nie wymagający ani umysłowego wysiłku, ani znajomości długiej serii reguł, które trzeba przestrzegać.
+
+Bruce Schneier powiązał je z przekonaniem, że wszystkie systemy bezpieczeństwa muszą być projektowane tak by zawodzić z jak najmniejszymi stratami (_to fail as gracefully as possible_). Zasady Kerckhoffsa stosują się nie tylko do kodów i szyfrów, ale do systemów bezpieczeństwa w ogólności, każda tajemnica tworzy potencjalne źródło porażki (_failure point_). Inaczej mówiąc tajemnica jest podstawowym powodem łamliwości - i dlatego może spowodować załamanie się systemu i odwrotnie, otwartość zapewnia giętkość. 
+Warto przybliżyć co Schneier rozumie jako łamliwość: w końcu każdy system bezpieczeństwa zależy w kluczowy sposób od trzymania pewnych rzeczy w tajemnicy. 
+Schneier uważa, że w tajemnicy należy trzymać te elementy systemu, które łatwiej jest zmienić. 
+Załóżmy, że algorytm kryptograficzny jest zaimplementowany w sprzęcie i oprogramowaniu, które jest szeroko dystrybuowane wśród użytkowników - jeśli bezpieczeństwo zależy od trzymania go w tajemnicy, wtedy ujawnienie spowoduje potrzebę utworzenia, przetestowania i wdrożenia nowego implementacji nowego algorytmu, a co za tym idzie wynmiany oprogramowania lub nawet sprzętu. Natomiast jeśli ważne jest utrzymanie w tajemnicy nie algorytmu, a tylko kluczy, wtedy ujawnienie kluczy będzie wymagało o wiele prostszej procedury utworzenia i dystrybucji nowych kluczy. 
+Inaczej mówiąc im mniej rzeczy trzeba utrzymać w tajemnicy by zapewnić bezpieczeństwo tego systemu, tym łatwiej je zapewnić. 
+Eric Raymond rozszerza tą zasadę na wsparcie oprogramowania open source, mówiąc, że tworzenie oprogramowania, bez założenia, że nieprzyjaciel posiada kod źródłowy jest z zasady nie warte zaufania, tak więc "nigdy nie ufaj zamkniętemu oprogramowaniu" (_never trust closed source_). 
+Idea, że oprogramowanie Open Source jest z zasady bardziej bezpieczne niż zamknięte jest promowane jako koncepcja "bezpieczeństwo przez jawność" (_security through transparency_). 

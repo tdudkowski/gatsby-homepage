@@ -1,0 +1,1871 @@
+---
+title: "LAMP"
+comment: ""
+section: "it"
+subsection: "internet"
+---
+
+1. [Wstęp](#intro)
+2. [WWW (World Wide Web) i protokół HTTP (HyperText Transfer Protocol)](#www)
+3. [Serwer HTTP: Apache](#apache)
+4. [Język skryptowy: PHP](#php)
+5. [Baza danych: MySQL](#mysql)
+6. [MySQL w PHP](#phpmysql)
+7. [Bezpieczeństwo](#security)
+8. [Przyszłość](#future)
+
+- CMS: Content Managment System
+
+### Wstęp
+
+Najpopularniejszym zestawem umożliwiającym tworzenie dynamicznych stron WWW jest tzw. LAMP: **L**inux + **A**pache + **M**ySQL + **P**HP
+
+Pierwszego elementu nie będę tu opisywał, bo jest to temat zbyt rozległy. Poza tym pozostałe trzy (Apache, PHP, MySQL) mają również wersje na MS Windows. Linux jednak jest popularny w tym zestawieniu ponieważ jest za darmo i ma dobra opinię. Wersja na Windows nosi oczywiście nazwę WAMP.
+
+LAMP jest podstawą dla rozwiązań typu CMS (**C**ontent **M**anagement **S**ystem). CMS  
+
+Poniższy tekst nie ma być w zamierzeniu wyczerpującym przewodnikiem po zagadnieniu, ale tylko przybliżeniem podstaw. Ma raczej wyjaśniać działanie mechanizmu niż stanowić instrukcję. Jest to przeznaczony dla początkujacych, którzy często nie wiedzą zacząć szukać w rozproszonych zasobach sieci. 
+
+**Tekst ten został napisany w 2005 i należy mieć to na względzie. Po pobieżnym przejżeniu stwierdziłem, że większość się nie zestarzała, ale parę rozdziałów usunąłem. Zawsze jednak sprawdź czy coś jest aktualne, jeśli mowa jest o dzialaniach w linii komend. Jaki jest sens udostępniania tekstów sprzed 15 lat? Taki mianowicie, że spora część jest aktualna, a bez publikacji nigdy tego nie uaktualnię.**
+
+### WWW (World Wide Web)
+
+#### Powstanie
+
+Na przełomie lat 80 i 90-tych [Tim Berners-Lee](http://www.w3.org/People/Berners-Lee/), Brytyjczyk zatrudniony w CERN, stworzył WWW (**W**orld **W**ide **W**eb). Najpierw zaproponował administracji stworzenie systemu hipertekstowej dokumentacji, która byłaby dostępna online. Jednak biurokraci okazali się niezainteresowani jego pomysłem, więc między 1989 a 1991 sam napisał:  
+
+- serwer
+- klienta (o nazwie World Wide Web)
+- pierwszą wersję HTML (**H**yper**T**ext **M**arkup **L**anguage) język określający strukturę dokumentów, będący bardzo uproszczoną wersją SGML.
+- protokół HTTP (**H**yper**T**ext **T**ransfer **P**rotocol) umożliwiający wymianę danych hipertekstowych w sieci rozległej.
+
+Chociaż w zamierzeniu miał służyć tylko wizualnej prezentacji dokumentacji naukowej i początkowo rozwijany w gronie entuzjastów, w latach 90-tych WWW stał się obok e-maila podstawową usługą internetową. 
+
+#### Zasada działania: protokół HTTP
+
+Jak cała reszta internetu WWW zbudowany jest w architekturze klient-serwer. 
+W tym przypadku klientem są przeglądarki internetowe (np. Firefox [[www.firefox.pl](http://www.firefox.pl/)] lub Opera [[www.opera.com](http://www.opera.com/)]), natomiast serwerem jest program, który udostępnia im dokumenty HTML przy użyciu protokołu HTTP czyli serwer WWW (np. Apache [[httpd.apache.org](http://httpd.apache.org/)]). 
+
+Protokół HTTP (ang. Hypertext Transfer Protocol) jest protokołem warstwy aplikacji i stosuje połączenia na poziomie TCP do zapewnienia sekwencyjnego doręczenia wszystkich pakietów HTTP. Używa zapytań oraz odpowiedzi. 
+Aktualna definicja: RFC 2616: [faqs.org (.html)](http://www.faqs.org/rfcs/rfc2616.html), [IETF.org (.txt)](http://www.ietf.org/rfc/rfc2616.txt)  
+Zapewnia znormalizowany sposób komunikowania się komputerów. Określa postać żądań klienta i odpowiedzi serwera. Od strony klienta przesyła żądania udostępnienia dokumentów WWW oraz dane z formularzy. 
+Jest bezstanowy - to znaczy, że nie zachowuje żadnych informacji o poprzednich transakcjach z klientem. Dlatego powstały takie techniki jak "cookies" i inne metody śledzenia sesji użytkownika. 
+
+HTTP standardowo korzysta z portu nr 80 (czasem 1080). Do sesji szyfrowanych SSL 443.
+
+1. Klient wysyła zapytanie, najpierw określa adres serwera oraz żądany zasób, analizuje żądany URL dzieląc go na trzy części:
+  - określenie protokołu (najczęsciej i domyślnie: http://)
+  - adres serwera (najczęściej w postaci DNS, chociaż może być też IP)
+  - ścieżka dostępu i nazwa dokumentu do pobrania
+2. Serwer odpowiada na to zapytanie wysyłając z powrotem do serwera, z którego pochodziło zapytanie, odpowiednie informacje.
+3. Po ustaleniu adresu i skontaktowaniu się z serwerem przeglądarka tworzy tzw. połączenie TCP, czyli kanał transmisji danych, który sam dba o integralność przesyłanych informacji i w razie wątpliwości co do poprawności transmisji zleca powtórzenie pojedynczych pakietów; dzięki temu przeglądarka nie musi kontrolować transmisji danych.
+4. Zaraz po utworzeniu połączenia TCP pomędzy przeglądarką a serwerem rozpoczyna się komunikacja oparta na protokole HTTP. Przeglądarka wysyła żądanie HTTP (request) a serwer reaguje na to odpowiedziami (response). 
+    Zapytania i odpowiedzi zaczynają się nagłowkiem, który określa rodzaj przesyłanych informacji i dopiero po nim następują właściwe dane. 
+    W nagłówkach dozwolone są jedynie znaki ASCII od 0 do 127 (więc można je symulować innym programem niż przeglądarka, co czasem jest wykorzystywane do testowania serwera), natomiast dane są przesyłane w postaci 8-bitowej.
+
+Elementy URL-a (Uniform Resource Locator)
+
+- identyfikator protokołu (np. http://, ftp://, news:// itp.)
+- adres serwera w postaci tekstowej (np. onet.pl) lub numerycznego adresu IP w postaci 193.231.134.21
+- ścieżka dostępu do dokumentu, która w przypadku katalogu głównego ma postać /
+- nazwa dokumentu (np. index.html)
+- dodatkowy parametr
+- dodatkowy parametr (tzw. querystring, poprzedzony znakiem zapytania, pozwala przesłać dodatkowe parametry na podstawie których serwer buduje stronę, np. ?userid=666)
+- można także podać numer portu TCP (:80) oraz nazwę użytkownika i hasło (@user:password)
+```
+adres_serwera[:numer_portu[@identyfikator_użytkownika[:hasło]]]
+```
+elementy w nawiasach są opcjonalne, i w przypadku ich braku zostaną wybrane wartości domyślne, identyfikator użytkownika oraz hasło mają domyślnie postać pustych ciągów, ponieważ nie są wymagane dla zapewnienia komunikacji HTTP i mają znaczenie jedynie podczas logowania do zasobów chronionych hasłem, a jeśli wymagane są dla identyfikacji użytkownika przekazywane są zazwyczaj w inny sposób. HMPTODO
+
+Np. jeśli klient wyśle żądanie w postaci konkretnego adresu:
+
+```
+    http://www.google.com/index.html
+```
+
+Składające się z: określenia protokołu (_http://_), adresu (_www.google.com_) i zasobu (_index.html_). 
+Przeglądarka wyśle na ten adres zapytanie HTTP. 
+
+```
+    GET /index.html HTTP/1.1
+```
+
+Jest tu i określenie nazwy dokumentu i wersji protokołu. 
+Komputery pośredniczące używają protokołu TCP/IP w celu określenia trasy oraz zagwarantowania dostarczenia zapytania. 
+Serwer odpowiada na pytanie, wysyłając następującą odpowiedź:
+
+```
+HTTP/1.x 200 OK
+Date: Mon, 06 Jun 2005 14:28:12 GMT
+...
+Content-Type: text/html; charset=iso-8859-2
+...
+Content lenght:...
+...zawartość żądanego dokumentu index.html
+```
+
+W HTTP 1.0 klient wysyła żądanie do serwera, a serwer odpowiedź do klienta. Potem połączenie jest zakończone. Tymczasem w HTTP 1.1 możliwe jest utrzymywanie ciągłeg połączenia. Dzięki temu klient wysłać żądanie i po otrzymaniu odpowiedzi wysłać dodatkowe żadania i natychmiast otrzymać odpowiedzi. Połączenie TCP nie jet przerwane dla wielokrotnych dodatkowych żądań dzięki czemu obciążenie przypadajace na pojedyncze żądanie jest dużo mniejsze. 
+
+Protokół HTTP w wersji 1.0 nie stosował sesji, każda porcja informacji wysyłana przez serwer do klienta używała oddzielnego połączenia TCP. Było to niewydajne rozwiązanie, bo stos TCP/IP w celu nawiązania każdego połączenia używa trójetapowego procesu uzgadniania połączenia TCP. HTTP/1.0 zakłada jedno żądanie i jedną odpowiedź. 
+HTTP 1.1 umożliwia nawiązywanie połaczeń nazwanych Persistent Connections, które są rodzajem stałego kanału informacyjnego pomiędzy przeglądarką a serwerem, umożliwiającego wysłanie więcej niż jednego - zwykle dwóch - żądań przed otrzymaniem odpowiedzi na poprzednie, nazywa się to _pipelining_. Zamiast przesyłać dokument HTML i wszystkie jego elementy osobnymi połączeniami, HTTP 1.1 ogranicza się do jednego połączenia TCP, którym transmitowane są wszystkie dokumenty. 
+
+Wykorzystywany w protokole HTTP 1.0 mechanizm BASIC-Authentication przesyła hasła w postaci niezaszyfrowanej. 
+W protokole HTTP 1.1 wprowadzono nowy mechanizm identyfikacji użytkownika o nazwie DIGEST-Authentication, w którym niezaszyfrowane hasło w ogóle nie jest przesyłane:
+
+1. aby użytkownik mógł się przedstawić serwer wysyła doprzeglądarki tzw. Chellenge w postaci ciągu znakowego
+2. do tego ciągu przeglądarka dokleja hasło po czym szyfruje za pomocą algorytmu DIGEST
+3. tak przygotowany ciąg znaków jest wysyłany do serwera
+4. serwer łączy posiadane hasło z wysłanym wezwaniem, szyfruje je, a następnie sprawdza czy to co uzyskał jest zgodne z ciągiem wysłanym przez przeglądarkę
+
+Słabą stroną tej metody jest fakt używania MD-5 w algorytmie DIGEST
+
+Typowe zapytanie HTTP:
+
+- isoc.org.pl
+
+```
+    GET / HTTP/1.1
+    Host: isoc.org.pl
+    User-Agent: Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.8b2) Gecko/20050531 Firefox/1.0+
+    Accept: text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5
+    Accept-Language: pl,en-us;q=0.7,en;q=0.3
+    Accept-Encoding: gzip,deflate
+    Accept-Charset: ISO-8859-2,utf-8;q=0.7,*;q=0.7
+    Keep-Alive: 300
+    Connection: keep-alive
+    znak nowej linii (\\n)
+```
+    
+- www.google.pl
+
+```
+    GET / HTTP/1.1
+    Host: www.google.pl
+    User-Agent: Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.8b2) Gecko/20050531 Firefox/1.0+
+    Accept: text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5
+    Accept-Language: pl,en-us;q=0.7,en;q=0.3
+    Accept-Encoding: gzip,deflate
+    Accept-Charset: ISO-8859-2,utf-8;q=0.7,*;q=0.7
+    Keep-Alive: 300
+    Connection: keep-alive
+    Cookie: PREF=ID=37498eb69b43f3b2:LD=pl:TM=1118068681:LM=1118068681:S=inJ5S3FdfFOwvZGX
+    znak nowej linii (\\n)
+```
+
+- _GET / HTTP/1.1_ prośba o zwrócenie dokumentu o URI / zgodnie z protokołem HTTP 1.1
+- _Host:_ wymagany w HTTP 1.1 nagłówek Host służacy do rozpoznania hosta, jeśli serwer na jednym IP obsługuje kilka VirtualHostów
+- _User-Agent:_ nazwa aplikacji klienckiej
+- _Accept:_ akceptowane (bądź nieakceptowane dla q=0) przez klienta typy plików
+- _Accept-Language:_ preferowany język strony - nagłówek przydatny przy Language negotiation
+- _Accept-Charset:_ preferowane kodowanie znaków, patrz strona kodowa
+- _Keep-Alive:_ czas, jaki klient chce zarezerwować do następnego zapytania w przypadku połączenia Keep-Alive
+- _Connection:_ chęć nawiązania połączenia stałego Keep-Alive z serwerem HTTP/1.0
+- znak nowej linii (\\n)
+
+W drugim przykładzie przeglądarka łącząc się ze stroną google.pl wysyła informacje o przechowywanym cookie, czyli nie jest to pierwsze połączenie z tym serwerem.
+
+Odpowiedź serwera WWW
+
+- isoc.org.pl:
+
+```
+    HTTP/1.x 200 OK
+    Date: Mon, 06 Jun 2005 14:28:12 GMT
+    Server: Apache/1.3.26 (Unix) Debian GNU/Linux PHP/4.3.10-1.dotdeb.0 mod_jk/1.1.0
+    X-Powered-By: PHP/4.3.10-1.dotdeb.0
+    Keep-Alive: timeout=15, max=100
+    Connection: Keep-Alive
+    Transfer-Encoding: chunked
+    Content-Type: text/html; charset=iso-8859-2
+    znak nowej linii (\\n)
+    tutaj zawartość dokumentu
+```
+
+- google.pl
+
+```
+    HTTP/1.x 302 Found
+    Location: http://www.google.pl/
+    Set-Cookie: PREF=ID=efa301cb6c5fa936:TM=1118068680:LM=1118068680:S=U15I8t9A0Nxxxnsq; expires=Sun, 17-Jan-2038 19:14:07 GMT; path=/; domain=.google.com
+    Content-Type: text/html
+    Server: GWS/2.1
+    Transfer-Encoding: chunked
+    Content-Encoding: gzip
+    Date: Mon, 06 Jun 2005 14:38:00 GMT
+    Cache-Control: private, x-gzip-ok=""
+    znak nowej linii (\\n)
+    tutaj zawartość dokumentu
+```
+
+- _HTTP/1.1 200 OK_ kod odpowiedzi HTTP, w tym wypadku zakceptowanie i zwrócenie zawartości
+- _Date:_ czas serwera
+- _Server:_ opis aplikacji serwera
+- _Set-Cookie:_ nakazanie klientowi zapisania Cookie
+- _Expires:_ czas wygaśnięcia zawartości zwróconego dokumentu. Data w przeszłości zabrania umieszczenie dokumentu w cache. Jest to stara metoda zastąpiona przez Cache-Control
+- _Cache-Control:_ no-store, no-cache, must-revalidate (no-store zabrania przechowywania dokumentu na dysku, nawet gdy nie jest to cache. must-revalidate nakazuje bezwzględnie stosować się do wytycznych i sprawdzić swieżość dokumentu za każdym razem)
+- _Pragma:_ no-cache (informacje dotyczące buforownia zawartości; stara, niestandardowa metoda.)
+- _Keep-Alive:_ timeout=15, max=100 (a tu co?)
+- _Connection:_ Keep-Alive (akceptacja połączenia Keep-Alive dla klientów HTTP/1.0; nagłówek Keep-Alive jest rozszerzeniem HTTP/1.0. W HTTP/1.1 ten nagłówek nie jest potrzebny, gdyż połączenia Keep-Alive są domyślne - zachowanie zmienia Connection: close)
+- _Transfer-Encoding:_ chunked (typ kodowania zawartości stosowanej przez serwer)
+- _Content-Type:_ text/html; charset=iso-8859-2 (typ MIME i strona kodowa zwróconego dokumetu)
+- znak nowej linii (\\n) rozdziela nagłówek od zawartości dokumentu
+
+HTTP do obsługi połączeń Keep-Alive wymaga aby odpowiedź od serwera miała znaną długość (przez podanie Content-Length lub użycie Transfer-Encoding: chunked). W przeciwnym wypadku koniec odpowiedzi sygnalizuje zerwanie połączenia i Keep-Alive nie może działać.
+
+#### Opis protokołu HTTP
+
+##### Zapytania HTTP:
+
+GET
+
+pobranie wskazanego parametrem dokumentu; polecenie składa się z nazwy, wskazania zasobu oraz określenia wersji protokołu:
+
+GET index.html HTTP/1.1
+
+POST
+
+tak samo jak GET ale wysyła wysyła zawartość formularza HTML w postaci par wartości do serwera
+
+PUT
+
+wysyła dokument na serwer; najczęściej nieobsługiwane
+
+DELETE
+
+kasuje dokument na serwerze; najczęściej nieobsługiwane
+
+HEAD
+
+tak samo jak GET, ale pobiera tylko nagłowek bez dokumentu; użyteczne dla pobierania metadanych
+
+TRACE
+
+zwraca otrzymane żadanie dzięki czemu klient może sprawdzić co dodają do nagłówka pośredniczące serwery
+
+CONNECT
+
+rzadko zaimplementowane, używane z proxy, który może być tunelem SSL
+
+W nagłówku mogą również występować pola opcjonalne: HMPTODO
+
+| Pole zapytania (przeglądarka) | Pole odpowiedzi (serwer) |
+| --- | --- |
+| [ Metoda kodowania dokumentu ] |     |
+| ACCEPT wersje kodowania MIME obsługiwane przez przeglądarkę |     |
+|     | CONTENT-TYPE wersja kodowania MIME wysłanego dokumentu |
+| ACCEPT-CHARSET zestawy znaków obsługiwane przez przeglądarkę |     |
+| [ Wybór języka ] |     |
+| ACCEPT-LANGUAGE język preferowany przez przeglądarkę |     |
+|     | CONTENT-LANGUAGE język dokumentu |
+| [ Rozmiar dokumentu ] |     |
+|     | CONTENT-LENGTH rozmiar dokumentu wysłanego przez serwer w bajtach |
+| [ Autoryzacja ] |     |
+| USER-AGENT identyfikator / nazwa programu przeglądarki |     |
+|     | SERVER nazwa oprogramowania serwera |
+| FROM adres e-mail użytkownika |     |
+| REFERER ostatnio odwiedzany URL (przekazany dla zapewnienia hiperłączowego poruszania się po serwerze) |     |
+| [ Data, buforowanie w pamięci cache, data utraty ważności ] |     |
+| DATE czas zapytania | DATE czas odpowiedzi |
+|     | EXPIRES data utraty ważności dokumentu wysłanego przez serwer |
+| IF-MODIFIED-SINCE data utraty ważności, po przekroczeniu której serwer powinien wysłać zawartość dokumentu; dopóki nie minęła przeglądarka używa starej wersji zapisanej w buforze |     |
+|     | LAST-MODIFIED data ostatniej modyfikacji danych |
+| PRAGMA niestandardowy rozkaz używany często w postaci "Pragma: no cache" aby wyłączyć działanie pamięci cache serwera proxy |     |
+| [ Przekierowanie ] |     |
+|     | LOCATION żądany dokument znajduje się pod podanym adresem (wskaznie gdzie znajduje się przeniesiony dokument, czasem stosowane również dla rozładowania ruchu) |
+| [ Oczekiwanie ] |     |
+|     | RETRY-AFTER zapytanie powinno być powtórzone po podanym czasie |
+| [ Autoryzacja użytkownika ] |     |
+|     | WWW-AUTHENTICATE wymóg uwierzytelnienia; w tym polu serwer określa z jakiego algorytmu korzysta i dla jakiej grupy zasobów wymagana jest autoryzacja |
+| AUTHORIZATION przesłanie identyfikatora i hasła |     |
+| [ Cookies ] |     |
+|     | SET-COOKIE zapisanie cookie na dysku twardym klienta |
+| COOKIE zapisane cookie odsyłane jest do serwera razem z zapytaniem |     |
+
+##### Kody odpowiedzi HTTP 1.1
+
+Kody odpowiedzi protokołu HTTP 1.1 wraz z opisem (określone w [RFC 2616](http://www.ietf.org/rfc/rfc2616.txt); za Wikipedia: [Kod_odpowiedzi_HTTP](http://pl.wikipedia.org/wiki/Kod_odpowiedzi_HTTP), [List_of_HTTP_status_codes](http://en.wikipedia.org/wiki/List_of_HTTP_status_codes):
+
+Informacyjne
+
+- 100 Continue (Kontynuuj - prośba o dalsze wysyłanie zapytania)
+- 101 Switching Protocols (Zmiana protokołu)
+
+Powodzenia
+
+- 200 OK (Zawartość żądanego dokumentu)
+- 201 Created (Utworzono - wysłany dokument został zapisany na serwerze)
+- 202 Accepted (Przyjęto - zapytanie zostało przyjęte do obsłużenia, lecz jego zrealizowanie jeszcze się nie skończyło)
+- 203 Non-Authoritative Information (Informacja nieautorytarna - zwrócona informacja nie odpowiada dokładnie odpowiedzi pierwotnego serwera, lecz została utworzona z lokalnych bądź zewnętrznych kopii)
+- 204 No content (Brak zawartości - serwer zrealizował zapytanie klienta i nie potrzebuje zwracać żadnej treści)
+- 205 Reset Content (Przywróć zawartość - serwer zrealizował zapytanie i klient powinien przywrócić pierwotny wygląd dokumentu)
+- 206 Partial Content (Część zawartości - serwer zrealizował tylko część zapytania typu GET, odpowiedź musi zawierać nagłówek Range informujący o zakresie bajtowym zwróconego elementu)
+
+Przekierowania
+
+- 300 Multiple Choices (Wiele możliwości - istnieje więcej niż jeden sposób obsłużenia danego zapytania, serwer może podać adres zasobu, który pozwala na wybór jednoznacznego zapytania spośród możliwych)
+- 301 Moved Permanently (Trwale przeniesiony - żądany zasób zmienił swój URI i w przyszłości zasób powinien być szukany pod wskazanym nowym adresem)
+- 302 Found (Znaleziono - żądany zasób jest chwilowo dostępny pod innym adresem a przyszłe odwołania do zasobu powinny być kierowane pod adres pierwotny)
+- 303 See Other (Zobacz inne - odpowiedź na żądanie znajduje się pod innym URI i tam klient powinien się skierować. To jest właściwy sposób przekierowywania w odpowiedzi na żądanie metodą POST)
+- 304 Not Modified (Nie zmieniono - zawartość zasobu nie podległa zmianie według warunku przekazanego przez klienta (np. data ostatniej wersji zasobu pobranej przez klienta - cache przeglądarki)
+- 305 Use Proxy (Użyj serwera proxy - do żądanego zasobu trzeba odwołać się przez serwer proxy podany w nagłówku Location odpowiedzi)
+- 306 (Kod nieużywany - zastrzeżony dla starszych wersji protokołu)
+- 307 Temporary Redirect (Tymczasowe przekierowanie - żądany zasób znajduje się chwilowo pod innym adresem URI, odpowiedź powinna zawierać zmieniony adres zasobu, na który klient zobowiązany jest przenieść się)
+
+Błędu aplikacji klienta
+
+- 400 Bad Request (Nieprawidłowe zapytanie - żądanie nie może być obsłużone przez serwer z powodu błędnej składni zapytania)
+- 401 Unauthorized (Nieautoryzowany dostęp - żądanie zasobu, wymagającego uwierzytelnienia)
+- 402 Payment Required (Wymagana opłata - odpowiedź zarezerwowana na przyszłość)
+- 403 Forbidden (Zabroniony - serwer zrozumiał zapytanie lecz konfiguracja bezpieczeństwa zabrania mu zwrócić żądany zasób)
+- 404 Not Found (Nie znaleziono - serwer nie odnalazł zasobu według podanego URI ani niczego co by wskazywało na istnienie takiego zasobu w przeszłości)
+- 405 Method Not Allowed (Niedozwolona metoda - metoda zawarta w żądaniu nie jest dozwolona dla wskazanego zasobu, odpowiedź zawiera też listę dozwolonych metod)
+- 406 Not Acceptable (Niedozwolone - zażądany zasób nie jest w stanie zwrócić odpowiedzi mogącej być obsłużonej przez klienta według informacji podanych w zapytaniu)
+- 407 Proxy Authentication Required (Wymagane uwierzytelnienie serwera proxy - analogicznie do kodu 401, dotyczy dostępu do serwera proxy)
+- 408 Request Timeout (Koniec czasu oczekiwania na żądanie - klient nie przesłał zapytania do serwera w określonym czasie)
+- 409 Conflict (Konflikt - żądanie nie może być zrealizowane, ponieważ występuje konflikt z obecnym statusem zasobu, ten kod odpowiedzi jest zwracany tylko w przypadku podejrzewania przez serwer, że klient może nie znaleźć przyczyny błędu i przesłać prawidłowego zapytania)
+- 410 Gone (Zniknął (usunięto) - zażądany zasób nie jest dłużej dostępny i nie znany jest jego ewentualny nowy adres URI; klient powinien już więcej nie odwoływać się do tego zasobu)
+- 411 Length required (Wymagana długość - serwer odmawia zrealizowania zapytania ze względu na brak nagłówka Content-Length w zapytaniu; klient może powtórzyć zapytanie dodając doń poprawny nagłówek długości)
+- 412 Precondition Failed (Wraunek wstępny nie może być spełniony - serwer nie może spełnić przynajmniej jednego z warunków zawartych w zapytaniu)
+- 413 Request Entity Too Large (Encja zapytania zbyt długa - całkowita długość zapytania jest zbyt długa dla serwera)
+- 414 Request-URI Too Long (Adres URI zapytania zbyt długi - długość zażądanego URI jest większa niż maksymalna oczekiwana przez serwer)
+- 415 Unsupported Media Type (Nieznany sposób żądania - serwer odmawia przyjęcia zapytania, ponieważ jego składnia jest niezrozumiała dla serwera)
+- 416 Requested Range Not Satisfiable (Zakres bajtowy podany w zapytaniu nie do obsłużenia - klient podał w zapytaniu zakres, który nie może być zastosowany do wskazanego zasobu)
+- 417 Expectation Failed (Oczekiwana wartość nie do zwrócenia - oczekiwanie podane w nagłówku Expect żądania nie może być spełnione przez serwer lub - jeśli zapytanie realizuje serwer proxy - serwer ma dowód, że oczekiwanie nie będzie spełnione przez następny w łańcuchu serwer realizujący zapytanie)
+
+Błędu wewnętrznego
+
+- 500 Internal Server Error (Wewnętrzny błąd serwera - serwer napotkał niespodziewane trudności, które uniemożliwiły zrealizowanie żądania)
+- 501 Not Implemented (Nie zaimplementowano - serwer nie dysponuje funkcjonalnością wymaganą w zapytaniu; ten kod jest zwracany gdy serwer otrzymał nieznany typ zapytania)
+- 502 Bad Gateway (Błąd bramy - serwer - spełniający rolę bramy lub proxy - otrzymał niepoprawną odpowiedź od serwera nadrzędnego i nie jest w stanie zrealizować żądania klienta)
+- 503 Service Unavailable (Usługa niedostępna - serwer nie jest w danej chwili zrealizować zapytania klienta ze względu na przeciążenie)
+- 504 Gateway Timeout (Przekroczony czas bramy - serwer - spełniający rolę bramy lub proxy - nie otrzymał w ustalonym czasie odpowiedzi od wskazanego serwera HTTP, FTP, LDAP itp. lub serwer DNS jest potrzeby do obsłużenia zapytania)
+- 505 HTTP Version Not Supported (Wersja HTTP nie obsługiwana - serwer nie obsługuje bądź odmawia obsługi wskazanej przez klienta wersji HTTP)
+
+### Serwer HTTP: Apache
+
+#### Historia
+
+W 1995 NSCA (National Center for Supercomputer Applications) na zlecenie rządu USA opracowało serwer NSCA HTTPd. 
+Z łat, modułów zwiększających jego możliwości powstał obecnie najpopularniejszy na świecie serwer HTTP [Apache](http://www.apache.org/) (**A*- **pa**t**che**d web server; nazwę też tłumaczy się jako _A patchy server_ co fonetycznie jest identyczne z _Apache server_). Obecnie jest rozwijany przez Apache Software Foundation. 
+Aktualna wersja 2.x nie zawiera już kodu NSCA. Ponieważ nie jest jeszcze uważana za wystarczająco stabilną, nadal powszechnie używa się wersji 1.3.x. 
+Jego dominacja na rynku serwerów WWW jest niezagrożona i wciąż rośnie, obecnie wynosi ponad 60%. Popularność serwera Apache wynika nie tylko z tego, że jest całkowicie bezpłatny dla wszelkich zastosowań. 
+
+#### Cechy
+
+- dostępność na praktycznie wszystkie platformy sprzętowe i programowe
+- wielowątkowość, skalowalność
+- bezpieczeństwo i wydajność
+- modularność: pozwala na stworzenie rozwiązań dokładnie dostosowanych do potrzeb:
+  - mod_access: kontrola dostępu na podstawie adresu
+  - mod_cgi: CGI
+  - mod_proxy: roxy typu HTTP, FTP, CONNECT
+  - mod_include: SSI
+  - mod_negotation: Content-Negotation
+  - mod_rewrite: moduł URL-Rewriting
+  - mod_ssl: SSL
+  - ...i inne
+
+#### Sposób działania
+
+Serwer po uruchomieniu najpierw odczytuje swoje pliki konfiguracyjne, a potem monitoruje określony w konfiguracji port (domyślnie 80) oczekując na pojawienie się żądania HTTP.
+Początkowo każde żadanie wywoływało uruchomienie oddzielnej kopii serwera, która j obsługiwała a potem była zamykana. Nadal można używać tego sposobu pracy - ustawienie ServerType inetd - jest on jednak mało wydajny i niezalecany. 
+Obecnie domyślny sposób pracy - ServerType standalone - polega na uruchomieniu procesu głównego na prawach roota, a następnie wywołaniu określonej w pliku konfiguracyjnym ilości procesów działających w trybie demona, mających uprawnienia użytkownika nieuprzywilejowanego. Proces główny zarządza tylko tworzeniem i wyłączaniem demonów http, których zadaniem jest obsługa żądań HTTP. 
+Zapewnia to o wiele większą wydajność i bezpieczeństwo. 
+
+#### Modularna budowa
+
+Moduły są samodzielnymi blokami kodu źródłowego, obsługującymi określone funkcje programu Apache. Jest ich dużo i dzięki otwartej licencji, można je modyfikować jak i tworzyć własne moduły. 
+Dodatkowe moduły Apache pozwalają m.in. na automatyczne poprawianie błędów w nazwach URL, modyfikację standardowych nagłówków HTTP, dają rozszerzone możliwości raportowania pracy serwera, uruchomienia funkcji proxy. 
+
+Ważniejsze moduły:  
+
+- mod_access - kontrola dostępu na podstawie adresu
+- mod_actions - skrypty CGI jako obsługa wewnętrznych uchwytów
+- mod_alias - mapowanie katalogów i przekierowania
+- mod_asis - obsługa plików zawierających w sobie nagłówki protokołu HTTP
+- mod_auth - kontrola dostępu do wybranych zasobów oparta na systemie kont i haseł
+- mod_auth_anon - anonimowy dostęp do wybranych zasobów (wymaga podania adresu e-mail jako hasła)
+- mod_autoindex - wyświetlanie zawartości katalogów
+- mod_cgi - uruchamianie skryptów CGI
+- mod_digest - jak mod_auth, ale hasła są szyfrowane w czasie transmisji
+- mod_dir - serwowanie domyślnego dokumentu katalogu (zwykle index.html)
+- mod_env - przekazywanie zmiennych środowiskowych do skryptów CGI i SSI
+- mod_expires - kontroluje określanie ważności serwowanych dokumentów
+- mod_headers - ustawianie dodatkowych lub modyfikacja standardowych nagłówków HTTP
+- mod_imap - obsługa map obrazkowych po stronie serwera
+- mod_include - obsługa SSI
+- mod_log_config - rejestrowanie w specjalnym pliku informacji o przeglądarkach pobierających dokumenty
+- mod_mime - określanie typów dokumentu na podstawie ich rozszerzeń
+- mod_mime.magic - określanie typów plików na podstawie ich zawartości
+- mod_negotiation - negocjacja zwartości (wersje językowe)
+- mod_rewrite - zaawansowany system przekierowań oparty na wyrażeniach regularnych
+- mod_setenvif - ustawianie zmiennych środowiskowych na podstawie informacji o przeglądarce
+- mod_speling - automatyczne poprawianie błędów w URL-ach
+- mod_status - wyświetlanie statusu serwera
+- mod_userdir - obsługa katalogów domowych użytkowników przez ~/[nazwa_użytkownika]
+- mod_unique_id - tworzenie unikatowych identyfikatorów dla poszczególnych żądań odczytu
+- mod_usertrack - śledzenie użytkowników przy pomocy cookies
+
+Można je dołączyć na dwa sposoby:  
+
+- wkompilować na stałe
+- dynamicznie dołączyć do programu w czasie uruchomienia przy użyciu techniki DSO (**D**ynamic **S**hared **O**bject)
+
+Ze względu na optymalizację wykorzystania zasobów jak i bezpieczeństwo zaleca się wkompilowanie oraz późniejsze dołączenie tylko niezbędnych modułów. 
+Serwer powinien mieć wkompilowane tylko dwa moduły (http_core.c, mod_so.c), które zawsze będą niezbędne do pracy, a resztę dołączy się dynamicznie za pomocą dyrektyw w głównym pliku konfiguracyjnym: httpd.conf. 
+
+Można to zrobić na używając dyrektyw LoadModule i AddModule lub przy użyciu dyrektywy blokowej `<IfModule>`. 
+
+Dyrektywa LoadModule służy do identyfikacji danego modułu, zaś AddModule dodaje nazwę modułu do listy modułów ładowanych w czasie działania. 
+Przykład:  
+
+```
+                LoadModule access_module      libexec/apache/mod_access.so
+                AddModule mod_access.c
+```
+
+LoadModule dodaje do listy modułów moduł o nazwie access_module zapewniający możłiwość uwierzytelnienia dostępu, następnie podana jest lokalizacja i nazwa pliku wynikowego (rozszerzenie .so). 
+Dyrektywa AddModule powoduje wczytanie danego modułu, po niej podana jest nazwa pliku źródłowego (rozszerzenie .c typowe dla języka C).
+
+Dyrektywa `<IfModule>` pozwala ona na warunkowe uaktywnienie dyrektyw w zależności od tego czy dany moduł został włączony do Apache podczas kompilacji. 
+Przykład:  
+
+```
+    <IfModule mod_mime_magic.c>
+    MIMEMagicFile conf/magic
+    </IfModule>
+```
+
+Moduł mod_mime_magic.c zostanie przetworzony jedynie wtedy gdy będzie stanowił część serwera. 
+
+Bezparametrowa dyrektywa ClearModuleList usuwa wszystkie moduły. Jeśli zostanie użyta serwer nie będzie korzystał z żadnych modułów, aż do momentu wystąpienia dyrektywy AddModule. 
+
+#### Konfiguracja
+
+Serwer składa się z trzech części:
+
+- demonów httpd
+- plików konfiguracyjnych - najczęściej znajdują się w /etc/apache lub /etc/httpd, główny plik konfiguracyjny to httpd.conf
+- zawartości serwera WWW
+
+Wszystkie pliki konfiguracyjne mają podobną strukturę. Są plikami ASCII, komentarze zaczynają się od znaku # i wszystkie posiadają obszerny komentarz do poszczególnych poleceń. Ponadto, większość poleceń w plikach jest zapisana w formie opcji, po której następuje wartość przypisana do opcji.
+
+- httpd.conf - główny plik konfiguracyjny Apache; zapisane są w nim m.in. informacje na temat komputera, portu, trybu pracy, logów, zasobów udostępnianych przez serwer; jest w nim również konfiguracja serwerów wirtualnych WWW uruchamianych przy pomocy Apache.
+- mime.types - przypisuje rozszerzeniom serwowanych plików odpowiednie typy
+- srm.conf oraz access.conf - oba te pliki istnieją tylko ze względów historycznych, obecnie nie mają juz żadnego znaczenia, ponieważ cała konfiguracja została przeniesiona do httpd.conf; w Apache 2.0 w ogóle ich nie ma
+- .htaccess - lokalny plik konfiguracyjny nadpisujący ustawienia serwera (o ile na to zezwalają: AllowOverride), odczytywany jest za każdym razem podczas odczytywania zawartości strony, co pozwala na zmianę konfiguracji podczas pracy bez przerywania działania serwera - powoduje to spadek wydajności ale jest niezbędne w wielu wypadkach jeśli dla danego konta czy katalogu trzeba użyć innej konfiguracji
+
+Plik httpd.conf podzielony jest na trzy części:
+
+- Środowisko globalne - ustala zachowanie procedów httpd (demonów)
+- Główny serwer - domyślne zachowanie serwera
+- Dyrektywy blokowe - grupują dyrektywy proste aby wykonywały pojedynczą funkcję, zbudowane są podobnie jak znaczniki HTML:
+
+##### Środowisko globalne - ustala zachowanie procedów httpd (demonów)
+
+- ServerRoot - wskazuje katalog z plikami konfiguracyjnymi (domyślnie /etc/httpd)
+- LockFile - pliku blokujący używany przez skrypt nadzorujący pracę serwera (np. /var/run/httpd.lock)
+- PidFile - plik zawierający identyfikator procesu (PID) głównego demona httpd (np. /var/run/httpd.pid)
+- ScoreBoardFile - plik używany przez serwer w celu zachowania stanu własnego procesu
+- Timeout - czas (w sekundach) jaki musi upłynąć zanim połączenie zostanie zamknięte
+- MinSpareServers - najmniejsza liczba wolnych demonów (domyślnie 5)
+- MaxSpareServers - największa liczba wolnych demonów (domyślnie 20)
+- StartServers - liczba demonów uruchomiona przy starcie serwera (domyślnie 8)
+- MaxClients - największa liczba jednoczesnych połączeń z pulą demonów (domyślnie 150)
+- MaxRequestPerChild - efektywny czas życia demonów (określany w liczbie obsługiwanych przez proces zapytań; domyślnie 1000; potem zostają zakończone)
+- Listen - nakazuje dowiązanie do określonych inerfejsów sieciowych i portów (np. 192.168.1.254:8080 powoduje dowiązanie do portu 8080 przy użyciu adresu 192.168.1.254)
+- BindAddres - konfiguruje serwer by używał dowolnych lub określonych adresów IP w przypadku używania serwerów wirtualnych.
+- LoadModule - ładowanie modułów (DSO - Dynamic Share Objects); możliwe jest również warunkowe załadowanie modułu przez umieszczenie dyrektywy LoadModule wewnątrz bloku `<IfDefine> </IfDefine>`
+- AddModule - wczytanie modułów; możliwe jest również warunkowe wczytanie modułu przez umieszczenie dyrektywy AddModule wewnątrz bloku `<IfDefine> </IfDefine>`
+    Poniższy blok sprawdza czy dostępny jest moduł PHP i jeśli ten warunek jest spełniony wczytuje go
+
+```   
+    <IfDefine HAVE_PHP>
+    AddModule mod_php.c
+    </IfDefine>
+```    
+- ClearModuleList - bezparametrowa dyrektywa usuwa domyślne moduły
+
+##### Główny serwer - domyślne zachowanie serwera HMPTODO
+
+- Dyrektywy proste - definiują ogólne zachowanie serwera
+- Listen - port, na którym będą nasłuchiwać demony httpd (domyślnie 80; może to też być 8080)
+- User (Group) - użytkownik oraz grupa dla procesów httpd; pierwszy demon Apache jest uruchamiany przy użyciu konta administratora i tworzy nowe procesy działajace za pomocą określonego przez ten parametr użytkownika oraz grupy, dzięki temu ewentualna luka w zabezpieczeniach nie spowoduje dostępu do uprawnień administratora, nigdy nie powinno się ustawiać użytkownika ani grupy root. (przykładowe ustawienia tych parametrów to apache.apache lub nobody.nobody - ale żeby uniknąć współdzielenie uprawnień z innymi programami niektórzy administratorzy tworzą tworzą osobno nieuprzywilejowanych użytkowników.grupy, np. httpd.httpd lub web.web);
+
+``` 
+    groupadd -g 999
+    httpd useradd -u 999 httpd -s /bin/false -c 'Web Server'
+```   
+W tym przypadku najpierw utworzona została grupa o identyfikatorze 999 a potem w tej grupie użytkownik bez dostępu do shella. 
+        
+- ServerAdmin - adres e-mail administratora używany do zgłaszania błędów w pracy serwera, może być w innej domenie niż serwer
+- DocumentRoot - katalog bazowy strony głównej serwera WWW
+- FollowSymLinks - serwer podąża za łączami symbolicznymi umieszczonymi w strukturze DocumentRoot
+- AllowOverride - umożliwa stosowanie plików w rodzaju .htaccess redefiniujących konfigurację; możliwe opcje:
+  - AuthConfig - zezwala na dyrektywy odpowiedzialne za autoryzację dostępu (AuthDBMGroupFile, AuthDBMUserFile, AuthGroupFile, AuthName, AuthDigestRealmSeed, AuthType, AuthUserFile, Require, etc.)
+  - Filelnfo - zezwala na dyrektywy określające rodzaj dokumentu, kontrola typów dokumentu (AddEncoding, AddLanguage, AddType, DefaultType, ErrorDocument, LanguagePriority, etc.)
+  - Indexes - zezwala na dyrektywy określające indeksowanie katalogów (AddDescription, AddIcon, AddIconByEncoding, AddIconByType, DefaultIcon, DirectoryIndex, FancyIndexing, HeaderName, IndexIgnore, IndexOptions, ReadmeName, etc.)
+  - Limit - zezwala na dyrektywy określające dostępność hosta (Allow, Deny oraz Order)
+  - Options - zezwala na dyrektywy określające własności katalogów (Options - np. Includes, FollowSymLinks, ExecCGI, MultiViews - i XBitHack)
+- None - odbiera wszystkie prawa
+- ExecCGI - zezwala na wykonywanie znajdujących się w katalogu skryptów CGI
+- FollowSymLinks - zezwala na podążanie za linkami do plików i katalogów
+- Includes - umożliwia wykonywanie instrukcji SSI
+- IncludesNOEXEC - zezwala na wykonywanie poleceń SSI z wyjątkiem #exec i #include
+- Indexes - pozwala na wyświetlenie zawartości katalogów (o ile nie ma w nim plików zdefiniowanych w DirectoryIndex)
+- Multiview - pozwala na obsługę negocjowalnych żądań; np. negocjacje wersji językowej
+- SymLinksIfOwnerMatch - zezwala na podążanie za linkami symbolicznymi o ile prowadzą one do plików i katalogów, których właścicielem jest ten sam do dokumentu z linkiem
+- All - ustawia wszystkie powyższe prawa oprócz Multiview
+    - All - zezwala na wszystkie dyrektywy
+    - None - żadne dyrektywy; zabrania użycia .htaccess
+        
+All i None muszą występować samodzielnie, np. _AllowOverride None_ uniemożliwia zmianę opcji przy użyciu wspomnianego pliku dla danego katalogu.
+- Order allow, deny - określa kolejność polityki przy ustalaniu praw dostępu, parametr _allow, deny_ konfiguruje kolejność, która najpierw zezwala na dostęp a potem zabrania go podanym klientom, opcja zabraniająca dostępu ma pierwszeństwo.
+- Allow from all - umożliwia dostęp z dowolnego miejsca, dyrektywa Allow może umożłiwić również dostęp z określonych serwerów oraz sieci, np ustawienie _Allow from 192.168.1.0/24_ otwiera dostęp z tej sieci.
+- AccessFileName - nazwa pliku stosowanego w celu definiowania dostępu do katalogów (domyślnie .htaccess), lokalna rekonfiguracja opcji serwera
+- UserDir - nazwa łańcucha dołączanego do ścieżki katalogu domowego użytkownika (domyślnie public_html).
+- DirectoryIndex - określa się czego i w jakiej kolejności ma szukać przeglądarka (np. _DirectoryIndex index.html index.htm index.cgi index.php_); można podawać różne nazwy plików startowych stron w zależności od potrzeb.
+- HostnameLookups - rejestrowanie adresów hostów, z których przyszło żądanie strony (domyślnie Off)
+- ErrorDocument - położenie stron z informacją o błędzie, pierwszym argumentem jest numer błędu, drugim położenie właściwego dokumentu
+```
+ErrorDocument 404 /sciezka/dostepu/404.html
+```
+- ErrorLog - nazwa i położenie pliku z komunikatami o błędach (np. /var/log/apache/error_log lub /var/www/html/logs)
+- LogLevel - poziom rejestrowania informacji o błędach (domyślnie warn)
+- LogFormat - format rejestrowanych komunikatów o błędach (domyślnie CLF - **C**ommon **L**og **F**ormat)
+- CustomLog - własne pliki dziennika
+- AddLanguage - dodanie wersji językowych (każdy język ma dwuliterowy kod: polski to pl a polska wersja: index.html.po; angielska: index.html.en)
+
+##### Dyrektywy blokowe - grupują dyrektywy proste aby wykonywały pojedynczą funkcję, zbudowane są podobnie jak znaczniki HTML
+
+```
+    <Dyrektywa blokowa>
+    dyrektywa opcja opcja
+    dyrektywa opcja opcja
+    </Dyrektywa blokowa>
+```
+
+- `<Directory /directory/path> <Directory>` ogranicza działanie dyrektyw do określonego katalogu
+
+```    
+    <Directory /home/*/public_html>
+    Options +IncludesNoExec +SymLinksIfOwnerMatch
+    order allow, deny
+    allow from all
+    <Directory>
+```   
+
+Działanie dyrektyw jest ograniczone do katalogów, w których użytkownicy przechowują swoje strony domowe. Ścieżka dostępu określana jest jako bezwzględna i może zawierać symbole wieloznaczne ("?" i "*") oraz nawiasy kwadratowe ([]).
+
+- `<Files> </Files>` ogranicza działanie dyrektyw do określonego pliku
+
+```    
+    <Files .htaccess>
+    order allow,deny
+    deny from all
+    </Files>
+```
+
+Dyrektywy odnoszą się tylko do plików konfiguracyjnych .htaccess. Ścieżka dostępu określana jest względem dyrektywy DocumentRoot i podobnie jak w przypadku dyrektywy `<Directory>` może zawierać symbole wieloznaczne oraz wyrażenia regularne poprzedzone znakiem tyldy (~).
+- `<Location> </Location>` ogranicza działanie dyrektyw do zadanych adresów URL
+```  
+    <Location /info>
+    order deny,all
+    allow from www.bezpieczny.net
+    deny from all
+    SetHandler server-info
+    </Location>
+```    
+- Alias - pozwala na dostęp do systemów plików na zewnątrz katalogów określonych przez DocumentRoot
+```
+    Alias /icons/ "/var/www/icons/"
+``` 
+- ScriptAlias - odwzorowuje jeden katalog na inny
+```
+    ScriptAlias /cgi-bin/ "/var/www/cgi-bin/"
+``` 
+- Redirect - przekierowuje przeglądarkę do innego miejsca
+- DefaultIcon - określa plik ikony jeśli żaden nie jest jawnie zdefiniowany
+- Serwery wirtualne - dokładniej omówione w odrębnym podrozdziale
+- NameVirtualHost - definiuje adresy IP dla wszystkich serwerów wirtualnych opartych na nazwie
+- `<VirtualHost ...>` - blok dyrektyw VirtualHost
+
+#### Sterowanie
+
+Skrypt nadzorujący działanie serwera to apachectl (może się znajdować w /usr/sbin lub /usr/local/apache/bin).
+
+Uruchamianie serwera:
+
+```
+    # apachectl start
+```
+
+Wszystkie opcje polecenia apachectl.
+
+```
+    # apachectl help
+    usage: /usr/sbin/apachectl (start|stop|restart|fullstatus|status|graceful|configtest|help)
+
+    start  - start httpd
+    startssl   - start httpd with SSL enabled
+    stop   - stop httpd
+    restart- restart httpd if running by sending a SIGHUP or start if not running
+    fullstatus - dump a full status screen; requires lynx and mod_status enabled
+    status - dump a short status screen; requires lynx and mod_status enabled
+    graceful   - do a graceful restart by sending a SIGUSR1 or start if not running
+    configtest - do a configuration syntax test
+    help   - this screen
+```
+czyli:  
+start - uruchamia serwer. 
+stop - kończy pracę serwera. 
+restart - jeśli był serwer był uruchomiony wstrzymuje jego pracę przez wysłane polecenia SIGHUP i ponownie go uruchamia; jeśli nie był uruchomiony włącza go. 
+fullstatus - wyświetla pełne dane o stanie serwera; wymaga lynxa i włączonego mod_status. 
+status - wyświetla skrócone dane o stanie serwera; wymaga lynxa i włączonego mod_status. 
+configtest - sprawdza obecną poprawność konfiguracji. 
+graceful - wymusza bezpieczny restart serwera przez wysłanie SIGUSR1 lub włącza go jeśli nie był uruchomiony. 
+help - wyświetla informacje o opcjach polecenia. 
+
+Włączenie i wyłączenie serwera wyglada tak:  
+
+```
+    # apachectl start
+    /usr/sbin/apachectl start: httpd started
+    # apachectl stop
+    /usr/sbin/apachectl stop: httpd stopped
+```
+
+Można również użyć programu httpd (/usr/sbin), który pozwala na zmianę domyślnie ustawionych wartości, np. lokalizacja plików konfiguracyjnych (opcja -f), albo uruchomienie konkretnej witryny (opcja -d, czyli httpd -d /home/strona). 
+
+```
+    # httpd -help
+    Usage: httpd [-D name] [-d directory] [-f file]
+    [-C "directive"] [-c "directive"]
+    [-v] [-V] [-h] [-l] [-L] [-S] [-t] [-T] [-F]
+    Options:
+    -D name          : define a name for use in <IfDefine name> directives
+    -d directory     : specify an alternate initial ServerRoot
+    -f file          : specify an alternate ServerConfigFile
+    -C "directive"   : process directive before reading config files
+    -c "directive"   : process directive after  reading config files
+    -v   : show version number
+    -V   : show compile settings
+    -h   : list available command line options (this page)
+    -l   : list compiled-in modules
+    -L   : list available configuration directives
+    -S   : show parsed settings (currently only vhost settings)
+    -t   : run syntax check for config files (with docroot check)
+    -T   : run syntax check for config files (without docroot check)
+    -F   : run main process in foreground, for process supervisors
+```
+
+Zatrzymanie pracy serwera można uzyskać przez zabicie procesu (PID jest w httpd.pid, można go też sprawdzić poleceniem `ps -aux`). 
+
+```
+    # kill numer_procesu
+```
+Można też użyć skryptu apachectl. 
+
+```
+    # apachectl stop
+```
+
+Ponieważ zatrzymanie serwera powoduje, że witryny przestają działać można zastosować restart po zmianach w konfiguracji. 
+
+```
+    # kill -USR1 numer_procesu
+```
+
+Polecenie to spowoduje ponowne odczytanie plików konfiguracyjnych, pozwalając na zakończenie pracy procesom, które wykonują żądania i zastąpienie ich nowymi procesami. 
+
+#### Konta użykowników
+
+Konfiguracja w pliku httpd.conf:  
+
+```
+    <IfModule mod_userdir.c>
+    #UserDIr disable
+    UserDir public_html
+    </IfModule>
+```
+
+W katalogu użytkownika domyślnym katalogiem usługi będzie katalog _public_html_ (/home/[nazwa_użytkownika]/public_html). 
+Dostęp do niego będzie pod adresem:  
+
+```
+    http://localhost/~[nazwa_użytkownika]
+```
+
+Katalog domowy powinien mieć ustawione prawa 711. 
+Katalog przechowujący jego stronę czyli public_html (i każdy zawierający jej elementy) powinien mieć 755. 
+Pliki strony natomiast 644. 
+
+Można również ustalić kto może mieć taką stronę a kto nie. 
+
+```
+    UserDir disabled
+    UserDir enabled user1 user2
+```
+
+W powyższym przykładzie najpierw jest to zabronione dla wszystkich a potem zezwolone dla user1 i user2. 
+A tak się zabrania dla wybranych użytkowników:  
+
+```
+    UserDir disabled user1 user2
+```
+
+Żeby powyższe ustawienia odniosły skutek trzeba uaktywnić konfigurację dostępu do stron domowych poprzez odkomentowanie zawartości bloku:  
+
+```
+    <Directory /home/*/public_html>
+
+    ...zawartość
+
+    </Directory>
+```
+
+#### Serwery wirtualne
+
+Serwer Apache umożliwia uruchomienie serwerów wirtualnych, które mogą być widoczne jako domeny oraz nazwy serwerów różne od serwera fizycznego. Mają własną konfigurację, oraz udostępniają odrębne informacje i usługi. 
+
+Dzielą się na dwa rodzaje:  
+
+- używające nazwy DNS: wymagają tylko jednego IP dla wszystkich serwerów wirtualnych w obrębie jednego serwera fizycznego; w tym celu używa się dyrektywy NameVirtualHost, która zawiera numer IP skojarzony z więcej niż jedną nazwą
+- używające numeru IP: wymaga przydzielenie unikatowego IP, co może stanowić pewien problem jeśli w danej sieci występuje ich niedostatek
+
+Konfiguruje się je przy użyciu tych samych dyrektyw, jakie są używane przez serwery fizyczne, z tą różnicą, że kontener wirtualnego serwera używa znacznika `<VirtualHost>`
+Wygląda to tak:  
+
+```
+    <VirtualHost serwer:port>
+    dyrektywa...
+    dyrektywa...
+    </VirtualHost>
+```
+
+Mogą tam występować wszystkie dyrektywy za wyjątkiem: ServerType, UserID, GroupID, StartServers, MaxSpareServers, MaxRequestsPerChild, BindAddress, PidFile, TypesConfig czy ServerRoot. 
+Zaleca się dla każdego serwera wirtualnego wstawić odmienne niż dla serwera fizycznego dyrektywy ErrorLog i TransferLog, dla oddzielenia informacji o błędach. 
+Brak wpisanego portu oznacza użycie domyślnego. 
+
+Może to wyglądać tak:  
+
+```
+    <VirtualHost www.virtual.net>
+    DocumentRoot /home/virtual/public_html
+    ServerName www.virtual.net
+    ServerAdmin root@virtual.net
+    ErrorLog /logs/error_log
+    TransferLog logs/transfer_log
+    </VirtualHost>
+```
+
+#### SSL (Security Socket Layer)
+
+SSL jest powszechnie używanym sposobem utworzenia bezpiecznej sesji HTTP, w czasie której weryfikowana jest tożsamość serwera (i opcjonalnie klienta), przesyłane dane są szyfrowane oraz zabezpieczona jest integralność sesji. 
+Następcą SSL jest TLS zachowujący wsteczną kompatybilność z SSL. 
+Ze względów bezpieczeństwa zaleca się wyłaczyć w kliencie obsługę SSL 2.0 i używać tylko SSL 3.0 lub TLS. 
+
+Więcej na temat samego SSL/TLS: [Kryptologia praktycznie: SSL/TLS (Secure Sockets Layer/Transport Layer Security)](/it/kryptologia). 
+
+Potrzebny jest moduł mod_ssl lub aplikacja ApacheSSL [[www.apache-ssl.org](http://www.apache-ssl.org/)]. 
+
+Używając polecenia openssl trzeba wygenerować klucz (apache.key) i certyfikat (apache.crt), proces tworzenia certyfikatu wymaga podania kilku informacji:  
+
+```
+    Country Name (2 letter code) [AU]:PL
+    State or Province Name (full name) [Some-State]:Województwo
+    Locality Name (eg, city) []:Miasto
+    Organization Name (eg, company) [Internet Widgits Pty Ltd]: Firma
+    Organizational Unit Name (eg, section) []:Web Server
+    Common Name (eg, YOUR name) []:example.net
+    Email Address []:root@example.net
+```
+
+Tak przygotowany certyfikat wysyłamy do CA (Certification Authority) uznanej instytucji, której klucze PGP znajdują się w każdej przeglądarce. Dzięki jej podpisowi na certyfikacie identyfikacja serwera zostanie uznana za prawidłową. W przypadku braku podpisu przeglądarka wyświetli komunikat z pytaniem czy użytkownik zaakceptuje niepodpisany certyfikat. Ponieważ może to spowodować, że użytkownik zrezygnuje z odwiedzenia takiej strony lepiej się o taki podpis postarać. 
+
+Niestety ze względu na koszty utrzymania infrastruktury uzyskanie takiego podpisu jest nie tylko czasochłonne ale i dość kosztowne. Na szczęście istnieje możliwość uzyskania za darmo podpisu dla serwisu niekomercyjnego w [Certum](http://www.certum.pl/pl/produkty/serwery_ssl/index.html). 
+
+Po umieszczeniu klucza i certyfikatu we własciwym miejscu pozostaje skonfigurować Apache. 
+Ważne jest tu dokładne określenie portu, na którym ma nasłuchiwać demon (:443) oraz opcje SSLCertificateFile i SSLCertificateKeyFile określające lokalizację klucza i certyfikatu SSL. 
+
+```
+    <VirtualHost _default_:443>
+    DocumentRoot "/home/secure"
+    ServerName secure.net:443
+    ServerAdmin root@secure.net
+    ErrorLog /var/log/httpd/error_log
+    TransferLog /var/log/httpd/access_log
+    ...
+    SSLCertificateFile /etc/httpd/ssl/apache.crt
+    SSLCertificateKeyFile /etc/httpd/ssl/apache.key
+    ...
+    </VirtualHost>
+```
+
+#### Autoryzacja dostępu
+
+Potrzebny jest moduł mod_auth. Zawiera polecenie htpasswd służące do dodawania użytkowników z hasłami. 
+
+Dyrektywy definiujące dostęp grupuje się w bloku:
+
+```
+    <Directory /home/www/restricted>
+    AuthType Basic
+    AuthName "for members only"
+    AuthUserFile /home/user/uzytkownicy
+    AuthUserGroup /home/user/grupa_uzytkownicy
+    require valid-user
+    </Directory>
+```
+
+W tym przykładzie zastosowano podstawowy tryb uwierzytelniania (AuthType Basic, który przekazuje hasła bez szyfrowania; tryb Digest pozwala na szyfrowanie haseł) dostępną dla dowolnego użytkownika, który znajduje się w pliku z hasłami (require valid-user). Dyrektywa AuthUserFile wskazuje położenie i nazwę pliku z użytkownikami i hasłami, a AuthUserGroup nazwy grup i użytkownków, którzy do nich należą. 
+AuthName to nazwa autoryzacji, która pokaże się w czasie logowania. 
+
+Można również wskazać użytkowników bezpośrednio w obrębie dyrektywy blokowej:
+
+```
+    require user member1 member2
+    require group members
+```
+
+Zezwolono tu na wejście po podaniu hasła dla użytkowników member1 i member2 oraz dla użytkowników z grupy members. 
+
+Istnieje także możliwość zdefiniowania dostępu anonimowego (typu anonymous), gdzie wystarczy znajomość hasła. 
+Potrzebny jest moduł mod_auth_anon. 
+Do podanej na początku dyrektywy blokowej dodaje się:
+
+```
+    Anonymous_Authoritative off
+    Anonymous guest anonymous gosc
+```
+
+Opcja off Anonymous_Authoritative oznacza, że po niepowodzeniu autoryzacji użytkownik poddawany jest standardowej procedurze autoryzacyjnej. Dyrektywa Anonymous określa dozwolone nazwy anonimowego użytkownika. 
+
+Użytkowników dodaje się poleceniem:
+
+```
+    htpasswd - c .htpasswd user
+```
+
+Gdzie .htpasswd jest nazwą pliku z hasłami (właśnie utworzonego tym poleceniem) a user nazwą użytkownika; opcję -c daje się tylko przy pierwszym użytkowniku, później jest niepotrzebna. 
+
+#### Ograniczanie dostępu
+
+Ograniczanie dostępu można oprzeć na adresie
+
+```
+    order deny,allow
+    deny from all
+    allow from .chip.pl
+```
+
+Wszystkie hosty mają prawo żadne tylko z domeny chip.pl
+
+```
+    order allow,deny
+    allow from all
+    deny from.chip.pl
+```
+
+Wszystkie hosty mają zakaz wszystkim wolno zabronione dla domeny chip.pl
+
+Jeżeli używa się adresów DNS przetłumaczenie ich na IP zwalnia działanie serwera, więc lepiej strefy określić wg. numerów IP. Można to robić podając pełne adresy jak i tylko początkowe bajty, dla większej precyzji można podać adres sieci i maskę podsieci np.:  
+
+```
+    134.134.26.0/255.255.255.128
+```
+
+#### Indeksowanie zawartości katalogu
+
+W zasadzie nie powinno się pozwalać na przeglądanie przez użytkownika katalogów WWW dlatego domyślnie ta opcja jest wyłączona. Jeśli serwer nie może wysłać żądanego dokumentu lub jeśli domyślny dokument nie istnieje klient powinien dostać komunikat błedu. 
+Czasem jednak indeksowanie zasobów jest przydatne, używa się do tego opcji Indexes. 
+
+```
+    Options Indexes...
+```
+
+Oczywiście zadziała dopiero jeśli w obrębie jej działania nie znajdzie się żaden plik określony przez DirectoryIndex. 
+
+#### Statystyki
+
+##### Webalizer
+
+Popularnym programem umożliwiającym tworzenie statystyk jest Webalizer [[www.mrunix.net/webalizer/](http://www.mrunix.net/webalizer/)], jego plikiem konfiguracyjnym jest /etc/webalizer.conf, pobiera informacje z /var/log/apache/acces_log (lub /var/log/httpd/acces_log). 
+W pliku konfiguracyjnym trzeba wpisać nazwę hosta (domena DNS):
+
+```
+    HostName nazwa_hosta
+```
+
+Katalog, do którego będą zapisywane dane to /var/www/html/usage i będzie można zobaczyć statystyki pod adresem:
+
+```
+    http://nazwa_hosta/usage
+```
+
+Ponieważ dostęp do statystyk ma każdy można założyć na ten katalog hasło. 
+
+Uruchomienie Webalizera z argumentami z linii poleceń:
+
+```
+    $ webalizer -n nazwa_domeny -p -o /miejsce/publikacji/statystyki /zrodlo/pobrania/danych
+```
+
+##### AWStats
+
+Innym popularnym narzędziem jest [AWStats](http://awstats.sourceforge.net/).
+
+##### Webmin
+
+Webmin
+
+### Język skryptowy: PHP
+
+#### PHP
+
+PHP (**P**HP **H**ypertext **P**reprocessor) jest językiem skryptowym wykonywanym po stronie serwera. Kod PHP można osadzić na stronie HTML i zostanie on wykonany ilekroć strona jest odwiedzana. Kod PHP jest interpretowany przez serwer WWW i tworzy on HTML lub inne wyniki, które zobaczy odwiedzający. 
+PHP, utworzony w 1994, jest dziełem jednego człowieka - Rasmunsa Lerdorfa, nazwa początkowo oznaczała Personal Home Page i był bardzo prosty. W póżniejszym czasie uległ poważnym przekształceniom i stał się dojrzałym produktem o poważnych zastosowaniach. 
+
+#### Konfiguracja - włączenie obsługi skryptów PHP w serwerze Apache
+
+Włączenie PHP jako modułu przez odkomentowanie w httpd.conf:  
+
+```
+    Include /etc/apache/mod_php.conf
+```
+
+W pliku mod_php.conf powinno się znaleźć:  
+
+```
+    # Load the PHP module:
+    LoadModule php4_module libexec/apache/libphp4.so
+
+    # Tell Apache to feed all *.php files through the PHP module:
+    AddType application/x-httpd-php .php
+```
+
+Własciwym plikiem konfiguracyjnym PHP jest _/etc/apache/php.ini_, są w nim zawarte dość wyczerpujące komentarze.
+
+Ze względów bezpieczeństwa zaleca się wyłączenie zmiennych globalnych. 
+
+```
+    register_globals = Off
+```
+
+#### Składnia
+
+Istnieją różne style znaczników PHP, w dokumentach WWW najlepiej używać stylu XML, który wygląda tak:
+
+```
+    <?php [instrukcja PHP]; ?>
+```
+
+Średnik na końcu oddziela instrukcje od siebie, pełni taką samą rolę jak kropka na końcu zdania. Powinien znajdować się na końcu każdej instrukcji, jego opuszczenie jest błędem składniowym. 
+Żeby instrukcje PHP mogły być realizowane plik musi mieć rozszerzenie _.php_ (a nie _.html_). 
+
+#### Strona kontrolna
+
+W katalogu /home/[nazwa_użytkownika]/public_html umieścić plik o nazwie np. info.php zawierający jedno polecenie php:
+
+```
+    <?php phpinfo(); ?>
+```
+
+W tym przykładzie nazwa pliku jest nieistotna ważne jest rozszerzenie, plik powinien mieć uprawnienia do odczytu przez wszystkich. 
+
+I pod adresem:
+
+```
+    http://localhost.localdomain/~[nazwa_użytkownika]/info.php
+```
+
+pokaże się strona kontrolna PHP z informacjami m. in. na temat wersji PHP, konfiguracji serwera oraz obsługiwanych modułów. 
+Powinna być tam informacja o zainstalowanych modułach. 
+
+Przykładowe moduły związane z bazami danych:
+
+- php-mysql - MySQL
+- php-pgsql - PostgreSQL
+- php-interbase - InterBase oraz Firebird
+
+### Baza danych: MySQL
+
+#### Baza danych
+
+Baza danych umożliwia przechowywanie, przeszukiwanie, sortowanie i odczytywanie danych. 
+SQL (**S**tructured **Q**uery **L**anguage, czyli strukturalny język zapytań) to standardowy język zapytań bazy danych. Służy do zapisywania danych do bazy danych jak i pozyskiwania z niej informacji. 
+Jest to najbardziej rozpowszechniony standaryzowany język dostępu do tzw. systemów zarządzania relacyjnymi bazami danych (RDBMS - **R**elational **D**atabase **M**anagement **S**ystem). Jest używany przez prawie wszystkie systemy baz danych (m.in. MySQL i PostgreSQL). 
+
+Najbardziej popularne bazy danych dostępne na otwartych licencjach:  
+
+- MySQL [www.mysql.com](http://www.mysql.com/)
+- PostgreSQL [www.postgresql.org](http://www.postgresql.org/)
+- Firebird [firebird.sourceforge.net](http://firebird.sourceforge.net/); [Poznaj Firebird w 2 minuty](http://www.firebirdnews.org/docs/fb2min_pl.html)
+
+Najpowszechniej używanym RDBMS jest MySQL. 
+Serwer MySQL kontroluje dostęp do nich w celu zapewnienia równoczesnego dostępu do nich wielu użytkownikom, zagwarantowania szybkiego dostępu oraz dostępu jedynie dla uwierzytelnionych użytkowników. Oznacza to, że jest to serwer wielodostępny i wielowątkowy. 
+Jest dostępny publicznie od 1996 ale jego historia sięga 1979. 
+
+#### Koncepcja relacyjnej bazy danych
+
+Opiera się na teoretycznych podstawach algebry relacyjnej. Relacyjne bazy danych składają się z relacji zwanych tabelami (które wyglądają jak te znane z arkuszy kalkulacyjnych). 
+Tabela składa się z:  
+
+- kolumn - każda zawiera określony rodzaj danych
+- wierszy - każdy zawiera te same atrybuty; nazywane są również rekordami lub krotkami
+- wartości - każdy wiersz zawiera zbiór pojedynczych wartości, każda z nich musi odpowiadać typom wartości przypisanym dla kolejnych kolumn
+
+Klucz to pole identyfikujące poszczególne rekordy w tabeli. 
+Wewnątrz danej tabeli jest to klucz podstawowy, jeśli zostanie użyty w innej nazywany jest tam kluczem obcym. 
+
+Zbiór projektów wszystkich tabel składających się na bazę danych nazywa się schematem bazy danych. 
+Jest to całościowy projekt bazy danych, zawiera projekty tabel, wraz z oznaczeniem kolumn, typów danych, przypisanym poszczególnym kolumnom i wskazywać klucze podstawowe i obce. 
+Klucze obce wskazują na relacje pomiędzy danymiz różnych tabel. Istnieją trzy typy relacji:  
+
+- "jeden do jednego" - po każdej stronie może być tylko jedna wartość (np. adres klienta)
+- "jeden do wielu" - każdej wartości z jednej tabeli może być przypisanych jedna lub więcej wartości z drugiej tabeli (np. wiele zamówień jednego klienta)
+- "wiele do wielu" - wiele wierszy jednej tabeli może być połączonych z wieloma wierszami innej
+
+#### Początek pracy
+
+- `# mysql_install_db` Skrypt inicjalizacyjny używany przy pierwszym uruchomieniu MySQL. Tworzy dwie bazy danych: mysql i test. 
+- wydanie tego polecenia zwraca komunikat o instalacji oraz podstawowe informacje, może to wygladać tak (Slackware 11.0):
+
+```
+    # mysql_install_db
+    Preparing db table
+    Preparing host table
+    Preparing user table
+    Preparing func table
+    Preparing tables_priv table
+    Preparing columns_priv table
+    Installing all prepared tables
+    050604 11:21:09 /usr/libexec/mysqld: Shutdown Complete
+       
+    To start mysqld at boot time you have to copy support-files/mysql.server
+    to the right place for your system
+        
+    PLEASE REMEMBER TO SET A PASSWORD FOR THE MySQL root USER !
+    To do so, start the server, then issue the following commands:
+    /usr/bin/mysqladmin -u root password 'new-password'
+    /usr/bin/mysqladmin -u root -h localhost password 'new-password'
+    See the manual for more instructions.
+        
+    You can start the MySQL daemon with:
+    cd /usr ; /usr/bin/mysqld_safe &
+        
+    You can test the MySQL daemon with the benchmarks in the 'sql-bench' directory:
+    cd sql-bench ; perl run-all-tests
+        
+    Please report any problems with the /usr/bin/mysqlbug script!
+        
+    The latest information about MySQL is available on the web at
+    http://www.mysql.com
+    Support MySQL by buying support/licenses at https://order.mysql.com
+``` 
+
+lub (Ubuntu 6.05):
+        
+```
+        # mysql_install_db
+        Installing all prepared tables
+        Fill help tables
+        
+        To start mysqld at boot time you have to copy support-files/mysql.server
+        to the right place for your system
+        
+        PLEASE REMEMBER TO SET A PASSWORD FOR THE MySQL root USER !
+        To do so, start the server, then issue the following commands:
+        /usr/bin/mysqladmin -u root password 'new-password'
+        /usr/bin/mysqladmin -u root -h localhost password 'new-password'
+        See the manual for more instructions.
+        
+        NOTE:  If you are upgrading from a MySQL <= 3.22.10 you should run
+        the /usr/bin/mysql_fix_privilege_tables. Otherwise you will not be
+        able to use the new GRANT command!
+        
+        You can start the MySQL daemon with:
+        cd /usr ; /usr/bin/mysqld_safe &
+        
+        You can test the MySQL daemon with the benchmarks in the 'sql-bench' directory:
+        cd sql-bench ; perl run-all-tests
+        
+        Please report any problems with the /usr/bin/mysqlbug script!
+        
+        The latest information about MySQL is available on the web at
+        http://www.mysql.com
+        Support MySQL by buying support/licenses at http://shop.mysql.com
+```
+
+Jak widać to polecenie tworzy tablice i wyłącza demona mysqld, można to sprawdzić poleceniem ps -A, nie ma żadnych wątków bazy danych. Jeśli chcemy z nią pracować trzeba mysql znowu uruchomić Ważne są informacje podane przez polecenie: trzeba ustawić hasło dla administratora (konto root) bazy danych a demona mysqld uruchamia się poleceniem mysqld_safe, do zarządzania baz służy natomiast mysqladmin.
+- `# mysqld_safe &` Uruchomienie MySQL w trybie demona, poprawnie wygląda to tak (Slackware 11):
+
+```
+    # mysqld_safe &
+    [1] 1197
+    # Starting mysqld daemon with databases from /var/lib/mysql
+```   
+
+lub (Ubuntu 6.05):
+
+``` 
+    # mysqld_safe &
+    [1] 5446
+    # Starting mysqld daemon with databases from /var/lib/mysql
+    mysqld_safe[5507]: started
+```
+
+- `# mysqladmin shutdown` Zamknięcie serwera. 
+
+Powyższe polecenia były wykonane z konta superużytkownika. 
+
+Domyślnie po instalacji baza MySQL jest dostępna dla każdego użytkownika, bez podawania hasła. W większości zastosowań jest to nie do przyjęcia. Dostęp do bazy danych powinien mieć tylko użytkownik mysql (i oczywiście root) w obu przypadkach zabezpieczony hasłem. 
+Przy czym konto mysql powinno być używane do zwykłych zadań związanych z bazą danych natomiast root tylko w przypadku zaistnienia potrzeby dostępu do zastrzeżonych zasobów systemu. 
+Dodatkowo należy usunąć konto anonimowego użytkownika oraz ustalić uprawnienia do katalogu mysql. 
+
+1. Ustalenie uprawnień do katalogu
+
+```   
+    # chown -R mysql.mysql /var/lib/mysql.
+``` 
+  - przed wydaniem tego polecenia MySQL odmawiał uruchomienia podając komunikat:
+
+``` 
+    # mysqld_safe &
+    [1] 1397
+    bash-3.00# Starting mysqld daemon with databases from /var/lib/mysql
+    STOPPING server from pid file /var/lib/mysql/localhost.pid
+    050604 15:55:31  mysqld ended
+        
+        
+    [1]+  Done        mysqld_safe
+```
+
+  - w pliku z błędami (/var/lib/mysql/localhost.err)
+
+```   
+    050604 15:55:54  mysqld started
+    050604 15:55:55  InnoDB: Started
+    050604 15:55:55 /usr/libexec/mysqld: Can't find file: './mysql/host.frm' (errno: 13)
+    050604 15:55:55 Fatal error: Can't open privilege tables: Can't find file: './mysql/host.frm' (errno: 13)
+    050604 15:55:55 Aborting
+        
+    050604 15:55:55  InnoDB: Starting shutdown...
+    050604 15:55:57  InnoDB: Shutdown completed
+    050604 15:55:57 /usr/libexec/mysqld: Shutdown Complete
+```
+
+  - ustalenie praw do katalogu na użytkownika i grupę mysql rozwiązało ten problem
+2. Usunięcie konta anonimowego użytkownika. Domyślna konfiguracja MySQL pozwala na uzyskanie dostępu do systemu przez dowolnego użytkownika bez podawania nazwy użytkownika ani hasła. Naprawienie tego błędu wygląda tak:
+
+```
+    bash-3.00# mysql
+    Welcome to the MySQL monitor. Commands end with ; or \\g.
+    Your MySQL connection id is 2 to server version: 4.0.24
+    
+    Type 'help;' or '\\h' for help. Type '\\c' to clear the buffer.
+    
+    mysql> use mysql;
+    Database changed
+    mysql> delete from user where User='';
+    Query OK, 1 row affected (0.13 sec)
+    
+    mysql> \\q
+    Bye
+    bash-3.00# mysqladmin reload
+    bash-3.00#
+```
+
+Jak widać polega to na wykonaniu następujących poleceń:
+    
+1. uruchomieniu monitora MySQL `# mysql`
+2. przejściu do bazy mysql `mysql> use mysql;`
+3. usunięciu zapisu z bazy `mysql> delete from user where User='';`
+4. wyjściu z monitora `mysql> \\q`
+5. przeładowaniu MySQL `# mysqladmin reload`
+
+Po wykonaniu tych czynności dostęp zwykłego użytkownika nie jest możliwy:
+
+```
+    bash-3.00$ mysql
+    ERROR 1045: Access denied for user: 'user@localhost' (Using password: NO)
+    bash-3.00$
+```
+
+3. Zabezpieczenie konta root hasłem (tutaj: _rootpassword_)
+
+```
+    # mysqladmin -u root password rootpassword
+```
+Uwaga: jest to tylko hasło dostępu do bazy danych, nie można użyć hasła dostępu do konta administratora.
+
+- Po zabezpieczeniu dostępu hasłem dostęp z konta root nie jest możliwy.
+
+```   
+    # mysqladmin reload
+    mysqladmin: connect to server at 'localhost' failed
+    error: 'Access denied for user: 'root@localhost' (Using password: NO)'
+```
+
+- Konieczne jest użycie opcji _-p_ (password):
+
+```   
+    # mysqladmin reload -p
+    Enter password:
+```
+
+- Nie trzeba się logować na konto administracyjne, można użyć opcji _-u_ (user)
+
+```
+    $ mysqladmin reload -u root -p
+    Enter password:
+```
+
+4. Utworzenie i zabezpieczenie hasłem konta mysql. Do zwyczajnej pracy z bazą danych MySQL nie jest potrzebne używanie konta uprzywilejowanego, wystarczy użytkownik i grupa mysql. Jest to ważne ze względów bezpieczeństwa. 
+
+```
+    mysql> grant usage on - to mysql identified by 'mysqlpassword';
+    Query OK, 0 rows affected (0.35 sec)
+```
+
+Powyższe polecenie utworzyło konto mysql. Użytkownik _mysql_ może się teraz zalogować używając swojego hasła, ale nie będzie mógł wykonać żadnych poleceń, bo nie ma żadnych przywilejów. Można je przydzielić mu później. 
+
+Jest to tylko użytkownik lokalny, jeśli chcemy zarządzać bazą danych zdalnie można wskazać konto razem z nazwą komputera z którego nastąpi dozwolone połączenie:
+
+```
+    mysql> grant usage on - to mysql@computer identified by 'mysqlpassword';
+```
+
+Nazwę komputera można zastąpić IP. Jest to lepsze także ze względów bezpieczeństwa  
+
+Od tej chwili zalogować się do bazy danych lub wykonać jakieś polecenia mogą tylko uprzywilejowaniu użytkownicy root i mysql i tylko po podaniu hasła. 
+Opcje:
+
+- `-p` zostanie użyte hasło
+- `-u` nazwa użytkownika
+- `-h` nazwa komputera
+
+Może wyglądać to tak:
+
+```
+    $ mysql -u mysql -p
+    Enter password:
+    Welcome to the MySQL monitor. Commands end with ; or \\g.
+    Your MySQL connection id is 28 to server version: 4.0.24
+
+    Type 'help;' or '\\h' for help. Type '\\c' to clear the buffer.
+
+    mysql>
+```
+
+Oczywiście jeśli już jesteśmy na komputerze lokalnym lub koncie mającym dostęp do bazy danych to tych parametrów nie trzeba podawać, zawsze jednak trzeba będzie używać parametru _-p_.
+
+W dalszym opisie pomijam prompt i opcje logowania. 
+
+#### System przywilejów
+
+W MySQL przywilej to posiadanie przez określonego użytkownika prawa do wykonania określonego polecenia na określonym obiekcie. Jest to podobne do praw dostępu do plików. 
+Ze względów bezpieczeństwa stosowana jest _zasada najmniejszego przywileju_: użytkownik (lub proces) powinien posiadać minimalny zbiór przywilejów potrzebnych do wykonania zadania. 
+
+Przywileje nadaje się poleceniem _grant_ a odbiera _revoke_. 
+
+Dzieli się je na przywileje:
+
+1. zwykłych użytkowników (w nawiasie: czego dany przywilej może dotyczyć)
+  - select (tabele, kolumny) - wyszukiwanie wierszy (rekordów) z tabel
+  - insert (tabele, kolumny) - wstawianie nowych wierszy do tabel
+  - update (tabele, kolumny) - zmiana wartości wierszy zapisanych w tabeli
+  - delete (tabele) - usuwanie z tabeli istniejących wierszy
+  - index (tabele) - tworzenie i usuwanie z tabeli istniejących wierszy
+  - alter (tabele) - zmiana struktury tabeli: dodawanie nowych kolumn, zmiana nazw kolumn lub tabel, zmiana typu danych istniejących kolumn
+  - create (bazy danych, tabele) - tworzenie nowych tabel i baz danych
+  - drop (bazy danych, tabele) - usuwanie tabel i baz danych
+  - grant - nadawanie posiadanych przez siebie praw innym użytkownikom (najczęściej dodawany w postaci opcji _with grant option_)
+2. administratorów
+  - reload - powtórne załadowanie tabel zawierających informacje o prawach dostępu oraz odświeżenie przywilejów, listy nazw łączących się komputerów
+  - shutdown - zakończenie pracy
+  - process - śledzenie i przerywanie procesów
+  - file - wczytanie danych z plików do tabel i na odwrót
+3. specjalne
+  - all - nadaje wszystkie przywileje (i zwykłych użytkowników i administratorów)
+  - usage - rejestruje użytkownika co pozwala mu się zalogować, ale nie nadaje żadnych przywilejów
+
+Polecenia MySQL wydawane są w tzw. monitorze MySQL czyli interfejsie, który pokazuje się po zalogowaniu poleceniem:
+
+```
+    $ mysql
+```
+
+Jeśli np. użytkownik _mysql_ chce się zalogować ze swojego konta o innej nazwie musi użyć opcji loginu i hasła, wygląda to tak:
+
+```
+    mysql -u mysql -p
+    Enter password:
+    Welcome to the MySQL monitor. Commands end with ; or \\g.
+    Your MySQL connection id is 2 to server version: 4.0.23a
+
+    Type 'help;' or '\\h' for help. Type '\\c' to clear the buffer.
+
+    mysql>
+```
+
+Na końcu widać znak zachęty konsoli MySQL w postaci strzałki. 
+
+Każde polecenie musi być zakończone znakiem średnika, bez niego [Enter] nie uruchamia polecenia na serwerze, ale przechodzi do następnego wiersza wyświetlając poniżej znak kontynuacji. Dzięki temu można umieszczać poszczególne części polecenia MySQL w oddzielnych wierszach. 
+Z jednej strony zwiększa to czytelność poleceń, ale trzeba pamiętać o umieszczeniu średnika na końcu bo jego pominięcie jest częstym błędem. 
+
+Sam MySQL nie rozróżnia wielkości liter w poleceniach, ale uniksowe systemy operacyjne w nazwach poleceń i obiektów tak. 
+Więc o ile polecenia MySQL można pisać zarówno mała jak i wielką literą (_grant_ to to samo co _GRANT_) to np. w nazwach baz danych czy tabel trzeba zachować konsekwencję. 
+
+Przykłady:
+
+```
+mysql> grant all
+    > on *
+    > to mysqladmin identified by 'mysqladminpassword'
+    > with grant option;
+```    
+
+Oczywiście można to zapisać wszystko w jednym wierszu. 
+W powyższym przykładzie przydzielono wszystkie przywileje (łącznie z administracyjnymi) na wszystkie bazy danych dla użytkownika o nazwie _mysqladmin_ używajacego hasła mysqladminpassword, ostatni wiersz zezwala mu na przydzielanie dowolnych praw innych użytkownikom.
+
+```
+    mysql> revoke grant option
+    > on *
+    > from mysqladmin;
+```
+
+W ten sposób pozbawia się użytkownika _mysqladmin_ prawa do przydzielania własnych przywilejów innym użytkownikom.
+
+```
+mysql> grant usage
+    > on shop.*
+    > to  merchant identified by 'merchantpassword';
+```
+
+Rejestruje użytkownika _merchant_ używającego hasła merchantpassword w bazie shop (i wszystkich jej obiektach), przydzielenie przywilejów może nastąpić później, kiedy już wiadomo jakich operacji na bazie danych będzie potrzebował dany użytkownik, można je przydzielić:
+
+```    
+    mysql> grant select, insert, update, delete, index
+    > on shop.*
+    > to  merchant;
+```
+w tym przykładzie przywileje dotyczą wszystkich obiektów bazy _shop_.
+
+Istnieje również możliwość dokładnego wskazania obiektu (bazy danych, tabeli, kolumny):
+
+```    
+    mysql> grant insert clients
+    > on shop.sale
+    > to  merchant;
+```
+
+w tym przypadku użytkownikowi _merchant_ przydzielono prawo umieszczania danych w kolumnie _clients_ tabeli _sale_ bazy danych _shop_; składnia wygląda tak:
+
+```    
+    mysql> grant przywilej [nazwa_kolumny]
+    > on [nazwa_obiektu]
+    > to  [nazwa_użytkownika];
+``` 
+
+parametr nazwa_kolumny jest opcjonalny, a nazwa_użytkownika może jednocześnie określić komputer, z którego będzie uzyskiwał dostęp do bazy (w postaci nazwa_użytkownika@nazwa_komputera)
+
+Informacje o nadanych przywilejach znajdują się w bazie _mysql_ w czterech tabelach osobno dla czterech poziomów przywilejów:
+
+- _mysql.user_ - globalny
+- _mysql.db_ - baza danych
+- _mysql.tables_priv_ - tabela
+- _mysql.columns_priv_ - kolumna
+
+#### Podstawowe polecenia
+
+- `$ mysql -h [nazwa_komputera] -u [nazwa_użytkownika] -p`
+    
+Zalogowanie się do serwera MySQL przy użyciu
+- nazwy komputera (-h; jeśli jest to ten sam komputer, można pominąć)
+- identyfikatora użytkownika (-u; jeśli jest to ten sam użytkownik, który się loguje można pominąć)
+- hasła (-p; jeśli nie zostało ustanowione można pominąć)
+
+```
+mysqlshow
+    +----------+
+    | Database |
+    +----------+
+    | mysql    |
+    | test     |
+    +----------+
+```
+
+Wyświetlenie listy baz danych
+
+```
+mysqlshow mysql
+    Enter password:
+    Database: mysql
+    +--------------+
+    |    Tables    |
+    +--------------+
+    | columns_priv |
+    | db           |
+    | func         |
+    | host         |
+    | tables_priv  |
+    | user         |
+    +--------------+
+```  
+
+Wyswietlenie listy tabel w bazie _mysql_
+
+#### mysqladmin
+
+- `$ mysqladmin ping
+    mysqld is alive`
+    Sprawdzenie czy serwer działa
+- `$ mysqladmin variables`    
+    wyświetlenie zmiennych określających konfigurację MySQL, np. datadir wskazuje na położenie katalogów i plików z danymi.
+- `$ mysqladmin --help`
+    Pomoc programu mysqladmin
+-
+```
+$ mysqladmin version status proc -p
+    Enter password:
+    mysqladmin  Ver 8.40 Distrib 4.0.23a, for slackware-linux-gnu on i486
+    Copyright (C) 2000 MySQL AB & MySQL Finland AB & TCX DataKonsult AB
+    This software comes with ABSOLUTELY NO WARRANTY. This is free software,
+    and you are welcome to modify and redistribute it under the GPL license
+    
+    Server version          4.0.23a
+    Protocol version        10
+    Connection  Localhost via UNIX socket
+    UNIX socket /var/run/mysql/mysql.sock
+    Uptime:     22 min 16 sec
+    
+    Threads: 2  Questions: 17  Slow queries: 0  Opens: 6  Flush tables: 1  Open tables: 0  Queries per second avg: 0.013
+    Uptime: 1336  Threads: 2  Questions: 17  Slow queries: 0  Opens: 6  Flush tables: 1  Open tables: 0  Queries per second avg: 0.013
+    +----+------+----------------+----+---------+------+-------+------------------+
+    | Id | User | Host           | db | Command | Time | State | Info |
+    +----+------+----------------+----+---------+------+-------+------------------+
+    | 2  | root | localhost:1368 |    | Sleep   | 212  |       |      |
+    | 9  | root | localhost      |    | Query   | 0    |       | show processlist |
+    +----+------+----------------+----+---------+------+-------+------------------+
+```   
+
+Bieżący stan serwera MySQL
+- `$ mysqladmin flush-privileges`    
+    Przeładowanie przywilejów. 
+- `$ mysqladmin reload`
+    Przeładowanie serwera. 
+- `$ mysqladmin shutdown`
+    Zamknięcie serwera. 
+    
+
+#### MySQL monitor
+
+- Ubuntu 6.05:
+
+```   
+    mysql
+    Welcome to the MySQL monitor. Commands end with ; or \\g.
+    Your MySQL connection id is 1 to server version: 5.0.22-Debian_0ubuntu6.06.2-log
+    
+    Type 'help;' or '\\h' for help. Type '\\c' to clear the buffer.
+    
+    mysql>
+```
+
+- Slackware 10.1:
+
+```    
+    mysql -u mysql -p
+    Enter password:
+    Welcome to the MySQL monitor. Commands end with ; or \\g.
+    Your MySQL connection id is 2 to server version: 4.0.23a
+    
+    Type 'help;' or '\\h' for help. Type '\\c' to clear the buffer.
+    
+    mysql>
+``` 
+
+logowanie na konto o nazwie _mysql_
+- 
+```
+mysql> show databases;
+    +----------+
+    | Database |
+    +----------+
+    | mysql    |
+    | test     |
+    +----------+
+```
+wyświetlenie listy baz
+- 
+```
+mysql> use mysql;
+    Reading table information for completion of table and column names
+    You can turn off this feature to get a quicker startup with -A
+    
+    Database changed
+```  
+
+wybranie bazy mysql
+- `mysql> [nazwa_bazy] -h [nazwa_komputera] -u [identyfikator_użytkownika] -p`
+Zalogowanie się na bazę danych przy użyciu nazwy komputera, użytkownika i hasła. 
+- 
+```
+mysql> show tables;
+    +-----------------+
+    | Tables_in_mysql |
+    +-----------------+
+    | columns_priv    |
+    | db  |
+    | func|
+    | host|
+    | tables_priv     |
+    | user|
+    +-----------------+
+    6 rows in set (0.01 sec)
+```   
+Pokazanie tablic/tabel wybranej bazy.
+- db - wyznacza, którzy użytkownicy i z jakich komputerów mają dostęp do określonych baz
+- host - przywileje każdej kombinacji użytkownik-komputer
+- user - zbiór przywilejów nadanych użytkownikowi _User_, łączącemu się z komputera _Host_ i logującemu się za pomocą hasła _Password_
+- columns_priv i tables_priv - przywileje nadane na wskazane tabele i kolumny
+- func - funkcje zdefiniowane przez użytkownika
+- 
+```
+mysql> describe func;
+    +-------+------------------------------+------+-----+----------+-------+
+    | Field | Type | Null | Key | Default  | Extra |
+    +-------+------------------------------+------+-----+----------+-------+
+    | name  | char(64) binary  |      | PRI |          |       |
+    | ret   | tinyint(1)       |      |     | 0        |       |
+    | dl    | char(128)        |      |     |          |       |
+    | type  | enum('function','aggregate') |      |     | function |       |
+    +-------+------------------------------+------+-----+----------+-------+
+    4 rows in set (0.02 sec)
+```
+Pokazanie wybranej tablicy
+- `mysql> show tables from test;`
+   Pokazanie tablic z określonej bazy danych, w tym wypadku _test_.
+- `mysql> show columns from user from mysql;`
+   Lista kolumn danej tabeli w wybranej bazie danych, można to zapisać również tak:
+  `mysql> show columns from mysql.user;`    
+- `mysql> show grants for [nazwa_użytkownika];`
+   Wyświetlenie aktualnych przywilejów danego użytkownika
+- `mysql> describe [nazwa_użytkownika];`
+   Wyświetlenie przywilejów o zasięgu globalnym dla danego użytkownika
+- `mysql> create database ez;
+    Query OK, 1 row affected (0.03 sec)`
+    
+Utworzenie bazy danych o nazwie _ez_.
+
+#### Tworzenie bazy do CMS-a
+
+Utworzenie bazy i dostępu do niej na potrzeby CMS-a wyglądać może tak:
+
+1.
+
+```
+    mysql -p
+    Enter password:
+    Welcome to the MySQL monitor. Commands end with ; or \\g.
+    Your MySQL connection id is 20 to server version: 4.1.14
+    
+    Type 'help;' or '\\h' for help. Type '\\c' to clear the buffer.
+    
+    mysql>
+``` 
+Zalogowanie się do monitora
+2.
+
+```
+    mysql> create database ez;
+    Query OK, 1 row affected (0.03 sec)
+```  
+
+Utworzenie bazy danych o nazwie _ez_.
+3.
+
+```
+    mysql> use ez;
+    Database changed
+```  
+
+Przejscie do bazy _ez_.
+4.
+
+```
+    mysql> grant all
+    mysql> on *
+    mysql> to mysqluser identified by 'mysqluserpassword';
+    Query OK, 0 rows affected (0.02 sec)
+```
+
+Przydzielenie wszystkich przywilejów - jeśli wcześniej nie istniał właśnie utworzonemu tym poleceniem - użytkownikowi o nazwie _mysqluser_ z hasłem _mysqluserpassword_.
+5.
+
+```
+    mysql> show grants for mysqluser;
+    +---------------------------------------------------------------------------------+
+    | Grants for mysqlu@%     |
+    +---------------------------------------------------------------------------------+
+    | GRANT USAGE ON *.- TO 'mysqluser'@'%' IDENTIFIED BY PASSWORD '76d9d50a6ac45165' |
+    | GRANT ALL PRIVILEGES ON \`ez\`.- TO 'mysqluser'@'%'       |
+    +---------------------------------------------------------------------------------+
+    2 rows in set (0,00 sec)
+```    
+
+Sprawdzenie przywilejów użytkownika _mysqluser_.
+6.
+
+```
+    mysql> \q
+    Bye
+```
+
+Wyjście z monitora.
+
+Baza danych ma nazwę _ez_, użytkownik _mysqluser_ a jego hasło to _mysqluserpassword_.
+
+#### Podstawowe polecenia
+
+SQL nie udostępnia dużej ilości funkcji, ale za to bardzo sprawnie je realizuje. Użycie samych poleceń SQL zapewni większą szybkość (np. w filtrowaniu lub sortowaniu) niż skrypt PHP, który pobiera dużą ilość danych i potem je przetwarza. 
+
+- _CREATE_ - tworzenie bazy lub tabeli: CREATE DATABASE nazwa_bazy;
+- _ALTER_ - zmiana struktury lub nazwy tabeli
+   ALTER TABLE nazwa_tabeli RENAME AS nowa_nazwa_tabeli;
+   zmiana nazwy
+   ALTER TABLE nazwa_tabeli ADD COLUMN nazwa_kolumny VARCHAR (50);
+   dodanie kolumny (w tym przypadku zawierającej łańcuch znaków o zmiennej długości)
+   ALTER TABLE nazwa_tabeli DROP COLUMN nazwa kolumny;
+   usunięcie kolumny
+- _DROP_ - usuwanie bazy danych lub tabeli
+   DROP TABLE tabela;
+- _SELECT_ - odczytywanie danych z bazy
+   SELECT nazwa_pola1, nazwa_pola2 FROM nazwa_tabeli WHERE warunek;
+   odczytanie wartości dwóch pól
+   SELECT - FROM nazwa_tabeli WHERE warunek;
+   wybranie całego wiersza
+   SELECT nazwa_pola FROM nazwa_tabeli WHERE warunek = 'SELECT nazwa_pola FROM nazwa_tabeli WHERE warunek';
+   podzapytanie (szybsze niż zastosowanie dwóch prostych wyrażeń SELECT)
+- _INSERT_ - wstawianie danych do bazy
+   INSERT INTO nazwa_tabeli (nazwa_kolumny1, nazwa_kolumny2) VALUES (wartość1, wartość2);
+- _DELETE_ - usuwanie danych z bazy
+   DELETE dana FROM nazwa_tabeli WHERE warunek;
+   uwaga: jeśli nie poda się warunku usunięta zostanie cała zawartość tabeli
+- _UPDATE_ - zmienianie danych w bazie, pozwala zrobić to bez uprzedniego usuwania
+   UPDATE nazwa_tabeli SET nazwa_pola1='wartość1', nazwa_pola2='wartość2' WHERE warunek;
+   uwaga: jeśli nie poda się warunku zamieniony zostanie każdy wiersz tabeli
+- _GRANT_ - przydzielenie uprawnień (omówione powyżej)
+
+#### Typy danych
+
+Wielkość pamięci potrzebnej do przechowywania danych zależy od typu, zawsze należy wybierać taki typ danych, który zajmuje najmniej pamięci i jednocześnie będzie pozwalał na zapisanie wszystkich potrzebnych informacji. 
+
+W MySQL rozróżnia się trzy podstawowe typy danych:
+
+1. Liczbowy
+  - całkowitoliczbowe
+  - zmiennoliczbowe - można zadeklarować liczbę cyfr znaczących po przecinku
+2. Daty i czasu - udostępnia kilka formatów, ważną cechą jest, to, że jeśli pozostanie niewypełnione automatycznie zostanie w nim zapisane czas i data aktualnie wykonywanej operacji
+3. Łańcuchowy
+  - zwykłe łańcuchy znaków
+    - CHAR - o stałej długości; zostaną uzupełnione spacjami do wyznaczonej ilości znaków
+    - VARCHAR - o zmiennej długości
+  - dwa typy przeznaczone dla większych rekordów
+    - TEXT - dłuższe teksty; rozróżniana jest wielkość liter
+    - BLOB - nazwa pochodzi od **B**inary **L**arge **Ob**jects, mogą przechowywać każdy rodzaj danych (np. obrazy czy dźwięki)
+  - dwa typy specjalne
+    - SET
+    - ENUM
+
+#### Typy i atrybuty kolumn
+
+##### Atrybuty
+
+- _not null_ - pole musi mieć nadane jakąś wartość, jeśli ten atrybut jest pominięty może być puste
+- _auto increment_ - specjalny atrybut nadawany kolumnom zawierającym wartości całkowitoliczbowe, w momencie wpisania do tabeli nowego rekordu zostanie w tym polu wstawiony unikalny identyfikator - liczba całkowita o wartości równej maksymalnej wartości w tej kolumnie powiększonej o jeden; w każdej tabeli może być tylko jedna kolumna z tym atrybutem i musi być indeksowana
+- _primary key_ - oznacza, że dana kolumna jest kluczem podstawowym tabeli, a wartości w niej zapisywane muszą być unikalne, jest automatycznie indeksowana; atrybut może być wpisany zaraz za nazwą kolumnty tylko w sytuacji gdy jest to jedyna kolumna będąca kluczem podstawowym tabeli
+- _unsigned_ - kolumna może zawierać tylko wartości nieujemne
+
+#### phpMyAdmin
+
+Narzędzia wspomagające zarządzanie bazami danych:  
+
+- MySQL: phpMyAdmin [[www.phpmyadmin.net](http://www.phpmyadmin.net)] [tłumaczenia dokumentacji; m.in. polskie](http://www.phpmyadmin.net/pma_localized_docs/)
+- PostgreSQL: phpPgAdmin [[phppgadmin.sourceforge.net](http://phppgadmin.sourceforge.net/)]
+
+Są to zestawy skryptów PHP umożliwiających zarządzanie bazą danych w trybie wizualnym za pomocą interfejsu WWW. Dzięki wizualnemu przedstawieniu danych i kolorowaniu składni zapewnia dużo prostszą pracę z bazą danych niż tryb konsolowy. 
+Można tworzyć i usuwać bazy, tworzyć, usuwać i zmieniać tabele, kasować, zmieniać i dodawać pola, oraz wykonać polecenia SQL. 
+Czasem są udostępniane jako interfejs administratora przez firmy prowadzące hosting zawierający również bazy danych. 
+
+W 2003 phpMyAdmin dostał nagrodę Readers Choice 2003 przyznawaną przez PHP Magazine. 
+Obsługuje kilkadziesiąt języków (w tym polski). Rozprowadzany jest na licencji GPL.
+
+Instalacja phpMyAdmin polega na (jako przykładu użyłem lokalnej instalacji):
+
+1. rozpakowaniu archiwum w wybranym katalogu (np. /home/user/html_public/phpMyAdmin/)
+2. edycji pliku konfiguracyjnego config.inc.php
+- wprowadzenie poprawnej wartości do $cfg['PmaAbsoluteUri'], w powyższym przykładzie będzie to wyglądało tak:
+``` 
+    $cfg['PmaAbsoluteUri'] = 'http://localhost.localdomain/~user/phpMyAdmin/';
+```
+- określeniu metody dostępu, zamiast domyślnej 'config' zaleca się 'http' lub 'cookie', metodą "znajdź i zamień" można wymienić wszystkie wystąpienia 'config' na to co wybierzemy
+3. pozostaje jeszcze ustalić uprawnienia do skryptów i katalogu instalacyjnego
+4. jeśli wszystko jest w porządku interfejs phpMyAdmin będzie dostępny pod adresem:
+``` 
+    http://localhost.localdomain/~user/phpMyAdmin/index.php
+``` 
+
+To oczywiście tylko pobieżny opis, w zasadzie w ogóle nie biorący pod uwagę zagadnień bezpieczeństwa.
+
+- [The phpMyAdmin Project](http://www.phpmyadmin.net/) [sourceforge.net: phpMyAdmin](http://sourceforge.net/projects/phpmyadmin/) [phpMyAdmin 2.9.0-dev Documentation](http://www.phpmyadmin.net/documentation/) [Dokumentacja phpMyAdmina 2.5.2-pl1](http://www.phpmyadmin.net/pma_localized_docs/Documentation-pl-2.5.2-pl1-1.html)
+- wikipedia: [PhpMyAdmin](http://pl.wikipedia.org/wiki/PhpMyAdmin), [PhpMyAdmin](http://en.wikipedia.org/wiki/PhpMyAdmin)
+- [PhpMyAdmin Tutorial](http://www.reg.ca/faq/PhpMyAdminTutorial.html)
+- [Learning SQL Using phpMyAdmin](http://www.php-editors.com/articles/sql_phpmyadmin.php)
+- home.pl: [phpMyAdmin](http://home.pl/pomoc/funkcje/phpmyadmin)
+- [phpMyAdmi Installation](http://www.aota.net/PHP_and_MySQL/phpmyadmin.php4)
+- washington.edu: [Installing phpMyAdmin](http://www.washington.edu/computing/web/publishing/phpmyadmin.html)
+- [WordPress phpMyAdmin Giude](http://www.tamba2.org.uk/wordpress/phpmyadmin/)
+- Dev Shed: Doing More with phpMyAdmin, by Harish Kamath [(Part 1)](http://www.devshed.com/c/a/PHP/Doing-More-With-phpMyAdmin-Part-1/) [(Part 2)](http://www.devshed.com/c/a/PHP/Doing-More-with-phpMyAdmin-Part-2/1/)
+- ovh.com: [Jak zcentralizować phpMyadmin](http://pomoc.ovh.com/CentralizacjaPhpMyAdmin/) [Phpmyadmin how to use it](http://help.ovh.com/PhpMyAdmin/)
+
+### MySQL w PHP
+
+#### Połączenie z bazą danych
+
+Połączenie z bazą danych MySQL jest realizowane poleceniem _mysql_connect_. 
+Wygląda to tak:
+
+```
+    mysql_connect($hostname, $user, $password);
+```
+
+Zamiast zmiennych można użyć ciągów, jawnie umieszczając dane w poleceniu:
+
+```
+    mysql_connect('nazwa_hosta', 'nazwa_użytkownika', 'hasło');
+```
+
+Jeśli zostały wybrane inne niż standardowe port i gniazdo należy podać je w nazwie hosta oddzielone dwukropkiem
+
+```
+    $hostname:port:gniazdo
+```
+
+Następnym krokiem jest wybór bazy danych:
+
+```
+    mysql_select_db($database);
+```
+
+Podobnie jak w samym połączeniu można podać nazwę jawnie:
+
+```
+    mysql_select_db('nazwa_bazy');
+```
+
+Poprzedzenie tych funkcji znakiem _@_ przełącza ich działanie w tryb cichy, w którym, ze względów bezpieczeństwa nie zwracają żadnych komunikatów o niepowodzeniu. 
+W całości może wyglądać to tak:
+
+```
+    @mysql_connect($hostname, $user, $password);
+    @mysql_select_db($database);
+```
+
+#### Polecenia PHP
+
+Funkcje PHP do obsługi MySQL (parametry w nawiasie kwadratowym są opcjonalne)
+
+- _mysql_affected_rows([id_połączenia])_ - po zapytaniu INSERT, UPDATE lub DELETE sprawdza liczbę zmienionych wierszy
+- _mysql_change_user(użytkownik, hasło, [baza], [id ołączenia])_ - zmienia użytkownika MySQL i otwiera połączenie
+- _mysql_close([id_połączenia])_ - zamyka połączenie
+- _mysql_connect([host], [:port], [:gniazdo], [użytkownik], [hasło])_ - połączenie z danym hostem dla danego, na podanym porcie i gnieździe dla użytkownika identyfikownego hasłem
+- _mysql_create_db(nazwa, [id połączenia])_ - tworzy nową bazę MySQL na serwerze skojarzonym z ostatnim połączeniem
+- _mysql_data_seek(id wyniku, numer wiersza)_ - przesuwa wewnętrzny wskaźnik do podanego numeru wiersza, do odczytania wyniku używa się funkcji pobierających dane
+- _mysql_db_query(zapytanie, nazwa_bazy, [id_połączenia])_ - zastępuje dwa polecenia: _mysql_select_db_ i _mysql_query_
+```
+    mysql_db_query($db, $query);
+``` 
+- _mysql_drop_db(nazwa_bazy [, id połączenia]_ - usuwa podaną bazę
+- _mysql_errno([id_połączenia])_ - zwraca numer błędu
+- _mysql_error([id_połączenia])_ - zwraca komunikat o błędzie
+- _mysql_fetch_array(id_wyniku, [typ_wyniku])_ - pobiera wynik i zwraca tablicę asocjacyjną; typ wyniku: MYSQL_ASOC, MYSQL_NUM lub MYSQL_BLOB
+- _mysql_fetch_field(id wyniku, [nr_pola])_ - zwraca jako obiekt informację na temat pól
+- _mysql_fetch_lengths(id_wyniku)_ - zwraca długość każdego pola w wyniku
+- _mysql_fetch_object(id_wyniku, [typ_wyniku])_ - pobiera wynik i zwraca go jako obiekt; typ podobnie jak w _mysql_fetch_array_
+- _mysql_fetch_row(id_wyniku)_ - pobiera wynik i zwraca jako tablicę indeksowaną liczbami
+- _mysql_field_name(id wyniku, numer pola)_ - zwraca nazwę podanego pola
+- _mysql_field_seek(id wyniku, numer pola)_ - przesuwa wskaźnik do wybranego numeru pola; używa się razem z _mysql_fetch_field_
+- _mysql_field_table(id_wyniku, numer_pola)_ - zwraca nazwę tabeli podanego pola
+- _mysql_field_type(id_wyniku, nr_pola)_ - zwraca typ podanego pola
+- _mysql_field_flags(id_wyniku, numer_pola)_ - zwraca znaczniki skojarzone z polem
+- _mysql_field_len(id_wyniku, numer_pola)_ - zwraca długość podanego pola
+- _mysql_free_result(id_wyniku)_ - zwalnia pamięć używaną przez wynik
+- _mysql_insert_id([id połączenia])_ - zwraca ID AUTO_INCREMENT wyrażenia INSERT lub FALSE jeśli ostatnim zapytaniem nie było INSERT
+- _mysql_list_fields(baza, tabela, [id_połączenia])_ - zwraca ID wyniku, używa się w _mysql_field_ bez wykonywania zapytania
+- _mysql_list_dbs([id_połączenia])_ - zwraca wskaźnik wyniku na mysqld, używa się z _mysql_tablename_
+- _mysql_list_tables([baza, [id połączenia])_ - zwraca wskaźnik wyniku do tablicy w bazie, używa się z _mysql_tablename_
+- _mysql_num_fields(id_wyniku)_ - zwraca liczbę pól w wyniku
+- _mysql_num_rows(id_wyniku)_ - zwraca liczbę wierszy w wyniku
+- _mysql_pconnect([host], [:port], [:gniazdo], [użytkownik], [hasło])_ - otwiera trwałe połączenie do bazy danych, wszystkie argumenty są opcjonalne; należy używać ostrożnie ponieważ ani _mysql_close_ ani zakończenie skryptu nie zamykają połączenia
+- _mysql_query(zapytanie, [id_połączenia])_ - wysyła zapytanie do bazy, średnik należy umieścić poza ciągiem zapytania
+```
+    mysql_query("SELECT dana FROM nazwa_kolumny WHERE warunek);
+``` 
+- _mysql_result(id_wyniku, id_wiersza, id_pola)_ - zwraca jednopolowy wynik, identyfikator pola może być numerem pola (_0_), nazwą pola (_FirstName_) lub nazwą wraz z tabelą (_myfield.mytable_)
+- _mysql_select_db(baza, [id_połączenia])_ - wybór bazy
+- _mysql_tablename(id_wyniku, id_tabeli)_ - używa się z funkcjami _mysql_list__ do zwrócenia wartości wskazywanej przez wskaźnik wyniku
+
+### Bezpieczeństwo
+
+#### Serwer Apache
+
+- Prawidłowo skompilowany serwer powinen mieć minimum wkompilowanych modułów (czyli dwa podstawowe: http_core.c, mod_so.c) oraz załadowane dynamicznie tylko te moduły które są niezbędne.
+- Wszystkie niepotrzebne usługi powinny zostać wyłączone; szczególnie dotyczy to SSI (mod_include) i CGI (mod_cgi).
+- Domyślnym użytkownikiem ani grupą nie może być root, najlepiej jest utworzyć dodatkowego użytkownika i grupę bez uprawnień
+- Właściwym kierunkiem polityki jest: najpierw wszystkiego zabronić a potem pozwalać tylko na to co niezbędne
+- Należy z rozwagą używać takich opcji jak np. FollowSymLinks
+
+#### PHP
+
+- safe_mode on ([FIX: safe_mode is gone](http://www.zend.com/zend/week/week276.php#Heading8))
+- Ze względów bezpieczeństwa zaleca się wyłączenie zmiennych globalnych.
+
+```  
+    register_globals = Off
+```
+
+- hacking.pl: [Sposób na SQL Injection w 20 linijkach [2006-03-14]](http://hacking.pl/5845)
+
+#### MySQL
+
+- Usunąć konto użytkownika anonimowego
+- Ustanowić hasło dla każdego użytkownika mającego prawo do modyfikacji bazy danych.
+- Ustalić restrykcyjne prawa dostępu do skryptów i katalogów
+- Nigdy nie wolno:
+- stosować tych samych haseł dostępu do konta i do bazy danych - szczególnie dotyczy to konta superużytkownika
+- wpisywać hasła w linii poleceń:
+
+```    
+    $ mysql -u root -p rootpassword
+```
+sama opcja _-p_ wystarczy, użytkownik zostanie wtedy zapytany o hasło
+
+```   
+    $ mysql -u mysql -p
+    Enter password:
+```
+
+- stosować znaku _%_ umożliwiającego na dostęp z dowolnej maszyny
+
+```   
+    mysql> grant all on mysql.- to mysql@% identified by 'mysqlpassword';
+```
+
+### Odnośniki
+
+- **Apache:*- [Apache](http://apache.org/) - [Apache HTTP Server Documentation](https://httpd.apache.org/docs/) | [AskApache - Crazy Advanced Web Development](https://www.askapache.com/) | [THE Ultimate Htaccess](https://www.askapache.com/htaccess/) | [.HTACCESS: The Definitive Guide](https://www.whoishostingthis.com/resources/htaccess/) | [URL Rewriting for Beginners](https://www.addedbytes.com/blog/url-rewriting-for-beginners) |  ["An In-Depth Guide to mod_rewrite for Apache"](https://code.tutsplus.com/tutorials/an-in-depth-guide-to-mod_rewrite-for-apache--net-6708) | [.htaccess check](http://www.htaccesscheck.com/) | [HTAccess Password-Protection Tricks](https://perishablepress.com/htaccess-password-protection-tricks/) | [(2001!) Hardening HTAccess, Part One](https://www.symantec.com/connect/articles/hardening-htaccess-part-one) - [Part Two](https://www.symantec.com/connect/articles/hardening-htaccess-part-two) - [Part Three](https://www.symantec.com/connect/articles/hardening-htaccess-part-three) | ["The Web Developer's Guide to DNS"](https://rjzaworski.com/2019/04/the-web-developers-guide-to-dns) | [Introduction to HTTP, by Launch School](https://launchschool.com/books/http)
+- **Hosting:*- [Domena, hosting, certyfikat dla sklepu internetowego – jak dobrze kupić?](https://www.wpdesk.pl/blog/jaki-hosting-wybrac/)
+- ["All You Need to Know About DNS"](https://mediatemple.net/blog/web-development-tech/all-you-need-to-know-about-dns/)
+- **PHP, SQL:*- [PHP.net](http://www.php.net/) - [PHP Manual](http://php.net/manual/en/index.php) | [MySQL.com](https://www.mysql.com/) - [MySQL Documentation](https://dev.mysql.com/doc/) | [Kurs PHP](http://phpkurs.pl/) | [MySQL Tutorial](http://www.mysqltutorial.org/) | [Bobby Tables: A guide to preventing SQL injection](http://bobby-tables.com/) | tutorialspoint: [PHP Tutorial](https://www.tutorialspoint.com/php/index.htm), [MySQL Tutorial](https://www.tutorialspoint.com/mysql/index.htm) | Tutorial Republic: [PHP Tutorial](https://www.tutorialrepublic.com/php-tutorial/), [SQL Tutorial](https://www.tutorialrepublic.com/sql-tutorial/) | [Coding Cyber](http://codingcyber.org/): ["5 Steps to Create Simple Secure Login Script in PHP and MySql"](http://codingcyber.org/simple-login-script-php-and-mysql-64/) | ["How to Create a Secure Login Script in PHP and MySQL"](https://www.wikihow.com/Create-a-Secure-Login-Script-in-PHP-and-MySQL) | ["PHP MySQL Login System"](https://www.tutorialrepublic.com/php-tutorial/php-mysql-login-system.php) | [Kevin Smith](https://kevinsmith.io/) | [phpMyAdmin](https://www.phpmyadmin.net/) | [pgAdmin](https://www.pgadmin.org/) | [Yii PHP Framework](http://www.yiiframework.com/) | [Symfony](https://symfony.com/) - [SymfonyCasts - PHP and Symfony Video Tutorial Screencasts](https://symfonycasts.com)| [Laravel](https://laravel.com/) | [Slim Framework](https://www.slimframework.com/) | [CodeIgniter](https://www.codeigniter.com/) | [CakePHP](https://cakephp.org/) | [Zend Framework](https://framework.zend.com/) | [squizlabs/PHP_CodeSniffer](https://github.com/squizlabs/PHP_CodeSniffer) | [FriendsOfPHP/PHP-CS-Fixer](https://github.com/FriendsOfPHP/PHP-CS-Fixer) | [Online Compiler and IDE >> C/C++, Java, PHP, Python, Perl and 70+ other compilers and interpreters - Ideone.com](https://ideone.com) | [phpro/grumphp](https://github.com/phpro/grumphp) | [drupol/drupal-conventions](https://packagist.org/packages/drupol/drupal-conventions) | [PHP MySQLi Examples – The Ultimate Tutorial](https://www.codewall.co.uk/php-mysqli-examples-the-ultimate-tutorial/) | [Xdebug: Support](https://xdebug.org/wizard) | [PHP Cheatsheets](https://phpcheatsheets.com) | [lukaseder "Say NO to Venn Diagrams When Explaining JOINs"](https://blog.jooq.org/2016/07/05/say-no-to-venn-diagrams-when-explaining-joins/) | [Dan Englishby "Download HTML Page As PDF In PHP"](https://www.codewall.co.uk/download-html-page-as-pdf-in-php/) | [Yves Trudeau and Francisco Bordenave "Tuning MySQL/InnoDB Flushing for a Write-Intensive Workload"](https://www.percona.com/blog/2020/05/14/tuning-mysql-innodb-flushing-for-a-write-intensive-workload/) | [The Net Ninja "PHP Tutorial for Beginners" [YT playlist 42 filmy]](https://www.youtube.com/playlist?list=PL4cUxeGkcC9gksOX3Kd9KPo-O68ncT05o) | [Eyoda: PHP Tutorials](https://www.edyoda.com/course/1483?episode_id=1962) | [Wojciech Pilich "Język PHP: mity i stereotypy"](https://www.wojtech.page/programowanie/jezyk-php-mity-i-stereotypy/) | [freecodecamp.org Sameer Khoja "What is SQL? What is a Database? Relational Database Management Systems (RDBMS) Explained in Plain English."](https://www.freecodecamp.org/news/sql-and-databases-explained-in-plain-english/)

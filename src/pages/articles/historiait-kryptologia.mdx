@@ -1,0 +1,180 @@
+---
+title: "Historia kryptologii"
+comment: ""
+section: "it"
+subsection: "historia"
+---
+
+### Wstęp
+
+Kryptoanaliza ewoluowała razem z kryptografią i ich wyścig może być śledzony przez historię - nowe szyfry były zaprojektowane by zastąpić stare pokonane metody. Nowe techniki kryptograficzne były wynajdywane by łamać coraz to lepsze mechanizmy. Praktycznie są widziane jako dwie strony tej samej monety -, żeby stworzyć bezpieczną kryptografię trzeba zaprojektować ją przeciwko możliwej kryptoanalizie.
+
+Proste szyfry
+Szyfry historyczne musiały umożliwiać szyfrowanie i deszyfrowanie przez człowieka, a więc opierać się na bardzo prostych operacjach. Współczesne komputery są o kilkanaście rzędów wielkości szybsze w obliczeniach od ludzi, i potrafią złamać praktycznie każdy tego typu szyfr. Istnieją jednak przykłady szyfrów, które są możliwe do zastosowania przez człowieka bez użycia komputerów i zapewniaja pewien sensowny poziom bezpieczeństwa. Warto zwrócić uwage na fakt, że zwykle siatka szpiegowska w obcym kraju może mieć utrudniony dostęp do sprzętu komputerowego, nadal jednak musi być w stanie przesyłać bezpiecznie zaszyfrowane wiadomości. Przykład szyfru o omawianych własnościach stanowi np. OTP, szyfry podstawieniowe dla krótkich wiadomości a nawet szyfr Solitare opisany w książce "Cryptonomicon" Neala Stephensona.
+Wszystkie wymienione niżej szyfry nie mają obecnie żadnego praktycznego znaczenia.
+
+W przeszłości kryptografia pomagała utrzymać tajemnicę łączności w dyplomacji wojnie i szpiegostwie i była domeną rządów, ale ostatnio (po połowie lat 70-tych: wynalazek kryptografii asymetrycznej i DES standard publiczney szyfrowania) jej znaczenie znacznie wzrosło i to na dwa sposoby.
+Po pierwsze zwiększył się zakres zastosowań, głównie dzięki kryptografii asymetrycznej zapewnia mechanizmy nie tylko do utrzymywania tajemnicy danych ale też np. cyfrowy podpis i cyfrowy pieniądz.
+Po drugie stała się powszechnie używana przez cywilów, którzy nie mają jakichś szczególnych powodów do tajemnicy, jest po prostu wbudowana w infrastrukturę informatyczną i telekomunikacyjną, a użytkownicy nie są najczęściej nawet świadomi, że używają technik kryptograficznych.
+Szyfrowanie jest używane nie tylko do zapewnienia tajemnicy, ale również do zapewnienia bezpieczeństwa komunikacji, szczególnie weryfikacji integralności i autentyczności wiadomości, np. MAC i cyfrowe podpisy. Ważna jest także ochrona przed analizą ruchu (_traffic analysis_). Internet e-commerce, sieci telefonów komórkowych i bankomatów.
+Szyfrowanie jest zajęciem bardzo starym, aczkolwiek nowoczesna kryptografia narodziła się dopiero w epoce komputerów i starsze szyfry są z dzisiejszego punktu widzenia zupełnie bezużytecznie.
+
+Historia kryptografii od starożytności była historią klasycznej kryptografii, którą można było stosować używając pióra i papieru. Na początku XX wynalazek złożonych mechanicznych i elektromechanicznych maszyn takich jak Enigma pozwolił na użycie zaawansowanych i wydajnych metod szyfrowania. Po wprowadzeniu komputerów złożoność kryptosystemów znacznie wzrosła.
+Istnieje równoległa historia kryptoanalizy, czyli łamania kodów i szyfrów, od wczesnej analizy częstotliwościowej skutki jej są znaczne: np. Telegram Zimmermanna i złamanie szyfrów Osi.
+
+### Starożytność i średniowiecze
+
+Najstarsze znane zastosowanie kryptografi to niestandardowe hieroglify wyryte na monumentach egipskiego Starego Państwa (ok 4.5K lat temu). Nie była to jak się uważa poważna próba tajnej komunikacji, ale raczej próba stworzenia atmosfery tajemniczości, intrygi lub nawet rozbawienia umiejących czytać widzów.
+
+Szyfry znane były u starożytnych Greków, np. szyfr przestawieniowy scytali przypisywany spartańskiej armii.
+Herodot opowiada o tajnych wiadomościach ukrytych pod woskiem na drewnianych tablicach i tatuażu na głowie niewolnika ukrytym przez odrastające włosy, ale nie są to przypadki kryptografii w dzisiejszym tego słowa znaczeniu, jest to steganografia.
+Rzymianie z pewnością znali kryptografię (np. szyfr Cezara i jego odmiany), jest wzmianka o książce o rzymskich szyfrach wojskowych, ale niestety zaginęła.
+
+Żydowscy uczeni używali prostych szyfrów monoalfabetycznych zastąpieniowych (np. szyfr Atbash) od ok. 500 do 600 pne.
+
+Kryptografia ma długą tradycję w religijnych pismach, które mogły obrazić dominującą kulturę lub władze polityczne. Może najbardziej znanym jest Numer Bestii z NT. "666" może być zaszyfrowanym odniesieniem do Imperium Rzymskiego lub samego Nerona, które mogło być zrozumiane tylko przez poddanych incjacji (którzy mieli klucz do zrozumienia) i dlatego bezpiecznym lub łatwym do zaprzeczenia jeśli dowiedziałyby się o nim władze.
+
+Kryptografia była też dobrze znana w Indiach. W Kamasutrze zalecano ją jako metodę porozumiewania się kochanków potajemnie, oznacza to najprawdpodobniej, że techniki kryptoanalityczne były słabo rozwinięte ok 500 ne.
+
+Najpewniej motywacja religijna była przyczyną wynalezienia analizy częstotliwościowej dla łamania, monoalfabetycznych szyfrów zastąpieniowych ok 1000 ne.. Był to najważniejszy postęp w kryptoanalizie do czasów WWII.
+Zasadniczo wszystkie szyfry pozostały podatne na tą technikę kryptoanalityczną aż do wynalazku szyfru polialfabetycznego przez Albertiego (ok 1465).
+
+Chociaż słowo kryptoanaliza jest raczej nowe (wymyślił je William Friedman w 1920), metody są dużo starsze. Najstarsze znane wyjaśnienie kryptoanalizy pochodzi z IX wieku - Abu Yusuf Yaqub ibn Ishaq al-Sabbah Al-Kindi w manuskrypcie "O rozszyfrowaniu tajnych wiadomości" (Manuscript on Deciphering Cryptographic Messages) - ten traktat zawiera także wyjaśnienie analizy częstotliwościowej.
+Jest to podstawowe narzędzie do łamania klasycznych szyfrów: w językach naturalnych pewne litery alfabetu pojawają się częściej niż inne, np. w angielskim prawdopodobnie "e" będzie najczęstszą literą w każdym przykładzie tekstu, a "th" najczęstszą parą liter itd. Jest to tym bardziej prawdopodobne i tym silniejsza jest ta regularność im dłuższy jest to tekst. W ten sposób można złamać każdy szyfr, który nie ukryje tych statystyk, np. w prostym szyfrze zastąpieniowym (gdzie każda litera jest zastąpiona przez inną) najczęściej występująca litera w szyfrgramie będzie prawdopodobnie "e".
+Jednak kiedy szyfry stały się bardziej złożone matematyka stopniowo stała się najważniejsza. Ta zmiana stała się najbardziej widoczna w czasie WWII kiedy to złamanie szyfrów używanych przez państwa Osi wymagało nowych metod matematycznych. Ponadto pierwszy raz zastosowano mechanizmy takie jak bomba i Colossus - jeden z najstarszych komputerów.
+
+### Czasy nowożytne do WWII
+
+Kryptografia stała się jeszcze ważniejsza jako skutek politycznej rywalizacji i religijnej rewolucji, np. w Europie w czasie i po renesansie obywatele różnych włoskich państw, także państwa koscielnego byli odpowiedzialni za gwałtowny rozwój technik kryptograficznych. Kilka z nich odzwierciedla rozumienie (lub nawet znajomość) wynalazku Albertiego.
+Zaawansowane szyfry nawet po Albertim nie były tak zaawansowane jak twierdzili (i wierzyli) ich wynalazcy i użytkownicy. Ten nadmierny optymizm był charakterystyczny wtedy i dzisiaj i jest przeszkodą w zrozumieniu jak słabe są kryptosystemy. Z braku wiedzy liczą się - jak można tego oczekiwać - domysły i nadzieje.
+
+Voynich Manuscript - słynne fałszerstwo
+
+Kryptografia, kryptoanaliza i zdrada tajnego agenta/kuriera pojawiła się w spisku Babingtona w czasie panowania królowej Elżbiety I. Doprowadziło do egzekucji Marii, królowej Szkotów.
+Zaszyfrowana wiadomość z czasów Człowieka W, żelaznej Masce (rozszyfrowana tuż przed 1900 przez Étienne Bazeries) rzuciła trochę światła na tożsamość tego więźnia.
+Kryptografia i jej niewłaściwe użycie było wmieszane w spisek, który doprowadził do egzekucji Maty Hari oraz aresztowanie Dreyfusa. Na szczęście w tym drugim przypadku kryptografowie przyczynili się także do wyjaśnienia manipulacji, które spowodowały jego problemy.
+
+Poza Bliskim Wschodem i Europą kryptografia pozostała nierozwinięta. Nie była używana w Japoni do 1510 a zaawansowane techniki nie były znane aż do otwarcia na świat po 1860.
+
+Choć kryptografia miała długą i złożoną historię do XIX wieku nie nastąpił żaden rozwój ponad przypadkowo dokonane odkrycia w kryptografii i kryptoanalizie.
+Przykłady tego drugiego to prace Babbage'a w epoce wojny krymskiej nad matematyczną kryptoanalizą szyfrów polialfabetycznych, odkryte i opublikowane później przez Prusaka Friedricha Kasiskiego.
+Rozumienie kryptografii tamtych czasów polegało głównie na regułach kciuka, np. prace kryptograficzne Auguste Kerckhoffs.
+
+Edgar Alan Poe rozwijał systematyczne metody rozwiązywania szyfrów w latach 40-tych. Umieścił informację o swoich umiejętnościach w filadelfijskim Alexander's Weekly (Express) Messenger zapraszając do nadsyłania szyfrów, które rozwiązywał, jego sukces przyciągnął uwagę na kilka miesięcy. Później napisał esej o metodach kryptografii, który okazał się użyteczny w rozszyfrowaniu niemieckich szyfrów używanych w czasie WWI.
+
+### WWII
+
+W czasie WWII mechaniczne i elektromechaniczne urządzenia szyfrujące były w powszechnym użyciu, ale tam gdzie były niepraktyczne nadal używano ręcznych technik. Nastąpił wielki postęp w praktycznej i matematycznej kryptografii. Ale wszystko to trzymano w tajemnicy. Informacje o tym okresie zaczęły się pojawiać dopiero kiedy skończył oficjalny niemiecki 50-letni okres tajemnicy i otwierały się powoli odpowiednie archiwa USA i zaczęto publikować utajnione dotąd pamiętniki i artykuły.
+
+Niemcy używali głównie (w kilku wariantach) elektromechanicznego systemu opartego na rotorach znanego jako Enigma. Złamany przez Rejewskiego. Był to największy przełom w kryptoanalizie od ponad tysiąca lat - narodziny kryptologii matematycznej. W sierpniu 1939 Polacy przekazali swoją wiedzę i maszyny Brytyjczykom i Francuzom.
+Matematyczna kryptografia rozwinęła się gwałtownie - choć w tajemnicy - dopiero po WWI, Marian Rejewski zaatakował i złamał wczesne systemy Enigmy używane przez niemiecką armię używając matematyki teoretycznej w 1932 i osiągał sukcesy aż do 39. Potem jego pracę kontynuowali Alan Turing, Gordon Welchman i inni w Bletchley Park łamiąc następne wersje Enigmy.
+
+Algorytm Enigmy używany jest w poleceniu crypt.
+
+Niemiecka armia podjęła próby zastosowania OTP, w Bletchley Park nazywano je szyframi Fish, a Max Newman i jego współpracownicy zaprojektowali i stworzyli pierwszy programowalny cyfrowy elektroniczny komputer - Colossus.
+Niemieckie MSZ zaczęło używać OTP w 1919, część ruchu została przeczytana w WWII jako rezultat odtworzenia pewnego klucza, który z niedostateczną dbałością został wyrzucony przez niemieckiego kuriera.
+
+Sprawa Enigmy i udział Polaków w jej złamaniu jest najbardziej medialnym rozdziałem historii kryptologii. Zamieszanie jakie w tej kwestii panuje częściowo ma przyczyny polityczne, otóż dopiero w latach '70 Brytyjczycy odtajnili historię Bletchley Park i maszyn Coolossus. Do tego czasu wszystko było kwestią spekulacji i popularnej literatury. Z drugiej strony Żelaznej Kurtyny również na Enigmie spoczywało piętno milczenia, bo - również do lat '70 - Armia Radziecka a za nią cały Układ Warszawski używała maszyn szyfrujących, które wprost wywodziły się z Enigmy.
+
+Polacy przygotowali się do wojny budując urządzenie szyfrujące LCD Lacida , które było trzymane w tajemnicy nawet przed Rejewskim. Kiedy w lipcu 1941 sprawdził je złamanie zabrało mu zaledwie kilka godzin, więc procedury operacyjne maszyny były zmieniane w pośpiechu.
+
+Kryptografowie USNavy (po 1940 w kooperacji z duńskimi i brytyjskimi) złamali kilka kryptosystemów japońskiej floty. Złamanie jednego z nich JN-25 doprowadziło m.in. do zwycięstwa pod Midway.
+SIS (USArmy) złamało najwyższego bezpieczeństwa japoński szyfr dyplomatyczny (elektromechaniczna maszyna nazywana przez Amerykanów "stepping switch" - Purple) jeszcze zanim zaczęła się WWII. Amerykanie nazywali wyniki wywiadu z kryptoanalizy "Magic", natomiast Brytyjczycy początkowo "Boniface" a potem "Ultra" (dotyczyło to głównie Enigmy).
+Japońskie MSZ używało systemu Purple i kilku maszyn w attachatach w japońskich ambasadach, jedna z nich została nazwana "M-machine" a druga "Red", wszystkie w jakimś stopniu zostały złamane.
+
+Inne maszyny używane w czasie WWII to brytyjski TypeX i amerykańska SIGABA, oba były podobne do Enigmy, nie wiadomo, żeby zostały złamane.
+Wojska w polu używały maszyn M-209 i mniej bezpiecznych M-94. Brytyjscy agenci SOE początkowo używali szyfrów poetyckich (poem ciphers - kluczem były zapamiętane poematy), ale później przerzucili się na OTP.
+
+Sukcesy kryptoanalizy mają wielkie znaczenie w historii - możliwość czytania tajnych wiadomości zawierających plany jest szczególnie ważna w czasie wojny, np. w czasie WWI złamanie telegramu Zimmermanna spowodowało przystąpienie USA do wojny, w czasie WWII kryptoanaliza niemieckich szyfrów (Enigma i szyfr Lorenza) przyczyniła się do skrócenia wojny a według niektórych nawet zadecydowała o rezultacie, na Pacyfiku duże znaczenie miało złamanie japońskiego kodu purpurowego.
+
+### Kryptologia współczesna
+
+Najważniejszy postęp w tych czasach został dokonany przez Williama F. Friedmana. Zastosowanie technik statystycznych do kryptoanalizy i tworzenia szyfrów i złamanie systemu Enigmy przez Rejewskiego. Kryptologia stała się jeszcze bardziej matematyczna po WWII, ale dopiero internet i powszechne używanie komputerów sprawiło, że szyfry zaczęły być używane przez kogokolwiek innego niż przez rządy lub wielkie organizacje.
+
+Użycie komputerów nie tylko spowodowało wielkie sukcesy w WWII ale umożliwiło zastosowanie nowych metod w kryptografii dzięki czemu stała się się bardziej złożona i odporna na ataki. W rezultacie wygląda na to, że zwyciężyła w pojedynku z czystą kryptoanalizą. Jeśli nawet atak z wybranym jawnym tekstem nie ujawni klucza do innych wiadomości można uważać kryptoanalizę za skończoną, ale są jeszcze inne możliwości - podsłuch, pluskwy, _side channel attack_ i komputery kwantowe.
+Nadal istnieją słabe szyfry, także nowe implementacje czasem ujawniają słabości: pochodzący z 1984 Madryga okazał się w 1998 podatny na atak samego szyfrogramu; FEAL-4 proponowany jako zastępstwo DES został zniszczony w serii ataków społeczności akademickiej, wiele z nich w całości praktycznych. Również zastosowane w przemyśle szyfry nie są wolne od błędów: np. algorytmy A5/1, A5/2 i CMEA używane w telefonach komórkowych mogą być złamane w krótkim czasie przy użyciu powszechnie dostępnego sprzętu. W 2001 został złamany WEP przez _related key atak_.
+
+Dla szyfrów symetrycznych żaden atak nie został przeprowadzony przez lata mimo intensywnych analiz, dla szyfrów asymetrycznych bezpieczeństwo zależy od trudności zwiazanego z nim matematycznego problemu.
+Jak dotąd dowiedziono bezpieczeństwo tylko jednego szyfru: OTP (_one-time pad_) jednakże potrzebuje on kluczy przynajmniej tak długich jak jawny tekst, co sprawia, że jest niepraktyczny.
+Rzadko kiedy bezpieczeństwo systemu zawodzi na skutek słabości algorytmu, cześciej jest to błąd w implementacji, użytym protokole lub inny ludzki błąd. Kryptografia może być użyta do implementacji pewnych godnych uwagi protokołów, np: _zero-knowledge proof_, _secure multiparty computation_ i _secret sharing_.
+
+Znaczenie kryptoanalizy jest doceniane przez rządy dla wywiadu (wojskowego i dyplomatycznego), powstały organizacje do łamania szyfrów innych państw, np GCHQ i NSA są wciąż aktywne. Np. w 2004 ogłoszono, że USA złamały szyfr irański (chociaż nie jest jasne czy stało się to na skutek kryptoanalizy czy też były w to zaangażowane jakieś inne czynniki).
+
+### Obecnie
+
+Historię współczesnej kryptografii rozpoczął Claude Shannon, który zapoczątkował kryptografię matematyczną, najpierw dokumentem [Communication Theory of Secrecy Systems](http://www3.edgenet.net/dcowley/docs.html) (1949) a potem książką Mathematical Theory of Communication. Na nich i innych jego pracach na temat informacji i teorii komunikacji opiera się rozwój kryptografii i kryptoanalizy. Dość szybko kryptografia stała się narzędziem agencji rządowych mającym strategiczne znaczenie, jej rozwój odbywał się w tajemnicy i aż do lat 70-tych - kiedy wszystko się zmieniło - bardzo niewiele działo się jawnie.
+
+Połowa lat 70-tych odznaczyła się dwoma ważnymi wydarzeniami: wprowadzenie DES i wynalezienie kryptografii asymetrycznej.
+
+17 marca 1975 został opublikowany szkic Data Encryption Standard w U.S. Federal Register. Proponowany DES został opracowany w IBM na zlecenie National Bureau of Standards (teraz NIST) w celu rozwoju bezpiecznej komunikacji dla organizacji takich jak banki i inne instytucje finansowe. Po modyfikacjach NSA został opublikowany jako FIPS Publication (Federal Information Processing Standard) w 1977 (obecnie w FIPS 46-3). DES był pierwszym publicznie dostępnym szyfrem mającym akceptację narodowej agencji takiej jak NSA. Publikacja specyfikacji przez NBS spowodowała wzrost zainteresowania kryptografią w opinii publicznej i środowiskach akademickich.
+Ponieważ był również zalecany przez agencje państwowe szybko został przyswojony przez banki i instytucje finansowe. Pomimo wykazywanych słabości był w powszechnym użyciu do niedawna. Dopiero w 2001 został zastąpiony przez AES (Rijandel) kiedy NIST ogłosił FIPS 197. W otwartej konkurencji NIST wybrało Rijandel.
+DES i jego bardziej bezpieczne wersje (takie jak 3DES lub TDES; zobacz FIPS 46-3) są nadal używane, ale udowodniono, że 56-bitowy klucz jest niewystarczającym zabezpieczeniem przed BF (jeden z takich ataków przeprowadzonych przez EFF zakończył się w 56 godzin). Wiadomości wysłane czystym DES i w rzeczywistości wszystkie wiadomości wysłane po 1976 są zagrożone. Niezależnie od jakości szyfru taka długość klucza była uważana za zbyt małą nawet w 1976.
+Było podejrzenie, że nawet wtedy rządowe organizacje miały dość mocy by złamać DES i brak przypadkowości w "s" boxes mógł być celowym błędem.
+
+Publikacja [New Directions in Cryptography](http://citeseer.nj.nec.com/340126.html). Autorzy Whitfield Diffie i Martin Hellman - kryptografia asymetryczną w fundamentalny sposób zmieniła sposób w jaki funkcjonuje kryptografia, która do tej pory w całości opierała się na algorytmach symetrycznych.
+Wprowadzili nową metodę dystrybucji kluczy, która rozwiązała jeden z największych problemów dotychczasowej kryptografii jakm było utworzenie bezpiecznego i niezależnego kaanału dystrybucji kluczy, które musiały być w tajemnicy przesyłane i przechowywane.
+W przeciwieństwie do powyższego wynalazek Diffiego-Hellmana (znany jako _Diffie-Hellman key exchange_) umożliwiał bezpieczną i jawną wymianę kluczy niezbędnych do wymiany tajnych danych. Zakładał utworzenie pary matematycznie powiązanych ze sobą kluczy, jednego używanego do szyfrowania, drugiego do odszyfrowania wiadomości, dzięki temu można publicznie i jawnie wymieniac się kluczami publicznymi.
+Kryptografia asymetryczna sprawiła, że zaawansowane szyfrowanie stało się publicznie dostępne, przełamany został prawie całkowity monopol wielkich organizacji i urzędów państwowych. Od tego czasu datuje się konflikt interesów pomiędzy agencjami rządowymi chcącymi kontrolować i regulować używanie kryptografii a obywatelami, którzy chcą zachować niezależność w tej sprawie.
+
+Prawdopodobnie całkowicie niezależnie kryptografia asymetryczna została wynaleziona przez brytyjski wywiad.
+GCHQ opublikował dokumenty, które tego dowodzą, różne tajne prace zostały napisane w GCHQ w latach 60 i 70-tych, które ostatecznie doprowadziły do mechanizmów identycznych z RSA i DF key exchange w 1973 i 74.
+Niektóre zostały opublikowane a wynalazcy (James Ellis, Clifford Cocks i Malcolm Williamson) udostępnili część z nich publicznie.
+
+Upowszechnienie się komputerów i rozwój internetu stworzyły naturalną przestrzeń dla stosowania kryptografii.
+
+[History\_of\_cryptography](http://en.wikipedia.org/wiki/History_of_cryptography)
+
+Pierwszy raz obywatele mają dostęp do kryptografii, która nie może być w prosty sposób złamana. Wywołało to kontrowersje.
+Do 1996 eksport technologii używających kluczy dłuższych niż 40 bitów był zakazany w USA, były FBI Director Louis Freeh zeznając przed komisją 911 wezwał do nowego prawa przeciwko użyciu kryptografii.
+Najważniejszym obrońcą silnego szyfrowania w publicznym użytku był Phil Zimmermann ze swoim PGP (1991), długa walka z restrykcjami i ostatecznie RFC 2440 (OpenPGP).
+
+Pomimo, że współczesne szyfry takie jak AES są uważane za nie do złamania, nadal istnieją słabe projekty: najsłynniejsze to WEP i CSS oraz A5/1 and A5/2 używane w GSM. Na dodatek, co do żadnej z matematycznych idei leżących u podstaw kryptografii asymetrycznej nie została udowodnione, że jest nie do złamania i przyszłe badania mogą uczynić te systemy niebezpiecznymi (umożliwiając odtworzenie klucza prywatnego z publicznego). Taki przełom jest nie do przewidzenia, niektóre mechanizmy zostały już złamane.
+Długość klucza rośnie stosownie do postępu mocy obliczeniowej i postępu w dziedzinie faktoryzacji, zbyt mała zawsze umożliwia BF (dotyczy to wszystkich algorytmów, symetrycznych i niesymetrycznych)
+Jest to przykład podstawowego problemu w kryptografii, trzeba wybrać konkretny kryptosystem (algorytm + protokół + mechanizm) który zabezpiecza przed każdym atakiem, ale nie można przewidzieć, ani kto dokona tego ataku, ani jakimi zasobami będzie dysponował, ani też jaka kryptoanaliza będzie możliwa. W tej sytuacji rozróżnienie co jest śmieciem a co wartościowym rozwiązaniem jest trudne nawet dla specjalistów.
+
+### Timeline
+
+- 3500s \[BC\]- Sumeryjczycy stsowali pismo klinowe a Egipcjanie hieroglificzne.
+- 1500s \[BC\] - Fenicjanie wymyślili alfabet
+- 600-500 \[BC\] - Hebrajscy uczeni stosowali proste szyfry zastąpieniowe, monoalfabetyczne (np szyfr Atbash)
+- 100-0 \[BC\] - Znane rzymskie szyfry, np. Szyfr Cezara.
+- 1000 - Analiza częstotliwościowa prowadzi do technik łamania monoalfabetycznych szyfrów zastąpieniowych, było to prawdopodobnie motywowane tekstową analizą koranu.
+- 1450 - Chińczycy stosowali druk (_movable type_) używając drewnianych blokach
+- 1450-1520 - The Voynich manuscript, przykład zaszyfrowanej ilustrowanej książki (fałszerstwo).
+- 1586 - kryptoanaliza użyta przez Sir Francisa Walsinghama wykazała, że Maria królowa Szkotów była uwikłana w spisek Babingtona mający na celu zamordowanie Królowej Elżbiety I. Maria została ostatecznie stracona.
+- 1614 - Szkot John Napier (1550-1617) opublikował dokument zarysowujący odkrycie logarytmu, wynalazł także pomysłowy system ruchomych prętów (nazwanych pałkami lub kostkami Napiera: Napier's Rods lub Napier's bones). Były oparte na logarytmach i pozwoliły operatorowi mnożyć, dzielić i obliczać kwadraty i sześciany przez przesuwanie pałek i umieszczanie ich na specjalnie skonstruowanej tablicy.
+- 1793 - Claude Chappe zbudował pierwszą długodystansową semaforową linię telegraficzną
+- 1831 - Joseph Henry proponuje budowę telegrafu elektrycznego
+- 1835 - Samuel Morse wymyślił alfabet Morsa
+- 1855 - Dla angielskiej strony wojny krymskiej Charles Babbage złamał szyfr autokey Vigenere'a ("niełamliwy szyfr" tamtych czasów) podobnie jak znacznie słabszy szyfr, który dzisiaj znany jest jako szyfr Vigenere. Z powodu tajemnicy wojskowej zostało to także odkryte później przez Prusaka Friedricha Kasiskiego.
+- 1894 - Afera Dreyfusa we Francji - zastosowanie kryptografii i jej nieprawidłowe użycie w celu fałszowania dokumentów.
+- 1918 Arthur Scherbius patent na maszynę szyfrującą, od 1923 Enigma, złamana 1932 Marian Rejewski
+- 1924 Edward Hugh Hebern patent na maszynę szyfrującą z rotorem - Hebern rotor machine
+- kwiecień 1943 - Max Newman, Wynn-Williams, i ich ekipa (także Alan Turing) w tajnym Government Code and Cypher School ('Station X'), Bletchley Park, Bletchley, England, tworzą "Heath Robinson". Jest to specjalizowana maszyna do łamania szyfrów, a nie ogólnego przeznaczenia kalkulator lub komputer.
+- grudzień 1943 - zbudowany został Colossus przez Dr Thomasa Flowersa w The Post Office Research Laboratories w Londynie, do złamania szyfru Lorenz (SZ42). Colossus został użyty w Bletchley Park w WWII - jako następca April's 'Robinson's. Chociaż ostatecznie zbudowano 10 zostały zniszczone natychmiast po zakończeniu pracy - były tak zaawansowane, że nie mogły wpaść w ręce wroga.
+- 1948 - Claude Shannon pisze dokument, który ustanawia matematyczne podstawy teori informacji
+- 1969 - pierwsze hosty ARPANET, są połączone.
+- 1974 DES
+- 1976 - Cray-1, pierwszy komercyjny superkomputer konstrukcji Seymoura Craya, który opuścił Control Data w 1972, żeby stworzyć nową kompanię. Ta maszyna znana była także ze względu na specyficzny design jak i ze względu na to, że była pierwszym praktycznym zastosowaniem przetwarzania wektorowego. Zostało sprzedanych 85 sztuk po $5M każda.
+- 1981 - Richard Feynman zaproponował komputer kwantowy. Głownym zastosowaniem które miał na myśli byłą symulacja kwantowych systemów, ale także wspomniał o możliwości rozwiązania innych problemów.
+- 1986 - W obliczu rosnącej liczby włamań na rządowe i korporacyjne systemy Kongres USA wprowadził Computer Fraud and Abuse Act, który stanowi przestepstwo z włamania się do systemu komputerowego, prawo to jednakże nie dotyczy nieletnich.
+- 1988 - pierwszy optyczny chip został zaprojektowany używa światła zamiast elektryczności co przyspiesza szybkość przetwarzania.
+- 1989 - Tim Berners-Lee i Robert Cailliau zbudowali w CERN prototyp systemu który stał się późniejszym WWW
+- 1991 - Phil Zimmermann opublikował program szyfrowania kluczem publicznym PGP razem z kodem źródłowym, który szybko pojawił się w internecie.
+- 1992 - Wypuszczenie filmu "Sneakers" w którym eksperci bezpieczeństwa są szantażowani, żeby ukraść uniwersalny dekoder systemów szyfrujacych.
+- 1994
+  - Peter Shor wymyślił algorytm, który pozwala komputerom kwantowym określić szybko faktoryzację dużych liczb całkowitych. Jest to pierwszy interesujący problem dla którego komputery kwantowe obiecują znaczące przyspieszenie i dlatego powodują duże zainteresowanie tą tematyką.
+  - koncepcja DNA computing
+  - rosyjscy krakerzy kradną $10M z Citibank i transferują pieniądze na konta bankowe na całym świecie. Wladimir Lewin, 30-letni szef bandy używa służbowego laptopa po godzinach do transferowania pieniędzy na konta w Finlandii i Izraelu. W USA został skazany na 3 lata a służby odzyskują wszystkie oprócz $400K.
+  - SSL 2.0 (Netscape Communications)
+- 1995 - SSH 1 (Tatu Ylönen), SHA-1 (National Security Agency)
+- 1996 - SSL 3.0 (Netscape Communications)
+- 1997 - powstaje OpenPGP (standard IETF)
+- 1999 -
+  - GPG 1.0 - GNU Privacy Guard (wolna implementacja OpenPGP; Werner Koch)
+  - TLS 1.0 (kontynuacja SSL 3.0; standard IETF)
+  - powstaje OpenSSH (wolna implementacja SSH-2; projekt OpenBSD)
+- 14 styczeń, 2000 - rząd USA zapowiada, że restrykcje na eksport kryptografii zostaną rozluźnione (chociaż nie usunięte). Pozwala to na zakończenie absurdalnej polityki rozwijania oddzielnych wersji programów dla USA i reszty świata.
+- marzec 2000 - President Clinton przyznaje, że nie używa e-maila do komunikacji z córką, Chelsea Clinton, ponieważ nie uważa tego medium za bezpieczne.
+- 6 wrzesień, 2000 - RSA Security Inc. publikuje algorytm RSA (public domain), uprzedzając zakończenie obowiązywania patentu (US Patent #4,405,829) 20 września. Po rozluźnieniu restrykcji rządowych na początku tego roku (14 styczeń) usunęło to ostatnie bariery do światowej dystrybucji większości oprogramowania opartego na systemach kryptograficznych. Należy zauważyć, że algorytm IDEA jest wciąż pod patentem i restrykcje rządowe nadal obowiązują w niektórych miejscach.
+- listopad 2001 - Microsoft i jego sojusznicy nawołują do zakończenia polityki pełnego ujawniania błedów bezpieczeństwa przez zastąpienie tego przez "odpowiedzialne" wytyczne ujawnienia.

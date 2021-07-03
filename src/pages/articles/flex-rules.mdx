@@ -1,0 +1,115 @@
+---
+title: "CSS Flexbox - zasady"
+comment: ""
+section: "it"
+subsection: "css"
+---
+
+### Wstęp
+
+Flexbox jest niesamowicie elastyczny i daje nowe możliwości, ale jest przy tym dość nieintuicyjny i w procesie wdrażania się wymaga repetycji w większym stopniu niż np. Boxmodel czy Float. Zachęcam do zapoznania się z nim w tym artykule: [A Complete Guide to Flexbox](https://css-tricks.com/snippets/css/a-guide-to-flexbox/). Tutaj krótkie przypomnienie, coś w rodzaju ściągawki rozpisanej na artykuł. Plus przykłady. Źródła podane w odnośnikach.
+
+Podstawową cechą niezbędną dla zrozumienia jak działa Flexbox to orientacja działania wzdłuż osi głównej i poprzecznej (możemy myślec o tym jak o układzie odniesienia) oraz elastyczne zarządzanie przestrzenią, zarówno jej nadmiarem i brakiem. Tylko rozumiejąc poprawnie te dwa założenia możemy zrozumieć Flexboksa i poprawnie go stosować.
+
+#### Oś główna
+
+Tworzy układ odniesienia modelu; w zasadzie matematycznie rzecz biorąc powinniśmy mówić o wektorze, bo ma kierunek i zwrot. Wzdłuż osi głównej rozmieszczone są obiektu: ich kolejność, wielkość, ułożenie muszą być widziane przede wszystkim w relacji do osi głównej. Drugą osią tego układu odniesienia jest oś poprzeczna.
+
+#### Zarządzanie przestrzenią
+
+Flexbox jest modelem elastycznym i tam gdzie kontener dysponuje większą przestrzenią niż suma rozmiarów zawartych elementów (dzieci) dynamicznie i łatwo ją rozdziela, albo przydzielając ją elementom albo rozmieszczając ją między nimi. Tak samo jest w przypadku kiedy elementy (dzieci) nie mieszczą się w kontenerze, mogą zmniejszyć się proporcjonalnie, wyjść poza kontener lub utworzyć kolejny rząd elementów.
+
+Dlatego niniejsze intro składa się z następujących części:
+
+1. Oś - układ odniesienia
+2. Przestrzeń na osi, zarządzanie nadmiarową przestrzenią i jej brakiem
+3. Właściwości elementów kontenera
+
+Na wstępie trzeba wyjaśnić trzy rzeczy:
+
+1. Żeby w danym kontenerze wprowadzić Flexbox trzeba użyć display:flex, które "włącza" go w kontenerze (istnieje też dużo rzadziej używany inline-flex liniowa wersja Flexboxa).
+2. Kiedy w kontenerze jest display:flex, wtedy model Flexboxa stosuje się do kontenera i wszystkich jego bezpośrednich dzieci, ale - uwaga! - ta cecha nie jest dziedziczona; żeby zawrzeć Flexboxa we Flexboksie trzeba tym dzieciom też dać display:flex.
+3. Nadal możemy używać wszystkich cech CSS dotyczących rozmiarów, marginesów, paddingów itd.
+
+### 1. Oś - układ odniesienia
+
+Wszystko co jest związane z ułożeniem i rozmieszczeniem obiektow w Flex można zrozumieć tylko w kontekscie głównej osi, a nie kierunków absolutnych dotychczas stosowanych w CSS. Oś może być poprowadzona poziomo lub pionowo. Mamy więc po display: flex kolejną dyrektywę czyli **flex-direction**:
+
+- **row** - poziomo, od lewej do prawej (domyślna)
+- **row-reverse** - poziomo, od prawej do lewej
+- **column** - pionowo, z góry na dół
+- **column-reverse** - pionowo, od dołu do góry
+
+Dlatego w przypadku Flexboxa nie mówimy o lewej lub prawej stronie, a o początku i końcu osi.
+
+Drugą opcją związaną z prowadzeniem osi jest flex-wrap. To jest wybór pomiędzy jedną linią osi (jednym wierszem) a zawijaniem osi po dojściu do końca kontenera. Najlepiej to zrozumieć na przykładzie liter. Bez zawijania wszystkie muszą się zmieścić w jednej linii. Z zawijaniem po dojściu do końca kontenera tworzą nową linię o tym samym kierunku i zwrocie, lub przeciwnym zwrocie. Tak więc **flex-wrap**:
+
+- **nowrap** nie zawija, wymusza jeden wiersz (domyślna)
+- **wrap** - zawijanie z zachowaniem zwrotu wektora
+- **wrap-reverse** - zawijanie ze zmianą zwrotu wektora za każdym razem
+
+Czyli, żeby użyć przykładu:
+
+```
+ div {display:flex;
+ flex-direction:row-reverse;
+ flex-wrap:wrap-reverse;}
+```
+
+wyświetli wszystkie elementy kontenera z prawej do lewej, zawijając, w każdym kolejnym wierszu zmieniając zwrot.
+
+Domyślne ustawienie elementów Flexboxa (samo display: flex) to jedna linia z lewej do prawej, bez przejścia do następnej linii.
+
+### 2. Przestrzeń na osi
+
+To tyle jeśli chodzi o poprowadzenie osi. A teraz rozmieszczenie elementów kontenera. Mamy trzy cechy:
+
+- **justify-content** rozmieszczenie elementów wzdłuż osi głównej (ma zastosowanie tylko jeśli rodzic ma wiecej przestrzeni niż dzieci w sumie, bo zarządza wolną przestrzenią)
+- **align-items** rozmieszczenie elementów w poprzek osi głównej
+- **align-content** rozmieszczenie wielu osi w poprzek osi głównej (dotyczy oczywiście tylko sytuacji kiedy dozwolone jest zawijanie)
+
+#### justify-content
+
+rozmieszczenie wzdłuż osi:
+
+- **flex-start**: wszystkie elementy są wyrównane do początku osi (domyślne)
+- **flex-end**: wszystkie elementy są wyrównane do końca osi
+- **center**: centrowanie
+- **space-between**: elementy są rozmieszczane odpowiednio pierwszy na początku, ostatni na końcu osi, ewentualny środkowy centrowany, jeżeli jest ich więcej niż trzy to podobnie jak w space-evenly, z tą różnicą, że skrajne przylegają do krawędzi kontenera
+- **space-around**: każdy element otaczany jest równo rozdzieloną wolną przestrzenią, co oznacza że pierwszy i ostatni od krawędzi będzie dzieliła jedna jednostka wolnej przestrzeni, a pomiędzy elementami będą dwie jednostki wolnej przestrzeni
+- **space-evenly**: wszystkie elementy są rozmieszczone tak, że przestrzeń pomiędzy nimi oraz pomiędzy nimi i krawędziami kontenera jest równa.
+
+#### align-items
+
+rozmieszczenie w poprzek osi
+
+- **stretch**: są rozciągane na cały rozmiar poprzeczny kontenera, ale cały czas z zachowaniem min-width/max-width (domyślne)
+- **flex-start**: elementy są przyciągane do początku osi poprzecznej
+- **flex-end**: elementy są przyciągane do końca osi poprzecznej
+- **center**: centrowanie
+- **baseline**: elementy są wyrównane do ich linii bazowej
+
+#### align-content
+
+rozmieszczenie wielu osi; wszystkie opcje są dokładnie takie same jak w align items i należy je rozumieć analogicznie (stretch rozciąga element na całą wysokość linii), nawet ta sama jest domyślna; ale oprócz nich są jeszcze dwie:
+
+- **space-between**: pierwsza linia jest przyciągnięta do początku osi poprzecznej, a ostatnia do jej końca
+- **space-around**: linie są rozmieszczone równo z równym rozdzieleniem przestrzeni pomiędzy nimi
+
+Skrót:
+flex-flow: flex-direction, flex-wrap (domyślne: row, nowrap).
+
+Tak więc mamy jedno polecenie włączające Flexboxa i pięć dyrektyw dotyczących zawartości kontenera oraz skrót.
+
+### 3. Właściwości elementów kontenera
+
+Tak samo mamy pięć dyrektyw dotyczących elementów kontenera oraz ich skrót.
+
+- **order**: argument to liczba całkowita (czyli może też być ujemna) określa kolejność umieszczenia elementów, domyślna dla każdego jest 0 co oznacza rozmieszczenie ich wg kolejności w kodzie HTML, każda inna niż zero wyrzuca poza porządek narzucony kolejnością w kodzie HTML, wyświetlanie zaczyna się od najniższych liczb.
+- **flex-grow**: liczba naturalna, rozdziela dodatkową przestrzeń, domyślna 0 oznacza "zachowaj wielkość, nie rośnij"; dla watości innej niż 0 rosną proporcjonalnie do sumy liczb, następuje podział wolnej przestrzeni na sumę liczb i proporcjonalne jej przydzielenie
+- **flex-shrink**: dotyczy sytuacji braku przestrzeni, argument to liczba naturalna, mechanizm działa analogicznie jak w przypadku flex-grow, z tym, że domyślna jest 1, która oznacza zmniejsz się proporcjonalnie; 0 to "nie zmniejszaj się", a każda inna niż 0 lub 1 jak wyżej decyduje o proporcjach zmniejszania się, w przeciwieństwie do dotychczasowych modeli tutaj nie może nastąpić zmniejszenie poniżej rozmiaru narzuconego zawartością elementu
+- **flex-basis**: wielkość elementu na osi głównej, domyślny argument to auto co oznacza wielkość wynikającą z zawartości, zawsze ma wyższość względem wszystkich innych dyrektyw dotyczących tego rozmiaru, ale nigdy nie zmniejszy elementu poniżej rozmiaru wynikającego z zawartości (czyli auto to jest minimum)
+- **align-self**: może dla danego elementu zmienić wartość align-item wynikającą z kontenera, domyślna to auto (czyli miej to co kontener narzuca), pozostałe to: flex-start, flex-end, center, baseline i stretch
+
+Skrót  
+flex: flex-grow, flex-shrink, flex-basis; domyślne to 0 1 auto. Uwaga: drugi i trzeci parametr jest opcjonalny, ale jeżeli zostaną pominięte w zapisie, narzucone zostaną wartości domyślne.

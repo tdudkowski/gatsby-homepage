@@ -1,0 +1,521 @@
+---
+title: "DNS"
+comment: ""
+section: "it"
+subsection: "internet"
+---
+
+## DNS (Domain Name System)
+
+### Powstanie DNS
+
+System używania nazwy jako bardziej przyjaznej dla człowieka abstrakcji adresu maszyny w sieci poprzedza powstanie TCP/IP i sięga czasów ARPANET-u. Od początków istnienia internetu potrzebne było przedstawienie adresów internetowych w formie przyjaznej dla człowieka.
+W małych sieciach takie odwzorowanie można przeprowadzić przy pomocy tablic zawierających odpowiednie rekordy. W większej skali tablica stałaby się ogromna, przeszukiwanie nieefektywne i trudne byłoby utrzymywanie synchronizacji pomiędzy wszystkimi serwerami zawierającymi dane.
+
+Z początku istniał serwer z plikiem host, który zawierał mapowania adresów IP na nazwy. Każdy komputer w sieci pozyskiwał plik nazwany HOSTS.TXT z SRI (obecnie SRI International), który mapował adres na nazwę. Technicznie ten system nadal istnieje - większość współczesnych systemów operacyjnych może sprawdzać swój plik hostów zanim sprawdzi DNS.
+
+Gdy pojawiała sie nowa maszyna, administrator sieci do której należała przesyłał pocztą informację do InterNIC, tam uaktualniano plik hosts.txt i rozsyłano go po świecie.
+
+Na początku gdy internet składał się z niewielkiej ilości komputerów i ten system wystarczał.
+Rowiązanie to miało wbudowane ograniczenia ponieważ oczywistym wymaganiem było, że jeśli jakiś komputer zmieniał adres, to każdy system który chciał się z nim skomunikować musiał uaktualnić swój plik hosts. Kiedy wpisy zaczęły się pojawiać kilka razy dziennie, listy stawały się coraz dłuższe, serwer nie był w stanie obsłużyć żadań a plik był wiecznie nieaktualny, pomimo tego, że był uaktualniany i dystrybuowany coraz szybciej.
+Rozwój sieci wymagał bardziej skalowalnego systemu, gdzie zmiana nazwy wymaga zmiany tylko w jednym miejscu i w którym inne hosty mogą sie dowiedzieć o tej zmianie dynamicznie. Tym właśnie jest DNS.
+
+Paul Mockapetris wymyślił DNS w 1983; oryginalna specyfikacja pojawiła się w RFC 882 i 883, w 1987 publikacja RFC 1034 i RFC 1035 uaktualniła specyfikację DNS i uczyniła RFC 882 i 883 _obsolete_. Wiele innych RFC jest rozszerzeniami tego protokołu.
+
+DNS to rozproszona baza danych, w której każdy host zawiera jednynie część informacji, każdy serwer nazw ma pod swoją kontrolą obszar sieci zwany strefą, przy czym strefy mają strukturę hierarchiczną. Do wymiany komunikatów pomiędzy serwerami nazw jako protokołu transportowego używa się UDP, a do wymiany informacji zawartej w lokalnej bazie każdego serwera używa się TCP.
+
+Jest hierarchicznie dystrybuowaną usługą tłumaczenia nazw na adresy IP i odwrotnie. Dzięki zagwarantowanej nadmiarowości (konfiguracja serwera zapasowego) jest niezawodna.
+Rozproszona struktura wynika z tego, że różne serwery zarządzają różnymi częściami drzewa nazw, a ta hierarchiczna (drzewiasta) natura gwarantuje unikalność każdej nazwy.
+Struktura adresowa DNS nie musi mieć cokolwiek wspólnego z IP; w skład jednej domeny nie muszą wchodzić komputery znajdujące się fizycznie w tej samej sieci.
+
+Wszyscy więksi operatorzy prowadzą dla potrzeb swoich podsieci odrębne serwery DNS, na których przechowywane są kopie danych strefowych.
+
+### Działanie DNS
+
+Usługa nazewnicza domen (DNS) zajmuje się tłumaczeniem nazw hostów na adresy IP i odwrotnie, oraz rozpowszechnia w całym internecie bazę nazw przypisanych adresom IP. Zapewnia usługę rozwiązywania nazw.
+Jest to system przechowywania informacji o nazwach hostów i nazw domenowych w rodzaju rozproszonej bazy danych w sieci, najważniejszą funkcją jest zapewnienie adresu IP dla każdej nazwy hosta i serwerów pocztowych dla każdej domeny.
+
+Składa się z dwóch odrębnych działań.
+
+- procedury odwzorowywania nazwy hosta na adres IP
+- dystrybucji danych opisujących odwzorowanie
+
+DNS to system serwerów oraz protokół komunikacyjny zapewniający zamianę adresów znanych użytkownikom internetu na adresy zrozumiałe dla sieci komputerowej. Dzięki wykorzystaniu DNS nazwa mnemoniczna, np. pl.wikipedia.org może zostać zamieniona na odpowiadające jej adres IP, czyli 207.142.131.245.
+Zapewnia to podstawową usługę w sieci, bo podczas kiedy komputery pracują na adresach IP dla adresowania i rutowania pakietów to ludzie potrzebują używać nazw hostów i domen, np. w URL-ach i adresach mailowych. Więc DNS pośredniczy pomiędzy potrzebami i preferencjami ludzi (wetware) i software.
+
+Strukturalnie rzecz biorąc, DNS to rozproszona baza danych, której zawartość rozsiana jest po całym internecie, a poszczególne serwery DNS na stałe przechowują tylko pewien podlegający im podzbiór danych. Obsługa zapytań stawianych tej ogromnej rozproszonej bazie danych funkcjonuje dzięki temu, że DNS może przesyłać dalej żądania translacji do właściwego serwera w sposób automatyczny, który daje się bardzo dobrze skalować.
+
+Serwery nazw przechowują dwa rodzaje informacji. HMPTODO
+
+- kompletna baza, w której znadują się dane odnośnie całej strefy nazw, są odświeżane w określonych odcinkach czasu
+- przechowywane informacje, kórych żądał w ostatnim czasie lokalny resolver
+
+System DNS składa się z:
+
+- serwera (Name Server) - zawierającego bazę danych o innych komputerach w sieci; nie zawiera informacji o wszystkich maszynach w sieci, ma jedynie adresy lokalnych maszyn zdefiniowane w strefach, które obsługuje oraz informacje o adresach innych serwerów DNS, jeśli chce znaleźć informacje o adresie, którego nie ma w swojej bazie danych wysyła zapytanie do innych serwerów w celu odnalezienia tej nazwy, czyli przechowuje tylko niewielki fragment tzw. przestrzeni nazw domeny, ale może także przechowywać dane pochodzące z innych części przestrzeni nazw w pamięci podręcznej
+- rekursywny serwer DNS, który szuka w systemie odpowiedzi na pytania resolwerów i zwraca im odpowiedzi
+- autorytatywny serwer DNS, który daje odpowiedzi na zapytania z rekursorów, albo w formie odpowiedzi, albo w formie delegacji (odniesienia do innego autorytatywnego serwera DNS).
+- klienta (resolver) - program klienta dzialający na komputerze użytkownika generujący zapytanie DNS (DNS request) na żądanie programów; kieruje zapytania do serwera DNS, jest to program zainstalowany na komputerze, który korzysta z internetu, konfigurowany za pomocą plików:
+- /etc/host.conf - wskazuje jakich usług nazw powinien używać resolver oraz w jakiej kolejności ma to robić, przykładowy wpis
+```
+order hosts,bind
+multi on
+```
+oznacza, że resolwer najpierw sprawdzi plik /etc/hosts a potem będzie wysyłał zapytania do serwera DNS, parametr multi on wskazuje host z pliku /etc/hosts otrzyma wszystkie prawidłowe adresy a nie tylko pierwszy z nich
+  - /etc/resolv.conf - przykładowo:
+```
+search domena.com.pl
+nameserver 127.0.0.1
+nameserver 194.204.159.1
+nameserver 194.204.152.34
+```
+    - Polecenie search definiuje listę domen, jaka będzie używana w celu rozszerzenia nazwy hosta zanim zostanie wysłana do serwera nazw, umożliwia to używanie krótkich nazw hostów - jeśli użytkownik wprowadzi tylko nazwę hosta to będzie ona rozwinięta o nazwę domeny przed wysłaniem do serwera nazw.
+    - Polecenie nameserver wskazuje adres serwera DNS, mogą być ich maksymalnie trzy, zapytania będą kierowane do nicj w takiej kolejności w jakiej zostały wpisane dopóki nie zostanie uzyskana odpowiedź lub nie minie czas oczekiwania resolvera, jeśli serwer nie działa lub jest nieosiągalny zapytanie jest kierowane do następnego.
+
+Dwa znaczenia DNS
+
+- DNS to złożony system komputerowy oraz prawny:
+- zapewnia rejestrację nazw domen internetowych i ich powiązanie z numerami IP
+- realizuje bieżącą obsługę komputerów odnajdujących adresy IP odpowiadające poszczególnym nazwom
+- DNS oznacza również protokół komunikacyjny jakim posługują się maszyny w sieci do pobierania potrzebnych im adresów. Dodatkowo protokół DNS zawiera opis w jaki sposób serwery DNS mają synchronizować między sobą swoje bazy adresowe, oraz sposób łączenia się klientów z serwerami DNS. Częścią specyfikacji protokołu jest również zestaw zaleceń, jak aktualizować wpisy w bazach domen internetowych.
+
+Podstawą technicznego systemu DNS jest ogólnoświatowa sieć serwerów. Przechowują one informację na temat adresów domen. Każdy wpis zawiera nazwę oraz odpowiadający jej adres IP. Wpisy udostępniane są automatycznie, co pozwala na pracę Internetu.
+Po całym świecie rozsiane są DNS, które odpowiadają za obsługę poszczególnych adresów internetowych. Listę 13 głównych serwerów odpowiedzialnych za obsługę poszczególnych domen najwyższego poziomu można pobrać z [ftp://ftp.rs.internic.net/domain/named.root](ftp://ftp.rs.internic.net/domain/named.root)
+
+Najważniejsze cechy systemu DNS:
+
+- Nie ma jednej centralnej bazy danych adresów IP i nazw. Najważniejsze jest te 13 serwerów, które są rozrzucone na różnych kontynentach.
+- Serwery DNS przechowują dane tylko wybranych domen.
+- Każda domena ma co najmniej 2 serwery DNS obsługujące ją; jeśli więc nawet któryś z nich będzie nieczynny, to drugi może przejąć jego zadanie.
+- Serwery DNS przechowują przez pewien czas odpowiedzi z innych serwerów (ang. _caching_), co skraca proces zamiany nazw na adresy IP.
+- Każdy komputer może mieć wiele różnych nazw. Na przykład komputer o adresie IP 207.142.131.245 ma nazwę pl.wikipedia.org oraz de.wikipedia.org
+- Czasami pod jedną nazwą może kryć się więcej niż 1 komputer po to, aby jeśli jeden z nich zawiedzie, inny mógł spełnić jego rolę.
+- Jeśli chcemy przenieść serwer WWW na inny szybszy komputer, z lepszym łączem, ale z innym adresem IP, to nie musimy zmieniać adresu WWW strony, a jedynie w serwerze DNS obsługującym domenę poprawiamy odpowiedni wpis.
+- Protokół DNS posługuje się do komunikacji głównie protokołem UDP.
+- Serwery DNS działają na porcie numer 53.
+
+Diagnostyka: użytkownik komputera ma kilka narzędzi umożliwiających sprawdzenie dlaczego jakaś nazwa mnemoniczna nie jest poprawnie zamieniana na adres IP. Służy do tego polecenie host. Dla przykładu po wpisaniu:
+
+```
+host pl.wikipedia.org
+```
+
+otrzymamy listę adresów IP komputerów, które obsługują stronę internetową pl.wikipedia.org:
+
+```
+Komputer:~# host pl.wikipedia.org
+pl.wikipedia.orgA 207.142.131.245
+pl.wikipedia.orgA 207.142.131.246
+pl.wikipedia.orgA 207.142.131.247
+pl.wikipedia.orgA 207.142.131.248
+pl.wikipedia.orgA 207.142.131.235
+pl.wikipedia.orgA 207.142.131.236
+```
+
+Konfiguracja
+Zwykle dane o konfiguracji protokołu DNS w domowym komputerze przekazywane się przez dostawcę Internetu (ISP).
+Większość operatorów udostępnia w swojej sieci protokół DHCP. Dzięki niemu komputer automatycznie może pobrać adres serwera DNS operatora. Serwer ISP działa najszybciej, bo ma zgromadzone w swojej pamięci najważniejsze adresy i jest blisko użytkownika Internetu.
+Serwery DNS Telekomunikacji Polskiej, to 194.204.152.34 oraz 194.204.159.1. Kiedy system automatycznego pobierania adresów serwera DNS nie działa, wtedy można je ręcznie wprowadzić.
+Lokalną listę serwerów DNS zawiera plik: /etc/resolve.conf, dla przykładu, jeżeli chcemy ręcznie ustawić serwery TPSA jako aktywne to możemy wpisać do tego pliku ich adresy:
+
+```
+194.204.152.34
+194.204.159.1
+```
+
+i wtedy komputer wykorzysta je do odnajdywania nazw DNS.
+Plik: /etc/hosts zawiera listę zdefiniowanych przez użytkownika nazw komputerów:
+
+```
+127.0.0.1 localhost #adres lokalnego interfejsu sieciowego
+192.168.0.1brama #serwer dostępu do sieci
+192.168.0.2kasia #inne komputery w sieci lokalnej
+192.168.0.3janek
+```
+
+Użytkownik może do tego pliku wpisać własne nazwy dla komputerów lokalnych. Dzięki temu, nie będzie musiał wpisywać ich adresów IP, tylko łatwe do zapamiętania nazwy. Nazwa mnemoniczna localhost oznacza komputer, na którym pracujemy (IP 127.0.0.1).
+
+### Bezpieczeństwo
+
+System DNS został zaprojektowany wiele lat temu przez naukowców. Nie przewidzieli oni istnienia światowej sieci używanej do prowadzenia poważnych operacji, ani tego, że sieć może być nadużywana.
+
+Najprostszym przypadkiem jest phishing wykorzystujący podobieństwo adresów.
+Na przykład klient banku używającego adresu bank.pl dostaje mail z prośbą, żeby wszedł na wskazaną linkiem w mailu podstronę bank.pt i zaktualizował dane, w przeciwnym wypadku konto zostanie zablokowane. Klient, który w pośpiechu wykona to polecenie najczęściej nie zauważy, że adres jest podobny, ale nie taki sam (bank.pl - bank.pt), a cała podstrona była tylko zręcznie wykonaną podróbką. Ponieważ podał login i hasło to o ile bank nie stosuje dodatkowych zabezpieczeń w rodzaju tokenów oszuści, którzy wysyłali mail i stworzyli fałszywą stronę mają dostęp do pieniędzy nieuważnego klienta.
+Tego typu oszustwo jest od niedawna jeszcze łatwiejsze: do nazw domenowych dopuszczono znaki spoza ASCII, więc można zarejestrować domenę, która będzie wyglądać nie podobnie, ale identycznie. Dlatego koniecznie używając usług banków internetowych należy wyłączyć obsługę znaków międzynarodowych i zastosować ochronę antyspoofingową.
+
+Pewną ochroną przed tego typu zagrożeniami jest SSL, który zapewnia uwierzytelnienie - weryfikację tożsamości organizacji, która jest właścicielem strony WWW.
+
+DNS poisoning, DNS spoofing, czyli zatruwanie DNS-u jest bardzo groźne, bo nawet po wykryciu fałszywe dane jakiś czas funkcjonują w buforach. Zapobiega się temu używając SSL.
+
+### Hierarchia nazw domen
+
+System DNS jest rozproszoną oraz hierarchiczną bazą danych. Decentralizacja tego systemu osiągana jest przez tzw. delegację domen.
+Każda domena jest podzielona na subdomeny, np. domena root (.) składa się z domen .com, .edu, .pl itd. Każda poddomena może być delegowana do innej organizacji, która będzie odpowiedzialna za utrzymywanie dalszych subdomen w tej domenie (np. domena .pl jest oddelegowana do NASK).
+Delegacja domeny jest jedną z czynności konfiguracji serwera nazw, jeżeli domena zostałą oddelegowana do pewnego serwera to teraz on jest odpowiedzialny za jej rozwój. Kierując wniosek o rejestrację domeny w NASK i podając adresy serwerów nazw, mamy do czynienia z delegacją domeny, wszelkie zapytania dotyczące serwerów w naszej domenie będą kierowane do naszych serwerów nazw. Serwer nadrzędny przekazujący subdomenę nie będzie musial zawierać informacji o wszystkich hostach w naszej domenie, lecz tylko znać adresy serwerów nazw odpowiedzialnych za subdomenę. Jeśli użytkownik wpisze adres nazwa.wroc.edu.pl to kolejno będą przeszukiwane serwery nazw odpowiedzialne za domeny: .pl, .edu.pl, .wroc.edu.pl, nazwa.wroc.edu.pl.
+
+W rzeczywistości jest to trochę bardziej skomplikowane. Najpierw odpytywany jest DNS obsługujący daną maszynę, może on mieć daną informację (bo ktoś o nią pytał i jest w buforze) albo odesłać pytanie do serwerów właściwych dla danych domen. Dopiero gdy brak jest tych danych odpytywane są serwery domen nadrzędnych.
+W najgorszym przypadku zapytanie trafi do któregoś z Root Level Servers, który prześle je do właściwej hierarchii.
+Dla odciążenia jest ich dziewięć (oznaczonych literami od A do I) - mają strategiczne znaczenie dla całego internetu.
+
+DNS składa się z hierarchiczego zestawu serwerów DNS, każda domena lub subdomena ma jeden lub więcej autorytatywnych serwerów DNS, które publikują informacje o domenach i serwerach nazw każdej domeny leżącej "poniżej". Hierarchia autorytatywnych serwerów jest zgodna z hierachią domen, na szczycie każdej hierachi są rootserwery, które odpowiadają kiedy szuka (rozwiązuje) się nazwy domeny TLD.
+
+Każdy serwer nazw musi adresy serwerów głównych, a jego adres musi być znany wszystkim hostom w obsługiwanej przez niego domenie.
+
+Nazwa domenowa musi się składać z dwóch lub więcej części (technicznie etykieta) rozdzielonych kropkami.
+
+- etykieta najbardziej na prawo zawiera _top-level domain_ (TLD) (np. adres isoc.org.pl ma domene TLD .pl).
+- każda etykieta określa poddział (subdivision) lub subdomenę domeny na górze, określenie subdomena wyraża relatywną zależność, a nie absolutną; dla przykładu: org.pl jest poddomeną domeny .pl a isoc.org.pl poddomeną domeny .org.pl
+- leżąca najbardziej na lewo (zwykle) część nazwy domenowej jest nazwą hosta; podczas kiedy reszta nazwy po prostu określa drogę budowania logicznej ścieżki do żądanej informacji, to właśnie nazwa hosta jest nazwą rzeczywistego systemu docelowego, którego IP jest potrzebne; np. www.isoc.org.pl ma nazwę hosta "www".
+
+TLD znajduje się na samym końcu nazwy domeny, na lewo od niej jest Second Level Domain itd, na samym początku jest nazwa komputera (np. www).
+Teoretycznie takie zagnieżdzenie może mieć 127 stopni, a pojedynczy segment, element nazwy (nazwa hosta lub subdomeny) nie może być dłuższy 63 znaków, a cała nazwa nie może przekroczyć całkowitej długości 127 (255[?]) znaków. W praktyce jednak niektórzy rejestratorzy wprowadzają dodatkowe ograniczenia.
+Pierwszy znak w nazwie hosta lub domeny musi być literą (z przedziału A-Z lub a-z), oprócz małych i dużych liter w nazwie mogą występować tylko cyfry oraz znak minusa; w systemie DNS nie są rozróżniane małe i DUŻE litery
+
+Międzynarodowe nazwy domen
+Nazwy domen muszą używać zestawu znaków ASCII przez co wiele języków nie może prezentować swoich nazw natywnie. ICANN zaprobowała system oparty na Punycode IDNA który mapuje ciągi znaków unkodowych na poprawny zestaw znaków DNS jako obejście tego problemu i część rejestratorów zaaprobowała IDNA.
+
+Nowe domeny można tworzyć tylko w obrębie już istniejących, a wszystkie muszą należeć do którejś z TLD.
+
+Przykład:
+
+- .com - Top Level Domain
+- google.com - Second Level Domain - jej właściciel ma prawo do tworzenia kolejnych domen w jej obrębie, na niego przechodzi obowiązek albo utrzymywania właściwych dla tych domen serwerów DNS, albo zlecenie tego swojemu ISP
+- scholar.google.domain - Third Level Domain itd.
+- www.google.com - to nie Third Level Domain ale nazwa hosta (serwer HTTP) jest na początku, nie jest konieczna, bo przeglądarka nie z adresu a z określenia protokołu transmisji (http://) dowiaduje się, że dany adres URL należy do sieci WWW; z tego samego powodu serwer FTP nie musi się nazywać ftp.
+- user@gmail.com - adres pocztowy nie musi zawierać informacji o nazwie serwera pocztowego, wystarczy wskazanie domeny, ponieważ system DNS przy transmitowaniu wiadomości e-mail system DNS ma dodatkowe zadanie ustalenia serwera poczty obsługującego daną domenę, informacja ta może być wprowadzana przez administratorów DNS w odpowiednich miejscach w zbiorach Zone-Files.
+Więc najpierw pytający musi się dowiedzieć jaka jest nazwa serwera pocztowego dla domeny a potem jaki jest jego adres IP.
+
+Strefa to jedna lub kilka domen wraz z subdomenami, które są administrowane przez jeden serwer DNS
+
+Przestrzeń nazw została zbudowana na modelu domenowym, nazwa danego hosta tworzona jest od prawej do lewej. Najpierw są nazwy domeny górnego poziomu, następnie poddomeny i na końcu nazwa hosta oddzielone kropkami.
+
+Struktura usługi DNS definiuje hierarchię nazw domen uporządkowanych w strukturę drzewa, odchodzącą od domeny głównej (ang. root domain) oznaczanej przez pojedynczą kropkę ".".
+Od domeny głownej odchodzi szereg domen najwyższego poziomu (ang. Top Level Domain), których nazwy mają postać przyrostka informującego o typie organizacji (organizacyjne: gTLD) lub dwuznakowego kodu państwa (geograficzne: ccTLD).
+
+gTLD (global Top Level Domain):
+
+- .com - jednostka komercyjna
+- .org - oryginalnie przewidziana dla jednostek niekomercyjnych
+- .net - oryginalnie przewidziana dla organizacji związanych z infrastrukturą internetu (np. ISP) firmy i organizacje zajmujące się administrowaniem i utrzymywaniem sieci komputeowych
+- .biz - jednostki biznesowe
+- .info - informacyjne, ogólne
+- .int - organizacje międzynarodowe lub nie dające się zlokalizować w żadnym konkretnym państwie; istniejące na mocy układów międzynarodowych
+- .gov - jednostki rządowe USA
+- .edu - wyższe uczelnie amerykańskie; przyznające stopnie naukowe
+- .mil - USArmy
+- .coop - organizacje / stowarzyszenia współpracy
+- .name - osoby prywatne
+- .aero - przemysł lotniczy
+- .museum - muzea
+
+ccTLD (countrycode Top Level Domain):
+
+- .us - USA
+- .uk - Wielka Brytania
+- .de - Niemcy
+- .pl - Polska w obrębie takiej domeny powtarzana jest hierachia gTLD
+- .edu.pl
+- .com.pl
+- .org.pl
+- .gov.pl
+- eu - planowana domena dla Unii Europejskiej
+- ...
+
+Nazwy domenowe muszą zapewnić mechanizm określania zasobów w taki sposób by ich nazwy mogły byc używane przez różne systemy, sieci, czy rodziny protokołów.
+
+Kombinacja nazwy hosta, nazwy domeny i nazwy domeny nadrzędnej jednoznacznie identyfikuje host w sieci internet i tworzy tzw. w pełni kwalifikowalną nazwę domenową (FQDN - Full Qualified Domain Name).
+
+Nazwa ta używana jest jako argument dla funkcji czy też lokalnego agenta zwanego resolverem (ang. resolver), który potrafi odnaleźć i sprowadzić informację zwiazaną z daną nazwą np. adres IP określonego komputera.
+Resolver od strony użytkownika jest pojedynczą bazą danych, swego rodzaju interfejsem, który ukrywa rzeczywistą strukturę DNS i przepływ zapytań pomiędzy poszczególnymi serwerami nazw.
+Od strony resolvera informacje o nazwach domenowych zawarte są w rozproszonej bazie danych, której cześciami składowymi są poszczególne serwery nazw. Baza ta jest redundantna, tzn. jeden rekord może się znajdować na dwóch lub więcej serwerach. resolver na początku musi znać adres przynajmniej jednego serwera nazw. Po otrzymaniu zapytania od użytkownika kontaktuje się ze znanym sobie serwerem, od którego otrzymuje żądaną informację bądź też odniesienie do innego serwera nazw.
+
+Strefy czyli fragmenty przestrzeni nazw domeny są zdefiniowane w określonym pliku strefowym (zone file), każdy serwer odpowiada tylko za pewna część nazw i adresów.
+W plikach Zone-Files, w których znajdują się wykazy nazw wszystkich hostów występujących w ramach danej domeny wraz z odpowiadającymi im adresami IP. Ponadto w tym miejscu mogą być zdefiniowane poszczególne subdomeny należące do bieżącej domeny oraz inne serwery DNS jeżeli dana subdomena tworzy samodzielną strefę na innym serwerze DNS. Korzystając ze zbioru Zone-Files serwer może więc udzielać informacji dla wszystkich umieszczonych w nim domen. Serwery DNS mogą ponadto wykorzystywać kilka różnych Zone-Files.
+Nazwa domeny składa się z identyfikatora hosta i nazw poddomen aż do domeny głównej root ".".
+Domeny główne (Top Level Domains) takie jak .org i .com są obsługiwane przez tzw. główne serwery nazw (Root Level Servers) ich lista jest przechowywana w pliku named.root.
+
+Serwer DNS oprócz zamiany nazwy hosta na numer IP realizuje także usługę odwrotną, tzw. Reverse DNS, (_Inverse Lookup_). W tym celu stworzono specjalną domenę .in-addr.arpa. Komputer o adresie a.b.c.d ma w niej adres d.c.b.a.in-addr.arpa (uwaga: oktety IP wpisuje się w odwrotnym porządku). Więc takie wyszukanie polega na odwróceniu oktetów w adresie IP i potraktowaniu go jako subdomeny w ramach domeny .in-addr.arpa.
+Strefy odwrotne zdefiniowane są w oddzielnych plikach (reverse zone files).
+Wszystkie adresy IP są umieszczone w domenie .in-addr.arpa w formie d.c.b.a.in-addr.arpa - jeśli chcemy wiedzieć jaka nazwa jest skojarzona z danym IP musimy zapytać o ten adres. Nie każdy serwer ujawnia takie informacje. Administrator serwera DNS decyduje na poziomie strefy czy ta funkcja jest w niej dozwolona.
+
+DNS umożliwia zmianę ISP bez zmiany adresu, wystarczy w pliku konfiguracyjnym serwera DNS zmodyfikować wpis dotyczący przenoszonego serwera.
+
+### Wyszukiwanie DNS
+
+Seria zapytań: DNS query czyli kolejne przepytywanie serwerów DNS.
+
+Serwery mogą też działać w trybie rekursywnym, w którym podają użytkownikowi ostateczną odpowiedź same wykonując proces poszukiwań serwera właściwego dla danej nazwy. Aby system działał sprawnie wprowadzono kilka zasad.
+
+- każde zapytanie jest kierowane najpierw do resolvera, który ma zadanie odnaleźć dane
+- resolver oraz wszystkie serwery buforują dane aby zmniejszyć ruch w sieci oraz przyspieszyć udzielanie odpowiedzi
+- w buforach odpowiedzi są przechowywane przez czas określony parametrem TTL (czyli zmiany nie rozchodzą sie natychmiast, stare wartości jakiś czas nadal pozostają na serwerach).
+
+Przykład rekursji DNS
+Załóżmy, że aplikacja potrzebuje znaleźć adres IP dla hosta www.isoc.org.pl, więc wysyła zapytanie do lokalnego rekursora.
+
+- zanim zacznie, rekursor musi wiedzieć gdzie znaleźć rootserwery, administratorzy rekursywnych serwerów ręcznie określają (i okresowo uaktualniają) plik zwany _the root hints zone_ który określa adresy IP tych serwerów.
+- proces zaczyna się od wypytywania jednego z tych serwerów, np. "jaki jest adres IP dla www.isoc.org.pl?"
+- rootserwer odpowiada delegacją czyli mówi "nie wiem jaki jest adres serwera www.isoc.org.pl, ale dla domeny .pl informacje ma serwer..."
+- lokalny rekursor pyta wskazany w odpowiedzi serwer o to samo i dostaje podobną odpowiedź: "nie znam adresu hosta www.isoc.org.pl, ale dla domeny .org.pl informacje ma serwer..."
+- ostatecznie ten serwer odpowiada na pytanie żądanym adresem.
+
+Kiedy aplikacja (np. przeglądarka WWW) chce znaleźć adres IP nazwy domenowej, nie musi podążać poprzez wszystkie zarysowane wyżej kroki, ponieważ często korzysta z bufora.
+
+A skąd serwer DNS wie jaki adres IP ma dana domena? Odpowiedź jest podana w pierwszym kroku - adresy IP rootserwerów są ręcznie wpisywane w konfiguracji, a serwery nazw, które są autorytatywnymi dla TLD zmieniają się bardzo rzadko.
+Jednakże serwery nazw które zapewniają autorytatywne odpowiedzi dla większości popularnych domen mogą zmieniać się względnie czesto, jako część usługi rejestracji nazwy domenowej rejestrator zapewnia rejestr z serwerami nazw które będą autorytatywne dla tej domeny i właśnie z tego rejestru korzysta serwer DNS.
+Zwykle serwery nazw są tam określone według nazwy a nie adresu IP. Generuje to następny strumień zapytań DNS by rozwiązać nazwę serwera nazw, kiedy adres IP serwera nazw jest zarejestrowany w strefie macierzystej (_parent zone_) nazywa się to _glue record_.
+
+Bufor i TTL
+Żeby zmniejszyć ilość zapytań DNS generowany przez system projektanci zapewnili mechanizm zmniejszenia obciążenia serwerów DNS. Kiedy resolwer DNS (np. klient) otrzyma odpowiedź przechowa ją w buforze przez określony parametrem TTL czas. Wartość tego parametru ustawiona jest przez administratora serwera udzielającego odpowiedzi. Kiedy takie pytanie się powtórzy resolwer zamiast przesłać je dalej użyje wartości zachowanej w buforze, chyba, że czas TTL upłynął (lub administrator oczyścił bufor).
+
+Czas propagacji
+Ważną konsekwencją tej architekturze opartej na dystrybucji i buforowaniu danych jest to, że zmiany w DNS nie są globalnie widoczne natychmiast. Przykład: jeśli administrator ustawił TTL na 6 godzin dla hosta www.isoc.org.pl a potem zmienił adres IP na który się rozwiązuje www.isoc.org.pl o 12.01 to administrator musi uwzględnić, że osoba, która zbuforowała odpowiedź o 12.00 nie skorzysta z serwera i nie uzyska nowej wartości aż do 18.00. Okres pomiędzy 12.01 a 18.00 nazywany jest czasem propagacji, który najlepiej jest określić jako okres zaczynający się kiedy wprowadza się zmianę w rekordzie DNS a kończy kiedy upływa maksymalna ilość czau określona przez TTL.
+To prowadzi do wniosku, że kiedy zmienia się wpisy w DNS nie wszyscy widzą to samo (RFC 1537).
+
+DNS w realnym świecie
+W rzeczywistym świecie użytkownicy nie mają bezpośrednio do czynienia z resolwerem DNS, używają programów takich jak przeglądarki internetowe (np. Opera lub Firefox) lub klientów poczty (jak Thunderbird). Kiedy użytkownik robi zapytanie które wymaga zapytania DNS (ang. _lookup DNS_) - w rzeczywistości takie jest każde zapytanie które używa internetu - taki pogram wysyła zapytanie do resolwera DNS wbudowanego w system operacyjny.
+Ten resolwer praktycznie zawsze ma bufor zawierający ostatnie zapytania. Jeśli jest tam odpowiedź natychmiast ją dostarcza, a jeśli jej nie ma wysyła zapytanie do przydzielonego serwera (lub serwerów) DNS. W przypadku większości domowych użytkowników ISP przydziela taki serwer, więc użytkownik albo skonfiguruje to ręcznie albo zajmuje się tym DHCP.
+Niektóre aplikacje (np. przeglądarki WWW) mają własne bufory DNS w celu zmniejszenia użycia biblioteki resolwera DNS. Te bufory zwykle mają bardzo krótki czas przechowywania: czasem około minuty.
+
+DNS posiada również inne funkcje.
+
+- Nazwy hosta i adresy IP niekoniecznie pasują jeden do jednego.
+Wiele nazw hostów odnosi się do jednego adresu IP: co w połączeniu virtual hosting, pozwala jednej maszynie obsługiwać wiele witryn.
+Jeden host może odpowiadać wielu adresom IP, w celu zmniejszania błędów i rozładowania ruchu (fault tolerance and load distribution) a także pozwala witrynie zmienić fizyczną lokalizację w sposób niewidoczny dla użytkownika.
+- Jest wiele zastosowań poza tłumaczeniem nazw na adresy IP, dla przykładu MTA używają DNS do dnalezienia serwera pocztowego dla danej domeny.
+- Sender Policy Framework
+- Żeby zabezpieczyć działanie w przypadku awarii komputera wiele serwerów DNS obsługuje każdą domenę. Szczególne znaczenie ma 13 rootserwerów na całym świecie. Programy DNS i systemy operacyjne mają wbudowane ich adresy IP. USA hostuje przynajmniej nominalnie wszystkie rotserwery oprócz dwóch. Ale ponieważ wiele rootserwerów ma zaimplementowany anycast, gdzie wiele różnych komputerów może mieć dzielić ten sam adres IP i dzielić między siebie obszary sieci, większość fizycznych rootserwerów operuje spoza USA.
+
+DNS używa TCP i UDP na porcie 53, żeby obsłużyć zapytania. Prawie wszystkie zapytania DNS zawierają jedno żądanie UDP, po którym idzie odpowiedź UDP z serwera. TCP jest używane kiedy w grę wchodzi kiedy dane odpowiedzi przekraczają 512 bajtów, albo dla takich zadań jak transfer strefy.
+
+### Serwer DNS
+
+Podstawowe konfiguracje serwera nazw:
+
+- Serwer podstawowy (_Master Server_) - główny serwer domeny, ładuje bazę danych z pliku znajdującego się na dysku lokalnym, posiada kompletne o domenie i dlatego określany jest jako autorytatywny (_authoritative_), jego odpowiedzi są zawsze uważane za dokładne
+- Serwer pomocniczy (_Slave Server_) - serwer zapasowy, który odpowiada za domenę w czasie awarii serwera podstawowego, z niego pobiera bazę danych i dlatego również uważany jest za autorytatywny; demon named podczas startu ładuje dane z zapasowej kopii bazy na dysku; później jej zawartość jest porównywana z bazą na głównym serwerze i w razie potrzeby modyfikowana
+- Serwer buforujący (_Caching Server_) - nie jest serwerem autorytatywnym, gdyż wszystkie dane jakie posiada pochodzą z innych serwerów i są przechowywane w pamięci podręcznej, jeżeli nie ma informacji o żądanych domenach, to pyta o nie inne serwery i buforuje te informacje i przy następnym pytaniu skorzysta z bufora, co zwiększa efektywność i zmniejsza ruch w sieci
+
+Serwer nazw może być jednocześnie serwerem podstawowym dla pewnej domeny i pomocniczym dla innej.
+Ponieważ niesprawny DNS oznacza w praktyce odcięcie od sieci koncepcja systemu DNS zakłada, że w celu zapewnienia niezawodnego działania oprócz podstawowego DNS (Primary DNS) musi być zawsze określony także serwer zapasowy (Secondary DNS Server). Więc każda domena czy strefa musi być obsługiwana przez co najmniej dwa komputery, każdy z nich powinien się znajdować w różnych sieciach i korzystać z różnych zasobów (łączy ze światem i sieci energetycznych). Jeden host nazywany jest nadrzędnym a pozostałe podrzędnym. Dzięki temu zawsze istnieją przynajmniej dwa komputery, które mogą udzielić informacji dotyczących określonej strefy. Wszystkie informacje wprowadzane są do serwera nadrzędnego, a pozostałe maszyny je od niego pobierają. Serwery DNS i resolvery są tak skonfigurowane, że jeśli nie mogą się połączyć z serwerem nadrzędnym próbują skontaktować się z podrzędnymi.
+Host obsługujący konkretną domenę zawiera tzw. delegacje (czyli odsyłacze) do serwerów DNS poddomen oraz adresy serwerów domeny głównej.
+
+Typy rekordów DNS HMPTODO
+
+- rekord A, lub rekord adresu mapuje nazwę hosta na jego 32-bitowy adres IPv4.
+- rekord AAAA, lub rekord adresu IPv6 mapuje nazwę hosta na jego 128 bitowy adres IPv6.
+- rekord CNAME, lub rekord nazwy kanonicznej sprawia, że nazwa jednej domeny jest aliasem drugiej; taki alias przejmuje również wszystkie subdomeny i rekordy DNS jak oryginał.
+- rekord MX, lub rekord wymiany maili (_mail exchange record_) mapuje nazwę domeny na listę serwerów wymiany poczty dla tej domeny.
+- rekord PTR (_pointer record_) - mapuje nazwę hosta na kanoniczną nazwę dla tego hosta, ustawienie rekordu PTR dla nazwy hosta w domenie in-addr.arpa, która wiąże się z jego adresem IP jest implementacją odwrotnego wyszukiwania DNS dla tego adresu. Dla przykładu: adresem IP dla www.isoc.org.pl jest a.b.c.d ale rekord PTR mapuje d.c.b.a.in-addr.arpa na jego nazwę kanoniczną.
+- rekord NS, lub rekord serwera nazw - mapuje nazwę domeny na listę serwerów DNS dla tej domeny, w ten sposób tworzy się delegacje.
+- rekord SOA (_start of authority record_) - określa serwer DNS który zapewnia autorytatywne informacje o tej domenie.
+- rekord SRV znany także jako _Service record_ - informacja o doestępnych usługach, ma cztery pola i specyficzną składnię: podkreślenie, nazwa usługi, kropka, podkreślenie, protokół, kropka, nazwa domeny;
+te cztery pola to:
+- Priorytet - rekord MX
+- Waga - używana do dostosowania ruchu do wydajności serwera
+- Port usługi
+- Nazwa hosta, przykład:
+```
+_http._tcp.example.com. SRV 10 5 80. www.example.com
+```
+- rekord TXT pomaga administratorowi umieścić arbitralny tekst w rekordzie DNS, jest używany również w specyfikacji Sender Policy Framework.
+
+Inne rodzaje rekordów po prostu zapewniają informację (np. rekord LOC daje fizyczną lokalizację hosta), lub dane eksperymentalne (dla przykładu rekord WKS daje listę serwerów oferujących dobrze znane usługi takie jak HTTP lub POP3 dla domeny).
+
+oprogramowanie DNS
+
+- BIND (Berkeley Internet Name Domain)
+- djbdns (Daniel J. Bernstein's DNS)
+
+### Dynamiczny DNS
+
+Dynamiczne przydzielanie adresów IP, najczęściej przez DHCP. Również tworzy on pary IP - nazwa domenowa i informacje o tym wysyła do serwera DNS, który automatycznie uaktualnia wpisy dotyczące stref dynamicznych.
+Żeby to było możliwe oprogramowanie serwera musi mieć specjalne opcje. BIND do rekordu SOA dodawane jest polecenie allow-update z numerem IP odpowiedniego komputera, informacje przesyłane między serwerem DHCP a DNS są podpisane kluczem kryptograficznym.
+Zmiany dokonywane są w nadrzędnym serwerze danej strefy, maszyny podrzędne po otrzymaniu polecenia uaktualnienia informacji przekazują ją do komputerów nadrzędnych i dokonywany jest transfer strefy. Dla ułatwienia zarządzania dla adresów dynamicznych tworzone są osobne strefy.
+W domenach dynamicznych czasy TTL są krótkie i powinny być takie same dla wszystkich rekordów.
+
+### BIND (Berkeley Internet Name Domain)
+
+BIND jest najpopularniejszą implementacją serwera nazw, składa się z:
+
+- demona serwera nazw: oddzielny proces o nazwie named
+- bibliotek stanowiących kod resolvera
+
+Główny plik konfiguracyjny to /etc/named.conf. Podobnie jak w języku C komentarze mogą być wprowadzane za pomocą dwóch slaszy (//komentarz) lub (/\*komentarz\*/).
+Elementy odnoszące się do wspólnego zasobu grupowane są w nawiasach klamrowych, a każda instrukcja kończy się średnikiem. Zwykle plik konfiguracyjny zawiera instrukcję options a w niej polecenie directory wskazujące na katalog, w którym będą umieszczone wszystkie pliki stref, pozwala to na dopisanie względnych nazw plików do definicji stref, przykładowo może to wyglądać tak:
+
+```
+options {directory "/var/named";};
+```
+
+Strefy definiowane są za pomocą instrukcji zone, która zawiera nazwę strefy, typ serwera dla tej strefy, wskazuje na źródło z informacją o strefie oraz dodatkowe opcje. Polecenia zone wpisywane są oddzielnie dla każdej strefy, a w przypadku obsługi wielu domen instrukcje mogą występować wielokrotnie.
+
+```
+zone "." {type hint; file "root.hints";};
+```
+
+root.hints zawiera wskazówki dotyczące domeny głównej, wpisane są w konwencji RR (nazwa ttl klasa typ dane), np:
+
+```
+A.ROOT-SERVERS.NET. 5W IN A 198.41.0.4
+```
+
+```
+zone "domena.com.pl" {type master; file "named.domena.com.pl";};
+```
+
+jest to serwer podstawowy (nadrzędny) dla domeny domena.com.pl
+
+```
+zone "0.0.127.in-addr.arpa" {type master; file "0.0.127";};
+```
+
+odnośnik do pliku 0.0.127:
+
+```
+$TTL 1D
+0.0.127.in-addr.arpa IN SOA domena.org. admin.domena.org. (2005010401 10H 1H 3W 12H)
+@ IN NS domena.org.
+1 IN PTR localhost.
+```
+
+gdzie pierwszy wiersz określa domyślną wartość parametru TTL - w tym przypadku informacje o strefie będą przechowywane przez jeden dzień;
+w drugim wierszu definicja strefy: nazwa właściwego serwera DNS i adres administratora (@ zamienione na kropkę), potem jest wersja pliku i dane określające, że serwery podrzędne mają uaktualniać swoje dane co 10 godzin pobierając informacje z serwera nadrzędnego, gdyby serwer był niedostępny operację synchronizacji trzeba ponawiać co godzinę, a po trzech tygodniach bezowocnych prób dane z serwera podrzędnego mają być usunięte, po 12 godzinach mają być usunięte odpowiedzi negatywne;
+dwie ostatnie linie zawierają definicje serwera nazw dla naszej domeny oraz, że host 1 (czyli 1.0.0.127.in-addr.arpa) ma nazwę localhost;
+kropki na końcach nazw oznaczają, że to FQDN a 1 jest częścią domeny 0.0.127.in-addr.arpa.
+
+W katalogu /var/named/ trzeba utworzyć plik named.domena.com.pl, zawierający informację o strefie (zone file).
+
+Przykładowy plik:
+
+```
+; strefa przyklad.pl
+$TTL 5D ; piec dni
+@ IN SOA ns.przyklad.pl. admin.przyklad.pl. (1 10H 1H 3W 12H)
+NS ns ; domyslnie przyklad.pl
+NS ns.dodatkowy.pl. ; podrzedny serwer DNS
+
+MX 1 poczta ; domyslnie poczta.przyklad.pl
+MX 2 poczta.dodatkowy.pl. ; serwer zapasowy
+ns A a.b.c.d ; definicja adresu hosta ns.przyklad.pl. zamiast a.b.c.d IP
+poczta A a.b.c.d ; definicja adresu hosta poczta.przyklad.pl. zamiast a.b.c.d IP
+MX 1 poczta ; rekord MX dla komputera poczta
+MX 2 poczta.dodatkowy.pl.
+
+www A a.b.c.d
+MX 1 poczta
+MX 2 poczta.dodatkowy.pl.
+
+ftp A a.b.c.10 ; oczywiscie tutaj i ponizej zamiast a.b.c.d IP
+user1 A a.b.c.11
+user2 A a.b.c.12
+user3 A a.b.c.13
+
+; delegacja poddomeny o nazwie poddomena1
+; bedzie obslugiwana przez hosta ns.poddomena1.przyklad.pl
+poddomena1 NS ns.poddomena1
+poddomena1 NS ns.dodatkowy.pl.
+ns.poddomena1 A a.b.c.d ; zamiast a.b.c.d IP
+```
+
+A w pliku 127.0.0:
+
+```
+10 PTR ftp.przyklad.pl.
+11 PTR user1.przyklad.pl.
+12 PTR user2.przyklad.pl.
+13 PTR user3.przyklad.pl.
+```
+
+Po każdorazowej zmianie w zbiorze named.conf oraz w plikach strefowych należy przeładować demona named, np. poleceniem:
+
+```
+/ścieżka/bind restart
+```
+
+Lub wysyłając sygnał HUP poleceniem:
+
+```
+kill -HUP 'cat /var/run/named.pid'
+```
+
+Uruchamiany jest poleceniem:
+
+```
+/ścieżka/bind start
+```
+
+Logi sa w np. /var/log/syslog.
+Diagnostyka: uruchomienie z opcją -d numer gdzie numer to liczba od 1 do 11, im większy tym większa szczegółowość diagnozy
+
+```
+kill -9 'cat /var/run/named.pid' /usr/sbin/named -d &lt;numer&gt; &
+```
+
+Testowanie serwera przy pomocy programu nslookup - przez wysyłanie zapytań do serwera tak jak to czyni resolver.
+
+W celu zrzucenia bufora demona named do pliku named_dump.db należy skorzystać z polecenia:
+
+```
+kill -INT 'cat /var/run/named.pid'
+```
+
+To spowoduje powstanie pliku named_dump.db zawierającego pełną informację o danych znajdujących się w buforze.
+
+### Administracja domen
+
+Właścicielem domeny jest organizacja zarządzajaca jej dzierżawą (np. do pewnego czasu monopol na gTLD miał InterNIC - Internet Network Information Center), w każdym kraju istnieją jednostki zajmujące się rejestracją adresów w tzw. domenach narodowych, w Polsce jest to NASK (Naukowa i Akademicka Sieć Komputerowa).
+Domeny nie można kupić, można ją tylko wydzierżawić.
+
+Za każdą domenę odpowiada jakiś konkretny registrar, który ma obowiązek udostępnić usługę WHOIS. Rejestrując domenę trzeba wskazać IP maszyny
+
+Prawni użytkownicy domen:
+Rejestrator (_registrant_):
+Nikt naprawdę nie posiada nazwy domenowej oprócz NIC (Network Information Centre) lub _domain name registry_.
+Większość NIC na świecie otrzymuje roczną opłatę od prawnego użytkownika za korzystanie z nazwy domenowej (jest to rodzaj umowy leasingowej), zależnie od konwencji nazewniczej registracji prawni użytkownicy są znani jako rejestratorzy lub jako właściciele domen (_registrants_ lub _domain holders_).
+ICANN utrzymuje kompletną listę rejestratorów domen (_domain registries_) na świecie. Można znaleźć użytkownika nazwy domenowej przeszukując bazę danych WHOIS utrzymywaną przez głównych rejestratorów.
+Dla większości z ponad 240 krajów rejestratorzy kodów krajów TLD (ccTLD) mają własne autorytatywne WHOIS (registrant, serwer nazw, data ekspiracji), dla przykładu: DENIC, niemieckie NIC ma autorytatywne WHOIS dla domeny .de.
+Jednakże niektórzy (np. VeriSign) używają modelu registry-registrar. Dla nazw domenowych .com i .net ma tylko podstawowy WHOIS (registrar i serwery nazw) a szczegółowy WHOIS można znaleźć u rejestratora.
+Od około 2001 większość gTLD registracji przyjęło tzw. gruby model rejestracji (_"thick" registry approach_) np. udostępniając autorytatywne WHOIS stref domenowych a nie rejestratorów.
+
+- Kontakt administracyjny
+Rejestrator zwykle wyznacza kontakt administracyjny do zarządzania nazwą domenową, jego funkcje to (na przykład):
+- obowiązek dostosowania się do wymagań registracji domeny w celu zachowania prawa do użycia nazwy domenowej
+- aktualizacja fizycznego adresu, emaila i numeru telefonu w bazie WHOIS
+- Kontakt techniczny
+Zarządza serwerami nazw dla nzwy domenowej, jego funkcje to:
+- upewnienie się, że konfiguracja nazwy domenowej zgadza się z wymaganiami domain registry
+- auktualnienie strefy domenowej
+- zapewnienie funkcjonalności 24x7 serwerów nazw (od czego zależy dostępność nazwy domenowej)
+- Kontakt bilingowy
+
+
+Administracja DNS
+DNS, jako system organizacyjny, składa się z dwóch instytucji - IANA i ICANN. Nadzorują one ogólne zasady przyznawania nazw domen i adresów IP. Jednak te dwie instytucje, nie są w stanie zajmować się całym światem i dlatego przekazują swoje uprawnienia na szereg lokalnych instytucji i firm. W wielu krajach domena internetowa przyznana przez system DNS staje się własnością, tego kto pierwszy ją kupi. W Polsce jest ona tylko wynajmowana na określony czas. Jeżeli ktoś zrezygnuje ze swojej popularnej domeny i zwróci ją administratorowi DNS, to może się spodziewać, że trafi ona w niepowołane ręce.
+
+Instytucje administrujące DNS na świecie:
+
+- ICANN-IANA - nadzór ogólny nad nazewnictwem i strukturą domen "topowych" (.pl, .gov itp.)
+- VeriSign Global Registry Services - rejestracja i nadzór nad domenami: .net, .org, .com
+- Rząd USA - rejestracja i nadzór nad domenami - .mil i .gov
+- NeuLevel - rejestracja i nadzór nad domeną - .biz
+- SITA - rejestracja i nadzór nad domeną - .aero
+- Afilias Limited - rejestracja i nadzór nad domeną - .info
+- Global Name Registry - rejestracja i nadzór nad domeną - .name
+- rządy poszczególnych krajów: rejestracja i nadzór nad domenami "krajowymi", np. *.pl. (zwykle rządy poszczególnych krajów przekazują ten nadzór wyspecjalizowanym instytucjom)
+
+Instytucje administrujące DNS w Polsce
+W Polsce dostęp do systemu DNS jest bardzo ograniczony. W większość krajów rejestracja domeny internetowej wiąże się z symbolicznymi opłatami. W Polsce koszty są bardzo wysokie, nawet na domenach niekomercyjnych. W efekcie Polska jest jednym z krajów rozwiniętych, który ma najmniej zarejestrowanych adresów DNS. Dodatkowo administrator DNS może odmówić rejestracji domeny, pod błahym pretekstem.
+
+Instytucje administrujące DNS:
+
+- NASK - nadzór nad domeną .pl jako całością, oraz obsługa rejestrowania domen: .com.pl, .biz.pl, .org.pl, .net.pl oraz kilkudziesięciu innych domen "funkcjonalnych" kontrolowanych przez NASK (łącznie z np. sex.pl) oraz części domen lokalnych, np. .waw.pl
+- IPPT PAN - rejestracja domeny .gov.pl
+- ICM - .art.pl, .mbone.pl
+- Fundacja Batorego - .ngo.pl
+- TASK - .med.pl
+- SGH - .irc.pl
+- Politechnika Wrocławska - usenet.pl
+
+Oprócz tego kilkaset domen typu nazwa-firmy.pl wykupiły od NASK-u rozmaite firmy i mają one prawo zarządzać tymi domenami we własnym zakresie.
+Dokładne informacje o rejestracji domen .pl znajdują się na stronie: [http://www.dns.org.pl/rejestracja-domen/](http://www.dns.org.pl/rejestracja-domen/)

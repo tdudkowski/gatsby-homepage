@@ -1,0 +1,434 @@
+---
+title: "React"
+comment: ""
+section: "it"
+subsection: "js"
+---
+### React - start
+
+Facebook 2013. Utworzenie środowiska deweloperskiego w kilku krokach:
+
+Ten artykuł to notatki sporządzone przy okazji kursu [React od podstaw. Teoria i praktyka](https://www.udemy.com/course/kurs-react-od-podstaw/) autorstwa Bartka Borowczyka. Który to kurs serdecznie polecam, jak zresztą wszystkie kursy robione przez Bartka - więcej: [Websamuraj - Kursy online z programowania i tworzenia stron](https://websamuraj.pl/).
+
+["The Concepts You Should Know in React"](https://icodemag.com/the-concepts-you-should-know-in-react/)
+
+### Niezbędnik
+
+- Środowisko uruchomieniowe [Node.js](https://nodejs.org/en/), zawiera m.in. silnik V8. Domyślnie dołączany jest menadżer pakietów npm. Instalacja zależna od systemu operacyjnego jest opisana dokładnie na stronie ([install Node.js 12 in Ubuntu 19.04 | NodeSource Node.js Binary Distributions / Debian and Ubuntu based distributions (deb) / Manual installation](https://github.com/nodesource/distributions/blob/master/README.md#debmanual)). Składniki:
+    - Menedżer pakietów: domyślnie w Node.js zawarty jest [npm](https://www.npmjs.com). Innym popularnym menedżerem pakietów jest [yarn](https://yarnpkg.com/). [Gant Laborde "NPM vs Yarn Cheat Sheet"](https://shift.infinite.red/npm-vs-yarn-cheat-sheet-8755b092e5cc)
+    - [libuv](http://libuv.org) - biblioteka udostępniająca funkcje systemu operacyjnego, m in zapewnia asynchroniczność; również jest integralną częścią Node.js
+    - [Repl.it - Online Nodejs Editor and IDE](https://repl.it/languages/nodejs) - interfejs poleceń Node.js; tutaj udostępniony online i można poćwiczyć
+    - [nodemon](https://nodemon.io) Node.js monitor, to już się przydaje do pracy z samym Node.js i frameworkami, które go używają, do Reacta nie jest potrzebny.
+- Edytor, np [Visual Studio Code](https://code.visualstudio.com/) z dodatkami: Live Server, Prettier, snippety (np. Simple React Snippets, by Burke Holland), Material Icon, itp. [Extensions for the Visual Studio family of products](https://marketplace.visualstudio.com/vscode)
+- W przeglądarce dodatki/rozszerzenia: [React Developer Tools](https://chrome.google.com/webstore/search/react%20developer%20tools) i [JSON Viewer](https://chrome.google.com/webstore/search/json%20viewer).
+- Last but not least sam [React](https://reactjs.org/) i kompilator [Babel](https://babeljs.io/); tak jak opisane jest poniżej z CDN lub React App.
+
+Czyli podsumowując, z powyższego oprócz rzeczy, które i tak są zainstalowane takie jak przeglądarka czy edytor jedynym elementem do zainstalowania jest Node.js.
+
+#### Dodatkowe narzędzia
+
+- [webpack](https://webpack.js.org), zaawansowany menedżer pakietów, którego zadaniem jest bundling czyli kompilacja wszystkich plików w zoptymalizowany zestaw plików czytany przez przeglądarkę.
+- Bazy danych: [MongoDB](https://www.mongodb.com/) ([MongoDB Atlas](https://www.mongodb.com/cloud/atlas) cloud MongoDB service.), [Firebase](https://firebase.google.com).
+- Framework [Express](http://expressjs.com).
+- [Heroku](https://www.heroku.com) - Cloud Application Platform
+- [Netlify](https://www.netlify.com) - All-in-one platform for automating modern web projects
+- Narzędzia JSON: [JSONPlaceholder](https://jsonplaceholder.typicode.com) | [JSONLint](https://jsonlint.com).
+- API: darmowe źródła do testowania - przeniesione do artykułu o Node.js
+- Przy okazji: [HTTP Cats](https://http.cat/) [What is Docker?](https://kalob.io/blog/what-is-docker/), [UFO Test: Framerates](https://testufo.com), [GreenSock - GSAP](https://greensock.com), ["How to Turn Your Website into a Mobile App with 7 Lines of JSON"](https://www.freecodecamp.org/news/how-to-turn-your-website-into-a-mobile-app-with-7-lines-of-json-631c9c9895f5/)
+
+### React na trzy sposoby
+
+W dokumentacji jest napisane, że Reacta można użyć na trzy sposoby:
+
+- narzędzia online: [Codepen](https://reactjs.org/redirect-to-codepen/hello-world), [CodeSandbox](https://codesandbox.io/), [Glitch](https://glitch.com/edit/#!/remix/starter-react-template), [StackkBlitz](https://stackblitz.com/edit/react-73ahgg) - to się przydaje na początek
+- Dodać do pliku w postaci CDN-ów
+- Stworzyć w środowisku deweloperskim React App
+
+### Dodawanie do plików
+
+- [Przykładowy plik do obejrzenia](https://reactjs.org/docs/getting-started.html)
+- [CDN](https://reactjs.org/docs/cdn-links.html) - są tam dwie biblioteki React (React i React DOM) oraz Babel; z linków małpę i numer wersji można usunąć wtedy dociągnie się najnowsza
+
+Jeżeli otworzymy przykładowy plik w przeglądarce i widzimy Hello World, a w konsoli obiekt React, to znaczy że wszystko jest w porządku.
+
+Koniecznie trzeba podać typ skryptu w przypadku kompilatora Babel, w każdym innym można pominąć.
+
+```
+<script type="text/babel">
+```
+
+Błąd: "Cross origin requests are only supported for HTTP." wynika z otwarcia pliku jako //file; trzeba użyć localhosta.
+
+Tak wygląda plik HTML z dodanymi CDN-ami React.
+
+```
+ <body>
+ <div id="root">
+   <!-- kontener na aplikację react  -->
+ </div>
+ <script src="https://unpkg.com/react/umd/react.development.js"></script>
+ <script src="https://unpkg.com/react-dom/umd/react-dom.development.js"></script>
+ <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+ <script type="text/babel" src="App.js"></script>
+</body>
+```
+
+Moduł React
+
+```
+ class App extends React.Component {
+
+    state = {
+        state_element: state_value
+    }
+
+    handleEvent = () => {
+        this.setState({
+            state_element: this.state.state_element
+        })
+    }
+
+    render() {
+        return (
+            <>
+                {/* komentarz w nawiasach */}
+                <button disabled={this.state.order ? false : true} onClick={this.handleEvent}>-</button>
+                <span> {this.state.state_element} </span>
+                <button disabled={this.state.storage === this.state.order ? true : false} onClick={this.handleEvent}>+</button>
+            </>
+        )
+    }
+}
+
+ReactDOM.render(<App />, document.getElementById('root'))
+```      
+
+Powyżej są wersje deweloperskie; wersja produkcyjna jest tu: [CDN Links](https://reactjs.org/docs/cdn-links.html).
+
+### React App
+
+Jest to bardziej zaawansowana metoda. Bardziej wymagająca, ale daje więcej możliwości. Przede wszystkim umożliwia stworzenie aplikacji z dołączonymi dowolnymi bibliotekami. W całości po ściągnięciu i rozpakowaniu takie środowisko zajmuje około 150 MB. Po skończeniu pracy eksportuje się wersję produkcyjną, która jest zminimalizowana i zoptymalizowana.
+
+- [React App](https://reactjs.org/docs/create-a-new-react-app.html) | [ReactDOMServer](https://reactjs.org/docs/react-dom-server.html)
+- ["Optimal file structure for React applications"](https://medium.com/@Charles_Stover/optimal-file-structure-for-react-applications-f3e35ad0a145) | ["A general and flexible project structure that works for all projects in any ecosystem"](https://dev.to/nullvoxpopuli/a-general-and-flexible-file-structure-that-works-for-all-projects-in-any-ecosystem-1lp9)
+- ["Create a React app from scratch with Webpack and Babel"](https://www.sentinelstand.com/article/create-react-app-from-scratch-with-webpack-and-babel)
+
+Poniższe polecenia są z manuala. Pierwsze tworzy środowisko, drugim wchodzimy do katalogu, trzecim uruchamiamy serwer.
+
+```
+ npx create-react-app my-app
+ cd my-app
+ npm start
+```   
+
+- Jeżeli na końcu polecenia jest kropka to tworzy aplikację w bieżącym katalogu.
+- Polecenie uruchamiające musi być wydane w katalogu aplikacji. Domyślny adres serwera to \[ http://localhost:3000/ \] Zatrzymanie serwera Ctrl+C.
+- W katalogu aplikacji cztery katalogi:
+
+W efekcie powstaje następująca hierarchia katalogów:
+
+- /.git - repozytorium git
+- /node\_modules - katalog z domyślnymi i doinstalowanymi modułami
+- /public - pliki dla serwera, do wyświetlenia na stronie, nie jest pakietowane
+- package.json - konfiguracja, zależności, co jest zainstalowane i wersje pakietów
+- /src - tutaj pracujemy
+    - index.js - główny plik aplikacji, wszystkie importy i połączenia, generuje stronę
+    - index.css - CSS
+    - /components - można utworzyć osobny katalog dla komponentów, dla większego porządku
+        - App.js - plik komponentu
+        - App.css
+
+Przykładowy plik index.js:
+
+```
+ import React from 'react';
+ import ReactDOM from 'react-dom';
+ import './index.css';
+ import App from './components/App';
+ import * as serviceWorker from './serviceWorker';
+ 
+ ReactDOM.render(<App />, document.getElementById('root'));
+ 
+ serviceWorker.unregister();
+```
+
+Przykładowy plik App.js:
+
+```
+ import React, { Component } from 'react';
+ import './App.css';
+ 
+ class App extends Component {
+   render() {
+     return (
+       <div className="App" >
+         <p>no elo </p>
+       </div>
+     )
+   }
+ }
+ 
+ export default App;
+```
+
+Instalowanie dodatkowej paczki:
+
+```
+ npm install nazwa_biblioteki
+```
+
+Żeby biblioteka działała trzeba ją importować, moduły importuje się wskazując ścieżkę:
+
+```
+ import Nazwa from 'nazwa_biblioteki';
+ import Nazwa_komponentu './Komponent';
+```
+
+Nazwy określa się przy imporcie i można je zmieniać z domyślnych, ale nazwy pobieranych muszą się zgadzać. Jeżeli App ma końcówkę .js można ją pominąć, wszystkie inne trzeba wpisać. Na końcu musi być polecenie eksportu, żeby inne moduły i główna strona mogły korzystać z zawartości pliku. Nazwa pliku powinna być zgodna z nazwą klasy, którą zawiera.
+
+Składniki:
+
+- serwer
+- Babel - tłumaczy na starszą wersję.
+- Webpack pakietuje (bandluje) pliki. Dynamicznie utworzony /static/js/bundle.js - cały js wynikowy.
+- Eslint poprawność kodu, wskazywanie błędów składni.
+
+### Komponenty klasowe i funkcyjne
+
+Aplikacja React składa się z komponentów - trochę przypominają moduły JS. Nazwy wszystkich komponentów piszemy zaczynając od dużej litery
+
+Każdy komponent posiada trzy cechy:
+
+- rodzaj - tag
+- właściwości tzw. propsy, czyli obiekty przekazujące dane; komponent posiada je zawsze, jeśli nie są zdeklarowane to są nullem, a domyślną wartością atrybutu bez przypisanej wartości jest true
+- treść czyli dzieci (children) elementy zagnieżdzone, które również mogą być komponentami
+
+Komponent można zapisać na dwa sposoby:
+
+- uzywając funkcji React.createelement()
+- JSX
+
+Tak wygląda przykładowy komponent React, jak widać do funkcji podajemy trzy parametry określające te trzy cechy komponentu: rodzaj propsy i treść:
+
+```
+ let component = React.createElement(
+  "div",
+  { style: { color: "black" } },
+  \`Treść przykładowego komponentu\`
+);
+
+ReactDOM.render(welcome, document.querySelector("#root"));
+```
+
+W praktyce sposób ten nie jest stosowany, bo dużo prościej da się to uzyskać JSX-em. Nie ma żadnego powodu, żeby stosowac powyższy zapis, popatrz na niego, wiedz, że istnieje i zapomnij. Wszystko poniżej zapisane jest w JSX.
+
+JSX jest zwykłym JavaScriptem i obrazki importujemy do niego jako obiekty, czyli w nawiasach klamrowych. Jest to funkcja wyświetająca rezultat React.CreateElement - stąd domyślny parametr children jako props. JavaScript umieszczamy w nim w wąsach.
+
+JSX może mieć tylko jedno dziecko, jako wrappera, który nie dodaje, żadnych znaczników do kodu można użyć React fragment:
+
+```
+<React.Fragment>
+// starsza wersja
+</React.Fragment>
+
+<>
+// młodsza, skrócona
+</>
+```
+
+Istnieją dwa rodzaje komponentów:
+
+- **klasowe** (stanowe) klasa ES6, która:
+    - jest rozszerzeniem React.Component
+    - może przechowywać stan (stany, właściwości mające ulec zmianie) oraz zmieniać go metodą setState() umieszczoną wewnątrz funkcji - ta metoda zmienia stan i tylko ona dokonuje ponownego renderowania zawartości komponentu
+    - posiada cykl życia (lifecycle, np. componentDidMount)
+    - W zasadzie dane spływają z góry drzewa komponentów, ale w komponencie podrzędnym można zmienić stan w komponencie nadrzednym za pośrednictwem funkcji uruchamianej przez propsy z komonentu podrzędnego
+    - domyślne wartości propsów można przekazać w wartości statycznej klasie static defaultProps{ }
+    - przy zmianie stanu (this.state), może generować jakiś element na nowo z nowymi propsami, dostępne są this.props; zmiany stanu można przkazać do innych komponentów za pomocją obiektu props
+    - posiada logikę, taki komponent wykonuje jakieś działanie
+    - ciało funkcji zawarte jest w metodzie render(), która musi coś zwracać, czyli musi mieć return
+    - jeżeli jest komponentem podrzędnym zawsze odbiera propsy, nie trzeba ich deklarować
+- **funkcyjne** (do wersji 16.8: bezstanowe) jest to prosta funkcja JS, więc nie można użyć setState(); najczęściej funkcja strzałkowa. Są prostsze, łatwiejsze w edycji i czytaniu. Ich stosowanie sprzyja oddzieleniu kontenera od komponentów prezentacji. Przyjmują dane i wyświetlają je: UI. Używają propsów, ale tylko od odczytu. Cykl życia nie ma zastosowania. Jeżeli jedynym zadaniem komponentu jest wyświetlenie czegoś (renderowanie) powinien to być komponent funkcyjny. Klasyczny przykład to button. W wersji 16.8 (6 lutego 2019 - [ReactJS "Introducing Hooks"](https://reactjs.org/docs/hooks-intro.html)) pojawiły się hooki (działają tylko w komponencie funkcyjnym), które umożliwiają zarządzanie stanami. Spowodowało to poważne ograniczenie stosowania komponentów klasowych, bardziej złożonych i trudniejszych w utrzymaniu.
+
+Struktura aplikacji wygląda następująco: komponenty są zagnieżdżane jeden w drugim w hierarchii "drzewka", z tym że może być wiele instancji danego komponentu w tej hierarchii. Na samej górze są komonenty klasowe zawierajęce stan, który może być zmieniany przez funkcję w komponencie stanowym za pomocą this.setState({ }), wartości tych stanów są przekazywane w dół hierarchii przez propsy do komponentów funkcyjnych. Docelowo cały interfejs powinien być zbydowany z komponentów funkcyjnych, których zadaniem jest wyświetlenie treści i elementów interakcyjnych interfejsu. Komponent funkcyjny tylko wyświetla treść, wszystkie zmiany wprowadzone przez użytkownika przekazuje propsami do funkcji w komponencie klasowym, tylko w komponentach klasowych są funkcje, najwazniejsze są te zmieniające stan. Domyślnie na szczycie tej hierrchii jest App.js - konwencja taka sama jak index.html. Komponent pownien być klasowy tylko jeśli jest taka konieczność. Powinno być ich jak najmniej i dzięki hookom można w ogóle się ich pozbyć.
+
+Komponenty funkcyjne są zagnieżdżane w kompoentach klasowych (lub w innych komponentach funkcyjnych) w postaci tagów (dlatego, żeby nie zaszła pomyłka nazwy zaczynają się od dużej litery), wewnątrz tych tagów przekazujemy propsy (skrót od properties czyli wlasciwości komponentu). Służą do przekazywania danych pomiędzy komponentami - jak argumenty przekazywane do funkcji. Propsy tworzą atrybuty przekazane z chwilą wywołania komponentu. Domyślne wartości propsów można też przekazać w App.defaultProps = { } - poza komponentem funkcyjnym. Uwaga: key nie jest przekazywane do propsa. Dla komponentów funkcyjnych są tylko do odczytu, nie podlegają zmianie. W propsach można przekazać też funkcje zawarte w komponentach klasowych.
+
+I tak wygląda podstaowy bieg danych w aplikacji React. Dzięki propsom funkcje zawarte w komponentach klasowych są uruchamiane (także z parametrem) z komponentów funkcyjnych. Funkcje te dzięki metodzie this.setState() modyfikuja stany i każda zmiana tych stanów na bieżąco jest uaktualniana i również przez propsy nowa wartość przekazywana jest w dół do komponentóow funkcyjnych modyfikując treść. Wszystko to dzieje się z punktu widzenia użytkownika dzieje się natychmiast (bo aplikacja jest załadowana w przeglądarce - chyba, że musi mieć połaczenie z bazą danych) i odbywa się bez przeładowania strony, zmieniany jest tylko ten element, który zmieniły propsy.
+
+Należy pamiętać, że kod jest wykonywany asynchronicznie, a uaktualnianie state jest na końcu. Oznacza to, że nawet jeśli kod nadający nową wartość stanu (damjmy na to stateParam) jest przed elementem, który jej używa, to i tak zmiana stanu nastąpi dopiero po wykonaniu wszystkich zadań, co możemy sprawdzić dając console.log(stateParam) na końcu funkcji. Zmiana stanu z setState({ }) jest zawsze ostatnia w kolejce i wszystkie inne zadania zostaną wykonane wcześniej. Czyli w funkcji zawsze dostaniemy poprzedni stateParam (albo ninaczej mówiąc stare propsy). Tak działa React i to się nie zmieni, to feature nie bug. Jeżeli potrzebujemy aktualnego propsa możemy użyć funkcyjnego setState, czyli takiego, który przekazuje do wewnątrz nie obiekt, a funkcję. W funkcji tej przekazujemy wszystkie stany (najłatwiej to sprawdzić w console.log) i jest obojętne jakiej nazwy użyjemy, ale przyjęło się używać prevState. Tu w przykładzie użyta jest dodatkowa funkcja, która generuje nową wartość propsa na podstawie wartości dwóch innych - i obie są aktualne. Używa się tego jeżeli zmieniamy poprzedni stan nie znając jego wartości - rodzaj przełącznika. Nie jest potrzebne w funkcjach, które po prostu ustawiają określoną wartość.
+
+```
+ functionToGetFreshProps = () => {
+    this.setState(prevState => ({
+      stateParam1 : this.functionMakingValue(prevState.stateParam2, prevState.stateParam3)
+    }));
+  };  
+```
+
+Komponent klasowy
+
+```
+ class Welcome extends React.Component {
+    render() {
+      return <h1>Hello, {this.props.name}</h1>;
+    }
+  }
+```
+      
+
+Komponent funkcyjny
+
+```
+ function Welcome(props) {
+    return <h1>Hello, {props.name}</h1>;
+  }
+```
+
+- ["React Functional or Class Components: Everything you need to know"](https://programmingwithmosh.com/react/react-functional-components/)
+- [Cem Eygi "React Functional Components, Props, and JSX – React.js Tutorial for Beginners"](https://www.freecodecamp.org/news/react-components-jsx-props-for-beginners/)
+- [Eduardo Vedes "How to become a pro with React setState() in 10 minutes"](https://www.freecodecamp.org/news/get-pro-with-react-setstate-in-10-minutes-d38251d1c781/)
+- [Kingsley Silas "Understanding React \`setState\`"](https://css-tricks.com/understanding-react-setstate/)
+- ["Functional Components vs Class Components"](https://guide.freecodecamp.org/react/functional-components-vs-class-components/)
+- ["Understanding React Components (Part 1): Working with Functional Components"](https://icodemag.com/understanding-react-components-part-1-working-with-functional-components/)
+- ["Functional vs Class Components in React - Everything you need to know"](https://morioh.com/p/af19b4e52fd7/functional-vs-class-components-in-react-everything-you-need-to-know)
+- [Naga Chaitanya Konada: "Creating React Components - different syntaxes"](https://dev.to/chaituknag/creating-react-components-different-syntaxes-55o2)
+- [Mehul Mohan "React Server Components Explained"](https://www.freecodecamp.org/news/react-server-components/)
+
+Ze względu na architekturę aplikacji dla bardziej precyzyjnego zarządzania zasięgiem (scope) komponenty dzielimy na dwa rodzaje:
+
+- publiczny - wykorzystywant wielokrotnie w innych komponentach naszej aplikacji, udostępniamy aplikacji
+- prywatny - wykorzystywany jest wyłącznie przez jeden komponent nadrzędny
+
+### Import i export
+
+Do wymiany danych pomiędzy modułami, który jest niezbędny żeby przetwarzać dane poza zasięgiem (scope) funkcji, używamy importów i exportów. Mamy ich dwa rodzaje:
+
+- CommonJS (CJS) używany kiedyś w Node.
+```
+ const package = require('module-name')
+```
+- ES modules, który jest aktualnym standardem w React
+```
+ import package from 'module-name'
+```
+
+[React lifecycle methods diagram](https://projects.wojtekmaj.pl/react-lifecycle-methods-diagram/)
+
+- [Ruth M. Pardee "Passing Data Between React Components"](https://medium.com/@ruthmpardee/passing-data-between-react-components-103ad82ebd17)
+- Flavio Copes ["Introduction to ES Modules"](https://flaviocopes.com/es-modules/)
+- [Lin Clark "ES modules: A cartoon deep-dive"](https://hacks.mozilla.org/2018/03/es-modules-a-cartoon-deep-dive/)
+- rwieruch: ["How to use CSS Modules in React?"](https://www.robinwieruch.de/react-css-modules)
+
+Mamy dwa rodzaje eksportu:
+
+- Named Export wymusza użycie klamry oraz identycznej nazwy w exporcie i imporcie, może być ich więcej niż jednen na moduł
+- Default Export może być tylko jeden na moduł i wymaga parametru default. Jeżeli jest tylko jeden export zaimportować można pod inną nazwą
+
+### CSS
+
+Inline
+
+```
+<p style={{border: '1px solid #999', fontSize: 20}}>treść</p>
+```
+
+Zamiast tak wpisanych można umieścić zdefiniowany przez const (przed render) obiekt. To daje możliwość zrobienia warunków.
+
+```
+ const style_p = {border: '1px solid #999', fontSize: 20}
+
+ <p style={warunki ? style_p : inne_style }>treść</p>
+```
+
+Najczęściej style importuje się z arkuszy podając ścieżkę względną. Stylowaniu podlegają także importowane komponenty. Wszystkie są globalne, tzn podlegają bandlowaniu podczas kompilacji.
+
+```
+ import '../sciezka/wzgledna/arkusz.css';
+```
+
+Bootstrap, instalacja:
+
+```
+ npm install bootstrap
+```
+
+Import, najlepiej w pliku App.js, wtedy wszędzie można używać klas bootstrapowych.
+
+```
+import 'ścieżka/dostępu/bootstrap.min.css';
+```
+
+SASS
+
+```
+ npm install node-sass
+```
+
+- [Dmitry Nozhenko "9 Ways To Implement CSS in React JS"](https://medium.com/@dmitrynozhenko/9-ways-to-implement-css-in-react-js-ccea4d543aa3)
+- [Cristian Vasta "Style Your Application Using Sass with React"](https://morioh.com/p/66a772168ef5)
+
+### React Router
+
+Instalacja. Dla aplikacji webowych w katalogu aplikacji:
+
+```
+ npm install react-router-dom
+```
+
+Dla React Native
+
+```
+ npm install react-router-native
+```
+
+Diagnostyka
+
+```
+ npm audit
+ npm audit fix
+```
+
+Komponenty
+
+- BrowserRouter (też BrowserRouter as Router)
+- Link i NavLink
+- Route
+- Switch
+- Redirect
+
+Import poszczególnych komponentów wygląda tak:
+
+```
+ import { BrowserRouter, NavLink, Route, Switch } from "react-router-dom";
+```
+
+Style CSS. Link i NavLink przypisują automatycznie styl active dla aktywnego elementu. NavLink ma dodatkowe możliwości: można użyć styli wpisanych na poniższe dwa sposoby:
+
+```
+ activeClassName="home_selected"
+ activeStyle={{ backgroundColor: "gray" }}
+```
+
+- [React Router](https://reacttraining.com/react-router/)
+- **Artykuły** ["Server Rendering with React and React Router"](https://tylermcginnis.com/react-router-server-rendering/) | ["React Router and Client-Side Routing"](https://morioh.com/p/b5538f3647f3)
+- ["APIs in React Tutorial - Recipe App using React Router" \[YT 1:33:10\]](https://www.youtube.com/watch?v=tvfeBLMA_Q4)
+
+### Moduły
+
+Składnia CommonJS (używane m in przez Node.js)
+
+```
+ const users = require('sciezka/nazwa_pliku');
+ module.exports = () => {/* _ */};
+```
+
+Składnia ES6
+
+```
+ import users from 'sciezka/nazwa_pliku';
+ export default () => {/* _ */};
+```
+
+- ["Getting Started with React Router v4"](https://morioh.com/p/de3255ea23f6)

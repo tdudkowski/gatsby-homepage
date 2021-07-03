@@ -1,0 +1,510 @@
+---
+title: "NextJS"
+comment: ""
+section: "it"
+subsection: "js"
+---
+
+### Next.js - założenia
+
+Framework React produkt firmy Zeit (obecnie Vercel). Wszechstronne narzędzie do budowania dynamicznych stron WWW.
+
+Na reddicie ukazał się post pod nieco prowokacyjnym tytułem: ["Does NextJS will be soon obsolete?"](https://www.reddit.com/r/reactjs/comments/au5z1u/does_nextjs_will_be_soon_obsolete/). Dokładnej odpowiedzi wyjaśniającej podstawowe założenia i działanie udzielił jeden z głównych deweloperów Next.js.
+
+- **Kompilator*- komponenty React są kompilowane przy użyciu webpacka i Babel, dzięki temu odbywa się to szybko i zachowane są globalne zależności
+- **SSR*- On-demand rendering (traditional SSR) każde żadanie powoduje wyrenderowanie unikalnej strony, wymaga to działającego serwera Node.js.
+- **Eksport do dokumentów statycznych*- (static exporting) wszystkie strony mogą być wyświetlone jako zwykły html.
+- **Automatyczne rozdzielenie kodu*- (automatic code splitting) cała struktura strony jest podzielona na niewpływające na siebie elementy, które sa wyświetlane dynamicznie niezależnie od ich liczby. Jeżeli z jakimś elementem jest cos nie tak nie wpływa to na resztę.
+- **Wymiana modułów*- (hot module replacement) automatyczne przeładowanie modułów bez konieczności odświeżania przeglądarki.
+- **Routing / prefetching*- routing wewnątrz katalogu może przebiegać automatycznie, w stylu SPA, Możliwy jest także prefetching.
+- **Dynamiczne wyświetlenie dokumentów*- (dynamic loading) jak w React.lazy ale bardziej optymalizowane dla SSR.
+- CSS w każdy dostępny sposób.
+- Manipulacja nagłówkiem strony.
+- Asynchroniczne pobieranie danych przed ich wyświetleniem (data fetching).
+- Zarządzenie wyświetlaniem błedów.
+- Serverless
+- Serverful - możliwe jest także bardziej tradycyjne podejście wszystkie routingi są zarządzane przez jeden serwer.
+- Optymalizacja dla produkcji.
+- **Optymizacja podczas dewelopmentu*- \- kompilowanie na żądanie (on-demand); uruchomienie serwera deweloperskiego nie powoduje kompilacji wszystkich składników strony, np podczas każdego zapisu, kompilowane są dopiero kiedy przeglądarka je uruchamia, to znacznie przyspiesza działanie procesu.
+- Zones / Microfrontends - można wprowadzać stopniowo, pojedynczymi elementami
+- Stabilność zapewniona jest podczas rozwoju przez wszechstronne testowanie .
+
+Użytkownicy Next.js to m.in. Hulu, Marvel, Docker i npm.
+
+### Instalacja
+
+Poniższe polecenie w katalogu bieżącym utworzy katalog aplikacji o nazwie projektu i w nim instaluje react, react-dom i next:
+
+```
+ npx create-next-app
+ npx: zainstalowano 1 w 3.446s
+ ✔ What is your project named? … // tu podajemy nazwę projektu
+ Creating a new Next.js app in // tu pojawia się ścieżka dostępu
+```
+
+Potem widzimy następujące komunikaty, które są instrukcją co zrobić dalej:
+
+```
+ Installing react, react-dom, and next using npm...
+
+
+ > core-js@2.6.10 postinstall /sciezka/dostepu/Nextjs/next-app/node_modules/core-js
+ > node postinstall || echo "ignore"
+ 
+ + react@16.11.0
+ + react-dom@16.11.0
+ + next@9.1.2
+ added 757 packages from 356 contributors and audited 10252 packages in 45.785s
+ found 0 vulnerabilities
+ 
+ 
+ Success! Created next-app-01 at /sciezka/dostepu/Nextjs/next-app
+ Inside that directory, you can run several commands:
+ 
+   npm run dev
+     Starts the development server.
+ 
+   npm run build
+     Builds the app for production.
+ 
+   npm start
+     Runs the built app in production mode.
+ 
+ We suggest that you begin by typing:
+ 
+   cd next-app
+   npm run dev
+```
+
+```
+ ✔ What is your project named? … next-app-js3
+ ✔ Pick a template › Default starter app
+ Creating a new Next.js app in /media/tadek/Nextjs/next-app-js3.
+ 
+ Installing react, react-dom, and next using npm...
+ 
+ + react-dom@16.13.1
+ + react@16.13.1
+ + next@9.3.5
+ added 782 packages from 307 contributors and audited 8527 packages in 57.389s
+ 
+ 29 packages are looking for funding
+ run \`npm fund\` for details
+
+found 0 vulnerabilities
+
+
+ Initialized a git repository.
+
+ Success! Created next-app-js3 at /media/tadek/Nextjs/next-app-js3
+ Inside that directory, you can run several commands:
+
+   npm run dev
+     Starts the development server.
+
+   npm run build
+     Builds the app for production.
+
+   npm start
+     Runs the built app in production mode.
+
+ We suggest that you begin by typing:
+
+   cd next-app-js3
+   npm run dev
+```
+
+Całość to ok 50 MB. Od razu będziemy mieli gita, i .gitignore z dodanymi node_modules. W zależnościach w package.json są tylko: react, react-dom i next.
+
+### Budowanie strony
+
+Potem
+
+```
+ $ cd katalog_aplikacji
+ $ npm run dev
+ 
+ > next-app-js3@0.1.0 dev /scieżka_dostępu/katalog_aplikacji
+ > next dev
+ 
+ [ wait ]  starting the development server ...
+ [ info ]  waiting on http://localhost:3000 ...
+ [ ready ] compiled successfully - ready on http://localhost:3000
+ [ wait ]  compiling ...
+ [ ready ] compiled successfully - ready on http://localhost:3000
+ [ event ] build page: /
+ [ wait ]  compiling ...
+ [ ready ] compiled successfully - ready on http://localhost:3000
+```
+
+I to wszystko, strona/aplikacja jest skompilowana i gotowa do użycia. Polecenie cały czas działa w tle, kompilując aplikacje na bieżąco po każdej dokonanej i zapisanej zmianie. Kiedy wejdziemy na wskazany adres zobaczymy wygenerowany domyślną stronę przygotowana przez Zeit: jest to /pages/index.js.
+
+Najprostszy dokument wygląda tak:
+
+```
+ function Home() {
+  return <div>Welcome to Next.js!</div>
+}
+
+export default Home;
+}
+
+export default Home;
+```
+
+Jak widać jest to zwykła funkcja, która zwraca JSX i na końcu jej wynik jest eksportowany.
+
+Istotą tworzenia strony jest zagnieżdżanie komponentów dostępnych globalnie w obrębie aplikacji dzięki importom i eksportom. Wszystkie znajdują się w katalogu /components (jego nazwa jest arbitralna, po prostu musi być używana konsekwentnie). W taki sposób można stworzyć np. komponent menu używający elementu link, tutaj przykład menu zawierającego nielinkujące elementy i stylowanie:
+
+```
+import Link from "next/link";
+
+const links = [  
+  { label: "Tytuł menu", className: "title" },
+  { href: "/page01", label: "Strona 01" },
+  { href: "/page02", label: "Strona 02" },  
+].map(link => {
+  link.key = \`nav-link-$\{link.href\}-$\{link.label\}\`;
+  return link;
+});
+
+const Navbar = () => (
+  <nav className="navigation_one">
+    <ul>
+      {links.map(({ key, href, label, className }) => (
+        <li key={key} className={className}>
+          <Link href={href}>
+            <a>{label}</a>
+          </Link>
+        </li>
+      ))}
+    </ul>
+  </navl>
+);
+
+export default Navbar;
+```
+
+Potem taki komponent nawigacyjny można umieścić w komponencie Header, a ten z kolei w Layout:
+
+```
+ import Header from "./header";
+ import Sidebar from "./sidebar";
+ import Footer from "./footer";
+ import "../style.css";
+ 
+ const Layout = props => (
+   <div className="container">
+     <Header />
+     <main>
+       <Sidebar />
+       <article className="article">{props.children}</article>
+     </main>
+     <Footer />
+   </div>
+ );
+ 
+ export default Layout;
+```
+
+W prosty sposób można stworzyć szablon strony, nad którą ma się całkowitą kontrolę. Importy zawsze dotyczą wykorzystywanych właściwości React lub Next.js, komponent Link byl importowany kiedy użyto go w szablonie nawigacji, a style aplikują się do złożonego w całość szablonu layoutu strony. Wszystkie elementy używane globalnie trzymamy w /components, a pliki stron w /pages.
+
+Kluczowe znaczenie ma tu obiekt props.children, czyli miejsce, w którym zostanie umieszczona unikalna treść podstrony. Mając taki schemat możemy utworzyć pliki stron, wg powyższych reguł, które w returnie mają tylko tagi &lt;Layout&gt; i treść:
+
+```
+<Layout>
+ tu właściwa treść podstrony...
+</Layout>
+```
+
+Ponieważ jest to React, kod w returnie (komponent klasowy) musi być zawarty w nawiasach i w jednym nadrzędnym tagu, np. React Fragment.
+
+```
+ return (
+  <>
+      [kod tu]
+  </>
+    )
+```
+
+Albo w funkcji strzałkowej (komponent funkcyjny) w jednym nadrzędnym elemencie HTML
+
+```
+ const Home = () => (
+  <div>
+[kod tu]
+  </div>
+```
+      
+
+### CSS
+
+W przypadku CSS mamy dostępne właściwie wszystkie istniejące możliwości. CSS możemy linkować statycznie z HTML-owego elementu szablonu layoutu (tag link).
+
+Można też importować do modułu (import "sciezka/dostepu/styles.css";), ale wtedy trzeba doinstalować moduł next-css
+
+```
+ npm install --save @zeit/next-css
+ npm WARN optional SKIPPING OPTIONAL DEPENDENCY: fsevents@1.2.9 (node_modules/fsevents):
+ npm WARN notsup SKIPPING OPTIONAL DEPENDENCY: Unsupported platform for fsevents@1.2.9: wanted {"os":"darwin","arch":"any"} (current: {"os":"linux","arch":"x64"})
+ 
+ + @zeit/next-css@1.0.1
+ added 22 packages from 14 contributors and audited 10440 packages in 16.803s
+ found 0 vulnerabilities
+```
+
+next.config.js - tutaj także załączony raw-loader dla plików .txt i .md.
+
+```
+ /- eslint-disable */
+ const withCss = require("@zeit/next-css");
+ 
+ module.exports = withCss({
+   publicRuntimeConfig: {
+     // ...
+   },
+   webpack: (config, { isServer }) => {
+     config.module.rules.push({
+       test: /\.(md|txt)$/,
+       use: "raw-loader"
+     });
+ 
+     return config;
+   }
+ });
+```
+
+Można też umieścić CSS w samym pliku szablonu lub podstrony w elemencie JSX:
+
+```
+<style jsx>;{\`
+tutaj style ...
+\`}</style>;
+```
+
+### App.js - /pages/_app.js
+
+Inaczej niż w Express, Next.js nie ma głównego pliku z konfiguracją takiego jak App.js. A ściśle rzecz biorąc nie jest on udostępniany użytkownikowi, nie mamy do niego dostępu. Ale można go nadpisać własnym: /pages/\_app.js (nazwa obligatoryjna). Może on wyglądać tak jak poniżej, tutaj przedstawiony jest \_app.js, który jednocześnie jest komponentem Layout:
+
+```
+ import React from "react";
+ import App from "next/app";
+ 
+ import Header from "../components/header";
+ import Footer from "../components/footer";
+ 
+ import "../styles/style.css";
+ 
+ class Layout extends App {
+   render() {
+     return (
+       [tu JSX]
+     )
+ }}
+ 
+ export default Layout;
+```
+
+Taki szablon layoutu ma przewagę nad domyślnym bo jest komponentem klasowym. Trzeba pamiętać, żeby go w plikach stron zaimportować. Używamy go wtedy zamiast dotychczasowego szablonu layout.
+
+### Link.active i scrollspy
+
+Next.js niestety nie udostępnia w komponencie Link możliwości automatycznego przypisywania klasy .active dla aktywnego elementu menu. Najprostszym rozwiązaniem jest zastosowanie skryptu autorstwa Flavio Copesa - ["Using the router to detect the active link in Next.js"](https://flaviocopes.com/nextjs-active-link/). Wystarczy skopiować go do katalogu komponentów pod nazwą Link.js (przykładowo) i zaimportować go w komponencie menu zamiast systemowego komponentu Link.
+
+Stosowanie scrollspy jest w Next.js utrudnione dlatego, że mamy do czynienia z dynamicznie renderowaną stroną w Node.js, który nie posiada obiektów przeglądarki. Tutaj rozwiązaniem jest moduł [react-scrollspy](https://www.npmjs.com/package/react-scrollspy). Wystarczy go zainstalować, zaimportować. Komponent Scrollspy jest listą, można mu nadać własną klasę. Wymaga komponentu Link.
+
+Pojawia się jednak problem jeżeli używamy scrollspy jako spisu treści podstrony. Trzeba wtedy umieścić ten komponent w każdym dokumencie, a nie w layoucie i w każdej instancji edytować, ręcznie wpisując i adresy i tytuły linków. Przynajmniej część tej pracy można zautomatyzować. Można przy tym zrezygnować z komponentu Link, trzeba będzie bowiem przepisać szablon komponentu scrollspy. Tytuły odnośników umieszczamy w tablicy, dodajemy funkcję, która pobiera elementy tablicy i tworzy inną tablicę, którą możemy mapować już wewnątrz komponentu na odnośniki. Wygląda to tak:
+
+```
+ // import komponentu
+ import Scrollspy from "react-scrollspy";
+ 
+ // tablica z tytułami rozdziałów dokumentu
+ let items = [
+   "Zażółć gęślą jaźń",
+   'Ścichapęk "o2o27(oo0("',
+   "Odnośnik 3"
+   // ... itd
+ ];
+ 
+ // utworzenie pustej, docelowej tablicy
+ let itemsList = [];
+ 
+ // funkcja rozpisująca pierwotną tablice na docelową
+ for (let i = 0; i < items.length; i++) {
+  let item = { key: i, href: \`#$\{items[i]}\`, label: items[i] };
+   itemsList.push(item);
+ }
+ 
+ // komponent z mapowaniem
+ const ScrollSpy = () => (
+   <Scrollspy items={items} currentClassName="current" className="scrollspy">
+     {itemsList.map(item => (
+       <li key={item.key}>
+         <a href={item.href}>{item.label}</a>
+       </li>
+     ))}
+   </Scrollspy>
+ );
+ 
+ // eksport i koniec pliku
+ export default ScrollSpy;
+```
+
+Dla pełnej automatyzacji wystarczy pobrać tytuły odnośników JS przeglądarki. Zakładając, że treść dokumentu znajduje się w tagu article i każdy rozdział jest zatytułowany nagłówkiem H3, taka funkcja może wyglądać następująco:
+
+```
+ const items = [];
+
+ const makeList = () => {
+ const listOfElements = [...document.querySelectorAll("article>h3")];
+ for (let i = 0; i < listOfElements.length; i++) {
+    itemsList.push(listOfElements[i].id);
+   }
+```
+
+Jak widać wymaga to konsekwentnego stosowania konwencji, w której adres hiperłącza jest identyczny z tytułem. Przesłanie jej do powyższego komponentu Node.js to jeszcze jest TODO.
+
+### Router
+
+```
+ import { useRouter } from "next/router";
+ import Layout from "../../components/layout";
+ 
+ export default function Post() {
+   const router = useRouter();
+ 
+   return (
+     <Layout>
+       <h1>{router.query.id}</h1>
+       <p>This is the blog post content.</p>
+     </Layout>
+   );
+ }
+```
+
+### Fetch
+
+```
+ import Layout from "../components/layout";
+import Link from "next/link";
+import fetch from "isomorphic-unfetch";
+
+const Index = props => (
+  <Layout>
+    <h1>Batman TV Shows</h1>
+    <ul>
+      {props.shows.map(show => (
+        <li key={show.id}>
+          <Link href="/p/[id]" as={\`/p/$\{show.id}\`}>
+            <a>{show.name}</a>
+          </Link>
+        </li>
+      ))}
+    </ul>
+  </Layout>
+);
+
+Index.getInitialProps = async function() {
+  const res = await fetch("https://api.tvmaze.com/search/shows?q=batman");
+  const data = await res.json();
+
+  // console.log(\`Show data fetched. Count: $\{data.length}\`);
+  // console.log(data);
+
+  return {
+    shows: data.map(entry => entry.show)
+  };
+};
+
+export default Index;
+```
+
+```
+import Link from "next/link";
+import Layout from "../components/layout";
+
+const PostLink = props => (
+  <li>
+  {/- <Link href={\`/post?title=$\{props.title}\`}> */}
+    <Link href="/p/[id]" as={\`/p/$\{props.id}\`}>
+      <a>{props.id}</a>
+      {/- <a>{props.title}</a> */}
+    </Link>
+  </li>
+);
+
+export default function Index() {
+  return (
+    <Layout>
+      <h2>Hello Next.js</h2>
+      <ul>
+        <PostLink id="Post title blah01" />
+        <PostLink id="This is the next post title" />
+        <PostLink id="Not a last, not just a next. Just" />
+      </ul>
+    </Layout>
+  );
+}
+```
+
+### Odnośniki
+
+- [Next.js - The React Framework](https://nextjs.org) | [zeit/next.js](https://github.com/zeit/next.js/) \- [Introducing Create Next App](https://nextjs.org/blog/create-next-app)
+- [react-next-boilerplate/react-next-boilerplate](https://github.com/react-next-boilerplate/react-next-boilerplate)
+- [Bulletproof Next](https://getstarted.sh/bulletproof-next/) Be an expert in Next.js
+- [Learn Next.js – A free video course on React and Next.js.](https://masteringnextjs.com)
+- DevNews [Tag Nextjs](https://www.devnews.pl/tag/nextjs/)
+
+#### Tutoriale
+
+- The Net Ninja ["Next.js Tutorial for Beginners" \[YT playlist 14 filmów\]](https://www.youtube.com/playlist?list=PL4cUxeGkcC9g9gP2onazU5-2M-AzA8eBw)
+- Samuraj Programowania Mateusz Domański ["Krótki kurs Next.js" \[YT 48:15\]](https://www.youtube.com/watch?v=3df3OAxPevo) | ["Krótki kurs Next.js cz.2" \[YT 1:25:07\]](https://www.youtube.com/watch?v=AA0epqPigJQ)
+- Academind ["Next.js Crash Course for Beginners 2021 - Learn NextJS from Scratch in this 100% Free Tutorial!" \[YT 3:14:16\]](https://www.youtube.com/watch?v=MFuwkrseXVE)
+
+#### Artykuły
+
+- ["What Is Next Js"](https://jaketrent.com/post/what-is-nextjs/)
+- ["Next.js Vs. Gatsby Vs. Create React App"](https://masteringnextjs.com/nextjs-gatsby-create-react-app/)
+- ["Why I chose React + Next.js for My Next Website"](https://www.freecodecamp.org/news/use-react-with-next-js-framework-and-how-it-made-my-life-easier-4280b643451/)
+- Medium: [The most insightful stories about Nextjs](https://medium.com/tag/nextjs) | [Francisco Suarez "Next.JS What is it?"](https://medium.com/front-end-weekly/next-js-what-is-it-9cb2f4af8f27) | ["Headless WordPress + Next.js — What We Learned"](https://medium.com/kata-engineering/headless-wordpress-next-js-what-we-learned-c10abdf80f6a) | ["Build a Next.js Website in 4 Steps"](https://medium.com/hackernoon/build-a-next-js-website-in-4-steps-ce0072c3bb6e) | [Christopher Heppell "Next.js development with instant dev-database provisioning"](https://medium.com/ingeniouslysimple/next-js-development-with-instant-dev-database-provisioning-e6f9ff4ef2d5) | ["Next.js Website Boilerplate"](https://medium.com/hackernoon/next-js-website-boilerplate-5134f560423e) | ["Next.js development with instant dev-database provisioning"](https://medium.com/ingeniouslysimple/next-js-development-with-instant-dev-database-provisioning-e6f9ff4ef2d5) | [jlei523 "6 tips: Using Next.js for your next web app"](https://dev.to/jlei523/6-tips-using-next-js-for-your-next-web-app-1hhh) | ["Next.js — React Server-Side Rendering Done Right"](https://medium.com/better-programming/next-js-react-server-side-rendering-done-right-f9700078a3b6) | [Flavio Copes "Discover Next.js and write server-side React apps the easy way"](https://medium.com/free-code-camp/discover-next-js-and-write-server-side-react-apps-the-easy-way-cc920dea2d9d) | ["Move over Next.js and Webpack!!"](https://medium.com/hackernoon/move-over-next-js-and-webpack-ba367f07545) | ["Nextjs for everyone — with some basic knowledge of React"](https://medium.com/free-code-camp/an-introduction-to-next-js-for-everyone-507d2d90ab54) | ["We migrated to Next.js to serve our home page 7.5× faster"](https://www.manifold.co/blog/we-migrated-to-next-js-to-serve-our-home-page-7-5-faster-559443219c84) | [Ryosuke "NextJS Tip - Using Media (Images & Fonts) in CSS"](https://dev.to/whoisryosuke/nextjs-tip---using-media-images--fonts-in-css-1ip5) | [Andréas Hanss "Back-office with NextJS (React) + ElasticUI (EUI)"](https://medium.com/javascript-in-plain-english/back-office-with-nextjs-react-elasticui-eui-168cba44a952) | [Brandon Duffany "The Hitchhiker’s Guide to Next.js"](https://medium.com/swlh/the-hitchhikers-guide-to-next-js-fd7aa14ae8d0) | [Akash Raju M "Easily deploy express API as a serverless function for free using ZEIT"](https://medium.com/@akashrajum7/easily-deploy-express-rest-api-as-a-serverless-function-for-free-using-zeit-b0159f4d2367) | [Ali Nawaz "Hacking Next.js for better PageSpeed scores"](https://medium.com/medwing-engineering-product-design/hacking-next-js-for-better-pagespeed-scores-6c651d19f218) | [Giuliano Kranevitter "Why you should use Gitlab + Now + Next.js"](https://medium.com/giulianok/why-you-should-use-gitlab-now-next-js-3da85c8da3e1) | [Danstan Onyango "NextJS OAuth with Passport and Github"](https://itnext.io/nextjs-oauth-with-passport-and-github-159e324f4900) | [Xiaoru Li "🔑 Passwordless Authentication with Next.js, Prisma, and next-auth"](https://dev.to/prisma/passwordless-authentication-with-next-js-prisma-and-next-auth-5g8g)
+- ["Getting Started with React and Next.JS — Part #1 of 11"](https://medium.appbase.io/part1-getting-started-with-react-and-nextjs-4f28a6a0c38e)
+- Simon Knott ["Integrating Next.js and NestJS"](https://simonknott.de/articles/Integrating-NextJS-with-NestJS.html)
+- Flavio Copes: s[All the Next.js tutorials](https://flaviocopes.com/tags/next/)
+- Robin Wieruch: ["Redux Persist with Next.js by Example"](https://www.robinwieruch.de/redux-persist-next-js)
+- [Mehul Mohan "Next.js production tips and checklist"](https://codedamn.com/news/nextjs-production-tips)
+- Lessons Learned Building in Next.js: ["Part 1: Introduction and Initial Gotchas"](https://medium.com/@diamondgfx/nextjs-lessons-learned-part-1-a5a8d442450f) | ["Part 2: Ajax, Styling, and Routing"](https://medium.com/@diamondgfx/nextjs-lessons-learned-part-2-f1781237cf5c)
+- morioh; [Alfie Kemp "What is Next.js and How it Works?"](https://morioh.com/p/8058baf41e44) | ["Getting Started with Next.js - The React Framework"](https://morioh.com/p/f9e6871b4ecc) | ["What's new in Next.JS v9.2"](https://morioh.com/p/4a041dab69da?f=5c21fb01c16e2556b555ab32)
+- web.dev: [Houssein Djirdeh "Improved Next.js and Gatsby page load performance with granular chunking"](https://web.dev/en/granular-chunking-nextjs/)
+- [Catalin Pit "A Comprehensive Guide On Setting Up Next.js With TypeScript And TailwindCSS"](https://catalins.tech/a-comprehensive-guide-on-setting-up-nextjs-with-typescript-and-tailwindcss)
+- Ruben Leija: ["A guide to navigating with Next JS links"](https://linguinecode.com/post/complete-guide-to-navigation-with-next-js-links) | ["How to redirect on the server side with Next.JS"](https://linguinecode.com/post/how-to-redirect-on-the-server-side-with-next-js) | ["How to add robots.txt and sitemaps to the latest version of Next.js"](https://linguinecode.com/post/add-robots-txt-file-sitemaps-nextjs)
+- Next.js Practical Introduction: ["Pages and Layout"](https://medium.com/@auth0/next-js-practical-introduction-pages-and-layout-e48a063a110) | ["Styling and Theming"](https://medium.com/@auth0/next-js-practical-introduction-styling-and-theming-2841b4af035b) | ["Navigation and Routing"](https://auth0.com/blog/next-js-practical-introduction-for-react-developers-part-3/) | ["Authentication Tutorial"](https://auth0.com/blog/next-js-authentication-tutorial/)
+- TechSolutionsHere.com: ["How To The Active Menu Based On URL In Next.JS?"](https://techsolutionshere.com/how-to-the-active-menu-based-on-url-in-next-js/) | ["How To Setup Redux In React Next Application"](https://techsolutionshere.com/how-to-setup-redux-in-react-next-application/)
+- [Maxime Castres "Build a blog with Next (React.js), Strapi and Apollo"](https://strapi.io/blog/build-a-blog-with-next-react-js-strapi-and-apollo)
+- Flavio Copes [The Next.js Handbook](https://www.freecodecamp.org/news/the-next-js-handbook/) | ["How to install Next.js"](https://flaviocopes.com/how-to-install-nextjs/)
+- ["Using a pipe function in Next.js getServerSideProps"](https://frontend-devops.com/blog/pipe-serverside-props-in-nextjs)
+- [Isaac Scarrott "Next.js Server-Side Route Authentication Using Cookies"](https://isaacscarrott.co.uk/blog/nextjs-route-auth)
+- [Cassidy Williams "Next.js 101: What you should know"](https://www.netlify.com/blog/2020/06/18/next.js-101-what-you-should-know/)
+- [Lee Robinson "Building a Blog with Cosmic CMS and Next.js"](https://www.cosmicjs.com/articles/building-a-blog-with-cosmic-cms-and-nextjs)
+- [Tomasz Łakomy "Build a site from scratch with Next.js, TypeScript, Emotion and Netlify"](https://egghead.io/playlists/build-a-blog-with-next-js-typescript-emotion-and-netlify-adcc)
+
+#### GraphQL
+
+- ["Build a Next.JS Blog with Cosmic’s GraphQL API"](https://blog.alec.coffee/build-next-js-blog-with-cosmics-graphql-api/)
+
+#### Youtube
+
+- **Kanały*- [Bruno Antunes \[YT 3\]](https://www.youtube.com/c/BrunoAntunesPT/)
+- **Playlisty*- [codedamn "Next.js Tutorials" \[YT playlist 18 filmów\]](https://www.youtube.com/playlist?list=PLYxzS__5yYQmpzsVeR7-KnX2li19KZhxE) | [Leigh Halliday "Next.js" \[YT playlist 12 filmów\]](https://www.youtube.com/playlist?list=PL8fumNHsC-3PqViUl9A5g0zk57acoCKnh) | [Imran Sayed "Next.js Tutorials for Beginners | Server Side React | Next JS Advanced | Tutorial Series | SSR | Server Side Rendering" \[YT playlist 9 filmów\]](https://www.youtube.com/playlist?list=PLD8nQCAhR3tSivFh8KuXBDGbLvvI-90zc) | [Bruno Antunes "Next.js Building a Car Trader Application" \[YT playlist 6 filmów\]](https://www.youtube.com/playlist?list=PLYSZyzpwBEWTt-0uuxAcSrJmMlnD9Yuz3) | [Artur Chmaro "Serverless" \[YT playlist 11 filmów\]](https://www.youtube.com/playlist?list=PLOzzvlJKwOdXyUoPkPV7u1vt6m2dHBeFR) | [Watch and Learn "Making Websites With Next.js And Strapi" \[YT playlist 20 filmów\]](https://www.youtube.com/playlist?list=PLUBR53Dw-Ef_oTLzPB3G5CdLWnGOSsec3) | [Waldev "NextJs Tutorial" \[YT playlist 4 filmy\]](https://www.youtube.com/playlist?list=PLvl8B47jLhkvHl1t3VIvrQUqHDTQ7dpRv) | [Ado Kukic "Next.js" \[YT playlist 5 filmów\]](https://www.youtube.com/playlist?list=PLojLA6XydbvHj6dkRw68EoyFJt0EgZ2M3) | [Lee Robinson "Mastering Next.js" \[YT playlist 13 filmów\]](https://www.youtube.com/playlist?list=PL6bwFJ82M6FXjyBTVi6WSCWin8q_g_8RR) | [Patrick M "Next.js" \[YT 3 filmy\]](https://www.youtube.com/playlist?list=PLr_ySpIi134-tA4ygwxCFRcIlPgzl3NSM)
+- **Filmy*- [freeCodeCamp.org "Next.js for Beginners - Full Course" \[YT 2:38:24\]](https://www.youtube.com/watch?v=1WmNXEVia8I) | [Traversy Media "Next.js Crash Course 2021" \[1:09:44\]](https://www.youtube.com/watch?v=mTz0GXj8NN0) | [Artur Chmaro "⚡️ Next.js czyli web framework przyszłości (Promeet #30)" \[YT 1:21:39\]](https://www.youtube.com/watch?v=NHIMVh5H0PA) | [Code Bushi "Next.js Server Side Rendering and getInitialProps" \[22:03\]](https://www.youtube.com/watch?v=tgS4YsgqLRo) | ["liveCoding #1.1 Publishing a website to the internet in less than 30 minutes with now/nextjs/react" \[YT 31:36\]](https://www.youtube.com/watch?list=PLBHbfZu_dhOfMImK1-SZazXbT8_NVSt00&v=KfNKUw0Ozww) | [Lee Robinson "Why Next.js Is the Future of React" \[YT 9:28\]](https://www.youtube.com/watch?v=rtgbaKBhdkk)
+
+#### Narzędzia
+
+- [Next.js Boilerplate](https://next-js-boilerplate.herokuapp.com)
+- [xeoneux / next-dark-mode](https://github.com/xeoneux/next-dark-mode) Enable dark mode for Next.js apps
+- [Tixpire / strapi-middleware-nextjs](https://github.com/Tixpire/strapi-middleware-nextjs) Strapi Middleware to use nextJS as the front end framework for strapi.
+
+#### Inne
+
+- ["Building a Serverless Doc Writing app using Cloudflare Workers and KV Store"](https://hashnode.com/post/building-a-serverless-doc-writing-app-using-cloudflare-workers-and-kv-store-ck236aou1001e8os1esou2fac)
+- [Papyr CMS](https://papyrcms.herokuapp.com)

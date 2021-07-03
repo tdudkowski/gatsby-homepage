@@ -1,0 +1,1060 @@
+---
+title: "Drupal"
+comment: ""
+section: "it"
+subsection: "cms"
+---
+
+Notatnik
+
+Uwaga: poniższy artykuł ma charakter notatek, sporządzanych w różnych okolicznościach, z sukcesywnie dodawanymi fragmentami i licznymi poprawkami. Może zawierać informacje błędne lub nieaktualne. Czytelnik jest zachęcany by najpierw przeczytał całość, dopiero później - już wiedząc gdzie są jakie informacje - przeczytał uważnie to czego potrzebuje i po przemyśleniu ewentualnie przetestował je w praktyce, najpierw na testowym środowisku.
+
+Konwencja zapisu, którą zastosowałem nie jest konsekwentna i zależy od kontekstu: np. najczęściej sitename, poddomena, site1 to to samo, ale nie zawsze. Rzeczy dla mnie oczywiste, mogą się okazać czymś czego tu brak, lub jest błędnie napisane. Mogą być błędy. Wszelkie uwagi są mile widziane. Postaram się poprawić wszelkie braki w tym materiale.
+
+Ponadto jest jeszcze jedna komplikacja związana z Drushem, kiedy zaczynałem pisać ten artykuł standardem była wersja 8.x, która była bardzo funkcjonalna i prosta w użyciu. Można było przy jej pomocy wykonać szereg operacji, które były uciążliwe. Zasadnicza różnica wobec Composera polegała na tym, że Drush działa w obrębie jednej witryny. Composer natomiast może obsłużyć cały multisite. Później jednak weszła wersja 9.x, która poważnie zmieniła charakter tego narzędzia, Drush wciąż się zmienia i to dynamicznie. Póki co wyrzuciłem wszystkie informacje ograniczające się do 8.x i być może za jakiś czas je zastąpię uaktualnioną treścią - kiedy się ustabilizuje.
+
+### Composer i Drush - podstawy
+
+
+Drupal, w przeciwieństwie do Wordpressa, niestety nie ma możliwości prostej, globanej aktualizacji z poziomu www. Od dawna ręczna aktualizacja przez przekopiowywanie katalogów nie jest zalecana. Służą temu specjalne narzędzia i można wykonać nimi wiele, jeśli nie wszystkie, czynności administracyjnych. Są to:
+
+- Composer: ["Download Composer"](https://getcomposer.org/download/) oraz [Introduction - Composer"](https://getcomposer.org/doc/00-intro.md) oraz ["Using Composer to manage Drupal site dependencies"](https://www.drupal.org/docs/develop/using-composer/using-composer-to-manage-drupal-site-dependencies)
+- Drush: [Drush docs](http://docs.drush.org/en/master/)
+- Drupal Console: ["How to install Drupal Console"](https://drupalconsole.com/articles/how-to-install-drupal-console), ["Install Drupal Console Using Composer"](https://docs.drupalconsole.com/en/getting/composer.html)
+
+Sprawdzenie wersji narzędzi:
+
+```
+ $ composer --version
+ Composer version 1.8.0 2018-12-03 10:31:16
+ $ drush version
+ Drush version : 9.5.2
+ $ drupal -V
+ Drupal Console version 1.8.0
+```
+
+Aktualizacja tych programów:
+
+```
+ $ composer self-update
+ Updating to version 1.8.0 (stable channel).
+	Downloading (100%)        
+ Use composer self-update --rollback to return to version 1.7.3
+ $ composer global update drush/drush
+ Changed current directory to /absolutna_sciezka_dostepu/.composer
+ Loading composer repositories with package information
+ Updating dependencies (including require-dev)
+ Package operations: 0 installs, 0 updates, 0 removals
+ Generating autoload files
+```
+
+Przejście do docelowej witryny:  
+
+Composer:
+
+```
+ $ cd /sciezka_dostepu/sitename
+```
+
+Drush:
+
+```
+ $ drush use @sitename
+ Site set to @sitename
+```
+
+Drusha najlepiej zainstalować jako moduł Composera:
+
+```
+ $ composer require drush/drush
+```
+
+W przeciwieństwie do Composera prompt nie musi być w katalogu operacji, polecenie use @sitename ustawia nam miejsce działania Drusha nie przemieszczając promptu.
+
+- Katalog, w którym przechowywane są aliasy to $HOME/.drush/, albo jeszcze lepiej w $HOME/.drush/sites .
+- Aliasy zapisane są w osobnych plikach o nazwie w formie sitename.site.yml
+
+Więcej aktualnych (na jesień 2018) informacji: [Drush Site Aliases](https://drupalize.me/tutorial/drush-site-aliases) oraz [How to target specific sites with Drush when using Multisites?](https://drupal.stackexchange.com/questions/152796/how-to-target-specific-sites-with-drush-when-using-multisites)
+
+Jak wygląda konfiguracja:
+
+```
+drush site:alias @self
+```
+
+Warto się zapoznać z [Drush Commands dla wersji 9](https://drushcommands.com/drush-9x/), lub wykonać polecenie:
+
+```
+ $ drush list
+```
+
+Które wyświetla listę dostępnych poleceń, jeżeli chcemy się dowiedzieć o konkretnym poleceniu więcej to:
+
+```
+ $ drush help polecenie
+```
+
+Obojętnie czy formie kanonicznej czy skróconej. Przegląd środowiska i Drusha i Drupala:
+
+```
+ $ drush st
+```
+
+To polecenie warto wykonać żeby zapoznać się do czego właściwie możemy użyć aktualnej wersji Drusha.
+
+Katalogiem w którym należy dokonywać aktualizacji Drusha 9.x jest /drupal\_dir/web. Do konkretnej strony przechodzimy poleceniem use @sitename. Natomiast aktualizacji Composera możemy dokonywać w dowolnym miejscu, ale jeżeli chcemy zaktualizować moduł globalnie dla multisite, trzeba przejść do /drupal\_dir.
+
+### Instalacja z użyciem Composera przez SSH
+
+
+- youtube.com: ["Building Drupal 8 Sites with Composer and Configuration Management [September 7, 2016]"](https://www.youtube.com/watch?v=RzOt0LxNAec)
+- ["Using Composer to manage Drupal site dependencies"](https://www.drupal.org/docs/develop/using-composer/using-composer-to-manage-drupal-site-dependencies)
+
+Założenia są takie - mamy:
+
+- połączenie SSH ze zdalnym hostem, jesteś w $ i całą zawartość www masz w public\_html
+- zainstalowane: git, Composer, Drupal Console, Drush
+- cierpliwość (bo wszystko co najłatwiejsze wyrzeźbione jest mit Kopf gegen die Wand)
+
+Zaczynamy:
+
+```
+~$ composer create-project drupal-composer/drupal-project:8.x public_html/sitename --stability dev --no-interaction
+```
+
+Tu dostajemy dużą liczbę komunikatów o tym co skrypt robi i co instaluje, zajmie to chwilę (minutę, może dwie). Polecenie to trzeba wykonać z zewnątrz, podając istniejący już katalog instalacji. A potem przechodzimy do katalogu i zmieniamy repozytorium w konfiguracji, trzecie polecenie czyści bufor:
+
+```
+ ~$ cd public_html/sitename
+ ~$ composer config repositories.0 composer http://packages.drupal.org/8
+ ~$ composer clear-cache
+```
+
+Żeby pójść dalej trzeba skonfigurować połączenie https, jeżeli nie chcemy/nie możemy tego zrobić to w composer.json można wyłączyć wymóg https i to robi ten drugi wiersz, pierwszy już był w ustawieniu domyślnym. Naraża to bezpieczeństwo projektu i w poważnych zastosowaniach jest to najdelikatniej rzecz ujmując niefrasobliwe. Ale dla samego przećwiczenia instalacji może być akceptowalne. Dodajemy ten drugi wiersz "secure-http": false:
+
+```
+ "config": {
+ "sort-packages": true,
+ "secure-http": false },
+```
+
+Tak, bezpośrednio po false nie ma przecinka, to JSON. I potem już można zaktualizować repo (jak widzimy pojawia się ostrzeżenie, że nie korzystamy z szyfrowania transmisji):
+
+```
+ $ composer update
+ /> DrupalProject\composer\ScriptHandler::checkComposerVersion
+ Loading composer repositories with package information
+ Warning: Accessing packages.drupal.org over http which is an insecure protocol.
+ Updating dependencies (including require-dev)
+ Nothing to install or update
+ Writing lock file
+ Generating autoload files
+ Removing packages services cache file:
+ /home/login/domains/sitedomain/public_html/sitename/vendor/drupal/console/extend.console.uninstall.services.yml
+ Creating packages services cache file:
+ /home/login/domains/sitedomain/public_html/sitename/vendor/drupal/console/extend.console.uninstall.services.yml
+ /> DrupalProject\composer\ScriptHandler::createRequiredFiles
+```
+
+Uwaga! Jeżeli chcemy zainstalować Drupala w trybie multisite, od tego miejsca przechodzimy do rozdziału "Instalacja w trybie multisite".
+
+Jeżeli potrzebujemy zwykłe pojedynczej instalacji możemy będąc nadal w CLI dokonać konfiguracji jednym poleceniem: przechodzimy do katalogu web i Konsolą instalujemy załadowanego tam Drupala (tak, aż do [admin pass] włącznie to jest jedno polecenie), oczywiście wpisujemy gołe parametry bez nawiasów i dolarów, chwilę po jego wbiciu zostaniemy zapytani o prefix bazy i w sumie od początku do końca wygląda to tak:
+
+```
+ $:~/public_html/sitename$ cd web
+ $:~/public_html/sitename/web$ drupal site:install standard --site-name "sitename" --langcode pl --db-type mysql --db-port 3306 --db-user [$dbuser] --db-pass [$dbpass] --db-host [IP] --db-name [&amp;dbname] --site-mail [&amp;mail] --account-name [&amp;admin] --account-mail [&amp;mail] --account-pass [&amp;admin pass]
+ 
+ Database Prefix [ ]:
+ 
+ > xx_
+ 
+ Starting Drupal 8 install process
+ 
+ [OK] Your Drupal 8 installation was completed successfully
+```
+
+To wszystko.
+
+O tym jak przekierować domyślny adres na poddomenę poniżej w rozdziale "Instalacja w trybie multisite" - punkt 1.
+
+### Instalacja w trybie multisite
+
+Tryb multisite analogicznie do farmy wiki w przypadku Mediawiki oznacza jedną instalację Drupala, z praktycznie nieograniczoną liczbą stron, łatwych do instalacji, konfiguracji, a przede wszystkim aktualizacji. Jeżeli mamy dwie, trzy strony Drupala na tym samym hostingu, po dłuższym czasie zaczyna być nużące ciągłe powtarzanie tych samych zdań administracyjnych kilka razy. A jeżeli jest ich kilkanaście, kilkadziesiąt? Ponadto, podobnie jak w przypadku Mediawiki, ważna jest oszczędność miejsca na hostingu. Tym ważniejsza im większą liczbę stron na Drupalu mamy.
+
+Wielkość:
+
+- drupal 7 (zwykła instalacja) - ~40 MB
+- drupal 8 (standalone i multisite) - 190 MB, czyli tu z każdą dodaną witryną oszczędzamy prawie 200 MB hostingu
+
+Minus? W zasadzie jeden. Jeżeli coś popsujemy w generalnej konfiguracji, czy aktualizacji mogą ucierpieć wszystkie strony jednocześnie. Po pierwsze więc trzeba wszystko robić uważnie i natychmiast wprowadzać tylko aktualizacje związane z bezpieczeństwem. Po drugie ważne jest by zapisywać wszystkie dodatkowe czynności administracyjne, np do czego i po co instalujemy dodatki. Dla potrzeb backupu warto zapisać czas dokonania zmian. Im mniej dodatków, tym mniej potencjalnych źródeł problemu. Warto może dla eksperymentów utworzyć drugą instalację i tam sprawdzać wszystkie modyfikacje wykraczające ponad po prostu dodanie kolejnego modułu,
+
+Całość przykładowej instalacji dwóch witryn na jednym Drupalu w trybie multisite to siedem czynności, które najlepiej wykonać w następującej kolejności:
+
+Zakładamy, że dokonaliśmy już zwykłej instalacji Drupala Composerem do momentu aktualizacji repo, Drupal znajduje się w katalogu drupal\_dir. Określenia poddomena.domena i sitename są tożsame.
+
+[1] Utworzenie poddomen:
+
+- site1.domena
+- site2.domena
+
+Zainstalowany Composerem Drupal domyślnie siedzi w podkatalogu sitename/web - trzeba więc zmienić wskazanie katalogu DocumentRoot dla subdomeny sitename.sitedomain. Nowa ścieżka:
+
+```
+ /absolutna_sciezka_dostepu/public_html/drupal_dir/web
+```
+
+Czasem żeby nowa hierarchia zaskoczyła trzeba wyczyścić bufor (ścieżka dostępu: admin/config/development/performance ). Zaraz po instalacji strona, jej zawartość i administracja są pod adresem http://sitename.domainname .
+
+W przypadku instalacji standalone docelowym katalogiem jest
+
+```
+ /absolutna_sciezka_dostepu/public_html/sitename/web
+```
+
+[2] Utworzenie baz danych: potrzebne nam będą następujące informacje:
+
+- nazwa bazy danych
+- nazwa użytkownika bazy danych
+- hasło użytkownika bazy danych
+- adres bazy danych, jeżeli jest inny niż localhost
+
+[3] W katalogu sites tworzymy kopię pliku example.sites.php o nazwie sites.php
+
+```
+ $ cp /sites/example.sites.php /sites/sites.php
+```
+
+modyfikujemy go dodając na końcu:
+
+```
+ $sites['site1.domena'] = 'site1.domena';
+ $sites['site2.domena'] = 'site2.domena';
+```
+
+[4] Utworzenie katalogów:
+
+```
+ $ mkdir sites/sitename
+```
+
+Potem do tych katalogów kopiujemy pliki ustawień:
+
+```
+ $ cp sites/default/example.settings.php sites/sitename/settings.php
+```
+
+Instrukcja ["Multisite Drupal 8 Setup"](https://www.drupal.org/docs/8/multisite-drupal/multisite-drupal-8-setup), w której jest kilka błędów i niedomówień mówi nam, żeby je skonfigurować. Nie ma takiej potrzeby.
+
+[5] Na końcu, w przeglądarce internetowej otwieramy adres poddomena.domena/core/install.php (równie dobrze może to być po prostu poddomena.domena, do core/install.php zostaniemy przekierowani automatycznie). Tu dokonujemy właściwego procesu konfiguracji witryny:
+
+1. wybór wersji językowej
+2. wybór profilu (standardowy lub minimalistyczny)
+3. weryfikacja wymagań (warto przeczytać i zapisać ewentualne ostrzeżenia; mogą to być zalecenia dotyczące konfiguracji serwera)
+4. podajemy typ bazy danych i jej dane: adres użytkownika i hasło, adres jeżeli jest inny niż localhost; plus w tym miejscu trzeba się zdecydować na prefix tabel i port
+5. instalowanie witryny, potem aktualizowanie tumaczeń
+6. konfiguracja, tu:
+    - podajemy nazwę i adres email witryny;
+    - nazwę, hasło i email administratora
+    - ustawienia regionalne: domyślny kraj i strefę czasową
+    - decydujemy również czy i jak chcemy być powiadamiani o nowych wersjach,
+
+I to w zasadzie wszystko. Jeżeli nie pojawią się błędy, lądujemy automatycznie na stronie głównej nowej witryny. 
+Po przejściu do adresu witryny widzimy ją w pełni zainstalowaną, z domyślną skórką i jesteśmy zalogowani jako administrator, teraz trzeba przejść do raportów, sprawdzić nowe wersje, a przede wszystkim raport witryny.
+
+[6] Najczęstszym (zawsze) występującym błędem jest ["Trusted Host settings"](https://www.drupal.org/node/1992030). Wracamy do panelu administracyjnego i modyfikujemy plik sites/sitename/settings.php najpierw zmieniając jego uprawnienia z domyślnych 444 na 755 (katalog z nazwą witryny powinien mieć 555), a potem dodając na końcu:
+
+```
+ $settings['trusted_host_patterns'] = array(
+	'^poddomena.domena\.xx$',
+	'^www\.poddomena.domena\.xx$',
+	'^localhost$',
+  );
+```
+
+Przy czym - uwaga - w tym wypadku domena jest rozbita na TLD (xx) i resztę domeny. Po zapisaniu zmian przywracamy dla pliku ustawień uprawnienia 444 i jeszcze raz sprawdzamy raport witryny.
+
+Może również wystąpić błąd, ostrzeżenie: "Plik settings.php nie jest chroniony przed modyfikacjami i może stanowić zagrożenie dla bezpieczeństwa systemu. Należy znieść uprawnienia do modyfikacji tego pliku." i to pomimo poprawnie ustawionych uprawnień. Zgodnie z tą informacją ["Problem with protected files..."](https://www.drupal.org/node/2817791) należy sprawdzić w tym pliku opcję:
+
+```
+ $settings['skip_permissions_hardening'] = TRUE;
+```
+
+I zmienić ją na FALSE.
+
+[7] Na koniec dodajemy witrynę do konfiguracji Drusha.
+
+Teraz instalacja każdej kolejnej witryny polega na:
+
+1. utworzeniu poddomeny i skierowaniu jej na drupal\_dir/web
+2. utworzeniu bazy danych
+3. dodaniu do sites/sites.php wpisu: $sites['poddomena.domena'] = 'poddomena.domena';
+4. utworzeniu w katalogu sites katalogu o nazwie poddomena.domena i skopiowaniu tam pliku settings.php
+5. konfiguracji w przeglądarce www
+6. rozwiązaniu problemu z Trusted Host settings
+7. dodaniu witryny do Drusha
+
+### Aktualizacja Drupala
+
+- ["Updating Drupal 8"](https://www.drupal.org/docs/8/update)
+- ["Drush Commands"](https://drushcommands.com/)
+
+Jeżeli mamy Drupala zainstalowanego Composerem to powinniśmy konsekwentnie jego używać. W tym wypadku potrzebny jest i Composer i Drush. Ponieważ jest to zadanie wykonywanie, nie tylko regularnie, ale zawierające ryzyko awarii, należy zadbać o zachowanie bezpieczeństwa. Przede wszystkim sprawdzamy czy istnieje backup bazy danych. Update składa się kolejno ze:
+
+1. sprawdzenia narzędzi
+2. ustawienia trybu maintenance i opróżnienia buforów
+3. aktualizacji (Drupala lub jego elementów)
+4. rozwiązania ewentualnych problemów
+5. przywrócenia pracy strony
+
+Wbrew pozorom jest to proste i z pewnością bardziej niezawodne niż ręczna manipulacja katalogami i plikami
+
+[2] Włączenie trybu maintenance i opróżnienie bufora (Drush 8.x bardzo się tu przydawał).
+
+[3] Aktualizacja
+
+W trybie multisite właściwym katalogiem operacji jest katalog główny instalacji, czyli public\_html/drupal\_dir . Po aktualizacji Drupala, każda z witryn będzie wymagała aktualizacji bazy danych.
+
+```
+ $ composer outdated
+```
+
+tu otrzymujemy listę elementów zainstalowanych Composerem, która składa się z czterech kolumn (nazwa pakietu, wersja zainstalowana, wersja najnowsza, opis), dla drupal/core jest to:
+
+```
+ drupal/core                           8.4.3           8.4.4           Drupal is an open source content management platform powering millions...
+```
+
+Następnym poleceniem jest właściwa aktualizacja, w idealnym świecie wygląda tak (ale zanim to zrobisz doczytaj rozdział do końca):
+
+```
+ $ composer update drupal/core
+ > DrupalProject\composer\ScriptHandler::checkComposerVersion
+ Loading composer repositories with package information
+ Updating dependencies (including require-dev)
+ Package operations: 0 installs, 1 update, 0 removals
+   - Updating drupal/core (8.4.3 => 8.4.4): Loading from cache
+ Writing lock file
+ Generating autoload files
+ Downloading (100%)Downloading (100%)<!--Downloading (100%)Downloading (100%)Downloading (100%)Downloading (100%)Downloading (100%)Downloading (conneDownloading (100%)Downloading (100%)Downloading (100%)Downloading (100%)Downloading (100%)Downloading (100%)Downloading (100%)Downloading--> (conneDownloading (100%)Creating packages services cache file:
+ /absolutna_sciezka_dostepu/sitename/vendor/drupal/console/extend.console.uninstall.services.yml
+ > DrupalProject\composer\ScriptHandler::createRequiredFiles
+```
+
+[5] Na koniec, kolejno: aktualizacja bazy danych, opróżnienie bufora i przywrócenie pracy strony (Drush 8.x).
+
+Przy prawidłowej konfiguracji wszystko powinno być ok. Z rzeczy, które warto zapamiętać:  
+przy czyszczeniu bufora i aktualizacji bazy danych mogą wyskoczyć komunikaty w rodzaju:
+
+```
+ sh: -c: line 0: błąd składni przy nieoczekiwanym znaczniku '('
+ sh: -c: line 0: 'git --git-dir /absolutna_sciezka_dostepu/mysite/web/modules/contrib/replicate/.git describe  --tags git: /usr/local/lib/libz.so.1: no version information available (required by git) 2/>&1'
+```
+
+ale ostatecznie ważny jest komunikat potwierdzający, odpowiednio są to:
+
+```
+ Cache rebuild complete.                                                                                                             [ok]
+```
+
+i np:
+
+```
+ No database updates required                                                                                                         [success]
+```
+
+Aktualizacja kolejnych wersji Drupala wymaga odpowiednio wysokich wersji Drusha, czasem może się zdarzyć, że w katalogu witryny zgłasza się starsza wersja niż jest zainstalowana globalnie, więc warto sprawdzić wersję po przejściu do katalogu i jeśli mamy niezgodność trzeba zaktualizować lokalnie.
+
+W realnym świecie najpierw upewnij się, że wszystkie moduły są aktualne, jeśli nie to każdy z osobna powinien zostać zaktualizowany. Dopiero potem zabieramy się za jądro.
+
+```
+ $ composer update drupal/core webflo/drupal-core-require-dev --with-dependencies
+```
+
+Istnieje możliwość kompletnego uaktualnienia wszystkich elementów witryny jednym poleceniem, ale nie jest zalecana bo jej użycie zwiększa prawdopodobieństwo, że coś pójdzie źle. Czasem aktualizacja samego Drupala może zakończyć się niepowodzeniem, po prostu nic się nie wydarzy:
+
+```
+ $ composer update drupal/core
+ /> DrupalProject\composer\ScriptHandler::checkComposerVersion
+ Loading composer repositories with package information
+ Updating dependencies (including require-dev)
+ Nothing to install or update
+```
+
+Wtedy można spróbować albo kompletnej aktualizacji aktualizacji poleceniem
+
+```
+ $ composer update drupal/core --with-dependencies
+```
+
+Ale uwaga: oznacza to równoczesną aktualizację wielu składników aplikacji i najlepiej tego unikać. Warto zamiast powyższego użyć wtedy polecenia:
+
+```
+ $ composer prohibits drupal/core:numer_wersji
+```
+
+które pokazuje nam jakie niespełnione zależności blokują aktualizację. Więcej można o tym poczytać tu: [Jeff Geerling: Updating drupal/core with Composer - but Drupal core doesn't update](https://www.jeffgeerling.com/blog/2018/updating-drupalcore-composer-drupal-core-doesnt-update).
+
+Natomiast polecenia aktualizacji reszty elementów, można wykonać po aktualizacji samego Drupala.
+
+OK, czyli teraz możemy wyrysować kolejność działań:
+
+1. aktualizacja wszystkich modułów i skórek, każdego z osobna
+2. aktualizacja jądra poleceniem:
+
+```
+ $ composer update drupal/core webflo/drupal-core-require-dev --with-dependencies
+```
+
+3. jeśli to nic nie daje, diagnostyka:
+
+```
+ $ composer prohibits drupal/core:numer_wersji
+```
+
+Powodzenia!
+
+### D9
+
+```
+ composer --ignore-platform-reqs --no-dev create-project drupal/recommended-project folder
+```
+
+i
+
+```
+ Creating a "drupal/recommended-project" project at "./d9ms"
+ Installing drupal/recommended-project (9.0.1)
+   - Installing drupal/recommended-project (9.0.1): Downloading (100%)         
+ Created project in /home/tdudkows/domains/tdudkows.ayz.pl/public_html/d9ms
+ Loading composer repositories with package information
+ Installing dependencies from lock file
+ Package operations: 59 installs, 0 updates, 0 removals
+```
+
+Informacja
+
+```
+ * Homepage: https://www.drupal.org/project/drupal
+ * Support:
+   * docs: https://www.drupal.org/docs/user_guide/en/index.html
+   * chat: https://www.drupal.org/node/314178
+														
+ Congratulations, you’ve installed the Drupal codebase  
+ from the drupal/recommended-project template!          
+														
+
+Next steps:
+ * Install the site: https://www.drupal.org/docs/8/install
+ * Read the user guide: https://www.drupal.org/docs/user_guide/en/index.html
+ * Get support: https://www.drupal.org/support
+ * Get involved with the Drupal community:
+	 https://www.drupal.org/getting-involved
+ * Remove the plugin that prints this message:
+	 composer remove drupal/core-project-message
+ * Homepage: https://www.drupal.org/project/drupal
+ * Support:
+   * docs: https://www.drupal.org/docs/user_guide/en/index.html
+   * chat: https://www.drupal.org/node/314178
+```
+
+webroot jest w my\_site\_name\_dir/web
+
+```
+ $ cd my_site_name_dir
+ $ composer config repositories.0 composer http://packages.drupal.org/9
+ $ composer clear-cache
+ 
+ 'username' =/> 'user_barrio',
+ 'password' =/> 'passwphrase',
+ 
+ usługi web
+ HAL
+ Serializacja encji przy użyciu formatu Hypertext Application Language.
+ 
+ HTTP Basic Authentication
+ Supplies an HTTP Basic authentication provider.
+ 
+ JSON:API
+ Exposes entities as a JSON:API-specification-compliant web API.
+ 
+ RESTful Web Services
+ Udostępnia encje i inne zasoby w postaci RESTful web API
+ 
+ Serialization
+ Provides a service for (de)serializing data to/from formats such as JSON and XML.
+ 
+ build hooks
+ 
+ composer config repositories.0 composer http://packages.drupal.org/8
+```
+
+### Motywy Bootstrap
+
+- [Bootstrap](https://getbootstrap.com/): ["Introduction: Get started with Bootstrap"](https://getbootstrap.com/docs/4.1/getting-started/introduction/) - [Blog](https://blog.getbootstrap.com/) - [bootswatch.com: Free themes for Bootstrap](https://bootswatch.com/)
+- [Material Design for Bootstrap](https://mdbootstrap.com/)
+- Drupal Bootstrap: ["Bootstrap"](https://www.drupal.org/project/bootstrap) - ["Drupal Bootstrap Documentation"](https://drupal-bootstrap.org/api/bootstrap)
+- Acquia: ["How to Create a Drupal 8 Theme Using Bootstrap"](https://www.youtube.com/watch?v=PuiqDxoEBCE) - ["How to Create a Drupal 8 Theme Using Bootstrap"](https://www.acquia.com/resources/webinars/how-create-drupal-8-theme-using-bootstrap), ["How to Create a Drupal 8 Theme Using Bootstrap"](https://www.slideshare.net/AcquiaInc/how-to-create-a-drupal-8-theme-using-bootstrap)
+- [Why the Bootstrap HTML framework in Drupal & OpenLucius](https://blog.lucius.digital/why-the-bootstrap-html-framework-in-drupal-openlucius-59d0c6ae1676)
+- OSTraining: ["Using the Bootstrap Theme with Drupal"](https://www.ostraining.com/blog/drupal/bootstrap/)
+- ["How to build your Drupal 8 theme using Bootstrap & Less"](http://valuebound.com/resources/blog/how-to-build-your-drupal-8-theme-using-bootstrap-less)
+- ["Using SASS in Bootstrap Drupal theme"](https://www.webfoobar.com/node/9)
+- ["Use the SASS Starterkit to Build a Drupal 8 Bootstrap Subtheme"](https://sevaa.com/blog/sass-starterkit-build-drupal-8-bootstrap-subtheme/)
+- ["Bootstrap Paragraphs - Documentation and Examples of the Drupal 8 Module"](https://bp.jimbir.ch/)
+- ["Cute Bootstrap 4 news article cards for Drupal 8 Views"](https://medium.com/@sarahcodes/cute-bootstrap-4-news-article-cards-for-drupal-8-views-b0e25395bf28)
+
+Jednym z najpopularniejszych frameworków CSS jest Bootstrap. Często używany jest jako podstawa do budowy wielu tematów Drupala i innych CMS-ów. Do niedawna podstawowym motywem Drupala zbudowanym na Bootstrapie był Drupal Bootstrap. Używał on Bootstrapa w wersji 3.x. W styczniu 2018 opublikowano czwartą wersję tego frameworku. Różnica jest istotna, bo czwórka zmienia semantykę nazw i opiera się na modelu Flexbox. Nie ma zapowiedzi wydania aktualizacji Drupal Bootstrap używającej Bootstrapa 4.0. Ze względu na różnice i brak wstecznej kompatybilności trzeba by napisać ten temat zupełnie od nowa.
+
+Istnieje temat używający Bootstrapa 4.x i mający te same możliwości co Drupal Bootstrap, jest to Barrio. Dla użytkownika przejście z jednego do drugiego jest bardzo łatwe, aż dziwne, że oba rozwijane są przez inne ekipy. Poniżej opisane są instalacje obu motywów, jak widać są do siebie bardzo podobne.
+
+#### Drupal Bootstrap
+
+Pobranie motywu:
+
+```
+    $ composer require drupal/bootstrap
+```
+
+Instalacja z poziomu www.
+
+I dalej na podstawie: [Drupal Bootstrap Documentation](https://drupal-bootstrap.org/api/bootstrap). Ze starterkitu tworzymy własny motyw. W trybie multisite sub-theme powinien znaleźć się w katalogu sites/site\_dir/themes/custom, w standalone kopiujemy do tego samego katalogu (w multisite też będzie tam widoczny, więc jeżeli tworzymy subtheme dla kilku witryn można tam zostawić):
+
+```
+   $ cp -R bootstrap/starterkits/cdn my_theme
+```
+
+Teraz trzeba pozmieniać nazwy THEMENAME na my\_theme; css/style.css nadpisuje style bootstrap. Lista jest tu: ["Sub-Theming"](https://drupal-bootstrap.org/api/bootstrap/docs!Sub-Theming.md/group/sub_theming/8). 
+Jest to pięć plików, dwa z nich trzeba wyedytować, każde wystąpienie THEMENAME zamieniamy na nazwę naszego sub-theme:
+
+- THEMENAME.libraries.yml
+- THEMENAME.starterkit.yml - tu zmieniając w nazwie starterkit w info, a w treści "name: 'THEMENAME'" oraz "libraries: - 'THEMENAME/global-styling'"
+- THEMENAME.theme
+- config/install/THEMENAME.settings.yml
+- config/schema/THEMENAME.schema.yml - tu zmieniając w treści "THEMENAME.settings:" oraz "label: 'THEMENAME settings'"
+
+Aktualizacja motywu nie powinna modyfikować naszego motywu. Po zmianie nazw nowy motyw powinien być widoczny w konfiguracji www - trzeba ustawić na domyślny. Przy czym oczywiście oryginalny Bootstrap Drupal pozostawiamy zainstalowany.
+
+Uwaga: żeby zaskoczył nadpisywany arkusz CSS ( css/styles.css ) trzeba w konfiguracji, albo wyczyścić bufory, albo odznaczyć opcję "agreguj pliki CSS". Jeżeli zrobi się to drugie wystarczy za każdym razem przeładowanie strony.
+
+#### Barrio
+
+Pobranie motywu:
+
+```
+    $ composer require drupal/bootstrap_barrio
+```
+
+Instrukcja: [Creating a custom Barrio sub-theme](https://www.drupal.org/docs/8/themes/barrio/creating-a-custom-barrio-sub-theme) - niestety zawiera błędy. Podobnie jak w przypadku Drupal Bootstrap trzeba skopioać subtheme do katalogu strony i zmienić nazwy następujących plików, wszędzie zmieniamy ten element "bootstrap\_barrio\_subtheme", rozszerzenia wbrew instrukcji są takie jak poniżej:
+
+- bootstrap\_barrio\_subtheme.theme
+- bootstrap\_barrio\_subtheme.info.yml
+- bootstrap\_barrio\_subtheme.libraries.yml
+- config/install/bootstrap\_barrio\_subtheme.settings.yml
+- config/schema/bootstrap\_barrio\_subtheme.schema.yml
+
+Potem edycja czterech plików:
+
+[1] W pliku: nowa\_nazwa.info.yml :
+
+```
+    name: nowa_nazwa
+    type: theme
+    description: 'Basic structure for a nowa_nazwa.'
+    # version: VERSION
+    # core: 8.x
+    base theme: bootstrap_barrio
+    
+    libraries:
+      - nowa_nazwa/bootstrap_cdn
+      - nowa_nazwa/global-styling
+```
+
+I tu niestety instrukcja wprowadza drugi, bardzo poważny błąd. Otóż skasowanie znajdującej się na końcu informacji od archiwizera może spowodować wyświetlenie zamiast strony:
+
+```
+ The website encountered an unexpected error. Please try again later.
+```
+
+A w dzienniku wpis błędu:
+
+```
+    Drupal\Core\Extension\InfoParserException: Missing required keys (core) in sciezka_dostepu/themes/custom/hpbarrio/hpbarrio.info.yml w Drupal\Core\Extension\InfoParserDynamic-/>parse() (linia 29 w sciezka_dostepu/public_html/drupal_dir/web/core/lib/Drupal/Core/Extension/InfoParserDynamic.php).
+```
+
+Więc zmieniamy tylko początek pliku, reszta zostaje bez zmian i wszystko jest w porządku.
+
+[2] W pliku config/schema/nowa\_nazwa.schema.yml :
+
+```
+     # Schema for the configuration files of the Bootstrap Barrio Subtheme.
+    
+	 nowa_nazwa.settings:
+	 type: theme_settings
+	 label: 'nowa_nazwa settings'
+```
+
+[3] W pliku: color/color.inc w linii 117:
+
+```
+     // Preview files.
+	 'preview_library' =/> 'nowa_nazwa/color.preview',
+	 'preview_html' =/> 'color/preview.html',
+```
+
+[4] W pliku yourname.theme zmienić w linii:
+
+```
+ function bootstrap_barrio_subtheme_form_system_theme_settings_alter(&$form, FormStateInterface $form_state)
+```
+
+na:
+
+```
+ function nowa_nazwa_form_system_theme_settings_alter(&$form, FormStateInterface $form_state)
+```
+
+Jak widać jest podobnie, niestety trochę więcej klikania, ponadto instrukcja zastosowana dosłownie skutkuje niewyświetleniem strony.
+
+### Breadcrumb i kategorie treści
+
+Jak najdłużej postaramy się obyć bez instalacji dodatkowych modułów. Powinniśmy tego unikać, bo za każdym razem, czasem zdejmując z nas trochę pracy, zwiększa komplikację systemu. Ponadto unikanie modułów jest okazją żeby nauczyć się czegoś o samym Drupalu.
+
+Jeżeli się przyjrzymy schematowi bloków oferowanych natywnie w Drupalu zobaczymy tam Breadcrumbs. Konfigurujemy tak, żeby nie pokazywał nazwy i nie wyświetlał się na stronie głównej. Domyślnie pokazuje całą strukturę adresową, więc jeżeli mamy nowe strony wg schematu /node/1, /node/2 itd. To dostaniemy breadcrumba w formie Strona główna / Node / 1. Ten Node jest całkiem niepotrzebny i łatwo można go usunąć, zmieniając strukturę adresową na czytelną dla człowieka - co i tak musimy zrobić. Dlatego w Konfiguracja / Aliasy adresów po kolei tworzymy aliasy dla wszystkich stron umieszczonych w menu głównym. Czyszczenie bufora, przeładowanie strony i gotowe. Nie ma już bezsensownego Node, mamy strukturę Strona główna / Tytuł podstrony.
+
+Co z artykułami? Powinny automatycznie wpadać do właściwej kategorii. Czyli jeżeli jest to podstrona z artykułami powinniśmy mieć Strona główna / Artykuły / Tytuł artykułu. Tu już niestety nie obejdziemy się bez modułu. Ale tym czego potrzebujemy jest [Pathauto](https://www.drupal.org/project/pathauto), moduł tak popularny, że możliwe iż niedługo stanie się częścią domyślnego zestawu Drupala. Warto się z nim zapoznać w tym artykule ["How to Use Pathauto in Drupal 8"](https://www.ostraining.com/blog/drupal/pathauto/).
+
+W linii poleceń przechodzimy do katalogu Drupala i instalujemy moduł Composerem
+
+```
+    $ cd public_html/drupal_dir
+    $ composer require drupal/pathauto
+```
+
+Dzięki temu Pathauto automatycznie dociągnie zależności, czyli ctools i token. Teraz musimy je zainstalować z poziomu www Rozszerz i tam wybieramy wszystkie trzy i "Instaluj". I teraz w Aliasach adresów mamy zupełnie nowe opcje. Wybieramy Wzory i Add Pathauto pattern.
+
+- Dla powyższego przykładu będzie to oczywiście Pattern type - Zawartość
+- Potem wybieramy rodzaj zawartości
+- Tworzymy Path pattern (wszystkie dostępne opcje są widoczne po kliknięciu "Przeglądaj dostępne wzorce."), czyli tu będzie to /Artykuly/[node:title]
+- Na końcu etykietę czyli wewnętrzną nazwę tworzonego wzoru, np. "ścieżka dla artykułów".
+
+Akceptujemy wybór i sprawdzamy jak to działa, zawsze można to zmienić. Teraz jeżeli tworzymy nową lub edytujemy już istniejącą treść zdefiniowanego powyżej typu w polu Adres mamy domyślnie zaznaczoną opcję "Generuj automatyczny alias URL" pole jest puste i niedostępne do edycji, ale adres zostanie utworzony wg wzoru, a artykuł automatycznie wskoczy we właściwe miejsce w hierarchii chlebowych okruszków. Musieliśmy zainstalować trzy moduły, ale po pierwsze są one bardzo popularne, po drugie i tak są wymagane przez wiele innych modułów.
+
+A jeśli jest wiele kategorii / działów artykułów? Np. artykuły w dziale Pierniki i w dziale Wiatraki. Wtedy używamy taksonomii, jest to rdzenny moduł i do tego domyślnie jest włączony:
+
+- Najpierw trzeba utworzyć taksonomię. W Struktura / Kategorie, mamy początkowo tylko Tagi. Dodajemy więc nowy słownik: "Dodaj słownik:" Taksonomia artykułów (to przykładowa nazwa, ważne żeby miała właściwy sens), a potem w kolejnym ekranie widzimy przycisk: "dodaj termin" i po kolei dodajemy nazwy wszystkich kategorii, przy okazji można określić nazwy aliasów, ale na razie nie jest to potrzebne
+- Kolejny krok to przypisanie do rodzaju treści. W Struktura / Rodzaje zawartości, dla wybranego rodzaju zawartości, w tym wypadku Artykułu dodajemy pole, wybierając w rozwijanej liście jego rodzaj "Termin taksonomii" a potem słownik, czyli w tym wypadku "Taksonomia artykułów".
+- Tworzymy wzorzec pathauto. W Konfiguracja / Aliasy adresów po instalacji Pathauto mamy dostępne wzorce i tam klikamy "Add Pathauto pattern" po czym do wyboru jest Taksonomia, Zawartość, Użytkownik, wybieramy zawartość i z dostępnej pomocy wybieramy pasujące elementy ścieżki, zwykle będzie to /nazwa kategorii/tytuł artykułu (np. [nazwa\_wezla\_taksonomii]/[node:title]), zaznaczamy, że ścieżka ma dotyczyć Artykułu i wybieramy etykietę czyli nazwę wzoru zrozumiałą dla człowieka np. wzorzec ściezki adresu dla artykułów.
+- Edycja artykułu: przypisujemy taksonomię do artykułu w polu o nazwie jaka wybraliśmy przy przypisaniu do rodzaju treści, ponadto pojawia się zaciemnione pole adresu i uaktywniona opcja "Generuj automatyczny alias URL", zawsze można to dla danego artykułu wyłączyć i dokonać edycji adresu. Po zapisaniu zmian nowa ścieżka powinna działać.
+
+Jeżeli zamiast kolejnej kategorii istniejącego już rodzaju zawartości potrzebny jest inny (inaczej wyglądający, z innymi właściwościami):
+
+- tworzymy osobny rodzaj zawartości (np. Artykuł Pierniki) wstępnie go konfigurując - w Struktura / Rodzaje zawartości
+- ustawiamy alias adresu np. /Pierniki/[node:title], przy czym powinna istnieć strona Pierniki, np. zawierająca view z listą artykułów piernikowych
+- tak skonfigurowany typ artykułu pojawi się jako Artykuł Pierniki w opcji tworzenia nowej zawartości i przy zaznaczeniu "Generuj automatyczny alias URL" zostanie utworzony pod właściwym adresem
+
+To w zasadzie wszystko, ale jeszcze zanim wypełnimy witrynę treścią, musimy mieć dobrze zdefiniowane i skonfigurowane rodzaje zawartości. Warto tak utworzony typ zawartości dokładnie skonfigurować. Jeżeli ma być kopią istniejącego już typu, np. Artykuł mamy kilka możliwości
+
+- Możemy skonfigurować nowy typ tworząc go dokładnie wg wzoru, powtarzając te same pola, ich układ itp.
+- Jeżeli typów zawartości będzie więcej, abo się spieszymy to instalujemy moduł [Field tools](https://www.drupal.org/project/field_tools), który nie ma żadnych zależności i służy do automatycznej i masowej manipulacji polami. W tym wypadku najpierw tworzymy nowe rodzaje zawartości, potem wybieramy typ zawartości, który chcemy skopiować, klikamy [edytuj] i w ostatniej zakładce "Tools" mamy narzędzie do kopiowania: od góry zaznaczamy jakie pola z aktualnego typu zawartości mamy skopiować, a na dole do jakiego typu zawartości mają zostać skopiowane. Jeżeli już są, to zostaną nadpisane a nie zdublowane. Narzędzie to działa bezkonfliktowo.
+- Narzędziem do prostego tworzenia nowego rodzaju zawartości na podstawie istniejącego wzoru jest [Content Type Clone](https://www.drupal.org/project/content_type_clone), który również można zainstalować Composerem i jak sama nazwa wskazuje tworzy klony, czyli dokładne kopie rodzajów zawartości pod nową nazwą. Jedyną jego zależnością jest token. Tworzenie klonów jest bardzo proste - w Rodzajach zawartości z rozwijanej listy wybieramy Klonuj i przechodzimy do pola edycji nowego rodzaju zawartości. Oczywiście wybieramy opcję "Copy all nodes from the source content type to the target content type" bez kasowania oryginału. Nie ma się co deprymować tym, że czasem wysypie ogromną liczbę błędów, to nie zawsze oznacza, że utworzenie kopii się nie powiodło. Na dole powinniśmy mieć na zielonym polu komunikat o pomyślnym utworzeniu nowego rodzaju zawartości. Warto ją później skopiować wg konfiguracji wzoru, wszystkie pola są bowiem te same, niektóre ustawienia mogą się różnić. Nowy rodzaj zawartości (dokładnie rzecz biorąc identyfikator systemowy rodzaju) nie może istnieć w momencie klonowania.
+
+["Structuring Content with Drupal 8"](https://evolvingweb.ca/blog/structuring-content-drupal-8)
+
+### Font Awesome
+
+Coraz popularniejszym elementem stron są glify czyli fonty-ikony, które przypominają proste ilustracje wektorowe, ale naprawdę są fontami i można zarządzać nimi jak fontami. Najpopularniejszą biblioteką takich glifów jest [Font Awesome](https://fontawesome.com/), który - podobnie jak sporo bibliotek tego typu - używa pustego tagu <i/> zdefiniowanego klasą. Niestety domyślnym edytorem w Drupalu jest CKEditor, który jest typowym edytorem treści i nie pozwala na puste tagi więc każdy wpisany glif jest usuwany przy powtórnym otwarciu edycji. W domyślnym CKEditor ustawieniu w ogóle nie pozwala na tag <i/> Co więcej nie ma dla CKEditora alternatywy.
+
+W internecie można znaleźć wiele porad jak sobie z tym poradzić. Czasem radzi się żeby umożliwić wpisywanie tagu <i/> przez włączenie opcji "Ogranicz dozwolone znaczniki HTML i napraw błędny kod HTML" a potem dopisanie <i/> do dozwolonych znaczników. Niestety ta domyślna lista jest bardzo uboga i trzeba ją uzupełnić nie tylko o nasz znacznik ale wszystkie których używamy. Przy zapisie wszystkie spoza listy zostaną usunięte. Znikną także parametry, których nie dopisaliśmy jako dozwolone, na szczęście istnieje przywracanie poprzednich wersji dokumentów. Co więcej - takie rozszerzenie listy znaczników w ogóle tu nie pomaga.
+
+[When using Font-Awesome, prevent CKEditor 4.x from removing <i/></i/>](https://www.drupal.org/project/ckeditor/issues/1908696) - jedna z licznych kolekcji porad dotyczących zmian konfiguracji CKEditor. Niestety jest to również nieskuteczne. Istnieje proste rozwiązanie, które działa i wymaga tylko trzech czynności.
+
+[1] Instalujemy rozszerzenie [Font Awesome Icons](https://www.drupal.org/project/fontawesome); więcej o tym rozszerzeniu [Using Font Awesome Icons in CKEditor](https://www.drupal.org/docs/8/modules/font-awesome-icons/using-font-awesome-icons-in-ckeditor)
+
+```
+    $ composer require drupal/fontawesome
+```
+
+[2] Włączamy moduł i w jego konfiguracji (admin/config/content/fontawesome) ustawiamy dwie opcje "Font Awesome Tag" na [span], "Font Awesome Method" jak chcemy, ale producent zaleca [SVG with JS].
+
+[3] W konfiguracji formatów tekstu w Full HTML dodajemy ikonkę Font Awesome do paska edytora (ważne: bez tego nie działa).
+
+Od tej pory Font Awesome działa bez zarzutu. Możemy dodać przycisk Font Awesome do edytora i wpisywać je w trybie WYSIWYG. Warto też wiedzieć że Font Awesome w powyższej konfiguracji używa zagnieżdżonego znacznika span i w tej formie można go wpisywać ręcznie bezpośrednio do kodu HTML. Wygląda to tak:
+
+```
+<span className="fontawesome-icon-inline"><span className="klasa font awesome"></span></span>   
+```
+
+### Integracja z IMCE
+
+Uploader plików [IMCE](https://www.drupal.org/project/imce) umożliwia dołączenie do tworzonej treści obrazków bezpośrednio z lokalnego komputera. Łatwo można go zintegrować z narzędziami edycji. Zgodnie z dokumentacją ["IMCE for Drupal 8"](http://ufku.com/drupal/imce):
+
+- Integracja z CKEditor - Konfiguracja / Formaty tekstu i edytory i wybieramy format, w którym chcemy mieć możliwość używania IMCE. Klikamy Konfiguruj i w Konfiguracji paska narzędziowego przeciągamy ikonkę IMCE na właściwe miejsce. Trzeba pamiętać, że ikonka ma identyczny wygląda jak ta standardowa do załączania obrazków.
+- Włączenie do edycji treści. Struktura / Rodzaje zawartości i wybieramy np Artykuł, tam dodajemy pole typu obraz, ustawiamy nieograniczoną ilość instancji, w ustawieniach pola wybieramy schemat nazywania katalogów z obrazkami. Następnie w zakładce Zarządzenie wyświetleniem formularza klikamy trybik z konfiguracją i rozwija się pole, na którym możemy wybrać opcję "Allow users to select files from Imce File Manager for this field.", po zatwierdzeniu zostaje tylko zapisać konfigurację i w następnej zakładce - Zarządzaj wyświetlaniem - przesuwamy utworzone pole do wyłączonych. Tak samo można zrobić z każdym rodzajem treści.
+
+Teraz podczas tworzenia/edycji treści mamy dodatkowe element, o nazwie którą wypraliśmy dla dodanego pola. Jest tam link "Open File Browser", który uruchamia mechanizm Drupala pozwalający wybrać pliki z instalacji, oraz przycisk "Wybierz plik" pozwalający dodać dowolną ilość obrazków do treści. Po dodaniu zostaje utworzona lista z absolutnych ścieżek dostępu i tam pozostaje na stałe. Po dodaniu plików możemy zamknąć przeglądarkę i np. następnym razem wybrać odnośnik i dodać go do kodu HTML.
+
+Przy większej liczbie obrazków taka lista jednak zaczyna przeszkadzać w edycji, poza tym znacznie efektywniejszy jest FTP. Warto o tym pamiętać jeśli jest to kilkanaście lub więcej obrazków.
+
+### Strona z galeriami obrazków
+
+Użytkownicy WordPressa znają i cenią [NextGEN Gallery](https://wordpress.org/plugins/nextgen-gallery/), doskonały plugin pozwalający na wzbogacenie treści galerią zdjęć z rzutnikiem, taką galerię można umieścić w dowolnym miejscu. Ba, NextGEN Gallery tworzy bibliotekę tych galerii, więc można je używać wiele razy. Ogromna ilość możliwości konfiguracyjnych i łatwość używania sprawia, że jest to ten plugin w swojej klasie, z którym porównywane są inne.
+
+Czy w Drupalu jest coś porównywalnego? Nie. Ale taką stronę z galeriami można łatwo w kilka minut zrobić. Niestety, nie mamy biblioteki galerii, a możliwości konfiguracji są o wiele mniejsze. Można to zrobić na kilka sposobów, w tym rozdziale opiszę dwa.
+
+### Lightbox + Karuzela Bootstrap
+
+Standardem prezentacji grafiki na WWW stał się [Lightbox2 by Lokesh Dhakar](https://lokeshdhakar.com/projects/lightbox2/), bardzo prosty w użyciu, konfigurowalny i wymagający tylko JQuery. Jedną z bardziej popularnych wersji dla Drupala jest [Colorbox](https://www.drupal.org/project/colorbox). Przy założeniu, że używamy jednego z bootstrapowych motywów nie trzeba już niczego dodawać. Wystarczy:
+
+- zainstalować moduł Colorbox (poleceniem Composera)
+- plugin [Colorbox - a jQuery lightbox](http://www.jacklmoore.com/colorbox/) rozpakować do drupal\_dir/web/libraries/
+
+W przypadku Lighboxa do każdego zdjęcia należącego do galerii trzeba dodać parametr data-lightbox="nazwa\_galerii". Podobnie jest z Colorboxem: tu trzeba dodać data-colorbox-gallery="nazwa\_galerii" i z cała resztą konfiguracji jest podobnie. Można się wzorować lub wręcz kopiować parametry Lightboxa. HTML wygląda tak, np. wewnątrz div-a:
+
+```
+    <a className="colorbox" data-colorbox-gallery="nazwa_galerii" href="sciezka_dostepu/obrazek.jpg"> <img src="sciezka_dostepu/miniatura.jpg" /> </a>
+```
+
+Mając Bootstrapa możemy umieścić Lightboxa wewnątrz karuzeli: [Carousel](https://getbootstrap.com/docs/4.1/components/carousel/). I jeżeli wybierzemy karuzelę ze strzałkami i wskaźnikami (które są bardzo praktyczne, jeżeli mamy więcej niż dwa zestawy slajdów) to kod HTML wygląda tak:
+
+```
+  <div id="carouselExampleIndicators"  data-interval="false" className="carousel slide" data-ride="carousel">
+	<ol className="carousel-indicators">
+	  <li data-target="#carouselExampleIndicators" data-slide-to="0" className="active"></li>
+	  <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+	</ol>
+	<div className="carousel-inner">
+	  <div className="carousel-item active">
+	   [tu Colorbox]
+	  </div>
+	  <div className="carousel-item">
+	   [tu Colorbox]
+	  </div>
+	<a className="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+	  <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+	  <span className="sr-only">Poprzedni</span>
+	</a>
+	<a className="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+	  <span className="carousel-control-next-icon" aria-hidden="true"></span>
+	  <span className="sr-only">Następny</span>
+	</a>
+  </div>
+```
+
+Do powyższego wystarczy dodawać kolejne div-y z klasą .carousel-item i kolejne wskaźniki. Ten parametr: data-interval="false" wyłącza automatyczny pokaz slajdów, który jest niepotrzebny w takich galeriach i mocno obciąża przeglądarkę, szczególnie jeśli jest ich kilka na stronie.
+
+### Juicebox HTML5 Responsive Image Galleries
+
+Potrzebne są dwa moduły:
+
+- [Paragraphs](https://www.drupal.org/project/paragraphs), ktory jako zależność dociągnie [Entity Reference Revisions](https://www.drupal.org/project/entity_reference_revisions)
+- Juicebox HTML5 Responsive Image Galleries [Juicebox HTML5 Responsive Image Galleries](https://www.drupal.org/project/juicebox), który jako zależność dociągnie [Libraries API](https://www.drupal.org/project/libraries); ponadto bibliotekę [Juicebox](https://www.juicebox.net/download/) (a konkretnie zawartość katalogu /jbcore) trzeba umieścić w ścieżce /drupal\_dir/web/libraries/juicebox
+
+Najpierw tworzymy nowy typ Paragraph, np. składający się z tytułu (krótki tekst niesformatowany), treści (długi tekst sformatowany) i obrazka, pamiętając żeby nazwać obrazek tak jakby już był galerią. Przy definiowaniu obrazka trzeba pozwolić na wielokrotne instancje. Lepiej dać to pole jako opcjonalne, bo może nie przy każdym bloku treści będzie potrzebna galeria. Potem, podczas konfiguracji Paragraphu w zakładce "Zarządzaj wyświetlaniem" jako Format z listy wybieramy Galeria Juicebox. I tutaj też dokonujemy konfiguracji Galerii. Dobrze jest od razu ustalić odpowiednią wielkość obrazków, dobrać kolor tła i zmniejszyć wysokość Galerii do np. 40%. Zapisujemy.
+
+Potem tworzymy nowy typ treści. Na samym początku trzeba usunąć ciało, czyli Body, bo pozostawione będzie tylko sprawiać problemy. Wystarczą dwa nowe pola: tytuł oraz Paragraph (po zdefiniowaniu naszego pierwszego typu powinien być dostępny jako opcja). Jeżeli jest więcej typów Paragraphów trzeba dokonać wyboru z listy radiowej. I tu też trzeba pozwoliś na wielokrotne instancje. I to wszystko. Teraz przy tworzeniu treści mamy nowy rodzaj, ktory składa się z sekwencji bloków treści zakończonych opcjonalnie galerią. Po kliknięciu "dodaj obrazki" zaznaczamy wszystkie, które mają tworzyć Galerię. Dodajemy je bezpośrednio z komputera. Nie trzeba ich najpierw dodawać do Drupala jako Media.
+
+### Przydatne moduły
+
+Jeżeli potrzebujemy statystyk podstawowym modułem jest [Google Analytics](https://www.drupal.org/project/google_analytics), który w prosty sposób łączy się z naszym kontem Google Analytics. Wystarczy ustawić właściwy identyfikator śledzenia. ["How To Set Up Google Analytics On Your Drupal Site: A Dead-Simple Step-By-Step Guide"](https://www.optasy.com/blog/how-set-google-analytics-your-drupal-site-dead-simple-step-step-guide)
+
+Do właściwego zindeksowania treści w Konsoli Googla trzeba dodać mapę witryny i tu odpowiednim narzędziem jest [Simple XML sitemap](https://www.drupal.org/project/simple_sitemap). Opis działania: [Simple XML Sitemap](http://drupal8.support/en/modules/simple-xml-sitemap). Trzeba pamiętać, żeby dodać do zakresu mapy każdy rodzaj zawartości: Struktura / Rodzaje zawartości - wybieramy Edytuj i na samym dole jest pole Simple XML sitemap, w którym wybieramy indeksowanie, po czym Zapisz typ zawartości. Po czym w Konfiguracja / Simple XML Sitemap klikamy przycisk Regenerate sitemap.
+
+Prosty w użyciu i niewymagający żadnych zależności moduł komentarzy Facebooka: [Facebook Comments Social Plugin](https://www.drupal.org/project/facebook_comments) - [Drupal Facebook Comments Social Plugin Module Tutorial](https://www.daymuse.com/blogs/drupal-facebook-comments-social-plugin-module-tutorial)
+
+Ogromne możliwości organizacji treści na stronie daje [Bootstrap Paragraphs](https://www.drupal.org/project/bootstrap_paragraphs), jak to wygląda najlepiej sprawdzić na stronie modułu Bootstrap Paragraphs - [Documentation and Examples of the Drupal 8 Module](https://bp.jimbir.ch/)
+
+Zbiór szablonów i możliwość edycji układu dokumentu - [Display Suite](https://www.drupal.org/project/ds)
+
+Edycja formularzy: [Webform](https://www.drupal.org/project/webform), [dokumentacja Webform](https://www.drupal.org/docs/8/modules/webform). ["Getting Started With Drupal's Webform Module"](https://www.ostraining.com/blog/drupal/webform-module/)
+
+Treść w zakładkach można umieszczać używając Bootstrap Paragraphs, oraz [Field Group](https://www.drupal.org/project/field_group), który nie ma żadnych zależności, ale wymaga utworzenia nowego rodzaju treści dla każdej opcji, krótka instrukcja [Drupal 8 - How To Group Fields Together With Field Group Module [YT 3:52]](https://www.youtube.com/watch?v=D_N03H9touQ). Menu: [Drupal 8 MegaMenu](https://www.drupal.org/project/we_megamenu).
+
+[Elementor Drupal](https://blog.linnovate.net/elementor-drupal-c4d789bd706d)
+
+### Modyfikacja layoutu skórek twig
+
+- [Twig - The flexible, fast, and secure PHP template engine](https://twig.symfony.com/)
+- [Twig in Drupal 8](https://www.drupal.org/docs/8/theming/twig)
+- [Twig basics | The Drupal 8 Theming Guide](https://sqndr.github.io/d8-theming-guide/twig/twig-basics.html)
+- [Template Design with Twig | Drupalize.Me](https://drupalize.me/topic/twig)
+- Electric Citizen: [Twig For Drupal 8 Development: Twig Templating Part 1 Of 2](https://www.electriccitizen.com/blog/twig-drupal-8-development-twig-templating-part-1) - [Twig For Drupal 8 Development: Twig Templating Part 2 Of 2](https://www.electriccitizen.com/blog/twig-drupal-8-development-twig-templating-part-2)
+
+Za: ["Locating Template Files with Debugging"](https://www.drupal.org/node/2358785)
+
+Znajdujemy lub tworzymy z szablonu plik /sites/default/services.yml (w przypadku instalacji multisite najpierw kopiujemy go do /sites/sitename)
+
+I tam w rozdziale: twig.config znajdujemy ten fragment i zmieniamy debug na true:
+
+```
+     # Twig debugging:
+	 / tu troche opisu /
+	 # Not recommended in production environments
+	 # @default false
+	 debug: true
+	 # Twig auto-reload:
+```
+
+Po czym czyścimy bufor i ładujemy stronę, w kodzie powinny być widoczne linie wyglądające w ten sposób:
+
+```
+<!-- BEGIN OUTPUT from 'core/themes/classy/templates/content/node.html.twig' -->
+```
+
+I już wiadomo który plik jest do modyfikacji. W przypadku skórki Bootstrap nie modyfikujemy żadnych plików w oryginalnym katalogu, natomiast wszystko co umieścimy w katalogu /sitename/web/themes/contrib/themename/templates nadpisuje pliki z Bootstrapa.
+
+### Szablon strony głównej
+
+- [Adding Regions to a Theme](https://www.drupal.org/docs/8/theming-drupal-8/adding-regions-to-a-theme)
+
+Opis na przykładzie poniższej witryny. Strona główna ma całkowicie zmieniony schemat. Składa się z nagłówka (menu i wyszukiwarka) u góry i stopki na dole. Pośrodku są trzy równe, horyzontalnie ułożone bloki. Stopka o zadanej wysokości ma się trzymać dołu strony. Niezależnie od wielkości ekranu żaden element treści nie może wychodzić poza blok w którym się znajduje, trzy środkowe bloki mają równo wypełniać przestrzeń, przy pewnej minimalnej szerokości ekranu cały układ ma się degradować do formy linearnej.
+
+Żeby utworzyć zupełnie nową stronę główną potrzebne są trzy rzeczy:
+
+- Bloki, które wypełnimy treścią.
+- Regiony, w których umieścimy bloki
+- Szablon strony głównej, w którym będą regiony.
+
+Najpierw tworzymy nową stronę: Zawartość / Dodaj treść / Zwykła strona, dajemy tytuł Strona główna i zapisujemy. Zapamiętujemy adres tak utworzonej strony, np. "node/1". Teraz Konfiguracja / Podstawowe ustawienia witryny i wpisujemy jako "Domyślna strona główna" - [/node/1].
+
+Teraz trzeba utworzyć te trzy bloki: Struktura / Układ bloków. Tam wybieramy "Biblioteka własnych bloków i tworzymy kolejno trzy bloki o odpowiednich nazwach. Puste, później wypełnimy je treścią. Jeżeli każdy z nich związany jest z jakaś treścią, nazwa powinna być semantyczna. Jeżeli jest to tylko element kompozycji można je nazwać wg położenia.
+
+Ale nie mamy pełnej kontroli nad layoutem dopóki musimy używać tych regionów, które są w domyślnej konfiguracji. Więc teraz trzeba zdefiniować własne regiony w konfiguracji w pliku tematu THEMENAME.info.yml, w następującej konwencji, nazwa systemowa: 'Nazwa użytkownika', np:
+
+```
+      front_header: 'Front header'  
+      block_1: 'Block 1'
+      block_2: 'Block 2'
+      block_3: 'Block 3'
+      front_footer: 'Front footer'
+```
+
+Nazwa systemowa to klasa CSS. Po wyczyszczeniu pamięci podręcznej nowe regiony będą widoczne. Możemy w nich umieścić nowo utworzone bloki.
+
+W Nawigacji zostawiamy tylko główną nawigację. Menu stopki idzie do Stopki, itd. Najpierw grupujemy standardowe bloki tak, żeby jak najwięcej regionów było pustych, a potem wyłączamy wszystkie bloki, których nie potrzebujemy (na wszelki wypadek nie usuwamy ich).
+
+Mamy już bloki i regiony. Trzeba jeszcze utworzyć szablon strony głównej. Szablony Drupala trzymane są w plikach .twig. Strona główna to plik templates/page--front.html.twig i jeżeli umieścimy go w sub-theme to nadpisze ustawienia w theme. Dla tego konkretnego przypadku wygląda on tak:
+
+```
+    <div className="front_container">
+    {# Navbar #}
+           <div className="front_header">
+            {{ page.navigation }}
+           </div>
+    
+    {# Main #}
+    {% block main %}
+      <div role="main" className="js-quickedit-main-content front-content">
+        
+          {# Block 1 #}
+          {% if page.block_1 %}
+            {% block block_1 %}
+              <div role="complementary" className="block_1">
+                {{ page.block_1 }}
+              </div>
+            {% endblock %}
+          {% endif %}
+    
+             {# Block 2 #}
+          {% if page.block_2 %}
+            {% block block_2 %}
+              <div role="complementary" className="block_2">
+                {{ page.block_2 }}
+              </div>
+            {% endblock %}
+          {% endif %}
+          
+                {# Block 3 #}
+          {% if page.block_3 %}
+            {% block block_3 %}
+              <div role="complementary" className="block_3">
+                {{ page.block_3 }}
+              </div>
+            {% endblock %}
+          {% endif %}
+          
+         </div>
+    {% endblock %}
+    
+    {% if page.footer %}
+      {% block footer %}
+        <div className="front_footer" role="contentinfo">
+          {{ page.footer }}
+        </div>
+      {% endblock %}
+    {% endif %}
+    </div>
+```
+
+Na powyższym przykładzie widać strukturę szablonu. Można go modyfikować dowolnie, dostosowując do potrzeb. Jeżeli zachowamy poprawną składnię, to po wyczyszczeniu bufora zobaczymy naszą nową, bardzo surowo wyglądającą stronę główną.
+
+Trzeba jeszcze skonfigurować ustawienia sub-theme w Wygląd - (domyślna skórka) Ustawienia.
+
+Powyższy szablon powinien wygenerować następujący układ elementów HTML:
+
+```
+   <div className="front-container">
+	 <div className="front-header"></div>
+	 <div className="front-content">
+	 <div className="block_1"></div>
+	 <div className="block_2"></div>
+	 <div className="block_3"></div>
+	 </div>
+	 <div className="front-footer"></div>
+	 </div>
+```
+
+Pora na CSS. Mamy do wyboru dwa modele, starszy i wspierany przez więcej przeglądarek, raczej jednowymiarowy Flexbox oraz nowszy, zasadniczo już 2D, ale jeszcze z mniejszym wsparciem Grid.
+
+Flexbox:
+
+```
+    @media screen and (min-width:768px) {
+		.front-container {display:flex; flex-direction:column; min-height:100vh;}
+		.front-header {flex:0 0 auto;}
+		.form_header {margin-left:auto;}
+		.front-content {flex:1; display:flex;}
+		.block_1 {flex:1 0;}
+		.block_2 {flex:1 0;}
+		.block_3 {flex:1 0;}
+		.right {flex:1 0;}
+		.front-footer {flex:0 0 5em;}
+		}
+```
+
+Grid:
+
+```
+    @media screen and (min-width:768px) {
+		.front-container {display:grid; grid-template-columns:1fr 1fr 1fr;  grid-template-rows:auto 1fr 5em; grid-template-areas:"header header header" "left center right" "footer footer footer"; height:calc(100vh - 20px);}
+		.front-header {grid-area:header; display:inline-grid; grid-template-areas:"menu form_header"; }
+		.block_1 {grid-area:left;}
+		.block_2 {grid-area:center;}
+		.block_3 {grid-area:right;}
+		.front-footer {grid-area:footer;}
+		.menu {grid-area:menu;}
+		.form_header {grid-area:form_header; text-align:right;}
+		.header ul li {display:inline-block; }
+		}
+```
+
+Teraz tworzymy główne podstrony - elementy menu.
+
+Jeżeli dla jakiejś konkretnej strony chcemy stworzyć odmienny layout, można to zrobić na kilka sposobów. najprostszym jest użycie (zakładając, że używamy Bootstrapa) modułu [Bootstrap Layouts](https://www.drupal.org/project/bootstrap_layouts), który pozwala w ustawieniach danej strony wybrać jeden z wielu układów.
+
+Inną możliwością jest napisanie własnego szablonu i umieszczenie go we własnym sub-theme w katalogu /templates. Zgodnie z dokumentacją: [Theming Drupal 8](https://www.drupal.org/docs/8/theming) - [Twig Template naming conventions](https://www.drupal.org/docs/8/theming/twig/twig-template-naming-conventions) - szablon taki wystarczy nazwać odpowiednio, żeby Drupal go wczytał dla konkretnej strony, najprościej użyć numeru węzła, czyli np. page--node--xx.html.twig (gdzie xx to numer węzła). W tworzeniu szablonów najlepiej kierować się podanymi na stronie Bootstrapa wzorami [Drupal Bootstrap /> Documentation /> Templates](https://drupal-bootstrap.org/api/bootstrap/docs%21Templates.md/group/templates/8).
+
+### Mapa OSM na stronie
+
+
+Na przykładzie użycia modułu Leaflet i mapy OSM. Potrzebujemy modułu [Leaflet](https://www.drupal.org/project/leaflet) ([Dokumentacja](https://www.drupal.org/node/1645460)), który jako zależności dociągnie moduły: [Geofield](https://www.drupal.org/project/geofield) oraz [GeoPHP](https://geophp.net/). Potem trzeba będzie uaktywnić moduły Leaflet, Leaflet Views i Geofield.
+
+```
+    $ composer require drupal/leaflet
+```
+
+Potrzebna jest także biblioteka JS [Leaflet an open-source JavaScript library for mobile-friendly interactive maps](http://leafletjs.com/download.html), którą rozpakowujemy w katalogu (trzeba go utworzyć) /drupal\_dir/web/libraries/leaflet . Ani moduł, ani biblioteka nie wymagają dalszej konfiguracji.
+
+Natomiast trzeba skonfigurować rodzaj treści, w którym ma się pokazać mapa. Dodajemy pole typu Geofield, tu zależnie od tego czy chcemy mieć jedną mapę na stronę/artykuł/blok, czy więcej ustawiamy jedno, lub nieograniczoną ilość elementów. Potem w "Zarządzaj wyświetlaniem formularza" ustawiamy np. "Szerokość/Długość geograficzna" i zaznaczamy "Use HTML5 Geolocation to set default values". Na końcu w "Zarządzaj wyświetlaniem" wybieramy jako format "Leaflet map" i konfigurujemy w trybiku po prawej.
+
+Zapisujemy i teraz przy edycji tego rodzaju treści na dole będzie dodatkowe pole o nazwie, którą wybraliśmy dla niego i dwa pola formularza: Latitude i Longitude, które wpisujemy np. w najprostszej formie jako stopnie wartości kątowej. Moduł przyjmuje wartości w formacie dziesiętnym (dla Wrocławia jest to 51.11, 17.022222). Jeżeli wpisaliśmy wartości nieprawidłowe pojawi się ostrzeżenie. Jeśli są poprawne w zakresie i formacie, po zapisaniu zobaczymy mapę.
+
+Natomiast jeżeli w "Zarządzaj wyświetlaniem formularza" wybraliśmy Geofield, powyższe dane wpisujemy jako: POINT (17.022222 51.11).
+
+Modułem rozwijającym możliwości Leaflet jest [Leaflet More Maps](https://www.drupal.org/project/leaflet_more_maps). Są to dodatkowe mapy i możliwości konfiguracji.
+
+W wyniku powyższego otrzymujemy mapę na dole strony. A co jeżeli chcemy mieć ją umieszczoną w bloku, lub dowolnym miejscu strony? Wystarczy utworzyć nowy rodzaj treści i dalej jak w przykładzie z galerią obrazków. Więcej na ten temat: [Easily Create Maps in Drupal with Leaflet [May 1, 2014] [YT 56:53]](https://www.youtube.com/watch?v=ldN23H35flw) (jak na to wskazuje data, poradnik nie jest w każdym detalu aktualny, ale ogólna idea pozostaje).
+
+### Awaria!
+
+Czasem zdarza się problem, którego nie uda się rozwiązać, zdiagnozować przez wyszukanie komunikatu błędu w google itp. Najpierw zapobiegamy pojawieniu się takich sytuacji przez:
+
+- notowanie dokonanych zmian i sprawdzanie ich efektów.
+- przy każdej poważniejszej zmianie typu modyfikacja konfiguracji, dodanie nowej funkcji, zmiana modułów na inne, czy po prostu dodanie modułu - najpierw archiwizujemy bazę danych zapisując ją pod nazwą, z której można wywnioskować datę.
+
+Co jednak jeżeli powyższe nic nie dało a witryna jest martwa niczym dodo? Możemy ją odtworzyć z samej bazy danych za pośrednictwem phpMyAdmina, przechodzimy do niej i kopiujemy teksty podstron z największej tabeli: prefix\_node\_revision\_\_body, w pierwszej zakładce Struktura klikamy w jej nazwę i zakładka zmienia nazwę na Przeglądaj, teraz widzimy listę artykułów i podstron, przy czym w "body value" mamy podgląd w pierwszy wiersz treści, wybieramy najnowszą wersję i po kliknięciu w Edytuj mamy podgląd treści, który już normalnie możemy skopiować. Jest to rozwiązanie, które ma tę zaletę, że zawsze działa, niestety witrynę i tak trzeba odtwarzać od podstaw.
+
+Tu przydaje się oddzielna instalacja poza naszym głównym produkcyjnym multisite, na której możemy bezpiecznie poćwiczyć takie elementy konfiguracji i możliwości Drupala, których jeszcze używaliśmy. Do tworzenia treści służy moduł [Devel](https://www.drupal.org/project/devel).
+
+### Odnośniki
+
+- [Documentation: Drupal 8](https://www.drupal.org/docs/8/) | [Community Documentation: Site Building Guide](https://www.drupal.org/documentation/build) | [Drupal 8 User Guide](https://www.drupal.org/docs/user_guide/en/index.html) | [Shield](https://www.drupal.org/project/shield) | [.htaccess and in order to password protect multisite sub-sites](https://www.drupal.org/forum/support/post-installation/2010-01-23/htaccess-and-in-order-to-password-protect-multisite-sub) | [Adding Regions to a Theme](https://www.drupal.org/docs/8/theming-drupal-8/adding-regions-to-a-theme)
+- [Drupal Training | Drupalize.Me](https://drupalize.me/)
+- [Drupal.pl](http://drupal.pl/) - [Praca Drupal - Wrocław, dolnośląskie - najnowsze oferty pracy | Indeed.com](https://pl.indeed.com/Praca-Drupal-w-Wroc%C5%82aw,-dolno%C5%9Bl%C4%85skie)
+- [DrupalGap 8 Docs](http://docs.drupalgap.org/8/)
+- [Drudesk](https://drudesk.com) - Drupal Fixes, Updates & Support
+- [Drupal 8 | OPTASY](https://www.optasy.com/blog/tag/drupal-8)
+- [Red Crackle Blog](http://redcrackle.com/blog/): [Blog/ Free Drupal 8 Tutorials – An Exhaustive List](http://redcrackle.com/blog/drupal-8/free-tutorials-list)
+- ["The Release of Drupal 8.5 (What’s New and What’s on the Horizon)"](https://www.ctidigital.com/blog/the-release-of-drupal-8.5)
+- [Drupal 8 | Aten Design Group](https://atendesigngroup.com/blog/category/drupal-8)
+- OSTraining: [Drupal News, Tutorials, Opionions and How-Tos](https://www.ostraining.com/blog/drupal/) | ["How to Use the New Media Module Features in Drupal"](https://www.ostraining.com/blog/drupal/media-drupal-8/) | [OSTraining: "Why Is Drupal CMS a Key To Success For Enterprise Websites In 2018?"](https://www.specbee.com/blogs/why-drupal-cms-key-success-enterprise-websites-2018)
+- [Drupal | Kalamuna](https://blog.kalamuna.com/categories/drupal)
+- [Drupal | David Lohmeyer | Allendale, MI Drupal Developer](https://lohmeyer.rocks/blog-categories/drupal)
+- ["27 Questions (and Answers) from My First Drupal 8 Site Build" (2014)](http://mattkorostoff.com/article/27-questions-and-answers-drupal-8)
+- [drupal security | Zivtech](https://www.zivtech.com/tags/drupal-security)
+- [Blog | gbyte](http://gbyte.co/blog)
+- [Colorfield](https://colorfield.be/)
+- [EC Blog | Electric Citizen, Minneapolis Drupal Web](https://www.electriccitizen.com/blog)
+- [Gyan Blog](https://www.gyanblog.com/)
+- [Drupal Upgrade](https://www.siteground.com/tutorials/drupal/upgrade/)
+- [10 free Drupal modules for integration with Social Media](https://www.adcisolutions.com/knowledge/10-free-drupal-modules-integration-social-media)
+- [drupal | matt glaman](https://glamanate.com/tags/drupal)
+- [Articles | Lullabot](https://www.lullabot.com/articles)
+- [Blog Posts - drupal | Texas Creative | Website Design Graphic Design Media Advertising Marketing | San Antonio](https://texascreative.com/blog/category/drupal)
+- [Drupal Commerce Blog | Acro Media Inc. | Drupal](https://blog.acromedia.com/topic/drupal)
+- [Drupal 8 | Acquia](https://dev.acquia.com/drupal-8)
+- [Drupal | ThinkDrop](http://thinkdrop.net/taxonomy/term/22)
+- [Drupal Archives | mobomo](https://www.mobomo.com/tag/drupal/)
+- [Drupal 8 News, Tutorials and How-Tos - Internetdevels](https://internetdevels.com/blog/drupal-8)
+- [Drupal | oakleys.org.uk](https://www.oakleys.org.uk/blog/categories/drupal)
+- [Savas Labs](https://savaslabs.com/blog/tag/drupal8/) [Composer](https://savaslabs.com/blog/tag/composer/)
+- [Ashday Blog | Drupal](https://info.ashday.com/blogs/tag/drupal)
+- [drupal | alvinalexander.com](https://alvinalexander.com/drupal)
+- [8.x | SooperThemes](https://www.sooperthemes.com/drupal/8x)
+- [drupal | Jeff Geerling](https://www.jeffgeerling.com/category/tags/drupal)
+- [Blog | Chromatic](https://chromatichq.com/blog)
+- [Drupal 8 | Evolving Web](https://evolvingweb.ca/tags/drupal-8)
+- [Drupal 8 | Chapter Three](https://www.chapterthree.com/blog/topic/drupal-8)
+- [Compony](https://www.compony.io) component-based system
+- CodeWall: [Tawny Bartlett "Using Drupal 8 Queues To Poll Orders From External APIs"](https://www.codewall.co.uk/using-drupal-8-queues-to-poll-orders-from-external-apis/)
+- specbee: ["Symphony2 Components In Drupal 8 : An Integration Every Drupaler Must Know About"](https://www.specbee.com/blogs/symphony2-components-drupal-8-integration-every-drupaler-must-know-about), ["Building Custom Modules In Drupal 8 - Best Practices To Follow"](https://www.specbee.com/blogs/building-custom-modules-drupal-8-best-practices-follow)
+- [Tawny Bartlett "Using Drupal 8 Queues To Poll Orders From External APIs"](www.codewall.co.uk/using-drupal-8-queues-to-poll-orders-from-external-apis/)
+- [API reference | DrupalContrib](http://www.drupalcontrib.org/api/drupal/8)
+- [Deeson: "How to create a custom field to use on an entity in Drupal 8"](https://www.deeson.co.uk/labs/how-create-custom-field-use-entity-drupal-8)
+- [Drupal development company | OpenSense Labs](https://opensenselabs.com/)
+- [Learn from our blog | Hook 42 SF Bay Area Enterprise Drupal Experts](https://www.hook42.com/blog)
+- Responsive Web Typography: [/topics/drupal](https://rwt.io/topics/drupal)
+- [Blog Promet - topic drupal](https://www.prometsource.com/blog?tid=59&combine=&items_per_page=5)
+- [Droptica Blog /Technology](https://www.droptica.com/blog/technology/)
+- [modules: Gutenberg](https://www.drupal.org/docs/8/modules/gutenberg) | [Drupal Gutenberg](https://drupalgutenberg.org/)
+
+#### YT
+
+- [LevelUpTuts "Drupal 8 Basics" [YT playlist 22 filmy]](https://www.youtube.com/playlist?list=PLLnpHn493BHE9mfp6z5--UowO-6SOzcuI)
+- John Perry ["Developing with Drupal 9 including composer, drush and Docker" [YT 2:01:12]](https://www.youtube.com/watch?v=XJatVmC5-ro)
+
+#### Web Accessibility
+
+- [Drupal is ensuring the Web Accessibility Standards](https://opensenselabs.com/blog/articles/drupal-ensuring-web-accessibility-standards)
+- [April Accessibility (A11Y) Talks](https://www.hook42.com/blog/april-accessibility-a11y-talks)
+- [Does an Accessibility Badge make my site WCAG 2.0 Compliant?](https://www.prometsource.com/blog/does-accessibility-badge-make-my-site-wcag-20-compliant)
+
+#### SEO
+
+- [6 Tips to Rock Drupal 8 SEO](https://www.volacci.com/blog/6-tips-rock-drupal-8-seo) - [Drupal 8 SEO - 12 Essential Modules and Configurations [YT 47:20]](https://www.youtube.com/watch?v=uiT-lLaZ1B4)
+- [Top 21 Drupal SEO Modules To Optimize Your Website](https://www.weebpal.com/blog/top-drupal-seo-modules)
+
+#### D 8.8
+
+- ["Guide to the Drupal 8.8 Update"](https://www.palantir.net/blog/guide-drupal-8-8-update)
+- ["So You Need to Update to Drupal 8.8.x?"](https://www.hook42.com/blog/so-you-need-update-drupal-88x)
+
+#### D 9
+
+- [Tim Lehnen "Is it time to give Drupal another look?"](https://stackoverflow.blog/2020/06/23/is-it-time-to-give-drupal-another-look/)
+
+#### D 10
+
+- ["What's Going On With Drupal 10?"](https://www.thirdandgrove.com/insights/whats-going-drupal-10/)
+
+#### Symfony
+
+- [The Symfony 5 book, The Fast Track, now available online for all languages](https://symfony.com/blog/the-symfony-5-book-the-fast-track-now-available-online-for-all-languages)

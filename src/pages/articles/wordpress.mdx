@@ -1,0 +1,201 @@
+---
+title: "WordPress"
+comment: ""
+section: "it"
+subsection: "cms"
+---
+
+Wordpress 5.0 został opublikowany - po kilkukrotnym przesuwaniu terminu - 6 grudnia 2018. Najbardziej dyskutowaną zmianą, którą wprowadza jest nowy edytor, którego nazwa ma symbolizować jakość zmiany - Gutenberg.
+
+- [WordPress 5.0 “Bebo”](https://wordpress.org/news/2018/12/bebo/)
+- [WordPress 5.0 Field Guide](https://make.wordpress.org/core/2018/12/06/wordpress-5-0-field-guide/)
+
+Notatnik
+
+Uwaga: poniższy artykuł ma charakter notatek, sporządzanych w różnych okolicznościach, z sukcesywnie dodawanymi fragmentami i licznymi poprawkami. Może zawierać informacje błędne lub nieaktualne. Czytelnik jest zachęcany by najpierw przeczytał całość, dopiero później - już wiedząc gdzie są jakie informacje - przeczytał uważnie to czego potrzebuje i po przemyśleniu ewentualnie przetestował je w praktyce, najpierw na testowym środowisku.
+
+### Multisite czyli Sieć Witryn
+
+[Na górę strony - do spisu treści](#top)
+
+- [What Is Wordpress Multisite? How Does It Work?](https://wpengine.com/support/what-is-wordpress-multisite/)
+
+Normalna i najczęściej spotykana sytuacja to jedna instalacja - jedna witryna. Czasem jednak przydaje się jednorazowa instalacja obsługująca wiele witryn, czyli multisite. To co ogólnie (i np. w Drupalu) określane jest mianem multisite, w przypadku WordPressa nosi też nazwę Sieci Witryn. Jest to trochę bardziej skomplikowane i ma pewne wady. Ale różnica nie jest taka duża i w wielu sytuacjach zalety przeważają nad wadami.
+
+Krótki i kompletny opis instalacji WordPressa multisite. Jedyne co jest do tego potrzebne to absolutne podstawy: hosting z możliwością tworzenia baz danych i dostępem do plików konfiguracyjnych umożliwiającym ich edycję.
+
+W większości wypadków hosting sam udostępnia opcję automatycznej instalacji WordPressa, tutaj jednak będzie opis jak zrobić oto samemu. Normalna instalacja wygląda prawie tak samo, składa się z kroków 1-3 i 5, resztę pomijamy.
+
+**1. Utworzenie bazy danych.** Dla każdej witryny w naszej Sieci Witryn będziemy potrzebowali osobnej bazy danych. W momencie tworzenia Sieci wystarczy jedna baza – ta, której będzie używać podstawowa, bazowa witryna.
+
+Jedyne dane, potrzebne po jej utworzeniu to: nazwa bazy danych, nazwa użytkownika bazy i jego hasło.
+
+**2. Umieszczenie WordPressa na hostingu.** Z witryny [wordpress.org](https://wordpress.org/) ściągamy na nasz hosting najnowszą wersję WordPressa. Nic więcej nie jest potrzebne, wszystkie dodatki pluginy  i rozszerzenia instalowane sa z panelu administracyjnego, zwanego tu Kokpitem – już po zainstalowaniu WordPressa.
+
+Rozpakowujemy plik, domyślnie ma on swój własny katalog o nazwie wordpress. Więc w najczęściej spotykanej sytuacji wszystkie pliki znajdą się w _/public\_html/wordpress_
+
+**3. Edycja pliku konfiguracyjnego wp-config.php.** W katalogu głównym WordPressa znajduje się szablon pliku konfiguracyjnego _wp-config-sample.php_. Kopiujemy go do tego samego położenia, ale z nazwą _wp-config.php_. na samym początku pliku, zaraz za komentarzem jest do wypełnienia  kilka parametrów, najczęściej wystarczy podać te trzy informacje z pierwszego punktu: nazwę bazy danych, nazwę użytkownika bazy i jego hasło.
+
+**4. Aktywacja opcji Multisite.** Skoro już edytujemy plik konfiguracyjny  to przy okazji włączmy też możliwość uruchomienia Sieci witryn. Na dole pliku mamy informację:
+
+```
+ /* That's all, stop editing! Happy blogging. */
+```
+
+i należy tego przestrzegać. Wiec tuż nad tą informacją dodajemy :
+
+```
+ define( 'WP_ALLOW_MULTISITE', true );
+```
+
+I zapisujemy plik konfiguracyjny.
+
+**5. Instalacja witryny.** W przeglądarce www otwieramy adres witryny (domyślnie będzie to domena/wordpress). Podstawowa konfiguracja jest już dokonana więc jedyne co mamy do zrobienia to wybór języka instalacji i od razu lądujemy w Kokpicie.
+
+**6. Deaktywacja wszystkich pluginów.** Zanim uruchomimy Sieć Witryn należy zdezaktywować wszystkie zainstalowane pluginy.  Jedną  z wad Sieci Witryn jest fakt, że nie wszystkie pluginy w niej działają. Większość nie sprawia problemów, ale w czasie uruchomienia sieci Witryn wszystkie muszą być wyłączone.
+
+**7. Uruchamianie Sieci Witryn.** W kokpicie wybieramy Narzędzia / Uruchamianie Sieci Witryn i tam podajemy kilka podstawowych informacji (które i tak później można zmienić).
+
+Uwaga: jeżeli w menu Narzędzia nie ma opcji "Uruchamianie Sieci Witryn" może to oznaczać, że albo nie udała się deaktywacja pluginów, albo znaki cytowania (apostrof) w regule, którą umieściliśmy w pliku konfiguracyjnym zostały skonwertowane - trzeba po prostu sprawdzić jak wygląda.
+
+Po kliknięciu Utwórz Sieć Witryn dostaniemy do skopiowania dwa fragmenty plików konfiguracyjnych:
+
+- jeden wklejamy do _wp-config.php_ zaraz obok poprzednio dodanej informacji aktywującej multisite
+- drugim zastępujemy w _.htaccess_ całą treść
+
+W tym kroku szczególnie ważne jest, żeby wiedzieć co się robi i mieć zachowane poprzednie, niezmodyfikowane wersje tych plików konfiguracyjnych.
+
+**8. Wylogowanie i zalogowanie.** To już w zasadzie wszystko, teraz musimy się już tylko zalogować w nowej konfiguracji, czyli najpierw trzeba się wylogować . Służy do tego link na dole informacji o treści plików konfiguracyjnych. Masz zapisane hasło, przeglądarka je pamięta? No to w drogę.
+
+**9. Sieć Witryn czyli „Moje witryny”.** Widzimy w kokpicie nową opcję pomiędzy menu WordPress a menu witryny znajduje się: „Moje witryny”.
+
+W praktyce najważniejsza zmianą dla administratora jest to, że teraz wszystkie zadania administracyjne w rodzaju instalacji nowych motywów, pluginów oraz ich aktualizacji dokonuje się w Kokpicie "Moje witryny". Tam też zarządza się użytkownikami, dodaje nowe witryny. Od tej pory Kokpit konkretnej witryny jest uboższy o te możliwości.
+
+Po zainstalowaniu pluginu pojawi się opcja „Włącz w sieci” co aktywację pluginu dla wszystkich witryn sieci.
+
+### Polecane pluginy
+
+[Na górę strony - do spisu treści](#top)
+
+Rozszerzenia znacznie zwiększają możliwości CMS-a, nie ma chyba strony WordPressa pozbawionej zainstalowanych pluginów. Takie jest założenie poprawnie zaprojektowanego CMS-a - posiada podstawową funkcjonalność, a wszystko ponad to rozszerzane jest wtyczkami. Wszystkie instaluje się z Kokpitu.
+
+### SEO
+
+Najczęściej polecanymi pluginami są:
+
+- plugins: [All in One SEO Pack](https://pl.wordpress.org/plugins/all-in-one-seo-pack/)
+- [SEO for everyone - Yoast](https://yoast.com/)
+- [Google Analytics (By ShareThis) -](https://wordpress.org/plugins/googleanalytics/) [Google XML Sitemaps](https://www.arnebrachhold.de/projects/wordpress-plugins/google-xml-sitemaps-generator/)
+
+[A Brief SEO Guide for WordPress Bloggers](https://10web.io/blog/a-brief-seo-guide-for-wordpress-bloggers/)
+
+### Gutenberg
+
+Z pewnością najbardziej dyskutowaną i kontrowersyjną zmianą związana z WP5 jest nowy domyślny edytor, tak rewolucyjny, że nazwano go Gutenberg. Zawsze można wrócić do [Klasycznego Edytora](https://pl.wordpress.org/plugins/classic-editor/).
+
+- [Gutenberg](https://wordpress.org/gutenberg/)
+- [Gutenberg Times](https://gutenbergtimes.com/)
+- [Gutenberg Hub](http://gutenberghub.com/)
+- 10Web Blog: ["WordPress 5.0: Getting Your Site Ready for Gutenberg"](https://10web.io/blog/wordpress-5-0-getting-your-site-ready-for-gutenberg/) | [WordPress Gets New Gutenberg Editor: What You Should Do as a Developer \[UPDATED\]](https://10web.io/blog/wordpress-gets-new-gutenberg-editor-what-you-should-do-as-a-developer/)
+- Matias Ventura: ["Gutenberg, or the Ship of Theseus"](https://matiasventura.com/post/gutenberg-or-the-ship-of-theseus/)
+- CodeinWP: [WordPress Gutenberg Guide: How to Build Your Next Site With the Revolutionary Editor](https://www.codeinwp.com/blog/wordpress-gutenberg-guide/)
+- kinsta.com: [Diving Into the New Gutenberg WordPress Editor (Pros and Cons)](https://kinsta.com/blog/gutenberg-wordpress-editor/)
+
+### Elementor
+
+Inną duża zmianą są pagebuildery czyli po polsku kreatory treści/stron. Stosunkowo nowym i jednocześnie dość nowoczesnym jest Elementor. Jego pełna wersja jest płatna, ale dostępna jest darmowa, której największym ograniczeniem jest pozbawienie możliwości edycji nagłówka i stopki.
+
+- Jak zrobić stronę internetową: [5 godnych polecenia kreatorów stron dla WordPress’a](https://jak-zrobic-strone.pl/5-godnych-polecania-kreatorow-wordpress/)
+- Paweł Wimmer numlock.edu.pl – Elementor: [1. Jak zacząć](http://www.numlock.edu.pl/blog/2018/07/10/elementor-jak-zaczac/) | [2. Sekcje to podstawa](http://www.numlock.edu.pl/blog/2018/07/13/elementor-podstawa-sa-sekcje/) | [3. Więcej o sekcjach](http://www.numlock.edu.pl/blog/2018/07/18/elementor-wiecej-o-sekcjach/) | [4. Edycja bloków](http://www.numlock.edu.pl/blog/2018/07/22/elementor-edycja-blokow/) | [5. Widżet tekstowy](http://www.numlock.edu.pl/blog/2018/07/25/elementor-widzet-tekstowy/) | [6. Widżet Obraz](http://www.numlock.edu.pl/blog/2018/07/27/elementor-widzet-obraz/) | [7. Inne widżety dla grafiki (1)](http://www.numlock.edu.pl/blog/2018/07/28/elementor-inne-widzety-dla-grafiki-1/) | [8. Inne widżety dla grafiki (2)](http://www.numlock.edu.pl/blog/2018/07/30/elementor-inne-widzety-dla-grafiki-2/) | [Elementor – edukacyjne fiszki](http://www.numlock.edu.pl/blog/2018/10/08/elementor-edukacyjne-fiszki/)
+- TemplateMonster: ["WordPress Developers about Elementor Builder Pros and Cons \[Is The Game Worth the Candle?\]"](https://www.templatemonster.com/blog/elementors-builder-pros-cons/)
+
+### Bezpieczeństwo
+
+[The Ultimate WordPress Security Guide – Step by Step (2018)](https://www.wpbeginner.com/wordpress-security/)
+
+[All In One WP Security](https://www.tipsandtricks-hq.com/wordpress-security-and-firewall-plugin)
+
+[Akismet Anti-Spam](https://akismet.com/)
+
+[Jetpack](https://jetpack.com/)
+
+### Treść
+
+[WordPress Gallery Plugin – NextGEN Gallery](https://www.imagely.com/wordpress-gallery-plugin/nextgen-gallery/)
+
+### Przydatne odnośniki
+
+[Na górę strony - do spisu treści](#top)
+
+- [WordPress Codex](https://codex.wordpress.org/Main_Page) – [WordPress Lessons](https://codex.wordpress.org/WordPress_Lessons) | [Hardening WordPress](https://codex.wordpress.org/Hardening_WordPress) | [Create A Network](https://codex.wordpress.org/Create_A_Network)
+- [Learn WordPress.com](https://learn.wordpress.com/)
+- [WPBeginner](https://www.wpbeginner.com/)
+- [WPTuts](https://wptuts.co.uk/)
+- [WPblog](https://www.wpblog.com/)
+- [WPEngine](https://wpengine.com)
+- [10Web Blog | All About WordPress](https://10web.io/blog/)
+- [WPCrafter.com](https://www.wpcrafter.com/)
+- [Torque - WordPress News, WP Community Experts | @thetorquemag](https://torquemag.io)
+- [WordPress resource for beginners | pros - wpcrib](https://wpcrib.com/)
+- [CodeinWP - A Hub for WordPress Freelancers, Bloggers & Creators](https://www.codeinwp.com/)
+- SiteGround - [WordPress Tutorial](https://www.siteground.com/tutorials/wordpress/)
+- tutorialspoint - [WordPress Tutorial](https://www.tutorialspoint.com/wordpress/)
+- WP Apprentice - [WordPress Tutorial for Beginners](https://wpapprentice.com/wordpress-tutorial/)
+- [WordPress Made Simple – the bare essentials](https://www.wpmadesimple.org/)
+- 000webhost - [WordPress Tutorial](https://www.000webhost.com/wordpress-tutorial)
+- Custom PC Guide.net: [Wordpress Tips and Tweaks Archive](https://www.custompcguide.net/category/wordpress-optimization-tips/) | ["CPG WordPress Page Speed and Performance Optimizations"](https://www.custompcguide.net/badass-wordpress-optimization-tips-and-tears/)
+- [Roots | Modern WordPress Development Tools](https://roots.io/)
+- [WP Team Support](https://wpteamsupport.com/)
+- LyrWP: [Simple Tips And Tutorials On WordPress](https://lyrwp.com/tips-tutorials/)
+- [WPForms Blog](https://wpforms.com/blog/)
+- [Colorlib Blog](https://colorlib.com/wp/)
+- I/O Gremlin [WordPress courses / workshops / tutorials](https://io.bikegremlin.com/category/wordpress/workshop/)
+- plugins: [Autoptimize](https://wordpress.org/plugins/autoptimize/) | [iThemes Security (formerly Better WP Security)](https://pl.wordpress.org/plugins/better-wp-security/)
+- [Local by Flywheel | Local WordPress development made simple](https://local.getflywheel.com/)
+- ["5 Best Ways To Add Social Media Icons To Your Wordpress Website Or Blog"](https://torquemag.io/2019/01/5-best-ways-to-add-social-media-icons-to-your-wordpress-website-or-blog/)
+- YT: ["Become a WordPress Developer: Unlocking Power with Code \[3:18:32\]](https://www.youtube.com/watch?v=FVqzKAUsM68) | [How to Make A Website With WordPress In 15 Minutes (Fast) YT 14:56](https://www.youtube.com/watch?v=Bvufe3gBQhU)
+
+#### Optymalizacja
+
+- ["The Ultimate Guide to Boost WordPress Speed & Performance"](https://www.wpbeginner.com/wordpress-performance-speed/)
+
+#### Tematy
+
+- TemplateMonster: [WordPress](https://www.templatemonster.com/blog/tag/wordpress/) - [Polski Blog TemplateMonster](https://www.templatemonster.com/pl/blog/)
+- [WordPress Themes Archives - freshDesignweb](https://freshdesignweb.com/category/wordpress-themes/)
+- [ThemeIsle Blog](https://themeisle.com/blog/)
+- [WordPress Themes Archives - freshDesignweb](https://freshdesignweb.com/category/wordpress-themes/)
+- [SiteGround: "How to Customize WordPress Themes Tutorial"](https://www.siteground.com/tutorials/wordpress/customize-themes/) | [WP Codex: "Stepping into Templates"](https://codex.wordpress.org/Stepping_Into_Templates) | ["A Definitive WordPress Theme Buying Guide By A Consumer. No Fluff. No Bull. No Affiliate Links."](https://lyrwp.com/wordpress-theme-buying-guide/)
+- [Anima](https://www.cryoutcreations.eu/wordpress-themes/anima)
+- [Suresh Patel "How to Build a Custom WordPress Theme from Scratch"](https://pixel2pixeldesign.com/how-to-build-a-custom-wordpress-theme-from-scratch/)
+
+#### Composer, Git
+
+- [A Warning About Using Composer With WordPress](https://wppusher.com/blog/a-warning-about-using-composer-with-wordpress/)
+- [Your Guide to Composer in WordPress](http://composer.rarst.net/)
+- [A Gentle Introduction To Using Composer With Wordpress](https://www.pmg.com/blog/composer-and-wordpress/)
+- David Winter: [Install and manage WordPress with Composer](https://davidwinter.me/install-and-manage-wordpress-with-composer/) | [Install and manage WordPress with Git](https://davidwinter.me/install-and-manage-wordpress-with-git/)
+
+#### Headless WordPress
+
+- ["Headless WordPress + Next.js — What We Learned"](https://medium.com/kata-engineering/headless-wordpress-next-js-what-we-learned-c10abdf80f6a)
+- ["Headless WordPress: The Ups And Downs Of Creating A Decoupled WordPress"](https://www.smashingmagazine.com/2018/10/headless-wordpress-decoupled/)
+
+#### YT
+
+- LevelUpTuts ["WordPress Basics" \[YT playlist 21 filmów\]](https://www.youtube.com/playlist?list=PLC5E59DD6D84D34DC) | ["Customizing WordPress" \[15 filmów\]](https://www.youtube.com/playlist?list=PLLnpHn493BHGACfv4rC29kJamYMtw34D9)
+
+#### Po polsku
+
+- [WordPress Polska](http://www.wordpress-polska.pl/)
+- [Wordpress forum Polska - wordpress.org.pl](http://wordpress.org.pl/)
+- [Kompendium WordPress](https://www.kompendiumwp.pl/)
+- [Zaawansowany WordPress](https://zaawansowanywordpress.pl)
+- [Planeta WordPress](https://planeta-wordpress.pl/)
+- [Blog o WordPressie - Kasia Aleszczyk](https://kasiaaleszczyk.pl/)
+- [Poradnik WordPress](http://poradnikwp.pl/)
+- [WPZen - WordPress na spokojnie](https://wpzen.pl/)
+- [Wordpress - Crocoder](https://crocoder.pl/wordpress/)
+- [Blog WPmagus.pl](https://wpmagus.pl/blog/)
+
+[Do spisu treści](#top)

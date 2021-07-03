@@ -1,0 +1,250 @@
+---
+title: "MongoDB"
+comment: ""
+section: "it"
+subsection: "js"
+---
+
+Najpopularniejsza nierelacyjna baza danych, powstała w 2009, związana z JS. Różnice pomiędzy bazami SQL i noSQL: [Twórca Stron "SQL vs noSQL | MySQL vs MongoDB - różnice" [17:18]](https://www.youtube.com/watch?v=m-wuNFzh93E) | [Academind "SQL vs NoSQL or MySQL vs MongoDB" [YT 21:29]](https://www.youtube.com/watch?v=ZS_kXvOeQ5Y)
+
+Instalacja MongoDB serwer - [MongoDB Community Server](https://www.mongodb.com/download-center/community), pyta czy zainstalować wersję Complete, czy Custom: w Complete jest [MongoDB Compass](https://www.mongodb.com/products/compass). Trzeba też wybrać lokalizację danych i logów.
+
+Baza danych. W pliku App.js najpierw require mongoose, potem mongoose.connect. Weryfikacja połączenia opisana w dokumentacji.
+
+Nomenklatura:
+
+- Cluster (w MongoDB Atlas): usługa zdefiniowana w konfiguratorze, w klastrze jest wiele baz danych.
+- Database: pojedyncza baza danych
+- Collection: odpowiednik tabeli SQL, zespół danych zdefiniowany w tzw. modelu
+- Document: pojedynczy zapis, rekord bazy
+
+Shell mongo, polecenie mongo.
+
+MongoDB przechowuje dane wg tzw modeli: schematów danych, opisujących pola, rodzaj danych i czy są wymagane. Modele są trzymane w osobnym katalogu /models, na końcu każdego modelu eksport. Zwyczajowo modele nazywane są z dużej litery.
+
+### MongoDB Shell
+
+```
+ db.cars.insertOne({brand: 'Ford', model : 'Taunus'});
+```
+
+Można umieścić wiele w tablicy.
+
+```
+ db.cars.insertMany([{...}, {...}])
+```
+
+```
+ db.cars.find()
+```
+
+Wyszukać, można wg każdego pola danych. Ale ID nie jest stringiem a specyficznym rodzajem obiektu i samo skopiowanie go nie wystarczy, trzeba objąć go funkcją ObjectId("tu numer"). Bez parametrów wylistuje całą kolekcję.
+
+Wyszukanie wg parametrów: większe niż &#123;$gt: parametr}; mniejsze niż &#123;$lt: parametr}, można je łączyć: &#123;$gt:30, $lt:50}. Odpowiednio `$lte` i `$gte` oznaczają mniejsze/większe lub równe (equal). &#123;$in [5, 10, 15]} - wyszuka wszystkie z tymi parametrami, przeciwieństwo &#123;$nin [5, 10, 15]} (not in).
+
+OR
+
+```
+ db.clients.find({$or: [{age: {$gt: 20, $lt: 50}}, {active:true}]})
+```
+
+Zaprzeczenie
+
+```
+db.clients.find({age: {$not: {$gt: 20}}})
+```
+
+Modyfikacja, aktualizacja. Polecenie update ma trzy parametry: które dokumenty uaktualnić (jeżeli brak odnosi się do wszystkich), co w nich zmienić, trzeci określa czy wszystkie znalezione, bez tego domyślnie tylko pierwszy.
+
+```
+ db.clients.update({}, {#set: {active: true}}, {multi: true})
+```
+
+updateOne tylko jeden dokument, updateMany wiele (tu nie trzeba parametru {multi: true}).
+
+Usuwanie, wg dowolnego selektora. Dla wielu deleteMany()
+
+```
+ db.clients.deleteOne({selektor})
+```
+
+Create Read Actualise Delete
+
+### MongoDB Compass Community
+
+GUI. Kompletna informacja o kolekcjach i dokumentach. Łatwy wizualny, sposób zarządzania bazami. W widoku tabeli dane muszą być spójne, w widoku listy niekoniecznie.
+
+### Node.js: mongodb
+
+Instalacja: mongodb jest oficjalną paczką npm, wspieraną przez MongoDB (nieoficjalną, ale bardzo popularną jest mongoose).
+
+```
+ npm i mongodb -S
+```
+
+Połączenie
+
+```
+ const mongo = require('mongodb');
+
+ const client = new mongo.MongoClient('mongodb://host:port', {useNewUrlParser: true});
+ 
+ client.connect(err => {if (err) {console.log(err);}
+ else {console.log("Połączenie z bazą");
+ // tu wybór bazy i kolekcji
+ }});
+```
+
+Domyślny port: 27017.
+
+W programie
+
+```
+ const db = client.db('test'); // wybór bazy
+
+ const cars = db.collection('cars'); // wybór kolekcji
+ 
+ client.close(); // koniecznie na końcu programu
+```
+
+Wszystkie polecenia jak w shellu. Do wyświetlenia używa się metody find i callback z danymi. Pobranie danych z przekształceniem w tablicę:
+
+```
+ clients.find({}).toArray((err, data) => {
+  if (err) {console.log(err);}
+  else {console.log(data);}
+})
+```
+
+Potwierdzenie zapisu:
+
+``` 
+}, err => {
+  if (err) {console.log('Błąd' + err);}
+  else {console.log('Wszystko OK');}
+}
+```
+
+Pobranie danych z bazy za pomocą process.argv:
+
+```
+ const args = process.argv.splice(2);
+```
+
+Zapisanie głosu w quizie, metoda save(). Wcześniej zaimportowany model i router,
+
+```
+ router.get('/', (req, res) => {
+  new Quiz({ title: 'Tytuł pytania', vote: 0}).save()
+  res.render("quiz", { title: "Quiz" });
+})
+```
+
+Zapis do bazy
+
+```
+ router.get('/', (req, res) => {
+  const newsData = new News({
+    title,
+    description
+  })
+  newsData.save((err)=>{console.log(err);})
+});
+res.render('admin/news-form', { title: 'Dodaj news'});
+```   
+
+Walidacja: w funkcji zapisującej dane do bazy
+
+```
+ router.get('/', (req, res) => {
+  const body = req.body;
+
+  const newsData = new News(body);
+  const errors = newsData.validateSync();
+```
+
+errors przekazać w funkcji res.render(). Potem w szablonie:
+
+```
+ if errors.errors !== undefined
+ each message in errors.errors
+   p=message
+```
+
+- [MongoDB Node.JS Driver](http://mongodb.github.io/node-mongodb-native/)
+- [mongodb/node-mongodb-native](https://github.com/mongodb/node-mongodb-native) Mongo DB Native NodeJS Driver
+
+### Node.js: mongoose
+
+Niektóre metody mongoose wyglądają jak JS, ale mają inne działanie: exec, sort created itd
+
+- [mongoose](https://mongoosejs.com) \- elegant mongodb object modeling for node.js
+- ["findOneAndUpdate() in Mongoose"](https://masteringjs.io/tutorials/mongoose/findoneandupdate)
+- Mastering JS [Mongoose Tutorials](https://masteringjs.io/mongoose)
+
+### Odnośniki
+
+#### Strony
+
+- [MongoDB](https://www.mongodb.com) \- [MongoDB Atlas Global Cloud Database](https://www.mongodb.com/cloud) | [MongoDB Compass](https://www.mongodb.com/products/compass) | [MongoDB Community Live Events](https://live.mongodb.com) | [MongoDB Developer Hub](https://developer.mongodb.com) | [Free MongoDB Official Courses | MongoDB University](https://university.mongodb.com)
+- [gudab](https://www.thinkpower.info/gudab/mongoDB-monitoring-tool/index.html) MongoDB GUI | MongoDB Management Tool | Monitor MongoDB
+- 3T Software Labs: [MongoDB Tutorials](https://studio3t.com/knowledge-base/categories/mongodb-tutorials/)
+- [Real-Time Dashboard Guide](https://real-time-dashboard.cube.dev)
+- [watscho/express-graphql-mongodb-boilerplate](https://github.com/watscho/express-graphql-mongodb-boilerplate) A boilerplate for Node.js web applications / API server / Authentication from scratch - express, graphql - (graphql compose), mongodb.
+- [JavaScript Teacher "A Complete MongoDB PWA Tutorial"](https://medium.com/swlh/a-complete-mongodb-pwa-tutorial-48bb7ab7578b)
+- Simple Cheat Sheet: [MongoDB Cheat Sheet](https://simplecheatsheet.com/tag/mongodb-cheat-sheet/)
+- Stack Chief [/ MongoDB](https://www.stackchief.com/search/mongodb)
+- [MongoDB | www.thecodebarbarian.com](http://thecodebarbarian.com/tag/mongodb.html)
+- Quick Programming Tips ["MongoDB History"](https://www.quickprogrammingtips.com/mongodb/mongodb-history.html)
+- [MongoDB Tutorial for Beginners and SQL Pros | Academy 3T](https://studio3t.com/academy/)
+- ObjectRocket [MongoDB Knowledge Base](https://kb.objectrocket.com/category/mongo-db)
+- [MongoDB Knowledge Base](https://kb.objectrocket.com/category/mongo-db)
+
+#### Narzędzia
+
+- [Harry-027 / mongo-cop](https://github.com/Harry-027/mongo-cop) MongoDB Migration Utility
+- [ramitmittal / mongraph](https://github.com/ramitmittal/mongraph) A tool for visualizing mongodb records as a network of nodes.
+
+#### Artykuły
+
+- [MongoDB Cheat Sheet - Essential MongoDB Shell Commands](https://opentechguides.com/how-to/article/mongodb/118/mongodb-cheatsheat.html)
+- ["Building MongoDB Dashboard using Node.js"](https://statsbot.co/blog/building-mongodb-dashboard-using-node.js)
+- [Chris on Code - Create a CRUD App with Node and MongoDB Courses](https://scotch.io/courses/create-a-crud-app-with-node-and-mongodb)
+- [The modern course on deploying Node.js, Express and MongoDB with Docker and Kubernetes](https://learnk8s.io/start-kubernetes-nodejs/)
+- [Nikita Kolmogorov "How to set up backups for MongoDB for free"](https://blog.borodutch.com/how-to-set-up-backups-for-mongodb-for-free/)
+- Codez Up [MongoDB Archives](https://codezup.com/category/mongodb/) | ["Data Modeling Concepts in MongoDB Tutorial"](https://codezup.com/data-modeling-concepts-mongodb-tutorial/)
+- CodeWall: [Piero Borrelli "NoSQL: A Gentle Introduction Using MongoDB"](https://www.codewall.co.uk/nosql-a-gentle-introduction-using-mongodb/) | ["NoSQL: Building Your First Application & Connecting To MongoDB"](https://www.codewall.co.uk/nosql-building-your-first-application-connecting-to-mongodb/) | ["NoSQL: Updating Data In A MongoDB Database"](https://www.codewall.co.uk/nosql-updating-data-in-a-mongodb-database/) | ["NoSQL: Deleting Data In A MongoDB Database"](https://www.codewall.co.uk/nosql-deleting-data-in-a-mongodb-database/) | ["NoSQL: A Complete Overview Of Testing Using Mocha"](https://www.codewall.co.uk/nosql-a-complete-overview-of-testing-using-mocha/) | ["NoSQL: Updating Data In A MongoDB Database"](https://www.codewall.co.uk/nosql-updating-data-in-a-mongodb-database/) | [Piero Borrelli "NoSQL: Retrieving Data from a MongoDB Database"](https://www.codewall.co.uk/nosql-retrieving-data-from-a-mongodb-database/) | [Piero Borrelli "NoSQL: Introduction to Testing MongoDB Applications using Mocha"](https://www.codewall.co.uk/nosql-introduction-to-testing-mongodb-applications-using-mocha/) | [Dan Englishby "MongoDB Beginner Tutorial With Compass GUI & The Mongo Shell CLI"](https://www.codewall.co.uk/mongodb-beginner-tutorial-with-compass-gui-the-mongo-shell-cli/)
+- ["Simple and Easy way to connect MongoDB Atlas with Spring Boot"](https://www.opencodez.com/java/use-mongodb-atlas-with-spring-boot.htm)
+- Medium: [Ross Bulat "Using Promises, async / await with MongoDB"](https://medium.com/@rossbulat/using-promises-async-await-with-mongodb-613ed8243900) | [Studio 3T "3 Lessons from 7 Years of Building a GUI for MongoDB"](https://medium.com/dev-genius/3-lessons-from-7-years-of-building-a-gui-for-mongodb-67393d33d16d) | [Jack Kelly "Create a Full-Stack web application using React, Strapi, Nginx, MongoDB, and DigitalOcean"](https://dev.to/jackrkelly/create-a-full-stack-web-application-using-react-strapi-nginx-mongodb-and-digitalocean-bkh) | [Alireza Mortazavi "MongoDB vs SQL Databases [Tech Debates]"](https://medium.com/@tech_debates/mongodb-vs-sql-databases-tech-debates-74d60aeb3fbe) | [Sergio Perez "Connecting to MongoDB Atlas"](https://medium.com/@sergio13prez/connecting-to-mongodb-atlas-d1381f184369) | [jelo rivera "Let’s build a full stack MongoDB, React, Node and Express (MERN) app"](https://medium.com/javascript-in-plain-english/full-stack-mongodb-react-node-js-express-js-in-one-simple-app-6cc8ed6de274)
+- [Rahul Raj "MongoDB Tips and Tricks for Querying Collections"](https://www.linkedin.com/pulse/mongodb-tips-tricks-querying-collections-rahul-raj/)
+- morioh: [Most Sara "How to build a Simple Beginner App with Node.js, Bootstrap and MongoDB"](https://morioh.com/p/4992b8208a1c/how-to-build-a-simple-beginner-app-with-node-js-bootstrap-and-mongodb) | [Noah Saunders "How to Build CRUD Application using Node.js and MongoDB?"](https://morioh.com/p/a8a23dd1d38e)
+- [Krissanawat Kaewsanmuang "Create simple POS with React.js, Node.js, and MongoDB #8: CRUD POS Machine"](https://blog.soshace.com/create-simple-pos-with-react-js-node-js-and-mongodb-8-crud-pos-machine/)
+- [Chinmaya Pati "Self-Hosted MongoDB"](https://www.loginradius.com/engineering/blog/self-hosted-mongo/)
+- ["Cassandra Vs MongoDB In 2018"](https://blog.panoply.io/cassandra-vs-mongodb)
+- [A user signup process with email verification implemented with RESTHeart and MongoDB](https://github.com/SoftInstigate/restheart-examples/blob/master/user-signup/README.md)
+- [Krissanawat Kaewsanmuang "Create simple POS with React.js, Node.js, and MongoDB #14: Export PDF, Excel, CSV, Bulk Delete, Inline Editing"](https://blog.soshace.com/create-simple-pos-with-react-js-node-js-and-mongodb-14-export-pdf-excel-csv-bulk-delete-inline-editing/)
+- [Ben Rogojan "3 Ways to Offload Read-Heavy Applications from MongoDB"](https://rockset.com/blog/3-ways-to-offload-read-heavy-applications-from-mongodb/)
+
+#### Expressjs
+
+- [jelo rivera "Let’s Build a MongoDB + Express + React + GraphQL + Relay Modern Full Stack Web App (From Scratch!) — Back End Part"](https://medium.com/javascript-in-plain-english/lets-build-a-mongodb-express-react-graphql-relay-modern-full-stack-web-app-from-scratch-a4ae3aaf212)
+
+#### Youtube
+
+- **Playlisty:** [r2schools "MongoDB Tutorials" [YT playlist 15 filmów]](https://www.youtube.com/playlist?list=PLJiv0pK43OksL0HY4C58rpZKHkhJK1COz) | [codedamn "MongoDB Tutorials" [YT playlist 12 filmów]](https://www.youtube.com/playlist?list=PLYxzS__5yYQk5r6iN4Q7h-xonV3F2HwT3) | [codedamn "MongoDB Aggregation Framework Tutorials" [YT playlist 11 filmów]](https://www.youtube.com/playlist?list=PLYxzS__5yYQmr3HQQJMPBMbKtMY37sdsv) | ["Learn MongoDB - MongoDB Tutorial for Beginners - Getting Started with MongoDB - Part 1/3" [YT 4:03:20]](https://www.youtube.com/watch?v=__5Iu0QZKNU) | [Coding Shiksha: MongoDB Tutorial for Absolute Beginners in 2019 [YT playlist 12 filmów]](https://www.youtube.com/playlist?list=PL3CDD0Jz5nVFqQT3NZ-1ccxaC7ORdECan) | [SQLInSix Minutes "The MongoDB 103" [YT playlista 123 filmy]](https://www.youtube.com/playlist?list=PLHHm85xMQAYNJSKsdeCoaB3pQO96Nniw3) | [Tyler Potts - Learn Firebase [YT playlist 12 filmów]](https://www.youtube.com/playlist?list=PLR8vUZDE6IeMiMtfMFkBcsywt5LyXDojx) | [The Full Stack Junkie "MongoDB Crash Course" [YT playlist 4 filmy]](https://www.youtube.com/playlist?list=PLuGe-XRWqbNQHhIJXq5UfkzCB98vvw1m7)
+- **Filmy:** [Twórca Stron "MongoDB + Node.js - kurs w 60 minut" [YT 55:59]](https://www.youtube.com/watch?v=WWk-4q3wiV0) | [Academind "SQL vs NoSQL or MySQL vs MongoDB" [YT 21:29]](https://www.youtube.com/watch?v=ZS_kXvOeQ5Y) | [Eduonix Learning Solutions "[MongoDB Tutorials] | Customer Database Project (2019) | Eudonix" [YT 43:36]](https://www.youtube.com/watch?v=YlrmGs6YHHY) | [GreyCampus Academy "Part 5 - How to Run Queries in MongoDB? | Free Course on Big Data for Beginners" [YT 47:34]](https://www.youtube.com/watch?v=XHPK9AN556I) | [The Net Ninja "MongoDB Tutorial for Beginners" [16 filmów]](https://www.youtube.com/playlist?list=PL4cUxeGkcC9jpvoYriLI0bY8DOgWZfi6u) | [Codevolution "MongoDB Tutorial for Beginners" [YT playlist 24 filmy]](https://www.youtube.com/playlist?list=PLC3y8-rFHvwh11bWtwm3_qKvo46uDmaal) | [Academind "MongoDB Complete Introduction & Summary" [YT 41:16]](https://www.youtube.com/watch?v=VELru-FCWDM)
+- **Node.js + Express + MongoDB** [freeCodeCamp.org "How to Build a RESTful API using Node, Express, and Mongo" [YT 1:38:54]](https://www.youtube.com/watch?v=o3ka5fYysBM) | [yoursTRULY "REST API using NodeJS and MongoDB" [YT playlist 18 filmów]](https://www.youtube.com/playlist?list=PLdHg5T0SNpN3EoN3PEyCmPR42Ok_44OFT) [Traversy Media "MongoDB In 30 Minutes" [YT 32:11]](https://www.youtube.com/watch?v=pWbMrx5rVBE) | [Traversy Media "MongoDB In The Cloud With Atlas" [14:52]](https://www.youtube.com/watch?v=KKyag6t98g8) | [Traversy Media "MongoDB Crash Course" [36:42]](https://www.youtube.com/watch?v=-56x56UppqQ) | [MVP Engineer "Learn MongoDB using Python MongoEngine | Python MongoDB tutorial" [YT 15:37]](https://www.youtube.com/watch?v=AQSfoRvCz6E)
+
+#### NeDB
+
+- [louischatriot/nedb](https://github.com/louischatriot/nedb) The JavaScript Database, for Node.js, nw.js, electron and the browser
+- [NeDB](https://dbdb.io/db/nedb)
+
+#### Firebase
+
+- ["Build Progressive Web Apps PWA with React and Firebase"](https://morioh.com/p/c8dae170eafd)
+- ["Firebase Cloud Storage How-to and Use Case"](https://expertise.jetruby.com/firebase-cloud-storage-how-to-and-use-case-dd9810fe041b)
+- [Didin J "React JS Tutorial: Building Firebase Chat App (React Hooks)"](https://www.djamware.com/post/5f2a1d9d9c794f177fd7b527/react-js-tutorial-building-firebase-chat-app-react-hooks)
+- freeCodeCamp.org [freeCodeCamp.org "Full Stack React & Firebase Tutorial - Build a social media app" [12:05:30]](https://www.youtube.com/watch?v=m_u6P5k0vP0) | [freeCodeCamp.org "Intermediate React and Firebase Tutorial - Build an Evernote Clone" [YT 1:49:49]](https://www.youtube.com/watch?v=I250xdtUvy8)
+- The Net Ninja [The Net Ninja "Firebase Functions" [YT playlist 19 filmów]](https://www.youtube.com/playlist?list=PL4cUxeGkcC9i_aLkr62adUTJi53y7OjOf) | [The Net Ninja "Firebase Hosting Tutorial" [YT playlist 5 filmów]](https://www.youtube.com/playlist?list=PL4cUxeGkcC9he0kHAyiyr3dDO2xw0NWoP) | [The Net Ninja "Firebase Firestore Tutorial" [YT playlist 10 filmów]](https://www.youtube.com/playlist?list=PL4cUxeGkcC9itfjle0ji1xOZ2cjRGY_WB) | [The Net Ninja "Firebase Auth Tutorial" [YT playlist 24 filmy]](https://www.youtube.com/playlist?list=PL4cUxeGkcC9jUPIes_B8vRjn1_GaplOPQ) | [The Net Ninja "Flutter & Firebase App Build" [YT playlist 28 filmów]](https://www.youtube.com/playlist?list=PL4cUxeGkcC9j--TKIdkb3ISfRbJeJYQwC)
+- [Fireship [YT (242)]](https://www.youtube.com/channel/UCsBjURrPoezykLs9EqgamOA/playlists) | [Tyler Potts "Learn Firebase" [YT playlist 12 filmów]](https://www.youtube.com/playlist?list=PLR8vUZDE6IeMiMtfMFkBcsywt5LyXDojx)

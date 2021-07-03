@@ -1,0 +1,403 @@
+---
+title: "Git"
+comment: ""
+section: "it"
+subsection: "js"
+---
+
+### Projekty na Githubie - pierwsze kroki
+
+Git jest obecnie najpopularniejszym i najważniejszym systemem kontroli wersji. Powstał ponad 10 lat temu do obsługi rozwoju jądra Linuksa i przez ten czas rozwinął się w cały ekosystem umożliwiający i ułatwiający rozwój oprogramowania. Jednym z elementów tego ekosystemu jest Github, witryna i społeczność używająca jej interfejsu do rozwoju i publikacji programów, skryptów, dokumentów itp. Wersja darmowa do niedawna pozwalała tylko na publiczne repozytoria, ale od 2019 są też dostępne repozytoria prywatne z ograniczeniem do trzech współpracowników. Wg wielu opinii zawartość konta na Gitbhubie jest ważnym elementem CV.
+
+Porównanie gita z innymi systemami kontroli wersji można znaleźć na Wikipedii - [Comparison of version-control software](https://en.wikipedia.org/wiki/Comparison_of_version-control_software)
+
+Porownanie Githuba z innymi witrynami tego typu - [Comparison of source-code-hosting facilities](https://en.wikipedia.org/wiki/Comparison_of_source-code-hosting_facilities)
+
+Poniżej opis jak zacząć używanie Githuba i gita.
+
+Jako edytor wybrałem VSC dla przykładu bo jest 1) dobry 2) powszechnie używany 3) darmowy, bez ograniczeń 4) dostępny dla wszystkich trzech ważnych systemów operacyjnych (Windows, Linuks. Mac) 5) bez konfiguracji jest przygotowany do gita
+
+#### 1. Założenie konta na Github.com
+
+Jest to tak samo proste jak założenie konta na każdej innej witrynie, wybieramy nazwę użytkownika, podajemy konto pocztowe i wybieramy hasło. To wszystko.
+
+Z ikonki użytkownika w prawym górnym rogu możemy wybrać widok profilu użytkownika, repozytoria, albo ustawienia. W repozytoriach mamy przycisk New, którym tworzymy nowe repozytorium.
+
+#### 2. Zainstalowanie gita na lokalnym komputerze
+
+np.:
+
+```
+ apt-get install git
+```
+
+#### 3. Inicjalizacja gita
+
+W katalogu głównym użytkownika z linii poleceń:
+
+```
+ $ git init
+```
+
+co utworzy katalog .git (będą tam repozytoria lokalne i cała konfiguracja lokalnego repozytorium.
+
+#### 4. Plik konfiguracyjny
+
+Jest to ~/.gitconfig [8.1 Customizing Git - Git Configuration](https://git-scm.com/book/en/v2/Customizing-Git-Git-Configuration).
+
+#### 5. Konfiguracja
+
+W linii poleceń można ustawić trzy podstawowe, niezbędne rzeczy (jeżeli po config damy parametr -- global, tworzy ustawienie dla wszystkich kont):
+
+```
+ user:~/.git$ git config user.name "user"
+ user:~/.git$ git config user.email "user@mail.com"
+ user:~/.git$ git config core.editor code
+ user:~/.git$ git config --list
+```
+
+Ostatnie polecenie pokazuje treść pliku konfiguracyjnego, warto ją sprawdzić, dlatego, że np. bardzo często użytkownicy popełniają literówkę i zamiast user.email wpisują user.mail czego git nie akceptuje ani nie koryguje.
+
+#### 6. Utworzenie klucza SSH
+
+[4.3 Git on the Server - Generating Your SSH Public Key](https://git-scm.com/book/en/v2/Git-on-the-Server-Generating-Your-SSH-Public-Key#_generate_ssh_key):
+
+```
+ cd ~/.ssh
+```
+
+sprawdzamy czy nie ma już pliku id_rsa
+
+```
+ user:~/.ssh$ ls
+ known_hosts
+```		
+
+jeżeli nie ma to:
+
+```
+ user:~/.ssh$ ssh-keygen -o
+ Generating public/private rsa key pair.
+ Enter file in which to save the key (/home/tomek/.ssh/id_rsa): // tu [Enter]                      
+ Enter passphrase (empty for no passphrase):  // tu [Enter], bo tworzenie hasła nie jest konieczne
+ Enter same passphrase again: 
+ Your identification has been saved in /home/user/.ssh/id_rsa.
+ Your public key has been saved in /home/user/.ssh/id_rsa.pub.
+ The key fingerprint is:
+ SHA256:ivxVwUyvZXPTwgqzOiUXYnAEdB3/MYLPNkW1wtJmCb0 user@comp
+ The key's randomart image is:
+ +---[RSA 2048]----+
+ | o  ..   o . . +.|
+ | .    .S    + o .|
+ |.. + o + . . ..+o|
+ |   o    .oB o    |
+ |. ...oo     . o E|
+ |. . = o . . . *o.|
+ |  oo      o.. .  |
+ |  . ....+*==.    |
+ |  .      + B o   |
+ +----[SHA256]-----+
+```
+
+Wygląd kluczy pozostawiłem, ale oczywiście znaki są pozamieniane, pamiętajmy, że każdy klucz prywatny jest tajemnicą, jeżeli nie mamy pewności jaki to jest traktujemy go jak prywatny i nawet publiczny ujawniamy tylko tam gdzie jest to potrzebne.
+
+#### 7. Umieszczenie klucza na Githubie
+
+Klucz jest zawarty w pliku ~/.ssh/id_rsa.pub i kopiujemy go do Github / Ustawienia / Klucz SSH i zapisujemy. Jeżeli nie ma żadnego komunikatu błędu oznacza to, że został zaakceptowany. Zawsze będzie można go skasować i zamienić na inny.
+
+#### 8. Utworzenie repozytorium na Githubie i lokalnej kopii repozytorium
+
+W utworzeniu repozytorium pomaga następująca ściąga z Githuba
+
+```
+ Get started by creating a new file or uploading an existing file. We recommend every repository include a README, LICENSE, and .gitignore.
+
+ …or create a new repository on the command line
+ echo "# repository-name" >> README.md
+ git init
+ git add README.md
+ git commit -m "first commit"
+ git remote add origin git@github.com:username/repository-name.git
+ git push -u origin master
+ …or push an existing repository from the command line
+ git remote add origin git@github.com:username/repository-name.git
+ git push -u origin master
+ …or import code from another repository
+```
+
+Jeżeli mamy jakieś repozytoria na Githubie i tworzymy lokalną kopię na komputerze. Tworzenie takiej kopii nie wymaga uwierzytelnienia. Wystarczy polecenie, które tworzy kopię repozytorium w katalogu .git:
+
+```
+ user:~/.git$ git clone git@github.com:user/RepoName
+```
+
+#### 9. Edycja
+
+Uruchamiamy VSC i otwieramy katalog .git. Od razu widać nowe opcje i inny wygląd listy katalogów i plików, wybieramy z danego repozytorium pliki do edycji i dokonujemy zmian.
+
+#### 10. Commit
+
+Linia poleceń jest już w Code, ale wszystko jedno której użyjemy. Commitowanie można zrobić na dwa sposoby, tak jak opisano w tym artykule: [Start a new git repository](https://kbroman.org/github_tutorial/pages/init.html), możemy użyć HTTPS co będzie za każdym razem wymagać podania hasła:
+
+```
+ https://github.com/username/new_repo
+```
+
+Lub SSH, które zapisuje klucz
+
+```
+ git@github.com:username/new_repo
+```
+
+#### 11. .gitignore
+
+Pozostaje jeszcze do rozwiązania jeden problem, otóż VSC pokazuje tysiące oczekujących zmian. Żeby ograniczyć gita tylko do jego własnego katalogu potrzebujemy pliku .gitignore - [Git - gitignore Documentation](https://git-scm.com/docs/gitignore). W najprostszej podanej w dokumentacji formie wyklucza wszystkie katalogi, ograniczając działanie gita do jednego:
+
+```
+ # exclude everything except directory user/.git
+ /*
+ !/user
+ /user/*
+ !/user/.git
+```		
+
+### Odnośniki
+
+#### Git
+
+- [Git](https://git-scm.com/) - [Documentation](https://git-scm.com/doc) | [Pro Git book](https://git-scm.com/book/en/v2)
+- [git ready](http://gitready.com) learn git one commit at a time
+- [Resources to learn Git](https://try.github.io)
+- [Git Magic](http://www-cs-students.stanford.edu/~blynn/gitmagic/index.html) - [[PL]](http://www-cs-students.stanford.edu/~blynn/gitmagic/intl/pl/)
+- [Git for Computer Scientists](http://eagain.net/articles/git-for-computer-scientists/)
+- [A Visual Git Reference](http://marklodato.github.io/visual-git-guide/index-en.html)
+- [A git Primer](https://danielmiessler.com/study/git/)
+- [Git Immersion](http://gitimmersion.com)
+- [Think Like (a) Git](http://think-like-a-git.net)
+- [Git Workflows by Yan Pritzker](http://documentup.com/skwp/git-workflows-book)
+- [Getting Git Right - Atlassian Git Tutorial](https://www.atlassian.com/git)
+- [git/github guide a minimal tutorial](https://kbroman.org/github_tutorial/)
+- ICT Solved!: ["Getting Started with Git"](https://ictsolved.github.io/getting-started-with-git)
+- [How to teach Git](https://rachelcarmena.github.io/2018/12/12/how-to-teach-git.html)
+- [How to explain git in simple words?](https://smusamashah.github.io/blog/2017/10/14/explain-git-in-simple-words)
+- [Git Cheatsheet](http://ndpsoftware.com/git-cheatsheet.html)
+- scotch.io: [Chris on Code - Get to Know Git Courses](https://scotch.io/courses/get-to-know-git)
+- [The Ultimate Beginner Git Cheatsheet](https://mukulrathi.com/git-beginner-cheatsheet/)
+- [Visualizing Git Concepts with D3](http://onlywei.github.io/explain-git-with-d3/)
+- [Learn Git Branching](https://learngitbranching.js.org/)
+- [The Git Parable](http://tom.preston-werner.com/2009/05/19/the-git-parable.html)
+- [Git Beginner's Guide for Dummies](https://backlogtool.com/git-tutorial/en/)
+- [git - the simple guide](http://rogerdudler.github.io/git-guide/)
+- [Courses | git.training](http://git.training/courses/)
+- Wikibooks: [Git [EN]](https://en.wikibooks.org/wiki/Git) | [Git [PL]](https://pl.wikibooks.org/wiki/Git)
+- [Resources to learn Git](http://try.github.io)
+- imgur: [git workflow](https://i.imgur.com/oodiCnB.png)
+- ["Git in Practice: Includes 66 Techniques 1st Edition [PDF]"](https://www.programmer-books.com/git-in-practice-includes-66-techniques-1st-edition/)
+- ["Git Dos and Don’ts"](https://blog.axosoft.com/git-dos-donts/)
+- ["Git Cheat Sheet For Beginners"](https://www.bettercoder.io/cheat-sheets/git-for-beginners)
+- [Git Command Explorer](https://gitexplorer.com)
+- [git rebase in depth](https://git-rebase.io)
+- freecodecamp.org: [M.V. Thanoshan - The beginner’s guide to Git & GitHub](https://www.freecodecamp.org/news/the-beginners-guide-to-git-github/) [Fabio Pacific "Git Cheat Sheet – 50 Git Commands You Should Know"](https://www.freecodecamp.org/news/git-cheat-sheet/)
+- [The Net Ninja - Git & Github Tutorial](https://www.thenetninja.co.uk/courses/git-github-tutorial)
+- ["Getting started with Git: Terminology 101"](https://opensource.com/article/19/2/git-terminology)
+- [joshsisto.github.io/git/](https://joshsisto.github.io/git/)
+- ["Configuring git"](https://switowski.com/git/2019/01/11/configuring-git.html)
+- ["How to use git efficiently"](https://adityasridhar.com/posts/how-to-use-git-efficiently)
+- xkdc: [Git](https://xkcd.com/1597/)
+- [Git for beginners - quizz](https://www.bettercoder.io/tests/62/git-for-beginners---quizz)
+- [Write yourself a Git!](https://wyag.thb.lt)
+- [Oh shit, git!](http://ohshitgit.com)
+- [Git Better](https://gitbetter.substack.com)
+- [git-flow cheatsheet](https://danielkummer.github.io/git-flow-cheatsheet/)
+- [Learn Git with GitKraken](https://www.gitkraken.com/learn-git)
+
+#### Git - artykuły
+
+- ["Git series 1/3: Understanding git for real by exploring the .git directory"](https://medium.freecodecamp.org/understanding-git-for-real-by-exploring-the-git-directory-1e079c15b807)
+- [Akshit Tiwari "15 Best Git Tutorials & Courses - Learn Git Development Online"](https://blog.coursesity.com/best-git-tutorials/)
+- devstyle.pl ["5 Obowiązkowych Sposobów Na Rewelacyjną Pracę Z Gitem (I Nie Tylko)"](https://devstyle.pl/2018/10/26/5-sposobow-na-prace-z-gitem/)
+- dev.to: ["8 Productivity Tips for GitHub"](https://dev.to/_darrenburns/8-productivity-tips-for-github-44kn) | ["Understanding git for real by exploring the .git directory"](https://dev.to/daolf/git-series-13-understanding-git-for-real-by-exploring-the-git-director--5bd0) | ["Git hacks you should know about"](https://dev.to/teamxenox/git-hacks-you-should-know-about-16pk) | [Amir Barak "Git - Revert The Revert"](https://itnext.io/git-revert-the-revert-88b1e66d71d4)
+- ["How to Write a Git Commit Message"](https://chris.beams.io/posts/git-commit/)
+- [Marc Backes "A Git-Flow Explainer & How To Tutorial"](https://www.codewall.co.uk/a-git-flow-explainer-how-to-tutorial/)
+- [Davide Nunes "Git Good"](https://davidenunes.com/git-good/)
+- ["Rewrite the past in fewer steps with rebase"](https://vincentcordobes.github.io/git-rebase/)
+- stackoverflow: [Questions tagged [git]](https://stackoverflow.com/questions/tagged/git)
+- [24 Git Interview Questions For Developers](https://codersera.com/blog/24-git-interview-questions-for-developers/)
+- [Practical Git for Everyday Professional Use](https://egghead.io/courses/practical-git-for-everyday-professional-use)
+- [Maciej Aniserowicz "5 Obowiązkowych Sposobów Na Rewelacyjną Pracę Z Gitem (I Nie Tylko)"](https://devstyle.pl/2020/05/07/5-sposobow-na-prace-z-gitem-2/)
+- Medium: ["A Dead Simple Intro to GitHub for the Non-Technical"](https://medium.com/crowdbotics/a-dead-simple-intro-to-github-for-the-non-technical-f9d56410a856) | [Indrek Lasn "Here Are 7 Git Commands Every Developer Should Know"](https://medium.com/@indreklasn/here-are-7-git-commands-every-developer-should-know-5b2169a49644) | Wiktor Malinowski: ["Start Using Git on the Command Line like a Pro in 5 Minutes"](https://medium.com/@abuduba/start-using-git-on-the-command-line-like-a-pro-in-5-minutes-36a6e0007e9f) | ["10 Git Commands You Should Know"](https://towardsdatascience.com/10-git-commands-you-should-know-df54bea1595c) | [17 Git Tips For Everyday Use](https://medium.com/@davisonpro/git-tips-for-everyday-use-48f10b4d4525) | ["How to become a Git expert"](https://medium.freecodecamp.org/how-to-become-a-git-expert-e7c38bf54826) | ["15 Git Commands You May Not Know"](https://dev.to/zaiste/15-git-commands-you-may-not-know-4a8j) | [Debugging with Git](https://blog.bitsrc.io/debugging-with-git-84b3cd53e587) | [Ömer Karabacak "Bulk Find and Replace in multiple files in multiple Git Repositories"](https://itnext.io/bulk-find-and-replace-in-multiple-files-in-multiple-git-repositories-487c7c433b75) | [Ahmed Bouchefra "How to Delete Local and Remote Git Branches"](https://itnext.io/how-to-delete-local-and-remote-git-branches-b8ad8baaded6)
+- [freecodecamp.org #GIT](https://www.freecodecamp.org/news/tag/git/) | [Bolaji Ayodeji "How to fix Git always asking for user credentials"](https://www.freecodecamp.org/news/how-to-fix-git-always-asking-for-user-credentials/)
+- ["15 Git Commands You May Not Know"](https://zaiste.net/15-git-commands-you-may-not-know/)
+- ["A Step by Step guide on how to use Git and Github"](https://blog.hlab.tech/a-step-by-step-guide-on-how-to-use-git-and-github/)
+- ["8 Manoeuvres to Make You the Perfect Git Citizen"](https://devbrett.com/2019/03/git-citizen.html)
+- ["Gitflow The easy release management workflow"](https://blog.axosoft.com/gitflow/?utm_content=111465107)
+- [Cem Eygi "Git Commands – 10 Terminal Tricks Every Developer Should Know"](https://www.freecodecamp.org/news/10-important-git-commands-that-every-developer-should-know/) | [Beau Carnes "How to Undo Mistakes with Git"](https://www.freecodecamp.org/news/how-to-undo-mistakes-with-git/)
+- blog.axosoft.com: ["A brief intro to git"](https://coryd.me/a-brief-intro-to-git/)
+- [WriteOnly.pl / Posts by tags / Git](https://www.writeonly.pl/posts-by-tags/git)
+- Flavio Copes: [All the Git and GitHub tutorials](https://flaviocopes.com/tags/git/)
+- [Git From Beginner to Advanced Step by Step With Graphical Animation](https://mohamedradwan.com/2019/05/31/mastering-git-from-beginner-to-advanced-step-by-step-with-graphical-animation-commands/)
+- CSS Tricks: ["How I Learned to Stop Worrying and Love Git Hooks"](https://css-tricks.com/how-i-learned-to-stop-worrying-and-love-git-hooks/)
+- ["Browsing a remote git repository"](https://begriffs.com/posts/2019-02-21-browsing-remote-git.html)
+- ["Git power tools for daily use"](https://nvie.com/posts/git-power-tools/) | ["A successful Git branching model"](https://nvie.com/posts/a-successful-git-branching-model/)
+- Nitay Neeman's Blog: ["Understanding Semantic Commit Messages Using Git and Angular"](https://nitayneeman.com/posts/understanding-semantic-commit-messages-using-git-and-angular/)
+- ["Getting Started with Git"](techcommunity.microsoft.com/t5/ITOps-Talk-Blog/Getting-Started-with-Git/ba-p/905676)
+- [Pavlo Golub "New git commands: git switch & git restore!"](https://til.cybertec-postgresql.com/post/2020-07-08-New-git-commands-git-switch-and-git-restore/)
+- [Jake Lee "Exploring pull requests with GitHub’s rich diff functionality"](https://blog.jakelee.co.uk/exploring-pull-requests-with-githubs-rich-diff-functionality/)
+- Yair's website [git](https://yairchu.github.io/tag/git)
+- Dan Aloni's blog [/git](https://blog.aloni.org/tags/git/)
+- Aleksandr Hovhannisyan [Git Blog Posts](https://www.aleksandrhovhannisyan.com/tag/git/)
+
+#### Youtube
+
+- **Kanały:*- [Dan Gitschooldude [YT (3)]](https://www.youtube.com/channel/UCshmCws1MijkZLMkPmOmzbQ/)
+- **Playlisty:*- [The Coding Train - Git and GitHub for Poets (playlista YT)](https://www.youtube.com/playlist?list=PLRqwX-V7Uu6ZF9C0YMKuns9sLDzK6zoiV) | [Git Tutorial [YT playlist]](https://www.youtube.com/playlist?list=PL3Y9MECuxct0RMwdYcqoIjo-7ncRpTNLs) | [Imran Sayed "Git Tutorial Playlist" [YT playlist 12 filmów]](https://www.youtube.com/playlist?list=PLD8nQCAhR3tTnEVPP6BtXaeiMDL--X_Wb) | [codedamn "Git / GitHub" [YT playlist 5 filmów]](https://www.youtube.com/playlist?list=PLYxzS__5yYQlLUz4Sy5YK6MQHWg-u7xST) | [Bhavesh Bhatt "GIT - Version Control" [YT playlista 1 film]](https://www.youtube.com/playlist?list=PLreVlKwe2Z0T7_vMK5cBFYYiL55HKyzHQ) | [Code SOS "Git Tutorials" [YT playlist 3 filmy]](https://www.youtube.com/playlist?list=PLmAPv1TrFSAbQxCjqWa4qbHxoWM2AEmGQ) | [The Nerdy Dev "Demystifying Git Tutorials For Beginners" [YT playlista 4 filmy]](https://www.youtube.com/playlist?list=PLXgqhtspYCM9z7aFaotMZB_l-9fPEnfHf) | [Better Coding Academy "Learn Git" [YT playlist 8 filmów]](https://www.youtube.com/playlist?list=PLnTRniWXnjf_abqo7qnrPsqo148VRYxjv) | [Dave Gray "Git and GitHub Tutorials for Beginners" [YT playlist 3 filmy]](https://www.youtube.com/playlist?list=PL0Zuz27SZ-6PkWWk_mA2vkimUTJf81mNz) | [Ihatetomatoes "Git Tutorials" [YT playlist 13 filmów]](https://www.youtube.com/playlist?list=PLkEZWD8wbltmcZQaA0ism9k2E6MGRnHZ7) | [Zaprogramuj Życie "Kurs Gita w praktyce" [YT playlist 13 filmów]](https://www.youtube.com/playlist?list=PLj-pbEqbjo6AKsJ8oE2pvIqsb15mxdrxs)
+- **Filmy:*- [hello roman "Git i GitHub – podstawy ⌨️ hello roman #92" [34:01]](https://www.youtube.com/watch?v=9qrgY2Dw30g) | [Maciej Aniserowicz "Jak pracować z GITem? (i innymi systemami kontroli wersji) [devstyle LIVE]" [YT 19:02]](https://www.youtube.com/watch?v=X7t2Yf8E7ts) | [Academind "Git Tutorial for Beginners - The Basics" [47:07]](https://www.youtube.com/watch?v=ly4niPr9vUo) | [Programming with Mosh "Git Tutorial for Beginners: Learn Git in 1 Hour" [YT 1:09:13]](https://www.youtube.com/watch?v=8JJ101D3knE) | [[Linux.conf.au 2013] - Git For Ages 4 And Up [YT 1:39:42]](https://www.youtube.com/watch?v=1ffBJ4sVUb4) | [Git Tutorial 1 - Introduction to Git 6:28](https://www.youtube.com/watch?v=h81JR0hEgtI) | [[ GITHUB VS GIT | What are they? (8"48)]](https://www.youtube.com/watch?v=MQWrY3aiFxQ) | ["Deep Dive into Git - Edward Thomson" [YT 1:00:02]](https://www.youtube.com/watch?v=fBP18-taaNw) | [Learn Git in 20 Minutes [YT 17:52]](https://www.youtube.com/watch?v=Y9XZQO1n_7c) | [Academind "Git MERGE vs REBASE" [YT 16:11]](https://www.youtube.com/watch?v=CRlGDDprdOQ) | [Nirlo "DevOps vs Git: How To Use Branches" [YT 18:29]](https://www.youtube.com/watch?v=sObNoF8spWI) | [overment "Szybki start z Git Hooks - łatwy deployment | overment" [YT 4:10]](https://www.youtube.com/watch?v=nqUm5uzxrBw) | infoShare Academy ["GIT - podstawy, zdalne repozytoria, gałęzie i łączenie zmian w 20 minut" [YT 20:22]](https://www.youtube.com/watch?v=TyI6y0k3U00)
+
+#### .gitignore
+
+- [gitignore.io](https://www.gitignore.io/) Create useful .gitignore files for your project | [github/gitignore](https://github.com/github/gitignore)
+- [simonwhitaker/gibo](https://github.com/simonwhitaker/gibo)
+- [Ignore CLI](https://www.npmjs.com/package/ignore-cli)
+
+#### Narzędzia
+
+- [jesseduffield/lazygit](https://github.com/jesseduffield/lazygit) simple terminal UI for git commands
+- [Magit](https://magit.vc) A Git Porcelain inside Emacs
+- [Gitea](https://gitea.io/en-us/) A painless self-hosted Git service | [Expose Gitea to Internet from a private network using Packetriot [YT 11:36]](https://www.youtube.com/watch?v=2TcF9P1EAd8)
+- [nosarthur/gita](https://github.com/nosarthur/gita) Manage multiple git repos side by side for sanity
+- [Gitutor](https://gitutor.io/guide/) a command line application that wraps Git and provides beginner friendly versions of git's commands
+- [GitMessenger](https://github.com/singhbhavneet/GitMessenger) chat app for developers
+- [Depfu](https://depfu.com/) automated dependency updates for Ruby and JS
+- [gitenc](https://github.com/angela-d/gitenc) sensitive data file encryption while using Git, with GPG
+- [forked.yannick.io](http://forked.yannick.io) - find maintained forks of your favorite GitHub repos
+- [Github-Web-Apps/Starhub](https://github.com/Github-Web-Apps/Starhub) All about your Github account, public and private activity, stars, followers
+- [binder](https://mybinder.org) Git repo into a collection of interactive notebooks - [Project Jupyter](https://jupyter.org)
+- [StackEdit](https://stackedit.io/app)
+- [CircleCI](https://circleci.com)
+- [jesseduffield/lazygit](https://github.com/jesseduffield/lazygit) simple terminal UI for git commands
+- [gg](https://gg-scm.io) Git with less typing
+- [Mark Shust "Introducing git ship, a simplified git flow workflow"](https://markshust.com/2018/04/07/introducing-git-ship-simplified-git-flow-workflow/)
+- [abskmj / hukum](https://github.com/abskmj/hukum) An NPM module printing the realtime status of Github Actions Workflow on your terminal.
+- [paulirish / git-open](https://github.com/paulirish/git-open) open the GitHub page or website for a repository in your browser
+- [jormaechea / git-web](https://github.com/jormaechea/git-web) Interact with your git provider from your command line.
+- [GitGuardian](https://gitguardian.com/)
+- [Github Wrapped](http://devwrapped.com)
+- [GitPals](https://www.gitpals.com/page/) Find a team or team members for open-source development
+
+#### Git GUI
+
+- [SmartGit](https://www.syntevo.com/smartgit/) graphical Git client
+- [GitEye](https://www.collab.net/products/giteye) easy-to-use Git GUI
+- [GitKraken](https://www.gitkraken.com) Git Client
+
+#### Po polsku
+
+- [Korzystanie z Gita i GitHuba - poradnik na start](http://kot-zrodlowy.pl/programowanie/2017/10/11/korzystanie-z-git-i-githuba.html)
+- randomseed.pl: [System kontroli wersji Git, cz. 1](https://randomseed.pl/pub/git-system-kontroli-wersji/01-wprowadzenie/)
+- ["Git i GitHub dla zielonych: tworzymy pierwsze repozytorium"](https://www.flynerd.pl/2018/02/github-dla-zielonych-pierwsze-repozytorium.html)
+- [overment "Kurs Git po polsku od podstaw / Czym jest branch, repozytorium, commit, github, zdalne repozytorium, fork, git rebase, rozwiązywanie konfliktów git" [YT playlista 13 filmów]](https://www.youtube.com/playlist?list=PLjHmWifVUNMKIGHmaGPVqSD-L6i1Zw-MH) | [overment "Kurs GIT (tutorial)" [YT playlist 3 filmy]](https://www.youtube.com/playlist?list=PLjHmWifVUNMJ4UxaI2AL4Joh7IlRqaTdd) | [Marcin Mokrzan "Git Tutorial" [YT playlist 1 film]](https://www.youtube.com/playlist?list=PL83p1dQtObtQNSAcPP3dNdG49pFKWLZpi)
+
+#### Github
+
+- [GitHub](https://github.com/) - [Github Docs](https://docs.github.com/) | [GitHub Guides](https://guides.github.com) [GitHub Learning Lab](https://lab.github.com) - [GitHub Octoverse 2017](https://octoverse.github.com/) | [Awesome Lists](https://github.com/topics/awesome)
+- [Good First Issues](https://goodfirstissues.com/about.html)
+- [Rutik Wankhade "Github repositories every aspiring developer should check out"](https://blog.rutikwankhade.dev/github-repositories-every-aspiring-developer-should-check-out-ck7k24sxu01otnds1bukx15ip)
+- [kcd-edu](https://github.com/topics/kcd-edu)
+- ["8 Productivity Tips for GitHub"](https://dev.to/_darrenburns/8-productivity-tips-for-github-44kn)
+- [GitHub special files and paths](https://github.com/joelparkerhenderson/github_special_files_and_paths)
+- Code With Ghazi ["How to create a Github Profile README with Dynamic Github Stats"](https://codewithghazi.com/how-to-create-a-github-profile-readme-with-dynamic-github-stats/)
+- [7 Tips of Searching GitHub Repositories You Should Know](https://www.oldyoungboys.club/7-Tips-of-Searching-Github-Repositories-You-Should-Know/)
+- ["How to Host a Static Website with S3, CloudFront and Route53"](https://paulrberg.com/post/2018/12/27/static-website-aws/)
+- ["How to clone all repositories in a Github Organization"](https://medium.com/@kevinsimper/how-to-clone-all-repositories-in-a-github-organization-8ccc6c4bd9df)
+- ["6 places to host your git repository"](https://opensource.com/article/18/8/github-alternatives)
+- Artem Golubin Blog ["How to track and display profile views on GitHub"](https://rushter.com/blog/github-profile-markdown/)
+- [TIL - Debugging GitHub Actions](https://blog.s1h.org/debugging-github-actions/)
+- ["6 Awesome Chrome Extension for Github"](https://www.reddit.com/r/reactjs/comments/g5jwri/6_awesome_chrome_extension_for_github/)
+- ["What every GitHub user should know about VS Code - GitHub Satellite 2020" [YT 24:07]](https://www.youtube.com/watch?v=T6sW1Dk9B4E)
+- [Simon Holdorf "10 Extraordinary GitHub Repos for All Developers"](https://medium.com/better-programming/10-extraordinary-github-repos-for-all-developers-939cdeb28ad0)
+- [Pedro Brandão "Deploy Previews with AWS and Github Actions"](https://significa.co/blog/deploy-previews-aws)
+- [sonic0002 "Create customized GitHub profile page"](https://www.pixelstech.net/article/1603006099-Create-customized-GitHub-profile-page)
+- [Leina McDermott "Let's build the GitHub authorization model"](https://www.osohq.com/post/building-the-github-authorization-model-using-oso)
+- [GitHub Key Combinations](https://keycombiner.com/collections/github/winlinux/)
+- [github.io Archives - VIP INFOTECH](https://www.vipinfotech.com/category/github-io/)
+
+#### Github YT
+
+- freeCodeCamp.org ["Git & GitHub" [YT playlist 7 filmów]](https://www.youtube.com/playlist?list=PLWKjhJtqVAbkFiqHnNaxpOPhh9tSWMXIF) | ["Git and GitHub for Beginners - Crash Course" [YT 1:08:25]](https://www.youtube.com/watch?v=RGOj5yH7evk)
+- hello roman: ["Git i GitHub – podstawy ⌨️ hello roman #92" [YT 34:01]](https://www.youtube.com/watch?v=9qrgY2Dw30g) | ["GitHub Quickstart Tutorial in 3 minutes" [YT 3:49]](https://www.youtube.com/watch?v=41G7TWwnNFU&feature=youtu.be)
+- overment "Github Actions - Wprowadzenie do CI/CD" [YT 55:52]
+- Jak nauczyć się programowania ["Git Tutorial" [YT playlist 5 filmów]](https://www.youtube.com/playlist?list=PLp9WLfHXxbccsrl9O05Fp8mzEE_EM8948)
+- Amigoscode ["Git and GitHub Tutorial For Beginners | Full Course [2021] [NEW]" [YT 2:21:42]](https://www.youtube.com/watch?v=3fUbBnN_H2c)
+- The Net Ninja ["Git & GitHub Tutorial for Beginners" [YT playlist 12 filmów]](https://www.youtube.com/playlist?list=PL4cUxeGkcC9goXbgTDQ0n_4TBzOO0ocPR) | [Academind "Git & GitHub - Managing Your Code" [YT 4 filmy]](https://www.youtube.com/playlist?list=PL55RiY5tL51poFMpbva1IqfO-pylwSNsN)
+- ["How to Set up a Free Website with GitHub Pages (tutorial) - How I Created quanticdev.com" [YT 13:26]](https://www.youtube.com/watch?v=jPhmR3TiGq8) | ["How to IDE-ify your GitHub" [7:19]](https://www.youtube.com/watch?v=JQsmSwbvPD8&feature=share) | [DevOps Directive "Set up GitHub Actions as a Free Website Uptime Monitor in Just 3 Minutes!" [3:37]](https://www.youtube.com/watch?v=o5ZLWpvus50)
+- JavaScript Mastery ["Optimize Your GitHub Profile - Tips For Getting Hired" [YT playlist 1 film]](https://www.youtube.com/playlist?list=PL6QREj8te1P689OAQJK7tcgN1aTViaAl9)
+- [Traversy Media "Git & GitHub Crash Course For Beginners" [32:41]](https://www.youtube.com/watch?v=SWYqp7iY_Tc)
+- Nirlo ["How To Use Github Actions: Octocat Will Be Everywhere" [17:58]](https://www.youtube.com/watch?v=9lQNbavOygw)
+- Colt Steele ["Learn Github in 20 Minutes" [19:59]](https://www.youtube.com/watch?v=nhNq2kIvi9s)
+- codeSTACKr ["Next Level GitHub Profile README (NEW) | How To Create An Amazing Profile ReadMe With GitHub Actions" [14:27]](https://www.youtube.com/watch?v=ECuqb5Tv9qI) | [codeSTACKr "UPDATE: Next Level GitHub Profile README (NEW) | GitHub Actions | Vercel | Spotify" [YT 18:34]](https://www.youtube.com/watch?v=n6d4KHSKqGk) | ["NEW GitHub CLI 1.0 Tutorial | FREE Swag! | Hacktoberfest UPDATE | Step-by-Step Guide | Web Developer" [YT 15:09]](https://www.youtube.com/watch?v=Uzcr9YrdODU)
+- Eddy Valverde ["Git Tutorial for Beginners" [YT 13:55]](https://www.youtube.com/watch?v=c4SXBSBHlGY)
+- TechWorld with Nana ["GitHub Actions Tutorial - Basic Concepts and CI/CD Pipeline with Docker" [YT 32:30]](https://www.youtube.com/watch?v=R8_veQiYBjI)
+
+#### Github CLI
+
+- [GitHub CLI](https://cli.github.com)
+- [Chris Pietschmann "GitHub CLI (gh) Cheat Sheet"](https://build5nines.com/github-cli-gh-cheat-sheet/)
+- ["Nowe narzędzie – Github CLI ⌨️ hello roman #96" [YT 13:26]](https://www.youtube.com/watch?v=ijJUuHgcmKE)
+- [codedamn "New GitHub CLI Crash Course - First Look" [YT 25:37]](https://www.youtube.com/watch?v=BRAG1Kj4-Ss)
+
+#### Narzędzia zbudowane w Githubie
+
+- justjoin.it ["Dziesięć najpopularniejszych repozytoriów na Githubie"](https://geek.justjoin.it/najpopularniejsze-repozytoria-github/)
+- [Foam](https://foambubble.github.io/foam/) a personal knowledge management and sharing system, built on VSC and GitHub
+- [Blood Lines](https://mister-blanket.github.io/blood-lines/) A 3D visualizer for genealogical data
+- [TrashEmail / TrashEmail](https://github.com/TrashEmail/TrashEmail) hosted disposable email telegram bot; privacy friendly
+- [simonarvin / eyeloop](https://github.com/simonarvin/eyeloop) Python 3-based eye-tracker tailored specifically to dynamic, closed-loop experiments on consumer-grade hardware
+- [ahmedgulabkhan / TouristAssist](https://github.com/ahmedgulabkhan/TouristAssist) an app made using Flutter and Firebase which provides a better tourism experience. Tourists can sign up and book local guides based on the current city they are present in
+- [1Hibiki1 / hex-color-blender](https://github.com/1Hibiki1/hex-color-blender) hex color blender
+- [nidhaloff / deep_translator](https://github.com/nidhaloff/deep_translator) flexible free and unlimited python tool to translate between different languages in a simple way using multiple translators
+- [Kamori / daily-mantra.com](https://github.com/Kamori/daily-mantra.com) A self-updating website for a daily mantra [Daily Mantra](https://daily-mantra.com)
+- [alias-rahil / handwritten.js](https://github.com/alias-rahil/handwritten.js) Convert typed text to realistic handwriting!
+- [TwinProduction / gatus](https://github.com/TwinProduction/gatus) Automated service health dashboard
+- [jdtaylor7 / prometheus](https://github.com/jdtaylor7/prometheus) Real-time drone monitoring system
+- [the-mcnaveen / Cheems-Chrome-Extension](https://github.com/the-mcnaveen/Cheems-Chrome-Extension) replace every image with Cheems
+- [samrobbins85 / notes-site](https://github.com/samrobbins85/notes-site) A site containing all my university notes
+- [qarmin / czkawka](https://github.com/qarmin/czkawka) Multi functional app to find duplicates, empty folders etc.
+- [nidhaloff / igel](https://github.com/nidhaloff/igel) a machine learning tool that allows to train, test and use models without writing code
+- [The-Kid-Gid / nextinspace](https://github.com/The-Kid-Gid/nextinspace) Never miss a launch
+- [CryptoDev "GitHub dla Inwestorów - M1 - Czym jest GitHub? / Widoki / Podstawy" [YT 9:41]](https://www.youtube.com/watch?v=7_GajY9JBgE)
+
+#### Gitlab
+
+- [glab](https://gitlab.com/profclems/glab) A custom Gitlab Cli tool written in Go (golang)
+- [Team Codegiant "Top 13 GitHub Alternatives in 2020 [Free and Paid]"](https://blog.codegiant.io/top-github-alternatives-in-2020-9f7d9ecf2fcb)
+- [Christian Montero "GitLab CI/CD example with a dockerized ReactJS App"](https://dev.to/christianmontero/gitlab-ci-cd-example-with-a-dockerized-reactjs-app-1cda)
+- ["Merge your Merge Request sooner Some of the Slack messages your team sends are critical for productivity. Automate them."](https://code-dog.app/gitlab)
+- [Ankit-Mittal "Gitlab" [YT playlist 8 filmów]](https://www.youtube.com/playlist?list=PLVdavx-2iX4PzoADNkSLI1I5L-eAtQlPn)
+- [Nirlo "DevOps: How To Use Gitlab-CI" [YT 19:09]](https://www.youtube.com/watch?v=bCLRXaaZaQE)
+- ["GitLab CE Tutorial #1 - Creating a GitLab Droplet on Digital Ocean" [YT 10:09]](https://www.youtube.com/watch?v=QCZl0eNzMTs)
+
+#### Hasła
+
+- [git-secret](https://git-secret.io)
+- [mozilla / sops](https://github.com/mozilla/sops) Simple and flexible tool for managing secrets
+- [Vault by HashiCorp](https://www.vaultproject.io)
+- GitHub Help: ["Removing sensitive data from a repository"](https://help.github.com/en/github/authenticating-to-github/removing-sensitive-data-from-a-repository) | ["Removing files from a repository's history"](https://help.github.com/en/github/managing-large-files/removing-files-from-a-repositorys-history)
+- stackoverflow: [Delete commits from a branch in Git](https://stackoverflow.com/questions/1338728/delete-commits-from-a-branch-in-git) | ["What is the best practice for dealing with passwords in git repositories?"](https://stackoverflow.com/questions/2397822/what-is-the-best-practice-for-dealing-with-passwords-in-git-repositories/30664318)
+- ["Deleting a git commit"](https://www.clock.co.uk/insight/deleting-a-git-commit)
+- ["On undoing, fixing, or removing commits in git"](https://sethrobertson.github.io/GitFixUm/fixup.html)
+
+#### Github Pages
+
+- Github Help: [Categories / Customizing GitHub Pages](https://help.github.com/categories/customizing-github-pages/) | [Github personal website generator](https://github.dev)
+- [Github Pages dla zielonych](https://radek024.github.io/blog/strony-www/2017/07/14/github-pages/)
+- [Creating and Hosting a Personal Site on GitHub](http://jmcglone.com/guides/github-pages/)
+- [Why Github Pages? because it's fantastic!](https://www.stephaniehicks.com/githubPages_tutorial/)
+- ["Jak opublikować stronę internetową na GitHub pages? – krok po kroku"](https://www.flynerd.pl/2018/02/opublikowac-strone-internetowa-github-pages-krok-kroku.html)
+- [Shortcut to Toggle Between Github Repo and That Repo's Github Pages](https://gist.github.com/zischwartz/daa9dd15ea0604321ca777c01fa4e3dd)
+- itsopensource ["Publish GitHub pages with GitHub Actions"](https://itsopensource.com/publish-github-pages-with-github-actions/)
+- ["Deploying to Github Pages? Don’t Forget to Fix Your Links"](https://maximorlov.com/deploying-to-github-pages-dont-forget-to-fix-your-links/)
+
+#### CI/CD
+
+- [Daniel Slapelis "How to build a CI/CD pipeline using GitLab for your business's website"](https://nextlinklabs.com/insights/building-cicd-pipeline-website-gitlab)
+- [Buddy Works](https://buddy.works/)

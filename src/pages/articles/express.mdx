@@ -1,0 +1,774 @@
+---
+title: "Express"
+comment: ""
+section: "it"
+subsection: "js"
+---
+
+Szybki, minimalistyczny framework Node.js. Przyspiesza pisanie aplikacji.
+
+### Instalacja
+
+Express.js można zainstalować w wybranym katalogu na dwa sposoby: tradycyjnie w dwóch krokach:
+
+```
+ npm i express -S
+```
+
+Potem (--no-view: instalacja bez szablonów; --view=pug jeżeli jako szablon wybieramy pug; --git: jezeli chcemy automatycznie utworzyć repozytorium git; nazwa katalogu jest opcjonalna, jeżeli nie zostanie podana, użyty zostanie bieżący)
+
+```
+ express --no-view --git nazwa_projektu_i_katalogu
+```
+
+Można też użyć generatora, który automatycznie utworzy standardowy szkielet aplikacji: [Express application generator](https://expressjs.com/en/starter/generator.html)
+
+```
+ npx express-generator
+```
+
+W obu przypadkach aplikacja powstanie bezpośrednio w bieżącym katalogu. Otrzymamy informacje o tym, że w przyszłych wydaniach jade nie będzie domyślnym szablonem widoków, listę wygenerowanych katalogów i plików oraz instrukcję jak dokończyć instalację.
+
+Niezależnie od wybranej metody, po instalacji w celu zainstalowania wszystkich zależności:
+
+```
+ npm install
+```   
+
+Które na podstawie package.json dociągnie moduły. Jeżeli widzimy komunikat "run \`npm audit fix\` to fix them, or \`npm audit\` for details" to - oczywiście należy się do niego zastosować. Potem uruchomienie aplikacji
+
+```
+ DEBUG=express:- npm start
+```
+
+Tutaj widzimy połączone dwa polecenia, pierwsze można wydać tylko raz, potem wystarczy już sam npm start. ak wygląda zalecana w dokumentacji struktura po zakończeniu instalacji.
+
+```
+ .
+ ├── app.js
+ ├── bin
+ │ └── www
+ ├── package.json
+ ├── node_modules
+ ├── public
+ │ ├── index.html
+ │ ├── images
+ │ ├── javascripts
+ │ └── stylesheets
+ │ └── style.css
+ ├── routes
+ │ ├── index.js
+ │ └── users.js
+ └── views
+  ├── error.pug
+  ├── index.pug
+  └── layout.pug
+ 
+ 7 directories, 9 files
+```
+
+Jeżeli wszystko jest ok, tzn. widzimy stronę pod adresem localhost:3000 ; to zatrzymujemy serwer (Ctrl + C) i git init; .gitignore dla node_modules, można podpiąć repo githuba.
+
+Może się zdarzyć, że nie uruchomi się dając komunikat o zajętym porcie i jeśli nie dają rezultatu "lsof -i :3000" i "killall -9 node" to możemy ustawić inny port tak jak to zaleca stackoverflow:
+
+```
+ app.set("port", process.env.PORT || 3001);
+```
+
+Generator domyślnie instaluje Express.js z szablonami jade (choć coraz wyraźniej informuje, że przejdzie na pug), jeżeli chcemy zmienić na pug to, najpierw trzeba pug zainstalować, a potem:
+
+```
+ express --view=pug
+```
+
+Kolejną zmianą, którą warto dokonać na początku jest zainstalowanie nodemona, który jak sama nazwa wskazuje jest demonem Node, restartującym serwer po każdej zmianie w monitorowanych plikach. Dzięki temu praca jest płynna i możemy na bieżąco obserwować wyniki działań.
+
+Tak utworzony, gotowy do dalszej pracy katalog zajmuje trochę ponad 10 MB.
+
+### Start
+
+Odpowiedź (route) serwera składa się z elementów:
+
+- Nazwa aplikacji (app)
+- Metoda HTTP (np. get, post, all)
+- W nawiasie:
+  - Ścieżka
+  - Funkcja
+
+Przykład:
+
+```
+ app.get("/", ()=>{res.send(req.ip)});
+```
+
+Potem w pliku App.js (główny plik ustawień aplikacji, przyjęta domyślna nazwa) - obiekt app stworzony na bazie funkcji express:
+
+```
+ const express = require("express");
+ const app = express();
+ const port = 3001;
+```
+
+Nasłuchiwanie:
+
+```
+ app.listen(port, "127.0.0.1", () => {
+    console.log("server is listening at port: " + port);
+  });
+```
+
+Odpowiedź:
+
+```
+ app.get("/", (req, res) => {
+    console.log(req.ip, port);
+    res.write(req.ip,);
+    res.write(req.path);
+    res.end();
+  });
+```
+
+Uruchomić serwer można przez "node app.js" - w katalogu aplikacji. Jeżeli chcemy używać npm start lub nodemon (nodemon ./bin/www) co jest najwygodniejsze bo tego nie trzeba restartować z każdą zmianą to musimy na końcu app.js zadeklarować eksport.
+
+```
+ module.exports = app;
+```
+
+### Obiekt Request (req)
+
+Obiekt Request parametry w callbacku każdego zdarzenia, każde zapytanie HTTP. Przykładowe:
+
+- req.hostname nazwa hosta, serwera na którym uruchomiona jest aplikacja
+- req.ip adres IP klienta
+- req.ips tablica dotychczasowych adresów, oryginalny
+- req.method która metoda HTTP przydatne przy ALL, domyślna to get
+- req.url z Node.js
+- req.originalUrl przy przekierowaniu zachowuje poprzedni adres
+- req.path jw choć są różnice
+- req.protocol nazwa protokołu: http czy https, string
+- req.secure bolean
+
+[What is a URL?](https://launchschool.com/books/http/read/what_is_a_url)
+
+```
+ ? query string parametr = wartość &
+```
+
+Dwie możliwości zakodowania niebezpiecznych znaków
+
+encodeURIComponent ręczny
+
+```
+ encodeURIComponent('zakodowany tekst z & i innymi niebezpiecznym znakami')
+ const url = \`/?name=$\{encodeURIComponent(name)}&surname=$(encodeURIComponent(surname)}\`;
+```
+
+URISearchParams z użyciem obiektu
+
+```
+ const params = URISearchParams(
+    {name,
+    surname }
+    );
+```
+
+odczytujemy przez req.query, który zawiera wszystkie dane przesłane przez query string, można zastosować destrukturyzację
+
+```
+ const {name, surname} = req.query;
+```
+
+req.get metoda pobrania nagłówków (Referer) przesłanych przez klientach, np cookies
+
+Routing metody i ścieżki; REST. W ścieżkach można przekazywać parametry /sciezka/:parametr/:parametr_opcjonalny? (nazewnictwo zgodne z zasadami zmiennych JS, rozdzielone mogą byc tylko kropka, myślnik, slesz), opcjonalny zakończony znakiem zapytania.
+
+req.params odpiera te wszystkie parametry, obiekt, który ma klucze zgodne z wszystkimi parametrami bez dwukropków. Opcjonalny też jest przechwycony jako undefined.
+
+### Obiekt Response (res)
+
+res.write() i res.end() znane z Node.js
+
+res.send() łączy obie, ponadto zapewnia:
+
+- nagłówek Content-Type domyślnie na html i kodowanie
+- Content-Length przeglądarka wie ile zostało ściągnięte
+- nagłówki związane z cachingiem nie pobieranie już pobranych data
+- konwertuje dane jeżeli jest to potrzebne
+- przesyła dane i kończy połączenie
+
+- string text/html i przesłanie tekstu
+- Buffer application/octet-stream przesyłanie czystych danych
+- array/Object application/json i zakodowanie danych jako JSON
+
+res.json() zawsze wysyła JSONa i ustawia Content-Type na application/json.
+
+res.location() trzeba ustawić kod statusu HTTP (302) i zakończyć połączenie przez res.end(), obie te rzeczy zapewnia sendStatus()
+
+res.redirect() prostszy sam ustawia kod odpowiedzi HTTP (można go zmienić: drugi argument, domyślnie jest 302), tworzy szablon HTML do przekierowania jeżeli standardowe metody zawiodą i daje więcej możliwości, ścieżki specjalne względne (dwie kropki czyli w górę) i cofające ('back' cofa a jeżeli nie ma dokąd to na główną).
+
+- 301 trwałe zapamiętuje nowy adres
+- 302 niestałe przekierowanie ale adres zostaje
+- 303 zobacz gdzie indziej, jak 302 ale metoda inna niż GET, przekierowująca potem na GET
+- 307 jak 302 ale bez zmiany na GET
+
+res.sendFile() potrzebuje ścieżki bezwzględnej, da się to uzyskać modułem path (wbudowany, wystarczy require).
+
+```
+ app.get('/logo', (req, res) => {
+    const fileName = path.join(__dirname, 'sciezka/do/pliku.rozszerzenie');
+    res.sendFile(fileName);
+    });
+```
+
+- root zabezpiecza przed wejściem wyżej w katalogach i wystarczy podawać ścieżkę lokalną (static albo public)
+- lastModyfied boleanem decydujemy czy ma być ustawiony, domyślnie true
+- headers można dodać własne nagłówki
+- dotfiles allow/deny/ignore domyślny ignore więc jakby nie było
+
+Można w ten sposób wszystkie pliki wysyłać także HTML i JS jest to szybsze bo pomija Node.js
+
+res.attachment() jw ale wymusi pobranie pliku, ale trzeba zakończyć połączenie przez res.end().
+
+res.download() połączenie 2 powyższych wymusza download i można dodać niektóre opcje znane z res.sendFiles(). Można zmienić nazwę u klienta, nie można stosować parametru root, sam kończy połączenie.
+
+res.set() ustawianie nagłówków (większą liczbę przekazuje się jako obiekt) i cookies.
+
+res.headerSet() informacja czy nagłówki zostały wysłane, przy odpowiedzi najpierw ustawia się nagłówki potem treść, nie można wrócić do nagłówków.
+
+res.cookie() ustawianie ciasteczek, ustawienie nagłówków nazwa i wartość, krótkie czyli sesyjne.
+
+Jako trzeci argument obiektu opcje:
+
+- domain
+- expires do kiedy ma być zapamiętane obiekt date
+- maxAge jw ale w liczbie ms
+- httpOnly domyślnie false, jeśli true frontend nie ma dostępu do ciastka, ważne dla uwierzytelnienia dobrze ustawić wtedy na true.
+
+res.clearCookie(), usuwanie ciasteczek, np do logoutu.
+
+### Middleware
+
+Middleware przekształca dane do aplikacji, można ich używać wiele równocześnie. Najczęściej rejestracja middleware przez:
+
+```
+ app.use(express.json());
+```
+
+Np express.json() ograniczenie do 100kB bo działa synchronicznie. Wtedy w obiekcie Request pojawi się nowy obiekt req.body, zawierający rozkodowane dane jeśli przybyły w zapytaniu z danymi application/json.
+
+Pobranie danych JSON i odkodowanie do obiektu JS
+
+```
+ function showNextQuestion() {
+    fetch('/question', {method: 'GET',})
+    .then(r => r.json())
+    .then(data => {console.log(data)});
+  }
+```
+
+Rejestrować middleware przed innymi ścieżkami.
+
+express.static() katalog plików statycznych, opcjonalnie drugi parametr pozwalający wybrać stronę główną, ograniczyć widzialność plików z kropką i sterować cache.
+
+Obsługa plików statycznych
+
+```
+ const path = require('path');
+
+ app.use(express.static(path.join(__dirname, 'public'),));
+```
+
+pakiet cookie-parser do zainstalowania.
+
+```
+ const cookieParser = require('cookie-parser');
+ app.use(cookieParser());
+```
+
+Teraz ciasteczka obecne są w obiekcie req.cookies, podpisane w req.signedCookies.
+
+fetch zapytanie asynchroniczne
+
+### App.js
+
+Domyślny plik główny aplikacji.
+
+```
+ var createError = require("http-errors"); // przechwytywanie błędów
+ var cookieSession = require("cookie-session"); // pakiet do sesji ciasteczek
+ var express = require("express"); // express
+ var path = require("path"); // ścieżka, moduł podstawowy
+ var cookieParser = require("cookie-parser"); // do czytania, parsowania ciasteczek
+ var logger = require("morgan"); // logi w trybie deweloperskim
+ var config = require("./config"); // wczytanie konfiguracji
+ var mongoose = require("mongoose"); // połączenie z bazą danych MongoDB
+ mongoose.connect(
+   "mongodb+srv://adminCluster0:HASŁO@adrees_bazy.mongodb.net/test?retryWrites=true&w=majority",
+   { useNewUrlParser: true }
+ );
+ 
+ var db = mongoose.connection; // weryfikacja połączenia z bazą MongoDB
+ db.on("error", console.error.bind(console, "connection error:"));
+ db.once("open", function() {
+   // we're connected!
+   console.log("db connected");
+ });
+ 
+ var indexRouter = require("./routes/index"); // importy routingów
+ ...
+ 
+ var app = express(); // uruchomienie serwera, wywołanie funkcji express
+ 
+ app.set("views", path.join(__dirname, "views")); // katalog z widokami (szablonami)
+ app.set("view engine", "pug"); // uruchomienie silnika szablonów
+ 
+ // app.use wywołanie expressu, i uruchomienie middleware'ów
+ app.use(logger("dev"));
+ app.use(express.json()); // przechwytywanie body i jsona, bezpośrednio
+ app.use(express.urlencoded({ extended: false })); // dane z formularza, automatyczne parsowanie z postu
+ app.use(cookieParser()); // ciasteczka
+ app.use(express.static(path.join(__dirname, "public"))); // katalog plików statycznych, assety, wszystko to co będzie publicznie dostępne
+ 
+ app.use((req, res, next) => {
+   res.locals.path = req.path;
+   next();
+ });
+ 
+ // uruchomienie routingów
+ app.use("/", indexRouter); // adres routera i nazwa
+ ...
+ 
+ // catch 404 and forward to error handler; przechwytywanie błędów
+ app.use(function(req, res, next) {
+   next(createError(404));
+ });
+ 
+ // error handler; przechwytywanie pozostałych błędów
+ app.use(function(err, req, res, next) {
+   // set locals, only providing error in development
+   res.locals.message = err.message;
+   res.locals.error = req.app.get("env") === "development" ? err : {};
+ 
+   // render the error page
+   res.status(err.status || 500);
+   res.render("error");
+ });
+ 
+ module.exports = app; // eksport aplikacji
+```
+
+Pliki z routingiem muszą być importowane i wywołane w App.js. Importowanie / deklaracja:
+
+```
+ const indexRouter = require('./routes/index');
+```
+
+Wywołanie:
+
+```
+ app.use('/', indexRouter);
+```
+
+### Routing
+
+Poszczególne dokumenty określone w app.js (podstrony) nazywamy routami, ich pliki są w katalogu /routes. Dajmy na to, że chcemy utworzyć dwa: jeden główny domyślny i drugi będący jakimś standardowym dokumentem: będą to index i about. W app.js trzeba je zadeklarować i uruchomić:
+
+```
+ const indexRouter = require("./routes/index");
+ const aboutRouter = require("./routes/about");
+ 
+ app.use("/", indexRouter);
+ app.use("/about", aboutRouter);
+```
+
+Te pliki w katalogu /routes muszą mieć w deklaracjach Express i Router oraz eksport:
+
+```
+ const express = require("express");
+ const router = express.Router();
+ 
+ module.exports = router;
+```
+
+Żeby coś wyświetlić pośrodku powinna byc funkcja:
+
+```
+ router.get("/", function(req, res, next) {
+    res.render("index", { title: "Express" });
+  });
+```
+
+Tutaj renderowaniu podlega plik index znajdujący się w domyślnym katalogu szablonów, czyli /views. Jeżeli używamy szablonów pug, będzie to index.pug.
+
+```
+ p Witaj w #{title}
+```
+
+Powyższy szablon wyświetli paragraf z treścią "Witaj w Express". Tytuł jest tu parametrem przekazanym z index.js.
+
+Najprostsza weryfikacja
+
+```
+ router.get("/login", (res, req) => { // utworzenie routu logowania
+    res.render("login", {title: "Logowanie"})
+  }
+  
+  router.post("/login", (req, res) => { // sprawdzenie
+    const body = req.body // przypisanie otrzymanego parametru do zmiennej, dane z formularza przychodzą w req pod parametrem body
+    if (body.login === login & body.password === password) {
+      res.redirect("/admin")}
+      else {
+        res.redirect("/login");
+      }
+  })
+```
+
+Logowanie admina ma dwa routery, jeden (get) przechwytuje żądania, drugi (post) weryfikuje poprawność wypełnienia formularza. Ifami przekierowuje się używając redirect. Osobna strona login z formularzem.
+
+Do przechowywania sesji biblioteka cookie-session: klucz sesji i maksymalny czas przechowywania. Sesja przechowywana jest w ciasteczku w komputerze użytkownika. (więcej \[96 12m\]); importuje się w app.js przed expressem.
+
+Router.all przed dwoma routerami admina. Odbiera wszystko co idzie na ten adres. Weryfikuje istnienie sesji. Jeżeli jest sesja redirect na admina, jeśli nie to na login (tu return, żeby zakończyć funkcję). Żeby wywołać następne funkcje musi być next().
+
+```
+ router.all("*", (req, res, next) => {
+    if (!req.session.admin){ // stan sesji został zapisany w tym parametrze
+      res.redirect("login");
+      return;}
+      next();
+      })
+```
+
+Przesłanie parametrów np. pomiędzy frontendem a backendem metodą POST:
+
+```
+ function sendAnswers(answerIndex) {
+  fetch(\`/answer/$\{answerIndex}\`), \{method:"POST",}
+}
+```
+
+Odbiór na backendzie:
+
+```
+ app.post ('/answer/:index', (req, res) => {
+    const {index} = req.params;
+    if (question.correctAnswer===Number(index)){
+      res.json({correct : true,});
+      else {
+      res.json({correct : false,});
+  }
+    };
+  });
+```
+
+Krócej:
+
+```
+ res.json({correct: question.correctAnswer === Number(index) ? true : false;})
+```
+
+Jeszcze krócej:
+
+```
+ res.json({correct: question.correctAnswer === Number(index),});
+```
+
+### Szablon
+
+Każdy route typu get musi mieć szablon. Dla powtarzalnych elementów strony, czyli zasadniczego layoutu istnieje plik szablonu o nazwie layout.pug. Jest on importowany przez wszystkie szablony dokumentów deklaracją extends layout, która jest na samej górze i jest pierwszego rzędu. W miejscu przeznaczonym na treść strony zawiera deklarację: block content. Nazwa block content jest zwyczajowa i arbitralna. Jeżeli zostaje wywołany w szablonie strony musi istnieć z tą samą nazwą w layoucie.
+
+Najprostsze menu zdefiniowane w layoucie może wyglądać tak:
+
+```
+ nav
+ li
+  a(href="/") Strona główna
+ li
+  a(href="/about") About
+```   
+
+Żeby można było używać styli umieszczonych w katalogu /public/stylesheets/ trzeba zadeklarować katalog statyczny /public:
+
+```
+  app.use(express.static(__dirname + "/public"));
+```
+
+W /routes/index.js
+
+```
+ res.render("index",{title:"Express})
+```
+
+Router dostaje informacje, który szablon ma wyrenderować pod danym adresem i dodatkowe parametry w obiekcie (w tym wypadku, zakładając, że używamy puga, będzie to /views/index.pug).
+
+Pobranie adresu ścieżki do parametru (w app.js przed użyciem routów - tu ważny jest next(), bo bez niego operacja zakończy się na tym roucie i żadna strona nie zostanie wyświetlona):
+
+```
+ app.use(function (req, res, next) {
+    res.local.path = req.path; // przypisuje otrzymany parametr req do zmiennej lokalnej
+    next();
+  })
+```
+
+I potem w szablonie można się testowo odwołać, taki span wyświetli ścieżkę route danej strony:
+
+```
+ span=path
+```
+
+Zasadniczy szablon strony zawiera szablon menu. Dlatego menu jest tylko jedno w osobnym pliku szablonu i dzięki extendom przechodzi na layout i jako element layoutu na szablony routów. Mixin menu deklarowany jest w szablonie pug przed elementami strony:
+
+```
+ mixin itemActive(title,url)
+ li
+   a(href=url class=path==url?'active':'')=title
+```
+
+Menu w szablonie (mixiny jak widać wrzuca się bezpośrednio do puga, dając plusa i parametry w nawiasie:
+
+```
+      ul
+      +itemActive ('Strona główna','/')
+      +itemActive ('Aktualności','/news')
+      +itemActive ('Quiz','/quiz')
+      +itemActive ('Admin','/admin')
+```
+
+Elementom pug można nadawać klasy CSS tak jak każdy atrybut (więcej [Attributes](https://pugjs.org/language/attributes.html)), tutaj to jest link z klasą i treścią:
+
+```
+ a(href="adres_linku" className="red") Nazwa linku
+```
+
+### MongoDB
+
+Modele są określane z dużej litery, trzyma się je w katalogu /models. Określa się typ danych i czy jest to pole wymagane. model musi być zaimportowany. Musi zostać wykonany save(). Pole number to Int32
+
+#### Połączenie z bazą danych
+
+Trzeba zainstalować mongoose. W app.js najpierw require a potem połączenie:
+
+```
+ const mongoose = require("mongoose");
+ mongoose.connect(
+   "mongodb+srv://link_do_połączenia",
+   { useUnifiedTopology: true, useNewUrlParser: true }
+ );
+```
+
+Sprawdzenie połączenie jest niezbędne, jeśli chcemy zdiagnozować gdzie nastąpił ewentualny błąd:
+
+```
+ const db = mongoose.connection;
+ db.on("error", console.error.bind(console, "connection error:"));
+ db.once("open", function() {console.log("connected");});
+```
+      
+
+#### Zapis do bazy danych
+
+Zapisanie newsa metodą post w admin.js:
+
+```
+ router.post("/news/add", (req, res) => {
+    const body = req.body; // zapisanie zmiennej
+  
+    const newsData = new News(body); // utworzenie zmiennej dla Newsa (model)
+    const errors = newsData.validateSync(); // zapisanie błędów, walidacja
+    // console.log(errors);
+    newsData.save(err => {
+      if (err) {
+        // console.log(err);
+        res.render("admin/news-form", { title: "Dodaj news", errors, body }); // jeżeli wystąpił błąd pozostajemy na formularzu
+        return;
+      }
+      res.redirect("/admin"); // brak błędów, news zapisany, przechodzimy do admina gdzie widać wszystkie zapisane newsy
+    });
+  });
+```
+
+Pobranie listy newsów - w parametrze data:
+
+```
+ router.get("/", (req, res) => {
+    News.find({}, (err, data) => {
+      console.log(data);
+      res.render("admin/index", { title: "Admin", data }); // pliki admina umieszczone w osobnym katalogu
+    });
+    // console.log(req.session.admin);
+    // res.render("admin/index", { title: "Admin" });
+  });
+```
+
+news.pug
+
+```
+ extends layout
+
+ block content
+   h1= title
+   p Welcome to #{title}
+   form(method="get") // wyszukiwarka, formularz działa na query stringu dlatego get
+    input(type="text" value=search name="search") // value=search zostawia wyszukiwany ciąg w inpucie
+    input(type="submit" value="Szukaj")
+   
+   each item in data // listowanie newsów z data i dla każdego wyświetlenie w poniższej strukturze
+    article
+     h1(className="title")=item.title
+     p(className="date")=item.created
+     p=item.description
+```
+
+#### Kasowanie
+
+```
+ router.get("/news/delete/:id", (req, res) => {
+    News.findByIdAndDelete(req.params.id, err => { // findByIdAndDelete metoda mongoDB, id jest w params z req
+      res.redirect("/admin"); // błąd nie jest tu obsługiwany, po poprawnym usunięciu przejście do admina
+    });
+  });
+```
+
+#### Sortowanie i wyszukiwanie
+
+Ponieważ do metody find doda się metody sortowania, to nie ma callbacka od razu po niej, tylko exec. Użyte tutaj find i sort to metody mongoose a nie JS (choć są bardzo podobne). W news.js:
+
+```
+ router.get("/", (req, res) => {
+    const search = req.query.search || ""; // tutaj pusty ciąg znaków na wypadek jeśli search jest undefined, na takim ciągu można wykonać trima, chroni to przed błędem
+    const foundNews = News.find({ title: new RegExp(search.trim(), "i") }).sort({ // regexp, i pomija wielkość znaków, trim usuwa spacje
+      created: -1 // sortowanie malejąco, rosnąco 1, 0 sortowanie domyślne
+    });
+    foundNews.exec((err, data) => {
+      res.render("news", { title: "News", data, search });
+    });
+  });
+```
+
+### Quiz
+
+Dane w poście są w req.body.quiz bo taka jest nazwa radio inputa. Wysłanie quizu.
+
+```
+ router.post("/", (req, res) => {
+    const id = req.body.quiz;
+    Quiz.findOne({ _id: id }, (err, data) => { // metoda findOne
+      // console.log(data);
+      data.vote = data.vote + 1; // zwiększenie o jeden
+      data.save(err => { // jeśli nie ma błędów zapisanie nowej wartości
+        req.session.vote = 1; // ustawienie flagi sesji
+        res.redirect("/quiz"); // i dopiero po wykonaniu save, redirect
+      });
+    });
+  });
+```
+
+Pobranie quizu
+
+```
+ router.get("/", (req, res) => {
+    const show = !req.session.vote; // jeśli negacja sesji jest prawdą pokazanie quizu
+    Quiz.find({}, (err, data) => {
+      let sum = 0;
+      data.forEach(item => {
+        sum += item.vote;
+      });
+      res.render("quiz", { title: "Quiz", data, sum, show });
+    });
+  });
+```
+
+#### API
+
+```
+ router.get("/", (req, res) => {
+    const search = req.query.search || "";
+    let sort = req.query.sort || defaultSort;
+    if (sort !== -1 || sort !== 1) {
+      sort = -1; // ustawienie domyślnej wartości sort
+    }
+    const foundNews = News
+    .find({ title: new RegExp(search.trim(), "i") })
+    .sort({
+      created: sort
+    });
+    foundNews.exec((err, data) => {
+      res.json({ data });
+    });
+  });
+```
+
+Za pomocą funkcji select() (umieszczonej np. po sort()) możemy ograniczyć liczbę zwracanych pól. Może to wyglądać tak:
+
+```
+ .select("_id title description");
+```
+
+Wyszukanie pojedynczego artykułu
+
+```
+ router.get("/:id", (req, res) => {
+    const id = req.params.id;
+    const foundNews = News.findById(id);
+    foundNews.exec((err, data) => {
+      res.json({ data });
+    });
+  });
+```
+
+### Odnośniki
+
+#### Strony
+
+- [Express](https://expressjs.com/) minimalist web framework for Node.js - [Production best practices: performance and reliability](https://expressjs.com/en/advanced/best-practice-performance.html)
+- MDN: [Express web framework (Node.js/JavaScript)](https://developer.mozilla.org/en-US/docs/Learn/Server-side/Express_Nodejs)
+- [maitraysuthar/rest-api-nodejs-mongodb](https://github.com/maitraysuthar/rest-api-nodejs-mongodb) Nodejs Expressjs MongoDB Ready-to-use API Project Structure
+- [antsmartian/lets-build-express](https://github.com/antsmartian/lets-build-express) contains chapters which explains how one can build a minimal express library
+- Mastering JS [Express Tutorials](https://masteringjs.io/express)
+
+#### Narzędzia
+
+- [eklemen / generate-express](https://github.com/eklemen/generate-express) Express generator CLI with es6+ support and your choice of database config
+- [calvintwr / express-routemagic](https://github.com/calvintwr/express-routemagic) module to automatically require all your express routes
+
+#### Artykuły
+
+- Medium: [hackernoon #express](https://hackernoon.com/tagged/express) | [Flavio Copes "The definitive guide to Express, the Node.js Web Application Framework"](https://hackernoon.com/the-definitive-guide-to-express-the-node-js-web-application-framework-649352e2ae87) | [Mike Cronin "Getting Started with Express JS for the Impatient"](https://itnext.io/getting-started-with-express-js-for-the-impatient-9177fc0e1b49) | [Aditya Prakash "Express will dominate the coming decade. Here’s why."](https://medium.com/javascript-in-plain-english/express-will-dominate-the-coming-decade-heres-why-fef06ca89501) | [Nick Parsons "Building a Node.js Powered API with Express, Mongoose & MongoDB"](https://hackernoon.com/building-a-node-js-powered-api-with-express-mongoose-mongodb-19b14fd4b51e) | [Dicky Perdian "How to fetch data using async / await Express.js, (Based Request)"](https://medium.com/@dickydraknes/how-to-fetch-data-using-async-await-express-js-based-request-f760736e345c) | [Maher Alkendi: "Learn how Full-stack apps work by building a simple one using JavaScript (Part 1)"](https://itnext.io/learn-how-full-stack-apps-work-by-building-a-simple-one-using-javascript-part-1-38e237694012?)
+- morioh: ["How to Create an Express Server Using TypeScript"](https://morioh.com/p/2063e05353d4) | [David Loffer "How to upload & resize images in Node using Express, Multer and Sharp"](https://morioh.com/p/55b2a669b74b) | [Yoav Reisler "Building a simple Express server in Node.js for Beginners"](https://morioh.com/p/1983d7916c00)
+- Coursesity Team ["9 Best Express JS Courses & Tutorials - Learn Express JS Online"](https://blog.coursesity.com/best-express-js-tutorials/)
+- Flavio Copes: [All the Express tutorials](https://flaviocopes.com/tags/express/) \- ["Handling forms in Express"](https://flaviocopes.com/express-forms/) | ["Send files using Express"](https://flaviocopes.com/express-send-files/)
+- rwieruch: ["How to setup Express.js in Node.js"](https://www.robinwieruch.de/node-js-express-tutorial) | ["How to create a REST API with Express.js in Node.js"](https://www.robinwieruch.de/node-express-server-rest-api)
+- [Dan Englishby "Setting Up A Local Web Server With NodeJS & ExpressJS"](https://www.codewall.co.uk/setting-up-a-local-web-server-with-nodejs-expressjs/)
+- [Dan Arias "Use TypeScript to Create a Secure API with Node.js and Express: Getting Started"](https://auth0.com/blog/use-typescript-to-create-a-secure-api-with-nodejs-and-express-getting-started/)
+- Tutorial And Example: ["Express.js Tutorial for Beginners"](https://www.tutorialandexample.com/expressjs-tutorial/) | ["ExpressJS Interview Questions"](https://www.tutorialandexample.com/expressjs-interview-questions/)
+- ["Express Error Handling: Tips & Tricks"](https://www.stackchief.com/blog/Express%20Error%20Handling%3A%20Tips%20%26%20Tricks)
+- Paweł Chudzik ["From express and pug to HTML"](https://blog.pchudzik.com/201801/express-pug/)
+- [Olumyco "FastLearn JavaScript Tutorial: Understanding Express Framework (Configuration, Middlewares & Routing) At A Goal"](https://www.rhitten.com/rhites/fastlearn-javascript-tutorial:-understanding-express-framework-(configuration,-middlewares-&-routing)-at-a-goal-0019418981503114274)
+- ["Express.js Web Application"](https://www.tutorialsteacher.com/nodejs/expressjs-web-application)
+- ["ExpressJS - Random Number Generator"](https://www.codingcommanders.com/random/)
+- [Elliot Blackburn "Understanding middleware in Express.js"](https://www.elliotblackburn.com/understanding-express-middleware/)
+- [Quickcode "Top Tutorials to Learn Express JS Framework in Node Js"](https://blog.coursesity.com/top-tutorials-to-learn-express-js-framework-in-node-js/)
+- [Janith Kasun Colombo "Building a REST API with Node and Express"](https://stackabuse.com/building-a-rest-api-with-node-and-express/)
+- StackChief ["Express Error Handling: Tips & Tricks"](https://www.stackchief.com/blog/Express%20Error%20Handling:%20Tips%20&%20Tricks)
+- [Simon Plenderleith "5 best practices for building a modern API with Express"](https://simonplend.com/5-best-practices-for-building-a-modern-api-with-express/)
+
+#### Youtube
+
+- **Playlisty:*- [overment "Kurs Node.js (Express.js)" \[YT playlista 12 ilmóœ\]](https://www.youtube.com/playlist?list=PLjHmWifVUNMKyW8SZUSQCoaYOROcWAKkt) | [Coding Shiksha "Real Time Chat App Using Socket.IO and ExpressJS" \[YT playlist 7 filmów\]](https://www.youtube.com/playlist?list=PL3CDD0Jz5nVH2RS2rdtHJ5-c5lgUvPPy2) | [codedamn "NodeJS + ExpressJS Tutorials" \[YT playlist 26 filmów\]](https://www.youtube.com/playlist?list=PLYxzS__5yYQmHbpKMARP04F344zYRX91I) | [Fullstack Programmer "Advanced Express JS REST API Tutorial/Crash Course | Build REST API with Express & Node" \[YT playlist 7 filmów\]](https://www.youtube.com/playlist?list=PLs1waz0ZKTGO7agN0cntpe6ro6TIka0ow) | [Okay Dexter "Express & Nunjucks Tutorials" \[YT playlist 20 filmów\]](https://www.youtube.com/playlist?list=PL6yy_CdpgQmX00jGQgj65whFrECdtTn2-) | [productioncoder "Sessions in express.js | Node.js session implementation with Redis" \[YT playlista 9 filmów\]](https://www.youtube.com/playlist?list=PL1Nml43UBm6fPP7cW9pAFTdZ_9QX2mBn2) | [Stuy "Backend Development" \[YT playlista 10 filmów\]](https://www.youtube.com/playlist?list=PL_cUvD4qzbkxZZyyuXa1xkWFhRB_NoQwl) | [The Nerdy Dev "Making a Simple Messenger API Using Express" \[YT playlista 5 filmów\]](https://www.youtube.com/playlist?list=PLXgqhtspYCM9rrzl6nlpCd_I7bQNUTU6Y) | [CodeTech Facts "Express Tutorial" \[YT playlist 6 filmów\]](https://www.youtube.com/playlist?list=PLd8ZELHR0oD5krr_ycsZZO3gJADcBmjtc)
+- **Filmy:*- [Samuraj Programowania "Wprowadzenie do Express (Framework Node.js)" \[YT 1:10:22\]](https://www.youtube.com/watch?v=IvEPIQMrFzI) | [Hays Stanford "ExpressJS Crash Course | The Ultimate Guide to REST APIs & More!" \[YT 46:00\]](https://www.youtube.com/watch?v=w8sCrLjNzHY) | ["Complete Node Express MongoDB CRUD Application in Under 2 Hours" \[1:39:53\]](https://www.youtube.com/watch?v=3eZoiJczT1I) | ["Introduction to Node & Express" \[2:13:09\]](https://www.youtube.com/watch?v=81Mx1Rh_UGo)
+- freeCodeCamp.org ["Node.js and Express.js - Full Course" \[YT 8:16:47\]](https://www.youtube.com/watch?v=Oe421EPjeBE)
+- Traversy Media [Traversy Media "Node.js & Express From Scratch" \[YT playlist 12 fimów\]](https://www.youtube.com/playlist?list=PLillGF-RfqbYRpji8t4SxUkMxfowG4Kqp) | [Traversy Media "ExpressJS Crash Course" \[YT 1:15:36\]](https://www.youtube.com/watch?v=gnsO8-xJ8rs) | [Traversy Media "Node.js App From Scratch | Express, MongoDB & Google OAuth" \[2:28:42\]](https://www.youtube.com/watch?v=SBvmnHTQIPY)
+
+#### Typescript
+
+- [Andrew Palatnyi "How to extend the ExpressJS Request object with Typescript"](https://itnext.io/how-to-extend-the-expressjs-request-object-with-typescript-26675cda0632)
+
+#### Inne frameworki
+
+- [LoopBack](https://loopback.io/)
+- [NestJS](https://docs.nestjs.com) \- ["TypeORM With NEST JS Basic Tutorial"](https://codersera.com/blog/typeorm-with-nest-js-tutorial/) | ["Learn NestJS - Full Course for Beginners" \[YT 3:19:12\]](https://www.youtube.com/watch?v=iEUw_SNou7o)
+- [Sails.js](https://sailsjs.com) \- Realtime MVC Framework for Node.js
+- [NextJS](https://nextjs.org) \- więcej na ten temat [Next.js](nextjs)
+
+#### Inne
+
+- [tinyhttp](https://tinyhttp.v1rtl.site/)

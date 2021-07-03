@@ -1,0 +1,113 @@
+---
+title: "PGP/GPG"
+comment: ""
+section: "it"
+subsection: "kryptologia"
+---
+
+### PGP (Pretty Good Privacy) i OpenPGP
+
+#### Historia PGP
+
+W 1991 Phil Zimmermann, stworzył PGP (nazwa oznacza "całkiem niezła prywatność"), program komputerowy umożliwiający łatwe szyfrowanie danych. Miało to na celu umożliwienie użytkownikom BBS-ów bezpiecznego przechowywania tam osobistych danych. Ponieważ do programu dołączony był kod źródłowy oraz dla niekomercyjnych zastosowań był dostępny za darmo PGP szybko zdobył sobie popularność w internecie.
+Od samego początku historia PGP jest bardzo skomplikowana, z jednej strony uwikłana w przepisy eksportowe USA (uznające zaawansowane techniki kryptograficzne za broń), z drugiej zaś w spory licencyjne związane z używanymi szyframi (część z nich jest opatentowana). Doprowadziło to do powstania dwóch wersji PGP: amerykańskiej (US version), która może być używana na terenie USA i Kanady i międzynarodowej (PGPi - i znaczy _international_) wolnej od kłopotów licencyjnych.
+Sam PGP z czasem stał się komercyjnym programem, używającym własnościowych technologii, który można używać zarówno w linii poleceń jak i w postaci GUI.
+
+Obecnie jest to najpopularniejsze narzędzie do szyfrowania i deszyfrowania przesyłanych wiadomości, podpisu cyfrowego i weryfikacji autentyczności nadawcy (opartej o sieć zaufania), oraz zarządzania kluczami. Istnieje wiele nakładek na program ułatwiających jego używanie oraz wtyczek pozwalających skonfigurować niemal każdy program pocztowy do współpracy z PGP (należy pamiętać, że używanie ich nie gwarantuje tego samego stopnia bezpieczeństwa).
+
+#### Powstanie OpenPGP
+
+Ze względu na znaczenie PGP dla społeczności internetowej, ważne było powstanie niezależnego, otwartego standardu, który umożliwiałby tworzenie współpracującego z nim oprogramowania. W lipcu 1997 PGP Inc. zaproponowało IETF utworzenie standardu nazwanego OpenPGP, co dało początek pracy OpenPGP Working Group.
+OpenPGP stał się standardem internetowym określonym w RFC 2440 i 3156.
+
+#### Znaczenie
+
+Najlepsze nawet rozwiązanie bez implementacji jest tylko teorią. PGP Philla Zimmermanna był pierwszym publicznie dostępnym programem, który umożliwił korzystanie z kryptografi asymetrycznej użytkownikom internetu. Jednocześnie uświadomił znaczenie technik kryptograficznych dla przeciętnego użytkownika i ujawnił opór jaki stawiają instytucję rządowe, kiedy są zmuszane do rezygnacji z choćby potencjalnej możliwości kontrolowania obywateli.
+Skomplikowane losy programu, zawiłości patentowe, licencyjne a w końcu problemy z niezgodnością pomiędzy różnymi jego wersjami oraz wtyczkami wykazały znaczenie otwartego, opublikowanego standardu PGP, który jest ważniejszy niż najlepszy nawet program. Takim właśnie standardem jest OpenPGP i dzięki niemu kryptografia asymetryczna i architektura klucza publicznego jest dostępna dla każdego kto zechce z niej skorzystać, niezależnie od tego jakiego oprogramowania (jeśli tylko jest zgodne z OpenPGP), czy systemu używa.
+Ze względu na jakość i siłę algorytmów szyfrujących zastosowanych w OpenPGP określenie "całkiem niezła prywatność" jest (jeśli technika te zastosowana jest prawidłowo) dość ironiczne - wobec każdego kto chciałby tę prywatność naruszyć.
+
+### GPG (GNU Privacy Guard)
+
+#### Opis
+
+GPG \[[www.gnupg.org](http://www.gnupg.org)\] jest kompletnym i darmowym zamiennikiem programu PGP. Rozwijany jest z inicjatywy Free Software Foundation przez Wernera Kocha i wspierany przez rząd niemiecki. Udostępniany jest na wolnej licencji GNU/GPL.
+Ponieważ GPG można dowolnie rozprowadzać, nie mogą być w nim używane opatentowanę lub w inny sposób ograniczonę algorytmy lub oprogramowanie. Dotyczy to np. algorytmu IDEA, obecnego w PGP niemal od początku. Zamiast tego używane są inne, nieopatentowane algorytmy, takie jak 3DES. Współcześnie wszystkie te programy przechodzą na uważany za znacznie silniejszy (i pozbawiony problemów patentowych) algorytm AES.
+GPG jest programem do szyfrowania hybrydowego, gdyż używa kombinacji tradycyjnych szyfrów symetrycznych (szybszych) i kryptografii klucza publicznego (łatwa i bezpieczna wymiana kluczy - na przykład przez użycie klucza publicznego odbiorcy do zaszyfrowania klucza sesji, używanego tylko raz). Ten tryb pracy jest częścią OpenPGP i był zawarty w PGP od jego pierwszej wersji.
+
+#### Podpis cyfrowy
+
+Podpis cyfrowy to dodatkowa informacja dołączona do wiadomości służąca do weryfikacji jej źródła.
+Służy uwierzytelnieniu cyfrowej informacji analogicznie do podpisu na zwyczajnym papierze, ale przy użyciu technik kryptograficznych.
+Podpisy cyfrowe korzystają z kryptografii asymetrycznej - tworzona jest para kluczy, klucz prywatny i klucz publiczny - klucz prywatny służy do podpisywania wiadomości, klucz publiczny natomiast do weryfikowania podpisu.
+Najważniejszymi kryptosystemami umożliwiającymi podpisywanie cyfrowe są RSA, ElGamal i DSA, ECDSA.
+Najpopularniejsze standardy pozwalające na złożenie podpisu elektronicznego to X.509 oraz PGP
+
+Ponieważ są możliwe kolizje w haszu można sfałszować podpis cyfrowy, który go stosuje.
+
+Mechanizm podpisu cyfrowego zawiera trzy algorytmy:
+
+- algorytm generacji klucza
+- algorytm podpisywania
+- algorytm weryfikacji
+
+Jest szeroko stosowany w e-commerce
+
+Obecny status - prawny i praktyczny
+Mechanizmy podpisu cyfrowego mają kilka uprzednich warunków, bez których taki podpis nic nie znaczy ani w sensie prawnym ani kryptograficznym.
+
+- Dobrej jakości algorytm, niektóre algorytmy asymetryczne są znane jako niebezpieczne, są możliwe ataki na nie.
+- Dobrej jakości implementacja, implementacja dobrego algorytmu (lub protokołu) z błędami nie działa (przeciętnie występuje jeden błąd na 1K linii kodu).
+- Klucz prywatny musi pozostać rzeczywiście tajny - każdy kto ma do niego dostęp może tworzyć tak samo autentyczne podpisy cyfrowe.
+- Dystrybucja kluczy publicznych musi się dokonywać tak, że klucz publiczny przypisany dla Boba rzeczywiście do niego należy i na odwrót. Jest to zapewniane przez PKI (operator to CA).
+- Użytkownicy (i ich oprogramowanie) musi używać protokołu prawidłowo.
+
+Dopiero jeśli wszystkie powyższe warunki są spełnione podpis cyfrowy jest dowodem na to kto wysłał wiadomość.
+
+Do prawidłowego działania całej infrastruktury podpisu cyfrowego konieczne jest również ustawodawstwo, dzięki któremu może mieć skutki prawne.
+
+Status dowodowy
+Wiele aktów prawnych dotyczących podpisów cyfrowych zajmuje się dopuszczalnością podpisu cyfrowego jako dowodu, jest to kontrowersyjne. W przeciwieństwie do zwykłego podpisu podpis cyfrowy może zostać wygenerowany automatycznie bez wiedzy właściciela, jest tworzony przez złożone oprogramowanie, którego działania użytkownik nie ma możliwości sprawdzić. Więc chociaż może służyć jako potwierdzenie, że ustanowiono niezakłóconą łączność to nie może być dowodem, że to konkretny uczestnik bierze w niej udział. Biorąc to pod uwagę termin podpis jest mylący. Ustawodawstwo, które deklaruje, że podpis cyfrowy jest prawidłowym podpisem różni się w ocenie jego możliwości z kryptografią.
+Jednakże jeśli dobre oprogramowanie jest używane w prawidłowy sposób (np. prywatne klucze nie wyciekają) wtedy cyfrowe podpisy mogą być dokonywane tylko przez ich właścicieli.
+
+Digital Signature Algorithm (DSA) jest amerykańskim narodowym standardem dla podpisów cyfrowych. DSA to algorytm asymetryczny. Podobnie jak ElGamal może też zostać użyty do przesyłania informacji podprogowej.
+DSA (Digital Signature Algorithm) jest obowiącującym w USA federalnym standardem podpisu cyfrowego, został zaproponowany przez NIST (National Institute of Standards and Technology) w sierpniu 1991 do użycia w DSS (Digital Signature Standard zdefiniowanym w FIPS 186 przyswojonym w 1993), mniejsze uaktualnienie nastąpiło w 1996 jako FIPS 186-1 a standard został później rozwinięty w 2000 jako FIPS 186-2.
+DSA jest chroniony U.S. Patent 5,231,668, którego właścicielem jest David W. Kravitz, dawny pracownika NSA.
+
+Algorytm DSA do podpisu dokumentu wykorzystuje wartość jednokierunkowej funkcji skrótu SHA-1. Długość kluczy używanych w tym algorytmie jest zmienna w zakresie 512 - 1024 bitów. Są one adekwatne do aktualnych mocy obliczeniowych. Za wystarczające do większości cywilnych zastosowań uważane są klucze o długości przynajmniej 768 bitów.
+DSA jest używany w OpenSSL, OpenSSH i GnuPG.
+
+Tworzenie klucza
+
+- wybierz liczbę pierwszą _p_ o długości L-bit gdzie 512 ≤ L ≤ 1024, i L jest podzielne przez 64
+- wybierz 160-bitową liczbę pierwszą _q_, taką, że _p - 1 = qz_, gdzie _z_ jest dowolną liczbą naturalną
+- wybierz _h_, gdzie _1 < h < p - 1_ taką, że_g = hz mod p > 1_
+- wybierz _x_ w sposób przypadkowy tak, że _0 < x < q_
+- oblicz _y = gx mod p_
+- klucz publiczny to (_p, q, g, y_) a prywatny _x_
+
+zauważ, że (p, q, g) mogą być współdzielone pomiędzy różnymi użytkownikami systemu jeśli jest to potrzebne
+
+Składanie podpisu
+
+- wybierz dla danej wiadomości przypadkową wartość _s_ (called a nonce), gdzie _1 < s < q_
+- oblicz _s1 = (gs mod p) mod q_
+- oblicz _s2 = (H(m) + s1\*x)s\-1 mod q_, gdzie _H(m)_ jest funkcją haszującą SHA-1 zastosowaną do wiadomości _m_
+- podpis to (_s1,s2_)
+
+Weryfikacja
+
+- oblicz _w = (s2)\-1 (mod q)_
+- oblicz _u1 = H(m)\*w (mod q)_
+- oblicz _u2 = s1\*w (mod q)_
+- oblicz _v = \[gu1\*yu2 mod p\] mod q_
+- podpis jest prawidłowy jeśli _v = s1_
+
+DSA jest podobny jak kryptosystem dyskretnego logarytmu Elgamal
+
+- [e-podpis.pl](http://www.epodpis.pl/)
+- Computerworld: [Kłótnia o dziury w e-podpisie](http://www.computerworld.pl/news/83636.html)
+
+### Blockchain
+
+- [Mastering Bitcoin 2nd Edition - Programming the Open Blockchain](https://github.com/bitcoinbook/bitcoinbook)
+- [Paweł Lipowczan "Protokół blockchain cz. 1"](https://devstyle.pl/2018/11/21/protokol-blockchain-czesc-1/)

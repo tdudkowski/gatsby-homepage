@@ -1,0 +1,188 @@
+---
+title: "Internet"
+comment: ""
+section: "it"
+subsection: "internet"
+---
+
+1. [Wstęp](#intro)
+2. [Sieci komputerowe, topologia, rodzaje](#net)
+3. [Internet - sposób funkcjonowania](#internet)
+4. [Warstwy sieci](#model)
+5. [Warstwa aplikacji](#application_layer)
+6. [Warstwa transportowa (TCP i UDP)](#transport_layer)
+7. [Warstwa internetowa (IP i ICMP)](#internet_layer)
+8. [Warstwa dostępu do sieci (ARP)](#link_layer)
+9. [DNS](#dns)
+10. [Adresowanie IP](#ip)
+11. [Firewall](#firewall)
+12. [URI, URL, FQDN](#uri)
+13. [Urządzenia](#kit)
+14. [Narzędzia](#tools)
+15. [Dodatek](#appendix)
+- [Słownik pojęć](#dictionary)
+- [Protokoły](#protocols)
+16. [Materiały](#resources)
+- [Książki](#books)
+- [Odnośniki](#links)
+
+### Wstęp
+
+Jest to tylko upubliczniony brudnopis z notatkami dotyczącymi bardziej mnie interesujących zagadnień związanych z sieciami komputerowymi w ogólności, a z internetem w szczególności.
+Źródła, z których korzystałem są wymienione na dole - są to przede wszystkim hasła z Wikipedii oraz artykuły z kilku czasopism. Więc nie jest to jakieś samodzielne opracowanie, w tej chwili jest to tak sobie zorganizowana kompilacja, która będzie podstawą dla bardziej kompletnego opisu internetu.
+Niektóre rzeczy (np. narzędzia) są tu tylko zasygnalizowane, inne zrobione (słownik pojęć) po łebkach. Ale jak będę miał czas to na pewno to poprawię.
+Oczywiście będę wdzięczny za wszelkie sugestie i wskazanie błędów.
+
+**Ostatnia aktualizacja: 24 VIII 2005**
+
+### Sieci komputerowe, topologia, rodzaje
+
+#### Sieć
+
+Sieć komputerowa to grupa komputerów lub innych urządzeń połączonych ze sobą w celu wymiany danych lub współdzielenia różnego rodzaju zasobów, na przykład:
+
+- korzystania ze wspólnych urządzeń, np. drukarek,
+- korzystania ze wspólnego oprogramowania,
+- korzystania z centralnej bazy danych,
+- przesyłania informacji między komputerami (komunikaty, listy, pliki).
+
+##### Rodzaje sieci komputerowych
+
+asymetryczne/dedykowane
+jeden z komputerów (tzw. serwer sieciowy) odgrywa rolę nadrzędną i nadzoruje pracę sieci, architektura klient-serwer
+
+symetryczne/równorzędne "peer to peer" (skrót P2P)
+wszystkie komputery mają jednakowe uprawnienia
+
+##### Topologie okablowania sieci komputerowych
+
+gwiazda
+scentralizowana, zapewnia duże możliwości zarządzania ruchem i odporność na awarię (o ile nie jest to akurat awaria serwera);
+komputery są podłączone do jednego punktu centralnego:
+
+- koncentratora, który tworzy fizyczną topologię gwiazdy, ale logiczną magistralę
+- przełącznika (jedna z częstszych topologii fizycznych Ethernetu)
+
+gwiazda rozszerzona
+posiada punkt centralny (podobie do topologii gwiazdy) i punkty poboczne (jedna z częstszych topologii fizycznych Ethernetu)
+
+hierarchiczna
+podobna do drzewa binarnego
+
+szyna (magistrala)
+komputery współdzielą jedno medium kablowe (topologia logiczna Ethernetu) i to pojedyncze łącze (zazwyczaj kabel koncentryczny) obsługuje wszystkie urządzenie sieciowe; szyna pozwala na przeprowadzenie tylko jednej transmisji a danym momenie;
+
+- zalety: prosta w budowie, tania i względnie wydajna w małych sieciach (np. domowych)
+- wady: łatwo przechwytywać transmisję, trudno wykryć wąskie gardła i zlokalizować awarię, każda stacja może przechwycić dane przeznaczone dla innej
+
+pierścień
+komputery są połączone pomiędzy sobą odcinkami kabla tworząc zamknięty pierścień (np. topologia logiczna Token Ring);
+
+- wady: łatwo przechwycić dane, jak w topologii szyny dwa miejsca awarii: serwer i kabel; awaria jednej stacji może odciąć cała resztę
+
+pierścień podwójny
+komputery są połączone dwoma odcinkami kabla (np. FDDI)
+
+sieć (ang. _mesh_)
+oprócz koniecznych połączeń sieć zawiera połączenia nadmiarowe; rozwiązanie często stosowane w sieciach, w których jest wymagana wysoka bezawaryjność.
+
+Elementy tworzące sieć komputerową:
+
+- serwer sieciowy: zazwyczaj komputer o dużej mocy obliczeniowej, wydajnym i pojemnym podsystemie dyskowym niezbędnym do przechowywania oprogramowania i danych użytkowników; na tej maszynie można uruchomić aplikacje udostępniające usługi sieciowe, również nazywane serwerami.
+- komputery - stacje robocze, (terminale), na których instaluje się oprogramowanie sieciowe; nazywane też klientami
+- media transmisji - kable miedziane, światłowody, fale radiowe
+- osprzęt sieciowy - karty sieciowe, modemy, rutery, koncentratory (huby), przełączniki (switche), punkty dostępowe (_access points_)
+- zasoby sieciowe - wspólny sprzęt, programy, bazy danych
+- oprogramowanie sieciowe - to programy komputerowe, umożliwiające przesyłanie informacji pomiędzy urządzeniami sieciowymi; rozróżnia się dwa podstawowe rodzaje oprogramowania sieciowego:
+- klient-serwer (system - użytkownik) - system, w którym serwer świadczy usługi dołączonym stacjom roboczym; w systemie tym programy wykonywane są w całości lub częściowo na stacjach roboczych
+- host-terminal (system baza) - do komputera głównego (hosta) dołączone zostają terminale lub komputery emulujące terminale; w systemie tym programy wykonywane są na hoście
+
+#### Architektura klient-serwer
+
+Jest to skalowalna architektura gdzie każdy komputer lub proces sieci jest albo klientem albo serwerem.
+Oprogramowanie serwera najczęściej (ale nie zawsze) działają na silnych komputerach dedykowanych dla wyłącznego użytku aplikacji serwerowych.
+
+Oprogramowanie klienckie z drugiej strony działa na popularnych PC lub stacjach roboczych. Klient dostaje wszystkie lub większość informacji od serwera i przekazuje mu większość zadań samemu mogąc wykonywać inne zadania. Każda instancja klienta może wysyłać żądania do serwera lub aplikacji serwera.
+
+Inny typ architektury sieci jest znany jako P2P ponieważ każdy węzęł lub instancja programu jest zarówno klientem jak i serwerem i każda ma równą odpowiedzialność. Zarówno klient/serwer jak i P2P są szeroko używane, każda ma swoje wady i zalety.
+
+Właściwości serwera:
+
+- pasywny - _passive (slave)_
+- czeka na żądania
+- na żądania odpowiada i wysyła wiadomość
+
+Właściwości klienta:
+
+- aktywny _active (master)_
+- wysyła żądania
+- czeka do nadejścia odpowiedzi
+
+Interakcja pomiędzy klientem a serwerem jest często opisywana przy użyciu diagramów sekwencji, są standaryzowane w UML.
+
+Chudy klient (_thin client_) vs. gruby klient (_fat client_)
+Inny typ klienta w architekturze klient-serwer jest znany jako chudy klient tzn. minimalny. Chudy klient używa jak najmniej zasobów hosta PC jak to tylko możliwe, głównie jest to graficzne wyświetlenie informacji z aplikacji serwera, to ułatwia zarządzanie zasobami.
+
+Arcitektura n-węzłów (_n-Tier Architecture_)
+Serwery aplikacji zwykle przechowują dane na trzeciej maszynie, znanej jako serwer bazy danych. To się nazywa trzywęzłowa (_three-tier_) architektura, podczas kiedy ogólna architektura klient/serwer jest dwuwęzłowa.
+W ogólności, n-węzłowa lub multi-węzłowa architektura może rozdysponować dowolną ilość oddzielnych usług, włączając przechodnie relacje pomiędzy serwerami aplikacji, każda z nich może ale nie musi użyć oddzielnej lub współdzielonego systemu baz danych.
+
+Przykłady:
+
+- Popularnym rodzajem klienta jest to przeglądarka internetowa, która łączy się z serwerem WWW przez internet, żeby pobrać i wyświetlić zawartość strony WWW.
+- X Window System jest architekturą klient-serwer z pewną nietypową cechą: serwer jest zawsze lokalny (blisko użytkownika) a klient może być lokalny lub zdalny. Lepiej jest wyobrazić sobie serwer (X display) jako udostępniający pewne zasoby (okienowy system wyświetlania), a klienta jako używającego tych zasobów.
+
+##### Serwer
+
+- Oprogramowanie wykonujące pewne zadania dla użytkowników.
+- udostępnianie plików: pozwalanie użytkownikom na przechowywanie i dostęp do plików na wspólnym komputerze
+- aplikacja udostępniająca usługi, oprogramowanie wykonuje zadania na komputerze dla użytkowników - jest to pierwotne znaczenie tego terminu. Pierwotnie oprogramowanie serwera było umieszczone na komputerze mainframe lub minikomputerze. W dużym stopniu zostały zastąpione przez rozbudowane komputery używające technologii mikroprocesorowej używanej także w PC. Najczęściej komputery pełniące funkcję serwera mają wysoką wydajność (czasem redundantną) i awaryjne zasilanie, płyta główna zaprojektowana jest dla pracy 24x7, ma duże ilości ECC RAM i szybkie podsystemy I/O używające technologii takich jak SCSI, RAID, i PCI-X lub PCI Express.
+- Oznacza także fizyczny komputer na którym działa oprogramowanie serwera.
+
+Czasem to podwójne znaczenie może prowadzić do pomieszania, np. w przypadku webserwera. Ten termin może oznaczać maszynę która przechowuje i przetwarza strony WWW i w tym znaczeniu jest używane przez firmy oferujące hosting. Ale słowo webserwer może również oznaczać oprogramowanie takie jak Apache HTTP - serwer który działa na maszynie i dostarcza elementy strony WWW w odpowiedzi na żądania przeglądarki.
+
+Wiele przedsiębiorstw używa licznych serwerów dla swoich potrzeb, zespół serwerów w jednej lokacji jest często nazywany farmą serwerów (_server farm_). Można skonfigurować maszyny do dystrybucji zadań tak, że żadna pojedyncza maszyna nie jest przeciążona żądaniami (tzw. _load balancing_) - jest to często używane kiedy potrzebna jest duża wydajność.
+
+Serwery mogą być:
+
+bezstanowe:
+serwer nie przechowuje informacji pomiędzy żądaniami (przykład: serwer HTTP dla statycznych stron HTML)
+
+stanowe:
+może zapamiętać informację pomiędzy żądaniami, zakres może być globalny lub ograniczać się do sesji (przykład: Apache Tomcat)
+
+##### X Window
+
+Serwer X nie jest komputerem z oddzielnym programem, ale zapewnia dostęp do urządzeń komputerowego wejścia i wyjścia takich jak monitory, kbd i myszy. Programy działające w środowsku X łącząc się z serwerem uzyskują dostęp do sprzętu.
+Protokół X jest zaprojektowany do działania w sieci. Jedynym wymogiem dla klienta do połączenia się z serwerem jest połączenie sieciowe. W większości sytuacji jednak, serwer i klient działają na tej samej maszynie. W tym wypadku albo lokalne gniazda UNIX albo interfejs pętli zwrotnej działa jako transparentne medium sieciowe dla połączeń sieciowych pomiędzy klientem a serwerem.
+
+#### LAN (_Local Area Network_) - WAN (_Wide Area Network_)
+
+Sieć lokalna to najmniej rozległa postać sieci komputerowej. Zwykle ogranicza się do jednego budynku, lub kilku pobliskich budynków (np. bloków na osiedlu). Topologia jest zdeterminowana przez fizyczną strukturę. Chociaż brak jest wyraźnie sprecyzowanych wyznaczników co jest siecią lokalną, a co nie, za taką uważa się sieć o rozmiarach od jednego pomieszczenia do budynków na obszarze ok 1 km2.
+
+Sieci lokalne dzielimy na:
+
+przewodowe
+najczęściej używaną technologią jest Ethernet (za pośrednictwem kart sieciowych zazwyczaj połączonych bubem lub switchami)
+
+bezprzewodowe
+najczęściej używaną technologią jest WLAN zwany także WiFi określony standardami ETSI 802.x
+
+Sieci lokalne podłączone są często do Internetu wspólnym łączem, takim jak SDI, Neostrada, DSL itp.
+
+Sieć rozległa (ang. _Wide Area Network_, WAN) - Sieć łącząca sieci lokalne, inne (mniejsze) sieci rozległe, jak również pojedyncze komputery. Odbywa się to przy pomocy urządzeń sieciowych takich jak rutery oraz urządzeń dostępowych takich jak modemy. Przykładami sieci rozległych są sieci miejskie, sieci korporacyjne, oraz internet. Pokrywa duży obszar i łączy dużą ilość komputerów. Największym przykładem takiej sieci jest internet.
+Sieć WAN działa w warstwie fizycznej oraz warstwie łącza danych modelu odniesienia OSI. Łączy ona ze sobą sieci LAN, które są zazwyczaj rozproszone na dużych obszarach geograficznych. Sieci WAN umożliwiają wymianę ramek i pakietów danych pomiędzy routerami i przełącznikami oraz obsługiwanymi sieciami LAN.
+
+Główne cechy sieci WAN:
+
+- łączą ze sobą urządzenia rozmieszczone na dużych obszarach geograficznych
+- w celu ustanowienia łącza lub połączenia między dwoma miejscami korzystają z usług operatorów telekomunikacyjnych, np. TP S.A., NASK, Energis
+- wykorzystują różne odmiany transmisji szeregowej
+
+Protokoły stosowane w sieciach rozległych to np: X.25, Frame Relay, Point to Point Protocol i ATM.
+Standardy sieci WAN są definiowane i zarządzane przez szereg uznanych organizacji, w tym:
+
+- Sektor Standaryzacji Telekomunikacyjnej Międzynarodowej Unii Telekomunikacyjnej (ITU-T, ang. International Telecommunication Union-Telecommunication Standardization Sector), dawniej Committee for International Telegraph and Telephone (CCITT)
+- Międzynarodową Organizację ds. Standaryzacji (ISO, International Organization for Standardization),
+- Grupę Roboczą ds. Technicznych Internetu (IETF, Internet Engineering Task Force),
+- Stowarzyszenie Przemysłu Elektronicznego (EIA, Electronic Industries Association).

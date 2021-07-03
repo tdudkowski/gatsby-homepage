@@ -1,0 +1,1067 @@
+---
+title: "Aneks"
+comment: ""
+section: "it"
+subsection: "internet"
+---
+
+### Urządzenia
+
+- Urządzenia warstwy fizycznej modelu OSI - wzmacniak, hub
+- Urządzenia warstwy łącza danych modelu OSI - switch, bridge
+- Urządzenia warstwy sieciowej modelu OSI - ruter
+
+Oba urządzenia działajace w warstwie fizycznej (pierwszej warstwy OSI) nie ingerują w żadne dane (oprócz wzmocnienia i połączenia), nie podejmują żadnych decyzji. Wzmacniak wzmacnia sygnał, a koncentrator kopiuje go z jednego komputera do wszystkich pozostałych przyłączonych do niego.
+
+Urządzenia warstwy drugiej modelu OSI to bridge i switch. Posiadają już pewną inteligencję - potrafią rozpoznawać skąd i dokąd mają przesłać ramki. Używają do tego adresów MAC urządzeń sieciowych.
+
+Urządzenia sieciowe warstwy trzeciej modelu OSI zajmują się: adresowaniem sieciowym (np. adresowanie IP) i rutingiem.
+Takim urządzeniem jest ruter.
+
+### Wzmacniak (ang. _repeater_)
+
+Urządzenie które działa w warstwie fizycznej i zajmuje się regeneracja sygnałów płynących w medium transmisyjnym (kablu) aby umożliwić sygnałowi przebycie dłuższego dystansu. Kiedy sygnał przebiega w medium transmisyjnym zatraca się wraz z długością drogi jaką pokonał (z różnych przyczyn, np. opór własny). Wzmacniaki umożliwiają sygnałowi przebycie dłuższej drogi poprzez wzmocnienie sygnału.
+
+### Koncentrator (ang. _hub_)
+
+Pozwala na utworzenie połączeń pomiędzy urządzeniami podłączonymi do niego (zazwyczaj są to komputery). Hub działa jak tzw. multiport repeater, to znaczy regeneruje przesyłany przez niego sygnał jednocześnie łącząc kilka urządzeń ze sobą. Kiedy jedno z urządzeń podłączonych do hub-a wyśle informacje, to otrzymują ją wszystkie pozostałe urządzenia.
+
+Najczęściej łączy wiele komputerów w sieci o topologii gwiazdy. Koncentrator podłączany jest do komputera głównego (serwera, często podłączonego do Internetu), zaś do koncentratora podłączane są komputery będące stacjami roboczymi. Do połączenia najczęściej wykorzystuje się kabel UTP skrętka kategorii 5.
+
+Łączy wiele segmentów Ethernetu zamieniając je w jeden, każde dołączone urządzenie dzieli tą samą przestrzeń rozgłoszeniową (_broadcast domain_) i tą samą dziedzinę kolizji (_collision domain_). Zatem tylko jeden komputer połączony do huba może nadawać w tym samym czasie, zależnie od topologii sieci, hub zapewnia podstawowe połączenie poziomu 1 modelu OSI pomiędzy obiektami sieciowymi (stacje robocze, serwery itp.). Zapewnia przepustowość dzieloną z innymi obiektami, porównywalną do przełączników.
+
+### Most (ang. _bridge_)
+
+Zadaniem mostu jest segmentacja - dzielenie sieci na różne domeny kolizyjne. Są to starsze urządzeniami i teraz rzadko są używane, zostały wyparte przez switch-e. Bridge miały przeważnie 2 porty, które dzieliły sieć na 2 różne domeny kolizyjne. Z tego powodu zostały wyparte przez switch-e (switch ma 4, 8, 12, 24, 48 portów).
+
+### Przełącznik (ang. _switch_)
+
+Switch w odróżnieniu od huba rozpoznaje skąd została przysłana ramka (np. od jakiegoś hosta w sieci) i potrafi zdecydować gdzie ją dalej przesłać za pomocą swojej tzw. tablicy adresów MAC. Kiedy adres docelowy nie jest adresem broadcast (lub multicast), ramka zostanie przekazana tylko to portu o adresie docelowym a nigdy do pozostałych.
+
+Przełącznik tworzy segmentację sieci, czyli dzieli sieć na mniejsze domeny kolizyjne (grupy komputerów pomiędzy którymi zachodzą kolizje) na poziomie portów. Ale kiedy urządzenia wysyłają broadcast lub multicast to i tak zostają one wysłane do wszystkich portów tych urządzeń, ponieważ systemy (np. hosty) posiadają nadal tą samą domenę rozgłoszeniową.
+
+Technicznie jest to wieloportowy most (ang. _bridge_). Urządzenie łączące różne segmenty sieci, używa logiki mostu sieciowego, ale pozwala na fizyczną i logiczną topologię sieci. Często jest używany zamiast koncetratorów (hub), czasem jest też określany jako inteligentny hub.
+Może połączyć Ethernet, Token Ring lub segmenty innych typów sieci przełączanych w formę heterogenicznej sieci działającej na warstwie 2 modelu OSI.
+
+Przełączniki to urządzenia pracujące w warstwie drugiej modelu OSI, ich zadaniem jest przekazywanie ramek. W celu ustalenia fizycznego adresata używają docelowego adresu MAC zawartego w nagłówku ramki Ethernet.
+Kiedy ramka przychodzi do przełącznika ten zachowuje jej oryginalny adres MAC i oryginalny port w tablicy adresów MAC przełącznika. Przełącznik wybiórczo wysyła ramki z określonych portów na podstawie adresu przeznaczenia MAC i wcześniejszych wpisów w tablicy adresów MAC. Jeśli adres MAC jest nieznany, lub jest to adres rozgłoszeniowy, albo multicast, wtedy przełącznik po prostu wyśle (_flood_) do wszystkich przyłączonych interfejsów oprócz przychodzącego portu.
+Jeśli adres przeznaczenia MAC jest znany, ramka jest wysyłana tylko do odpowiedniego portowi w tablicy adresów MAC. Jeśli port przeznaczenia jest ten sam co port pochodzenia ramka jest filtrowana i nie jest przesyłana.
+
+Przełączniki utrzymują tablicę mapowań adres MAC&lt;-&gt;port fizyczny, której pojemność jest zwykle określona na 4096, 8192 lub 16384 wpisów. Po przepełnieniu tej tablicy, nowe wpisy nie są dodawane (chyba, że któryś z istniejących wygaśnie), a ramki rozgłaszane są do wszystkich portów (za wyjątkiem portu, którym ramka dotarła do przełącznika).
+Przełączniki ograniczają domenę kolizyjną do pojedynczego portu, dzięki czemu są w stanie zapewnić każdemu hostowi podłączonemu do portu osobny kanał transmisyjno-nadawczy, a nie współdzielony, tak jak koncentratory.
+
+Inaczej niż huby używają mikrosegmentacji do dzielenia dziedzin kolizji, jedną na podłączony segment. W ten sposób tylko NIC-e, które są podłączone bezpośrednio przez łącze point-to-point lub bezpośrednio połączone koncentratory rywalizują o medium.
+Dzięki wyeliminowaniu są możliwe możliwości kolizji, full-duplex połączenia point-to-point do przełącznika.
+Wirtualne LAN-y mogą być używane w przełącznikach do redukcji rozmiaru dziedzin rozgłoszeniowych (_broadcast domains_) i w ten sposób zwiększają bezpieczeństwo.
+
+Na przełącznikach zarządzalnych można również wydzielać VLAN-y, czyli wirtualne podsieci LAN. Porty należące do różnych VLANów nie 'widzą' swoich transmisji - do wymiany informacji pomiędzy różnymi VLANami używa się routerów. Porty do VLANów przypisywane są statycznie lub na podstawie adresu MAC podłączonej stacji (opisuje to protokół GVRP, Generic VLAN Registration Protocol, dostępny na większych przełącznikach). VLANy pomiędzy dwoma podłączonymi do siebie przełącznikami przenosi specjalny rodzaj połączenia - _trunk_. W standardzie IEEE 802.1Q każda ramka wysyłana przez _trunk_ opatrzona zostaje 4-bajtowym polem, w ramach którego przenoszony jest również identyfikator VLAN-u (tak, by odbierający ramki przełącznik był w stanie wysłać ramkę do odpowiedniego VLANu). W związku z tym ramki oznaczane (czasem określa się to tagowaniem), moga mieć maksymalnie długość do 1522 bajtów.
+Obecnie na rynku obecne są również przełączniki routujące (tzw. przełączniki 3 warstwy modelu OSI).
+
+Są cztery metody przekazywania (_forwarding methods_) jakich może użyć przełącznik:
+
+- przecięcie (_Cut through_)
+- gromadź i prześlij (_Store and forward_) - inaczej niż w poprzedniej buforuje i najczęściej sprawdza sumy kontrolne na każdej ramce przed przesłaniem.
+- (_Fragment free_)
+- (_Adaptive switching_)
+
+Wady
+Przełączniki stwarzają problemy w monitorowaniu ruchu ponieważ każdy port jest izolowany aż do chwili przesyłania danych, i nawet wtedy tylko wysyłający i odbierający port są połączone.
+Dwie popularne metody specjalnie zaprojektowne do monitorowania ruchu w takich sytuacjach to:
+
+- _Port mirroring_ - przełącznik wysyła kopie pakietów sieciowych do monitorującego połączenia sieciowego.
+- _SMON_ - "Switch Monitoring" opisany przez RFC 2613 i jest protokołem przeznaczonym do kontroli takich właściwości takich jak port mirroring.
+
+Inne metody (ataki) zostały opracowane, żeby umożliwić _snooping_ w innym komputerze w sieci bez współdziałania z przełącznikiem:
+
+- _ARP spoofing_ - ogłupienie docelowego komputera przez użycie swojego własnego adresu MAC na bramce sieci lub użycie go jako adresu rozgłoszeniowego MAC.
+- _MAC flooding_ - przeładowanie przełącznika dużą liczbą numerów adresów MAC, w wyniku czego przełącza się w "_failopen mode_".
+
+### Ruter (ang. _router_)
+
+Domeny rozgłoszeniowe to systemy w których rozchodzą się wspólne ramki broadcastu, domyślnie nie przechodzą przez routery, które działają jako tzw. punkt demarkacyjny (demarcation point). Żeby przeprowadzić komunikację pomiędzy domenami rozgłoszeniowymi potrzebna jest warstwa trzecia i urządzenia, które w niej działają - rutery.
+W sieci opartej o protokół IP komputery wykorzystują do tego tzw. domyślną bramę (default getway) - zazwyczaj jest nią lokalny adres routera. Kiedy host z jednej sieci (domeny rozgłoszeniowej) chce się skomunikować z hostem w innej sieci, przekazuje pakiet do routera (domyślnej bramy), który to decyduje gdzie dalej go przesłać (odbywa się to przy pomocy jego tzw. tablicy routing-u). Router-y mają zawsze co najmniej 2 interfejsy, którymi mogą odbierać i wysyłać dane.
+Dla przykładu ruter ma połączyć dwie sieci Ethernet LAN lub jedna Ethernet LAN z Token Ring LAN. W tej sytuacji ruter pełni rolę połączenia sieci o różnych technologiach.
+
+Urządzenie sieciowe, które określa następny punkt sieciowy, do którego należy skierować pakiet danych (np. datagram IP). Ten proces nazywa się routingiem (rutingiem) bądź trasowaniem. Routing IP odbywa się w warstwie trzeciej modelu OSI.
+Przesyłanie pakietów danych do ich przeznaczenia związane jest najczęściej z protokołem IP, ale są również używane inne mniej popularne protokoły (np. IPX sieci Novell).
+Aby mógł zajść routing, router musi być podłączony przynajmniej do dwóch podsieci (które można okreslić w ramach jednej sieci komputerowej).
+Ruter może być używany albo do połączenia przynajmniej dwóch sieci albo do stworzenia mobilnej sieci ad-hoc. Używany jest przede wszystkim do łaczenia ze sobą sieci WAN, MAN i LAN.
+Ruter, który łączy klienty z internetem jest nazywany ruterem krawędziowym (_edge router_).
+Ruter który służy do transmisji danych pomiędzy innymi ruterami to ruter rdzenny (_core router_).
+
+Router tworzy i utrzymuje tablicę routingu (_routing table_), która przechowuje najlepsze ścieżki do konkretnych obszarów sieci i metryki rutingu (_routing metrics_) związane z tymi ścieżkami.
+
+Pierwotne routery z lat sześćdziesiątych były komputerami ogólnego przeznaczenia. Chociaż w roli routerów można używać zwykłych komputerów, nowoczesne, szybkie routery to wysoce wyspecjalizowane urządzenia. Zazwyczaj mają wbudowane dodatkowe elementy sprzętowe w celu przyspieszenia typowych czynności, takich jak przekazywanie pakietów lub bardziej wyspecjalizowanych zadań jak np. szyfrowanie IPSec.
+Wprowadzono również inne zmiany w celu zwiększenia pewności działania, takie jak zasilanie awaryjne z baterii oraz pamięć trwała zamiast magnetycznej. Nowoczesne routery zaczynają przypominać centrale telefoniczne, a obie te technologie coraz bardziej się upodabniają i prawdopodobnie wkrótce się połączą.
+Obecnie wiele funkcji rutowania zostało dodanych do przełączników LAN, tworząc przełączniki warstwy 2/3 (_Layer 2/3 Switches_), które rutują ruch blisko prędkości kabla.
+Małe rutery są natomiast coraz bardziej popularnym sprzętem gospodarstwa domowego.
+Pierwszymi, nowoczesnymi (dedykowanymi, _standalone_) ruterami były rutery Fuzzball.
+
+Szczególnym przypadkiem routera jest urządzenie z jednym interfejsem sieciowym, które rutuje pomiędzy dwoma lub większą ilością sieci wydzielonych logicznie na tym pojedynczym interfejsie. Dla sieci Ethernet są to VLAN-y (wirtualne sieci lokalne), dla sieci ATM czy Frame Relay kanały PVC/SVC (Permanent Virtual Circuit/Switched Virtual Circuit, stałe bądź komutowane kanały wirtualne).
+
+Rutery są także implementowane jako bramki internetowe (_internet gateways_), głównie dla małych sieci jak te używane w domach i małych biurach; najczęściej tam gdzie połączenie internetowe szerokopasmowe jest stale aktywne jak np. modemy kablowe lub DSL.
+
+W przypadku ruterów dostępowych nie konfiguruje się klasycznej tablicy routingu. Dla tej grupy urządzeń tablica routingu powiazana jest ściśle z funkcją NAT tłumaczacą adresy IP z wewnętrznej puli adresowej na jeden numer widoczny na zewnątrz, w praktyce więc można jedynie definiować reguły dotyczące zarządzania pakietami, które trafiają do sieci lokalnej: np. filtrować je (firewall) zarezerwować adresy i porty sieciowe dla wydzielonych usług takich jak FTP lub WWW (tzw. Virtual Server Mapping lub forwarding portów), można też skonfigurować opcje pozwalające użytkownikom z zewnątrz zalogowanie się do sieci lokalnej.
+
+<!-- http://www.ouah.org/ http://linux4biz.net/writing.html http://www.freeos.com/ http://linux.cudeso.be/linuxdoc.php http://www.linux-sxs.org/ http://linux.maruhn.com/cat/Tool/Network.html http://www.iss.net/security_center/advice/default.htm http://www.nettwerked.net/ http://www.tscm.com/ http://www.ciphertrust.com/resources/statistics/zombie.php CipherTrust's ZombieMeterSM http://security-networks-today2.blogspot.com/ security-networks-today2 http://www.volubis.com/blog/ http://www.rootsecure.net/ http://www.network-monitoring-net.com/ http://altaglobalnet.blogspot.com/ http://raytownblog.blogspot.com/ http://myspywareblogging.blogspot.com/ http://www.cr0.net:8040/code/network/ http://www.lagado.com/proxy-test http://www.informatik.uni-freiburg.de/~alsbiha/code.htm http://www.wired.com/news/privacy/0,1848,67223,00.html?tw=rss.TEKU.S. Military's Elite Hacker Crew http://www.theregister.co.uk/2005/04/19/teenagers_want_computer_security_lessons/ Teenagers want computer security lessons http://news.zdnet.co.uk/0,39020330,39193999,00.htmRussian hackers 'the best in the world' http://www.internetnews.com/security/article.php/3493206 Alliance Formed to Finger Hackers -->
+
+- [Scanrand Dissected: A New Breed of Network Scanner](http://www.lurhq.com/scanrand.html)
+- [Zabezpiecz swoją sieć w stylu NSA](http://hacking.pl/5301)
+- [Remove the limit on TCP connection attempts](http://www.speedguide.net/read_articles.php?id=1497)
+- [Hacking Google for fun and profit](http://www.channelregister.co.uk/2005/04/04/google_hacking/)
+- [Ten Things I Didn't Know About Google](http://blogs.pcworld.com/techlog/archives/000681.html)
+- [Advanced Search with Google](http://binaryrealm.ath.cx/index.php?option=com_content&task=view&id=16&Itemid=9)
+- [How To Find MP3's with Google](http://www.i-hacked.com/content/view/128/42)
+- [How to Google hack Windows servers](http://searchwindowssecurity.techtarget.com/tip/0,289483,sid45_gci1089383,00.html)
+- [Possible Domain Poisoning Underway](http://www.techweb.com/wire/security/60405913)
+- [Hackers poison DNS](http://www.theinquirer.net/?article=21621)
+- [Defeating Honeypots: System Issues, Part 1](http://www.securityfocus.com/infocus/1826)
+- [DNS system in need of upgrade](http://www.vnunet.com/news/1162310)
+- [Spam, Directory Harvest Attacks (DHA), email Denial of Service (DoS) attacks](http://www.technologynewsdaily.com/node/364)
+- [Trio of security holes kick sysadmins in teeth](http://www.techworld.com/security/news/index.cfm?NewsID=3631)
+- [Thwarting Hacker Techniques: Signs of a compromised system](http://searchsecurity.techtarget.com/tip/1,289483,sid14_gci1069097,00.html)
+- [Software Firewalls versus Wormhole Tunnels](http://www.securityfocus.com/infocus/1831)
+- [Intro to Telnet And Hacking](http://www.techenclave.com/forums/showthread.php?t=3252)
+- [Anti-Forensic Tools](http://www.networkintrusion.co.uk/foranti.htm)
+- [Cracking Unix password files for beginners](http://www.governmentsecurity.org/articles/CrackingUnixpasswordfilesforbeginners.php)
+- [Hacking Beginning](http://www.port7alliance.com/txt/hackbg.html)
+- [Best Hacking Tools and Tutorials](http://thetechdomain.com/?p=27)
+- [IP Spoofing: Understanding the basics](http://www.linuxexposed.com/Articles/Hacking/IP-Spoofing-Understanding-the-basics.html)
+- [Hacker Mags you might not know about](http://www.i-hacked.com/content/view/144/48)
+- [Geekfathers: CyberCrime Mobs Revealed](http://www.baselinemag.com/article2/0,1397,1775903,00.asp)
+- [Gotcha!: Hack Attacks](http://www.baselinemag.com/article2/0,1397,1774475,00.asp)
+- [Denial-of-service glitch could threaten Windows](http://news.com.com/Denial-of-service+glitch+could+threaten+Windows/2100-1002_3-5604579.html?tag=nl)
+- [The Guest Account Is The Hacker's Holy Grail](http://channels.lockergnome.com/windows/archives/20050114_the_guest_account_is_the_hackers_holy_grail.phtml)
+- [Coke Machine Hacks](http://www.boingboing.net/2004/12/20/coke_machine_hacks.html)
+- l0t3k: [distro forensic](http://www.l0t3k.org/linux/distro/forensic/)
+- [Penguin Sleuth Kit Bootable CD](http://www.linux-forensics.com/downloads.html)
+- [FrozenTech's LiveCD List](http://www.frozentech.com/content/livecd.php?sort=&showonly=forensics)
+- [Top 100 Network Security Tools](http://sectools.org/)
+
+### Słownik pojęć
+
+ARP (Address Resolution Protocol - protokół rozróżniania adresów)
+
+Protokół określający jak wyznaczyć adres MAC odpowiadający adresowi IP. Działa w warstwie dostępu do sieci. Mimo, że jest potrzebny w sieciach TCP/IP obecnie nie należy do zestawu protokołów TCP/IP.
+Zapewnia odwzorowanie adresów hostów na postać fizycznych adresów sieciowych.
+
+ATM (Asynchronous Transfer Mode)
+
+Technika transmisji, w której dane dzieli się na małe pakiety o stałej wielkości (tzw. komórki, cells). Pozwala ona na jednoczesne przesyłanie danych komputerowych, głosu i wideo w tej samej sieci. Prędkość transmisji może być od 25 do 622 Mbps. W ATM (w odróżnieniu od protokołu TCP/IP, gdzie każdy pakiet może podróżować inną drogą) w trakcie ustanawiania połączenia negocjuje się stałą trasę (kanał) między dwoma punktami. Pozwala to m.in. na wybór drogi w zależności od potrzebnej przepustowości. ATM pozwala zdecydować, czy dane mogą być przesyłane zawsze ze stałą lub ze zmienną prędkością (Constant lub Variable Bit Rate). Możliwe jest także korzystanie z całej dostępnej w danym momencie przepustowości z zachowaniem minimalnego poziomu (Available Bit Rate) lub bez niego (Unspecified Bit Rate).
+Frame Relay (FR) protokół wykorzystywanym do łączenia urządzeń w sieciach WAN. W USA stosuje się prędkości T-1 (1,544 Mbps) i T-3 (45 Mbps), w Europie natomiast od 64 Kbps do 2 Mbps. FR jest powoli wypierany przez ATM.
+
+Bastion Host
+
+Jednostka sieciowa zapewniająca pojedynczy punkt wejścia/wyjścia do internetu używany w celu ochrony sieci wewnętrznej - jest barierą pomiędzy obszarem publicznym a prywatnym.
+Zwykle zawiera firewall i zapewnia usługi takie jak WWW, DNS i mail.
+
+bramka (ang. gateway)
+
+Element łączący dwie sieci.
+
+CHAP (Challenge Handshake Authentication Protocol)
+
+Protokół używany w PPP
+
+DNS (Domain Name Service/Server)
+
+Usługa/serwer nazw tłumacząca nazwy domenowe na adresy IP i odwrotnie
+
+DHCP (Dynamic Host Configuration Protocol)
+
+Mechanizm ułatwiający konfgurację sieci komputerowej, automatycznie przydziela adresy IP wszystkim komputerom w sieci.
+Ważne jest aby określona przez użytkownika pula rozdzielanych przez serwer DHCP adresów I była z tego samego zakresu co adres IP należący do rutera.
+
+delegacja
+
+Wpis w serwerze DNS zawierajacy informację o maszynie obsługującej daną subdomenę.
+
+demon (ang. daemon)
+
+Program obsługujący daną usługę i odpowiadający na zapytania klientów.
+
+DMZ (DeMilitarized Zone)
+
+Wyłączajaca ograniczenia sieci wewnętrznej strefa zdemilitaryzowana.
+Podsieć jest najczęściej używana dla łączenia serwerów, które mają być dostępne z zewnętrznego świata takie jak serwery mail, WWW i DNS. DMZ jest tworzona przez konfigurację firewalla.
+Nazwa pochodzi z militarnej nomenklatury i oznacza obszar pomiędzy dwoma nieprzyjacielami
+
+domena (ang. domain)
+
+Część hierarchii w którą są zgrupowane adresy internetowe.
+
+domena odwrotna (ang. domain)
+
+Domena zaczynająca się odwróconym adresem IP a kończąca się .in-addr.arpa; jest wykorzystywana w procesie zamiany adresów IP na nazwy
+
+dyrektywa
+
+Komenda konfiguracyjna Apache, definiująca dane niezbędne do poprawnej pracy oraz wskazująca sposób zachowania się podczas wystąpienia określonych zdarzeń.
+
+Ethernet
+
+Standard przemysłowy osprzętu szybkiej sieci lokalnej, wprowadzony w 1975 przez Xerox Company, a następnie rozwinięty w 1980 przez DEC i Intela.
+
+gniazdo (ang. socket)
+
+Informacje identyfikujące połączenie
+
+FDDI (Fiber Distributed Data Interface - łącze danych w sieci światłowodowej)
+
+Światłowód
+
+firewall (zapora ogniowa)
+
+Zbiór metod ochrony plików i programów znajdujących się w jednej sieci chroniący przed nieuprawnionym dostępem użytkowników z innej sieci. Głównym zadaniem firewalla jest blokowanie lub filtrowanie wskazanych portów (np. w celu ograniczenia warunków korzystania z właczonych na chronionej maszynie usług) lub dostępu do całych domen.
+Służy do ochrony lokalnych sieci komputerowych jego zadaniem jest m.in. fitrowanie pakietów, potwierdzanie tożsamości i kontrola uprawnień użytkowników, wyszukiwanie wirusów, kontrolowanie sprowadzanych plików, równoważenie obciążenia serwerów sieciowych, translacja adresów internetowych, ochrona przesyłanych informacji oraz monitorowanie działalności użytkowników i administratorów a także rejestrowanie ważnych zdarzeń
+
+FTP
+
+Protokół komunikacyjny zdalnego kopiowania plików.
+
+FQDN (ang. Fully Qualified Domain Name)
+
+Pełna nazwa domenowa, tworzy ją nazwa hosta oraz domeny.
+
+host
+
+Węzeł sieci, czyli komputer przyłączony do sieci
+
+- Komputer włączony do Sieci połączeniem stałym, posiadający stały adres, udostępniający swoje usługi użytkownikom łączącym się ze swoich komputerów. Powszechną praktyką jest współistnienie na jednym hoście wielu usług, np. WWW, FTP i SSH. Komputer lokalny użytkownika nazywany jest wtedy zdalnym terminalem (ang. remote terminal).
+- Każdy komputer podłączony do Internetu lub innej sieci używającej protokołu TCP/IP i posiadający unikalny adres IP. Jeżeli użytkownik łączy się z Internetem dzwoniąc do swojego dostawcy usług internetowych, jego komputer otrzymuje dynamiczny adres IP i na czas trwania połączenia staje się hostem. W tym znaczeniu "host" jest po prostu dowolną maszyną uczestniczącą w wymianie danych przez sieć.
+- W publikacjach angielskojęzycznych jako czasownik _to host_ - dostarczać infrastrukturę dla usług komputerowych. Przykładowo wyrażenia _to host Web server_ lub _hosted by_ mogą odnosić się do firmy zapewniającej sprzęt, oprogramowanie oraz połączenie dla czyjejś witryny WWW.
+
+httpd (ang. HyperText Transfer Protocol Daemon)
+
+Demon usługi HTTP
+
+koncentrator (_hub_)
+
+Urządzenie zapewniające dołączenie dodatkowych stacji roboczych i umożliwiające zarządzanie i monitorowanie siecią
+
+ICMP (Internet Control Message Protocol - protokół międzysieciowych komunikatów sterujących)
+
+Obsługuje zawiadomienia o błędach oraz informacje sterujące, które przepływają między bramami a maszynami użytkownika, które są generowane najczęściej przez procesy systemowe.
+Niewielkie komunikaty umożliwiające zarządzanie siecią, wiele z nich pozwala rozeznać sytuację problemu i jego przyczyny.
+Najbardziej znanym zastosowaniem jest polecenie ping wysyłające pakiety ICMP typu 8 (Echo request), po których oczekuje się typu 0 (Echo replay)
+
+interfejs sieciowy (ang. adapter)
+
+Interfejs sieciowy
+
+IP (Internet Protocol - bezpołączeniowy protokół komunikacyjny internetu)
+
+Zarządza transmisją, rutowaniem, oraz fragmentacją i składaniem danych niskiego poziomu. Bezpołączeniowy protokół komunikacyjny, transmisja datagramów między systemami w sieci.
+
+IPX (Internetwork Packet Exchange)
+
+Miedzysieciowa wymiana pakietów, bezpołączeniowy protokół komunikacyjny działający w warstwie sieciowej OSI, w którym pakiet jest wysyłany do miejsca przeznaczenia bez nawiązania połączenia i kontroli transmisji.
+Używany w sieciach Nowell Netware razem z NetWare SPX (Sequenced Packet Exchange)
+
+ISO (International Organization for Standardization)
+
+Międzynarodowa organizacja normalizacyjna
+
+ISDN (Integrated Services Digital Network)
+
+Sieć cyfrowa z integracją usług.
+
+klient
+
+Komputer korzystający z usług serwera.
+System który używa zdalnego dostępu do usługi na innym komputerze przez sieć. Termin ten początkowo był zastosowany do urządzeń które nie były w stanie używać własnych programów ale mogły być zdalnym interfejsem dla innych komputerów. Takie terminale były klientami komputera mainframe (time-sharing mainframe computer).
+Model klient-serwer nadal jest używany w internecie, tam gdzie użytkownik może połączyć się do usługi działającej na zdalnym serwerze przez zestaw protokołów inernetowych.
+Przeglądarki internetowe są klientami, które mogą się połączyć z webserwerami i pobierać strony do wyświetlenia. Większość ludzi używa klientów e-mail do pobierania swoich emaili z serwerów swoich ISP.
+Coraz więcej aplikacji klienckich jest przełączanych na WWW (np. webmail), dzięki czemu przeglądarki staja się uniwersalnym klientem.
+
+koncentrator (ang. hub)
+
+Urządzenie sieciowe
+
+LAN (Local Area Network)
+
+Lokalna sieć komputerowa
+
+MAC (Media Access Control - sterowanie dostępem do nośnika)
+
+Numer sprzętowy interfejsu sieciowego
+
+MAN (Metropolitan Area Network)
+
+Sieć miejska
+
+masquerade
+
+NAT
+
+model OSI
+
+Model usług sieciowych
+
+modem (**mo**dulator-**dem**odulator)
+
+Urządzenie sieciowe
+
+most (ang. bridge)
+
+Urządzenie sieciowe
+
+NAT (Network Address Translation)
+
+Mechanizm pozwalający na zamianę jednych adresów IP na inne, dzięki któremu maszyny należące do jednej sieci lokalnej mogą połączyć się z internetem wykorzystując jeden widoczny z zewnątrz numer IP
+
+NCSA (National Center for Supercomputing Applications)
+
+Zajmuje się rozwijaniem nowych technologii informatycznych
+
+NetBEUI (NetBIOS Extended User Interface)
+
+Rozszerzony interfejs użytkownika - protokół komunikacji sieciowej działający w warstwie sieciowej i transportowej modelu OSI swiadczący usługi na rzecz protokołów pracujących w warstwie sesji (np. NetBIOS, TCP, SPX)
+
+NetBIOS (Network Basic Input/Output System)
+
+Podstawowy sieciowy system wejścia/wyjścia - moduł zawierający podstawowe procedury obsługi zasobów sieciowych, wprowadzony przez IBM i używany w sieciach PC Network, przesyłanie pakietów i zapewnienie interakcji klient-serwer
+
+NFS (Network File System)
+
+Sieciowy system plików
+
+OSI (Open System Inteconnection)
+
+Połączenie systemów otwartych - standard ISO komunikacji sieciowej i międzysieciowej, standard warstwowego systemu sieciowego ISO
+
+PAT (Port Address Translation)
+
+Właściwość NAT, która tłumaczy połączenia TCP lub UDP do hosta i portu w zewnętrznej sieci na host i port w wewnętrznej sieci, pozwala używać jednego adresu IP. Jeden zewnętrzny adres może liczyć ponad 64K wewnętrznych hostów.
+W typowej konfiguracji firewalla zewnętrzna sieć jest internetem a wewnętrzna LAN.
+W typowej konfiguracji DMZ zewnętrzna sieć jest internetem a wewnętrzna DMZ.
+
+PAP (Password Authentication Protocol)
+
+Protokół używany w PPP.
+
+PHP
+
+Język skryptowy ogólnego przeznaczenia dostosowany do potrzeb WWW, ma wiele rozszerzeń, między innymi umożliwia łaczenie z bazami danych i obługę bibliotek graficznych
+
+poddomena, subdomena (ang. subdomain)
+
+Część domeny, każda oprócz najwyższej (.) jest poddomeną innej domeny.
+
+port
+
+Umożliwia skierowanie danych do odpowiedniego procesu (bo np. PID procesu jest za każdym razem inny). Proces oczekujący na określonym porcie informuje system iż oczekuje od niego przesłania do siebie danych. Żaden inny proces nie może korzystać z tego portu.
+Jest ich 65 536 (2 16), poniżej 1024 są zarezerwowane dla roota.
+Adres portu to 16-bitowa liczba określająca konkretną usługę lub aplikację na maszynie docelowej, która powinna odebrać dane.
+Umożliwia określenie i lokalizację usługi. Komputer pragnący zrealizować jakąś usługę na innej maszynie może albo od razu próbować skomunikować się z określonym portem albo poprosić o informację, której udziela portmap (port 111) pod jakimi numerami są dostępne poszczególne usługi (portmap może odmówić informacji, które nie są dostępne dla wszystkich)
+Ponieważ komunikacja w rzeczywistości odbywa się pomiędzy procesami a nie między komputerami, port jest adresem procesu; ten sam port może być wykorzystywany jednocześnie przez procesy TCP (numer/tcp) i UDP (numer/udp) bo tak się różnią między sobą.
+Jeśli np. 25/TCP zostanie zarezerwowane dla jakiejś usługi - ponieważ uniksy traktują wszystkie obiekty jako pliki - w celu przypisania sobie portu proces prosi system ustanowienie tzw. gniazda, które jest po prostu jedną ze stron komunikacji; system zwraca deskryptor pliku gniazda, który może być użyty przez proces jak zwykły plik tyle, że ma więcej opcji konfiguracyjnych a potem wywołuje funkcję systemową zwiazaną z tym gniazdem.
+gdy system nasłuchuje na określonym porcie - port jest otwarty
+
+netstat -apn
+
+adres 0.0.0.0 oznacza przyjmowanie wszystkich połączeń
+
+lsof -i tcp
+
+_well known port numbers_:
+
+PPP (Point-to-Point Protocol)
+
+Protokół - umożliwia transmisję danych za pomoca dowolnych łączy Point-to-Point, używany do przesyłania danych przez łącze szeregowe.
+
+protokół sieciowy
+
+Zbiór reguł, które kierują ruchem w sieci, porządkujący komunikację. Każdy system musi się do nich dostosować, żeby być przyłączony do danej sieci. Dzięki temu można podłączyć do sieci komputery pracujące pod kontrolą różnych systemów operacyjnych.
+
+przełącznik (ang. switch)
+
+Urządzenie
+
+RARP (Reverse Address Resolution Protocol)
+
+Umożliwia ustalenie adresu IP dla danego fizycznego adresu sieciowego
+
+resolver (ang. resolver)
+
+Częśc systemu DNS odpowiedzialna za bezpośredni kontakt z aplikacjami użytkowymi, zwykle ma formę usługi systemowej.
+
+RIP (Routing Information Protocol)
+
+Protokół dzięki któremu rutery wymieniają między sobą dane o aktualnej konfiguracji urządzeń sieciowych, w przypadku zmian w sieci zostanie rozesłana odpowiednia informacja.
+
+ruter (ang. router)
+
+Urządzenie sieciowe, które wytycza drogę pakietów między sieciami zapewniając możliwość połączenia ze sobą dowolnych komputerów niezależnie od ich fizycznej lokalizacji.
+Posiada przynajmniej dwa przyłącza sieciowe każde o innym adresie IP jego zadaniem jest skierowanie danych we właściwą stronę na podstawie adresu docelowego. Przekazywane są do niego pakiety o adresach spoza sieci lokalnej. Rutery potrafią same zmieniać trasę przesyłania pakietów i tworzyć tzw. drogi obejściowe w razie np. awarii.
+
+serwer
+
+Element sieci komputerowej udostępniający usługi innym komputerom (klientom), udostępnia swoje zasoby innym maszynom, przyjmuje od nich polecenia i je wykonuje (ang. serve - służyć komuś, pełnić oobowiązki).
+Nazwa serwer internetowy obejmuje dwa pojęcia:
+
+- host - (zazwyczaj) komputer podłączony do sieci, realizujący określone usługi;
+- specjalizowane oprogramowanie uruchomione na tym sprzęcie, np. serwer HTTP, SMTP, DNS, FTP itp.
+
+Czasem chodzi o oba te znaczenia na raz. Należy podkreślić, że niekoniecznie musi być to komputer - serwerem DHCP może być np. router.
+Serwery są często realizowane w postaci demonów
+
+serwer wirtualny (Virtual Server)
+
+Ogólna nazwa stosowanych w bramach rezydentnych technologii umożliwiających dzięki remapowaniu portów uruchomienie w sieci lokalnej serwerów dostępnych dla użytkowników internetu mimo używania jednego (lub kilku) adresów IP i mechanizmu NAT
+
+SLIP (Serial Line Interface Protocol)
+
+Zapewnia transmisję danych za pomocą łączy szeregowych (modem)
+
+SMTP (Simple Mail Transfer Protocol)
+
+Prosty protokół przesyłania poczty elektronicznej
+
+SNMP (Simple Network Management Protocol)
+
+Prosty protokół zarządzania siecią, zajmuje się zarządzaniem i monitorowaniem urządzeń sieciowych i ich funkcji
+
+strefa
+
+Domena lub grupa poddomen zarządzana w jednym miejscu, strefy proste zawierają zwyczajne domeny, a strefy odwrotne domeny typu .in-addr.arpa
+
+TCP (Transmission Control Protocol - protokół sterowania transmisją)
+
+Odpowiada za stabilność sesji komunikacji sieciowej między aplikacjami, w tym za sterowanie przepływem oraz wykrycie i naprawienie błędów. Działa w warstwie transportowej.
+Jego zadaniem jest zapewnienie niezawodnej, zorientowanej połączeniowo, komunikacji pomiędzy dwoma procesami, które mogą działać na różnych maszynach w sieci.
+
+TCP/IP (Transmission Control Protocol/Internet Protcol)
+
+Zestaw protokołów definiujących jak maszyny powinny komunikować się między sobą przez sieć oraz wewnętrznie z innymi warstwami zestawu protokołów. Powstał na potrzeby ARPAnetu.
+TCP i UDP wysyłają i odbierają dane w jednostkach zwanych pakietami, każdy pakiet zawiera porcję informacji do wysłania oraz nagłówek określający adres portu docelowego i portu źródła.
+IP w hierachii protokołów leży niżej, jest odpowiedzialny za przesyłanie i kierowanie pakietów TCP i UDP w sieci. Pakuje każdy pakiet TCP lub UDP w inny pakiet zwany datagramem IP, który zawiera nagłówek z informacją o trasie i miejscu przeznaczenia (są tam adresy IP maszyny źródłowej i docelowej).
+
+TLD (Top Level Domain)
+
+Domena najwyższego poziomu
+
+TTL (Time To Live)
+
+Czas ważności informacji, parametr ten określa jak długo dane będą przechowywane w pamięci podręcznej serwerów
+
+UDP (User Datagram Protocol - protokół datagramów użytkownika)
+
+Zapewnia komunikację bezpołączeniową między aplikacjami. W protokole UDP, w przeciwieństwie do TCP, nie ma weryfikacji, czy przekazywane dane zostały dostarczone. Jeśli oczekiwane dane nie nadejdą, to aplikacja zażąda ich jeszcze raz. Działa w warstwie transportowej.
+Procesy wykorzystujące UDP w razie potrzeby muszą same implementować mechanizmy potwierdzenia i synchronizacji. Nadawca nie ma możliwości ustalenia czy pakiet został pomyślnie dostarczony.
+
+URI
+
+Adres
+
+URL (Uniform Resource Locator)
+
+Adres
+
+usługa
+
+Określony protokołami transmisji typ wymiany danych pomiędzy aplikacjami.
+
+skaner
+
+Program
+
+snifer (ang. sniffer)
+
+Program służący do analizy ruchu sieciowego, przez przechwytywanie, rejestrowanie i analizowanie pakietów przepływających w sieci. Narzędzie diagnostyczne używane przez administratorów sieci jak i również przez włamywaczy; może służyć również zwykłym użytkownikom do sprawdzenia czy i w jaki sposób działa szyfrowany kanał komunikacji. Nazwa po polsku oznacza węszyciel i prawdopodobnie pochodzi od komercyjnego programu Sniffer (produkcji Network Associates, Inc.).
+[Packet_sniffer (eng.)](http://en.wikipedia.org/wiki/Packet_sniffer) [Sniffer (pl.)](http://pl.wikipedia.org/wiki/Sniffer)
+[.:[ packet storm ]:.](http://packetstormsecurity.com/), [insecure.org: Top 75 Security Tools](http://www.insecure.org/tools.html)
+Przykładowe sniffery (uwaga: nieostrożne użycie może spowodować problemy prawne):
+
+- dsniff: [www.monkey.org/~dugsong/dsniff/](http://www.monkey.org/~dugsong/dsniff/)
+- EtherApe [etherape.sourceforge.net](http://etherape.sourceforge.net/)
+- Ethereal [www.ethereal.com](http://www.ethereal.com/)
+- ettercap [ettercap.sourceforge.net](http://ettercap.sourceforge.net/)
+- Sniffit [reptile.rug.ac.be/~coder/sniffit/sniffit.html](http://reptile.rug.ac.be/~coder/sniffit/sniffit.html)
+- Snort [www.snort.org](http://www.snort.org/)
+- tcdump [www.tcpdump.org](http://www.tcpdump.org/)
+
+WAN (Wide Area Network)
+
+Sieć obejmująca swoim zasięgiem duży obszar, składajaca się z wielu podsieci połączonych ruterami.
+
+WWW (World Wide Web)
+
+Usługa sieciowa
+
+wzmacniak (ang. repeater)
+
+Urządzenie sieciowe
+
+VPN (Virtual Private Network - Wirtualna Sieć Prywatna)
+
+Mechanizm umożliwiający wykorzystanie sieci publicznej (internetu) do dwukierunkowej bezpiecznej komunikacji pomiędzy odległymi komputerami. Na czas połączenia tworzony jest wirtualny wydzielony tunel, przez który transmituje się zaszyfrowane informacje. Dzięki temu nawet po przechwyceniu pakietów danych przez osoby niepowołane przesyłane informacje są bezpieczne gdyż do odczytania ich potrzebny jest klucz znany tylko komputerom nawiązującym połączenie.
+Używane głównie do zapewnienia dostępu do firmowych intranetów dla podrózujących pracowników
+
+### Protokoły
+
+#### ARP (Address Resolution Protocol)
+
+Ramka zbudowana jest tak (w nawiasach kwadratowych ilość bajtów):
+
+- [7] Preambuła (takt)
+- [1] Znacznik początku
+- [2 lub 6] Adres odbiorcy
+- [2 lub 6] Adres nadawcy
+- [2]
+- [0 do 1500] Dane
+- [0 do 46] PAD
+- [4] kontrola parzystości
+
+**DNS (Domain Name System)**
+
+Każda strefa zawiera bazę danych zdefiniowaną w oddzielnym pliku, składa się ona w większości z pozycji RR Informacja o nazwach domen przechowywana jest w strukturach zwanych RR (Resource Records) składających się z sześciu pól:
+
+1. nazwa - pole o zmiennej długości, identyfikuje nazwę hosta, koniec nazwy zaznaczany bajtem zerowym
+2. typ - typ danego rekordu (może on być używany nie tylko do przekształcania nazw); możliwe wartości (wartość - typ - znaczenie):
+  - 1 - A - nazwa hosta; najczęściej występujący rekord, który odwzorowuje nazwę hosta na jego numer IP
+```
+test IN A 192.168.0.2
+```
+  - 2 NS - nadrzędny serwer nazw; definiują oficjalne serwery nazw dla domeny, np:
+```
+@ IN NS localhost.
+```
+spowoduje, że serwerem nazw dla bieżącej domeny będzie komputer localhost
+  - 3 - MD - adres przeznaczenia dla poczty
+  - 4 - MF - forward poczty
+  - 5 - CNAME - alias nazwy; umożliwia tworzenie aliasów do nazw kanonicznych (takich jak np. www.google.com), można np. stworzyć alias testowy dla komputera test.domena.com wpisując komendę
+```
+testowy IN CNAME test.domena.com.pl
+```
+jeśli nazwa maszyny jest częścią bieżącej domeny wystarczy podać tylko ją (nie całą domenę) gdy nazwą kanoniczną jest identyfikator komputera z innej domeny to należy podać pełną nazwę zakończoną kropką
+nazwa kanoniczna, rodzaj aliasu używanego w strefach prostych
+  - 6 - SOA (Start Of Authority) - początek definicji strefy; w żadnym pliku nie może być więcej niż jeden wpis SOA, przykładowy rekord:
+```
+@ IN SOA localhost. root.localhost.
+(2000050601; Serial
+604800; Refresh
+86400; Retry
+24192; Expire
+604800); Default TTL
+```
+W powyższym przykładzie:
+- localhost. - nazwa serwera dla danej strefy; musi być zakończony kropką
+- root.localhost. - adres pocztowy osoby odpowiedzialnej za domenę, @ w adresie mailowym jest zamienione przez "." (prawdziwy adres to root@localhost); musi być zakończony kropką
+- @ - odnosi się do aktualnego pochodzenia, które oznacza nazwę strefy w pliku named.conf
+- IN - internet
+- Serial - pole zawierające numer wersji pliku strefy, po wprowadzeniu zmian do pliku strefy należy koniecznie ten numer zwiększyć aby serwery pomocnicze były poinformowane o konieczności dokonania zmian w swoich plikach, zazwyczaj używa się numeru typu RRRRMMDDNN (rok, miesiąc, dzień, wersja z danego dnia)
+- Refresh - określa jak często serwer pomocniczy ma sprawdzać serwer podstawowy, czy nie zachodzi potrzeba uaktualnienia
+- Retry - definiuje po jakim czasie serwer pomocniczy ponowi nieudaną próbę odświeżenia danych
+- Expire - maksymalny limit czasu, przez jaki serwer pomocniczy może utrzymywać dane w pamięci bez ich uaktualniania
+- Default TTL - określa domyślny czas TTL dla tych rekordów, które nie mają wpisanych wartości TTL
+
+- 7 - MB - nazwa domeny skrzynki pocztowej
+- 8 - MG - grupa pocztowa
+- 9 - MR - nazwa domeny pocztowej
+- 10 - NULL - wartość NULL
+- 11 - WKS - opis "dobrze znanych usług"
+- 12 - PTR - wskaźnik nazwy domenowej, również alias, ale używany w strefach odwrotnych
+- 13 - HINFO - nformacja o hoście; pozwala na wpisanie informacji o danym komputerze (np. typ procesora i system operacyjny)
+```
+test.domena.com.pl IN HINFO "PC C333" "Linux Debian"
+```
+  - 14 - MINFO - informacje o skrzynce badź liście pocztowej
+  - 15 - MX - wymiana poczty; pole to określa jaki serwer bdzie pełnił funkcję bramki pocztowej (będzie przyjmował pocztę adresowaną dla danej domeny); w rekordzie MX należy podać numer oznaczający priorytet serwera, ponieważ można wprowadzić kilka rekordów MX poczta kierowana będzie do serwera o najmniejszym numerze, a jeżeli ten nie będzie mógł przyjąc poczty zostanie skierowana do następnego w kolejności, po wpisaniu polecenia
+```
+domena.com.pl. IN MX 10 poczta.domena.com.pl.
+```
+  - 16 - TXT - łańcuchy tekstowe
+Wartości MD i MF zostały zastąpione przez MX, wartości MB, MG, MR i NULL są eksperymentalne
+3. klasa - klasa rekordu, możliwe wartości to IN, CS, CH I HS (w przypadku internetu używany jest tylko IN)
+4. TTL - 32-bitowa liczba określająca wyrażony w sekundach czas jaki rekord może być przechowywany w buforze, zanim dane będą mogły zostać ponownie sprawdzone; wartość zero oznacza, że nie może być przechowywany w buforze i może być użyty tylko w tej transakcji w ten sposób określa się czas jaki dane mają być przechowywane w bazie danych serwera pomocniczego lub serwera buforującego
+5. długość - 16-bitowa liczba określająca rozmiar danych w bajtach
+6. dane - składa się z jednej informacji, MX i HINFO: dwie informacje, SOA: wiele informacji
+
+Komunikacja między procesami w modelu DNS odbywa się poprzez przesyłanie tzw. wiadomości (ang. message) czasem nazywanych komunikatami, które składają się z pięciu pól.
+
+1. Nagłówek
+2. Zapytanie
+3. Odpowiedź
+4. Źródło nadrzędne
+5. Informacje dodatkowe
+
+Nagłówek zawsze musi być obecny, składa się z sześciu słów.
+
+1. - ID - 16-bitowa wartość przypisywana przez program, który generuje zapytanie, identyfikator ten z kolei jest przypisywany komunikatowi z odpowiedzią tak by host wysyłający mógł powiązać ze sobą pytania i odpowiedzi na nie
+2. - QR - jednobitowe pole wskazujące czy dana wiadomość jest pytaniem (0) czy odpowiedzią (1)
+- opcode - kod operacji; czterobitowe pole wskazuje rodzaj zadawanego pytania, wartość ta jest ustalana przez wysyłającego zapytanie oraz kopiowana do odpowiedniego pola w odpowiedzi; dopuszczalne wartości:
+- 0 standardowe zapytanie (standard query)
+- 1 zapytanie odwrotne (inverse query)
+- 2 żądanie stanu serwera (serwer status request)
+- 3-15 zarezerwowane dla przyszłych zastosowań (reserved for future use))
+- AA - bit wskazujący, że serwer jest serwerem nadrzędnym dla danej domeny
+- TC - wskazuje, że część komunikatu została odrzucona ponieważ jego długość była większa niż dopuszczalna w danym kanale transmisyjnym
+- RD - ustawienie tego bitu na jeden wskazuje, ze serwer powinien przetwarzać dane rekurencyjnie. Bit ten jest ustawionyw zapytaniu i kopiowany do odpowiedzi
+- RA - wskazuje czy dany serwer obsługuje zapytania rekurencyjne, ustawiany w odpowiedziach
+- Z - zarezerwowany dla przyszłych zastosowań, w pytaniach i odpowiedziach ma być 0
+- RCODE - czterobitowe pole ustawiane w wiadomościach z odpowiedziami, wskazuje czy a jeśli tak to jaki rodzaj błędu nastąpił:
+- 0 - brak błędu
+- 1 - serwer nie jest w stanie zinterpretować zapytania
+- 2 - wewnętrzny błąd serwera
+- 3 - podana domena nie istnieje
+- 4 - serwer nie obsługuje zapytań podobnego typu
+- 5 - odrzucenie zapytania
+- 6-15 - zarezerwowane dla przyszłych zastosowań
+3. - QDCOUNT - liczba zapytań w komunikacie
+4. - ANCOUNT - liczba odpowiedzi w komunikacie
+5. - NSCOUNT - liczba rekordów w sekcji serwerów nadrzędnych
+6. - ARCOUNT - liczba rekordów w sekcji dodatkowej
+
+Zwykle zapytania są wysyłane przy użyciu protokołu UDP z ustaloną wielkością datagramu na maksimum 512 bajtów. jeśli wielkośc ta zostanie przekroczona, wiadomość zostanie obcięta i ustawiony zostanie bit TC w nagłówku. Do wymiany informacji międzystrefowej używany jest natomiast TCP. W obu przypadkach używany jest port 53.
+
+#### ICMP (Internet Control Message Protocol)
+
+HMPTODO
+
+Wiadomości ICMP:
+
+Nie można osiagnąć systemu docelowego (Destination Unreachable Message)
+
+1. - [8] Typ wiadomości - równy 3
+- [8] Kod
+- 0 - niedostępna sieć (net unreacheble)
+- 1 - niedostępny host (host unreachable)
+- 2 - niedostępny protokół (protocol unreachable)
+- 3 - niedostępny port (port unreachable)
+- 4 - konieczna fragmentacja (fragmentation need and DF set); gdy datagram trafi do sieci, która nie będzie w stanie przesłać go dalej w całości, tzn. konieczna jest fragmentacja a flaga DF w nagłowku jej zakazuje
+- 5 - błąd routingu (source route failed) pierwsze dwa kody wysyłane są gdy nie można się dostać do sieci docelowej (fizyczne połączenie zerwane, za duża odległość, niedostępny docelowy komputer); 2 i 3 jeśli datagram dotrze ale jego przeznaczeniem będzie nieistniejący port lub protokół;
+- [16] Suma kontrolna
+2. - [32] Nie używane
+3. - [32] Nagłówek i 64 bity oryginalnego datagramu
+
+Przekroczony limit czasu (Time Exceeded Message)
+
+Struktura wiadomości jest identyczna jak wyżej
+
+1. - [8] Typ wiadomości - równy 11
+  - [8] Kod
+- 0 - przekroczony limit czasu (time to live exceeded); pole TTL osiągnęło wartość 0 i datagram musi zostać zniszczony
+- 1 - przekroczono czas składania (fragment reassembly time exceeded); host nie jest w stanie złożyć w całość pofragmentowanego datagramu, najprawdopodobniej poszczególne części zostały zagubione w sieci
+  - [16] Suma kontrolna
+2. - [32] Nie używane
+3. - [32] Nagłówek i 64 bity oryginalnego datagramu
+
+Niewłaściwy parametr (Parameter Problem Message)
+
+wiadomość wysyłana jest gdy w parametrach nagłówka pojawi się błąd, który spowoduje konieczność jego odrzucenia potencjalnym źródłem takiego problemu jest pole opcje
+
+1. - [8] Typ wiadomości - równy 12
+- [8] Kod
+- 0 - pole wskaźnik wskazuje miejsce wystąpienia błędu
+- 1 - błąd w polu typ usługi
+- [16] Suma kontrolna
+2. - [8] Wskażnik
+- [24] Nie używane
+3. - [32] Nagłówek i 64 bity oryginalnego datagramu
+
+Stłumienie źródła (Source Quench Message)
+
+wiadomość wysyłana jest gdy gateway nie ma wystarczającej wolnej przestrzeni w buforze do przetworzenia datagramu lub gdy system docelowy nie nadąża z odbieraniem przesyłek; jest to prośba o zwolnienie prędkości wysyłania danych lub ich chwilowe wstrzymanie; system wysyłający powiniena na to zareagować zwalniając aż pakiety Source Quench Message przestaną napływać, później może zwiększać tempo aż do ponownego otrzymania tej wiadomości zaleca się by gateway wysłał tą wiadomość kiedy zbliża się do granicy możliwości a nie po jej przekroczeniu - oznacza to, że datagram, który spowodował ten komunikat może zostać prawidłowo dostarczony
+
+1. - [8] Typ wiadomości - równy 4
+- [8] Kod
+- 0
+- [16] Suma kontrolna
+2. - [32] Nie używane
+3. - [32] Nagłówek i 64 bity oryginalnego datagramu
+
+Przekierowanie datagramu (Redirect Message)
+
+wysyłana gdy gateway znajdzie krótszą drogę (przez inny gateway)
+
+1. - [8] Typ wiadomości - równy 5
+- [8] Kod
+- 0 - przekierowanie do sieci
+- 1 - przekierowanie do hosta
+- 2 - przekierowanie ze względu na typ usługi i sieć
+- 3 - przekierowanie ze względu na typ usługi i host
+- [16] Suma kontrolna
+2. - [32] Adres gatewaya (do którego powinien zostać skierowany ruch do sieci podanej w polu przeznaczenia datagramu, który spowodował wysłanie wiadomości Redirect
+3. - [32] Nagłówek i 64 bity oryginalnego datagramu
+
+Echo i Odpowiedź echa (Echo or Echo Replay Message)
+
+jeśli host otrzyma wiadomość typu Echo musi odesłać pakiet z wiadomością Odpowiedź echa
+
+1. - [8] Typ wiadomości
+- 8 dla wiadomości Echo
+- 0 dla wiadomości Odpowiedź echa
+- [8] Kod
+- 0
+- [16] Suma kontrolna
+2. - [16] Identyfikator
+- [16] Numer sekwencyjny
+3. - [32] Dane
+
+pola Identyfikator i Numer sekwencyjny zawierają zawierają wartości pomocne w porównywaniu Echa i Odpowiedzi echa, mogą one przyjmować wartość zero
+
+Znacznik czasowy i echo znacznika czasowego (Timestamp or Timestamp Replay Message)
+
+1. - [8] Typ wiadomości
+- 13 dla znacznika czasowego
+- 14 dla echa (odpowiedzi) znacznika czasowego
+- [8] Kod
+- 0
+- [16] Suma kontrolna
+2. - [16] Identyfikator
+- [16] Numer sekwencyjny
+3. - [32] Znacznik oryginalny - host wysyłający Timestamp wstawia w pole Znacznik oryginalny czas wysłania wiadomości
+4. - [32] Znacznik odpowiedzi - host docelowy w pole Znacznik odpowiedzi wstawia czas kiedy odebrał wiadomość
+5. - [32] Znacznik transmisji - host docelowy w pole Znacznik transmisji wstawia czas kiedy wysłał wiadomość i odsyła wiadomość o typie 14 (czyli echo znacznika czasowego)
+
+pola Identyfikator i Numer sekwencyjny są używane do dopasowania do siebie wiadomości Timestamp i Timestamp Replay
+
+Informacja i Żądanie informacji (Information Replay or Information Request)
+
+1. - [8] Typ wiadomości
+- 15 dla żądania informacji (Information Request)
+- 16 dla informacji (Information Replay)
+- [8] Kod
+- 0
+- [16] Suma kontrolna
+2. - [16] Identyfikator
+- [16] Numer sekwencyjny
+
+pola Identyfikator i Numer sekwencyjny są używane do skojarzenia ze sobą żądania informacji i odpowiedzi, wiadomość ta może zostać użyta do stwierdzenia w jakiej sieci się host znajduje; w nagłówku IP w adresie źródłowym pola dotyczące sieci są wyzerowane, podobnie jak cały adres docelowy, odpowiedź musi natomiast mieć te pola prawidłowo wypełnione, w ten sposób host po otrzymaniu odpowiedzi będzie wiedział w jakiej jest sieci
+
+#### IP (Internet Protocol)
+
+HMPTODO
+
+- networksorcery.com: [IP, Internet Protocol](http://www.networksorcery.com/enp/protocol/ip.htm)
+- cisco.com: [Internet Protocols](http://www.cisco.com/univercd/cc/td/doc/cisintwk/ito_doc/ip.htm)
+
+```
+IPv4 header format
++ Bits 0 - 3 4 - 7 8 - 15 16 - 18 19 - 31
+0 Version Header length Type of Service
+(now DiffServ and ECN) Total Length
+32 Identification Flags Fragment Offset
+64 Time to Live Protocol Header Checksum
+96 Source Address
+128 Destination Address
+160 Options
+192
+Data
+```
+
+Każdy pakiet (datagram IP) rozpoczyna się od nagłówka składającego się z sześciu 32-bitowych słów (w nawiasach kwadratowych długość pola nagłówka w bitach):
+
+1.
+  - [4] numer wersji protokołu - obecnie 4
+  - [4] IHL (Internet Header Length) - długość nagłówka wyrażona w ilości słów 32-bitowych (stała wielokrotność 4 bajtów, minimalna długość to 5x4=20 bajtów), pole to jest potrzebne ponieważ nagłówek może mieć różną długość (4 lub 5 słów) ponieważ nagłówek IPv4 może zawierać różną ilość opcji to pole zasadniczo określa offset to the data portion datagramu IPv4. Najmniejszy nagłowek IPv4 ma 20 bajtów długości więc minimalną wartością dziesiętnych jest 5 (5x4 = 20 bajtów). W ten sposób to reprezentuje całkowitą liczbę bajtów zajętych przez nagłowek jako wielokrotność 4 bajtów
+  - [8] typ usługi - wpływa na sposób w jaki zostanie potraktowany pakiet, np. ważne pakiety można oznaczyć etykietą "wysoki priorytet"; W RFC 791, te 8 bitów jest alokowanych do pola Type of Service (ToS) field - obecnie DiffServ and ECN. Pierwotną intencją było, żeby wysyłajacy host mógł określić preferencje jak datagram ma być przetwarzany kiedy idzie przez podsieci, dla przykładu możnaby określić dla danego datagramu niskie opóźnienie dla innego wysoką wiarygodność, w praktyce nie zostało to szeroko zaimplementowane, jednakże wiele pożytku wynikło z eksperymentowania z tymi ośmioma bitami i te bity zostały zredefiniowane przez grupę roboczą DiffServ w IETF i Explicit Congestion Notification codepoints (see RFC 3168).
+- pierwsze 3 bity definiują priorytet (zazwyczaj ignorowane):
+- 0 - (routine) zwykłe dane
+- 1 - datagram priorytetowy
+- 2 - (immediate) natychmiastowy
+- 3 - błyskawiczny
+- 4 - błyskawiczny z pierwszeństwem (flash override)
+- 5 - CRITIC/ECP
+- 6 - kontrola międzysieciowa
+- 7 - informacje krytyczne (informacje kontroli sieci)
+- kolejne trzy bity to flagi oznaczające odpowiednio opóźnienie, przepustowość i niezawodność (zazwyczaj są ignorowane)
+- 0 - wartość normalna
+- 1 - małe opóźnienie, wysoka przepustowość, wysoka niezawodność
+- kolejne dwa bity zarezerwowane do przyszłych zastosowań, nieużywane
+  - [16] wyrażony w bajtach rozmiar pakietu razem z nagłówkiem - ponieważ jest to 16-bitowe pole długość nie może przekraczać 65 536 bajtów (64 KB), minimalną wartością jest 20 bajtów, a minimalną wielkością z jaką musi sobie radzić host jest 576 bajtów. Definiuje rozmiar całego datagramu łącznie nagłówek i dane w bajtach, minimalna wielkość datagramu to 20 bajtów a maksymalna 65535
+2. - [16] identyfikator - jednoznacznie rozróżnia wysyłane pakiety, są to kolejne liczby będące numerami pakietów, jeśli pkiet ulega fragmentacji każda część otrzymuje ten sam numer to pole jest unikalnym identyfikatorem datagramu IP, niektóre eksperymenty dotyczyły użycia tego pola do innych celów takich jak danie informacji śledzenia pakietu w celu wyśledzenia drogi datagramów ze sfałszowanymi adresami źródłowymi.
+- [3] flagi używane do kontrolowania lub identyfikowania fragmentów
+- [1] bit nieużywany, zarezerwowany, musi być zero
+- [1] flaga DF (Dont Fragment) - jeśli jest ustawiona (1) pakiet nie może być dzielony na mniejsze, jeśli zostanie uznany za zbyt duży dla komputera docelowego zostanie skasowany
+- [1] flaga MF (More Fragments) - jeśli jest ustawiona (1) oznacza to, że podczas transmisji pakiet został podzielony na mniejsze, a odebrana paczka jest tylko jego fragmentem; ustawiony na 0 oznacza ostatni (lub jedyny) fragment datagramu
+- [13] początek fragmentu, przesunięcie pakietu - informuje o tym od którego bajtu pierwotnego pakietu zaczyna się dany fragment, dzięki temu możliwe jest odtworzenie pakietu z części, wszystkie fragmenty oprócz pierwszego będą miały niezerową wartość
+pozwala odbierającemu określić miejsce konkretnego fragmentu w oryginalnym datagrami IP mierzone w 8 bajtowych blokach.
+3. - [8] czas życia (TTL - Time To Live) - określa jak długo pakiet będzie przesyłany do kolejnych węzłów sieci, po przejściu przez każdy węzeł jego wartość zmniejsza się o 1 i kiedy osiągnie 0 jest kasowany, pierwotnie ta wielkość określała ilość sekund, obecnie określna ilość skoków (hops).
+- [8] protokół transportowy - jaki sposób transmisji jest przewidziany dla danego pakietu (RFC 1700 wymienia 100 wartości, 0 i 255 są zarezerwowane, od 101 do 254 nie mają przypisań), najważniejsze protokoły to:
+- 1 - ICMP
+- 6 - TCP
+- 17 - UDP
+- [16] suma kontrolna nagłówka - można określić czy nagłówek został przesłany bezbłędnie
+niektóre wartości w datagramie IPv4 zmieniają się z każdym hopem więc suma musi być zawsze przeliczana w czasie drogi.
+4. - [32] adres nadawcy - adres IP komputera źródłowego
+5. - [32] adres odbiorcy - adres IP komputera docelowego, jeśli znajduje się w sieci lokalnej jest od razu przesyłany, jeśli nie wysyłany jest do rutera
+6. dodatkowe pola nagłówka (nazwane opcjami) nie są używane zbyt często, wartość IHL musi zawierać dość 32 bitowych słów by zmieścić wszystkie opcje (plus dopełnienie - padding - konieczne by zapewnić, że nagłówek będzie zajmował liczbę całkowitą 32-bitowych słów; lista opcji może być zakończona opcją EOL (End of Options List) ale jest to potrzebne tylko jeśli koniec opcji nie jest jednocześnie końcem nagłówka użycie LSSR i SSSR (Loose and Strict Source and Record Route) opcji jest odradzane ponieważ powodują problemy bezpieczeństwa, pakiety z nimi są zwykle blokowane przez rutery
+- [32] opcje - informacje specjalne, używane np. do zarządzania siecią; pole to nie musi wystąpić, jeśli jest zawiera opcje formowane po 8 bitów
+- pierwszy bit jest flagą kopiowania, oznacza, że dana opcja ma być skopiowana do każdej części części datagramu podczas ewentualnej fragmentacji (1 - tak; 0 - nie)
+- kolejne dwa bity oznaczają klasę opcji
+- 0 - informacje sterujące
+- 1 - wartość zarezerwowana
+- 2 - informacje testowe
+- 3 - wartość zarezerwowana
+- dalsze pięć bitów oznacza właściwy numer opcji
+- 0 - (End of Option List) koniec listy opcji; zakończenie listy wszystkich opcji w nagłówku, używane jeśli pole opcje jest krótsze niż 32 bity
+- 1 - (No Operation) brak operacji, może być użyty do oddzielenia dwóch podopcji
+- 2 - (Security) opcje bezpieczeństwa; definiuje 16 poziomów bezpieczeństwa (8 zarezerwowanych do przyszłych zastosowań)
+- 3 - (Loose Source Routing) możliwośc zmiany trasy datagramu
+- 7 - (Record Route) zapisywanie trasy przesyłania datagramu
+- 8 - (Stream Identifier) umożliwia przesyłanie 16-bitowego identyfikatora strumienia satnet
+- 9 - (Strict Source Routing) zakaz zmiany trasy przesyłania datagramu
+- wypełnienie - jeśli lista opcji nie zajmie całego przeznaczonego na nią miejsca, wolna przestrzeń zostanie wypełniona zerami do pełnych 32 bitów
+
+**PPP (Point-to-Point Protocol)**
+
+PPP (ang. Point to Point Protocol) jest protokołem używanym najczęściej przy połączeniach modemowych (dial-up), technologii HIS (SDI). PPP może być również skonfigurowany na interfejsie szeregowym asynchronicznym i synchronicznym. Służy również do prostego zestawiania tuneli. Z PPP jest stosowany w technologii WAN. Z protokołem tym wiąże się autoryzacja PAP lub CHAP. Preferowany jest CHAP, ponieważ w przeciwieństwie do PAP używa MD5.
+powszechnie używany do połączenia pomiędzy dwoma węzłami, pierwotnie używany głównie do połączeń przy użyciu lini telefonicznych ale także czasem używany przy połączeniach szerokopasmowych. Wielu ISP używa PPP kiedy zapewnia połączenia dial-up (w internecie zastąpił starszy protokół - SLIP).
+Jest powszechnie używany do działania jako protokół warstwy 2 (warstwa łącza danych modelu OSI) dla połączenia przez synchroniczną i asynchroniczną sieć. PPP został zaprojektowany do pracy z kilkoma protokołami warstwy sieciowej takimi jak IP, IPX i AppleTalk i jest zastępstwem niestandardowego protokołu warstwy drugiej SLIP.
+Został zaprojektowany dużo później niż oryginalna specyfikacja HDCL, w rezultacie twórcy PPP dodali dużo nowych właściwości, których wcześniej nie było w protokołach łącza danych WAN.
+PPP tworzy dwie podwarstwy w warstwie łącza danych w modelu OSI: Link Control Protocol i Network Control Protocol. Do pierwszej podwarstwy można zaliczyć np. autoryzację, a druga odpowiada za komunikację z warstwą sieciową.
+PPP jest opisany w RFC 1661.
+Cechy PPP
+
+- przydział adresów IP
+- kontrola konfiguracji łącza danych modelu OSI
+- multipleksowanie protokołów sieciowych
+- wykrywanie błędów
+- testowanie jakości łącza
+
+Rozszerzona detekcja błędów
+PPP wykorzystuje pola FCS aby wykryć błędy powstałe w ramkach podczas transmisji. PPP monitoruje ilość błędów i może zostać skonfigurowany tak, że kiedy kiedy liczba nieprawidłowych przekazów zbyt wzrośnie, wtedy łącze ulega zerwaniu.
+Dodatkowe opcje PPP
+Protokół kontroli połączenia (ang. link control protocol- LCP) jest integralną częścią PPP zdefiniowaną w RFC i zawiera wykrywanie zapętlonych połączeń. Opiera się to na wykorzystywaniu liczby magicznej (ang. magic number). Każdy z uczestników komunikacji wysyła komunikaty LCP zawierające liczby różniące się liczby. Jeżeli pojawi się połączenie zapętlone, to odbiornik dostanie wysłaną przez siebie wartość. W ten sposób może to wykryć. Częścią specyfikacji PPP jest również protokół IPCP, który pozwala na automatyczne określenie adresów IP lokalnego komputera oraz zdalnej maszyny. Dodatkowo często wykorzystuje się DHCP do przekazywania takich informacji jak adres IP serwera DNS.
+Other PPP features
+Zapewnia haki (hooks) dla automatycznej konfiguracji interfejsu sieci na każdym końcu (wysyłając adres IP, domyślną bramkę itp) i dla uwierzytelnienia (porównaj z DHCP).
+Wykrycie zwrotnego łącza (Looped link detection)
+LCP (Link Control Protocol, integralna część PPP i zdefiniowana w tym samym RFC) zauważa zwrotne łącza (looped links) używając właściwości magicznych numerów (magic numbers). Kiedy używamy PPP koniec (endpoint) wysyła wiadomości PPP LCP, zawierające magiczny numer, który jest odmnienny dla każdego końca i kiedy linia jest zapętlona dostaje wiadomość LCP ze swoim własnym numerem zamiast dostania wiadomości z czymś innym magicznym numerem.
+RFC
+Protokół PPP został opisany przez IETF w specyfikacji RFC 1661. O tamtego czasu liczne RFC opisywały różne aspekty np. uwierzytelnianie, szyfrowanie i metody kompresji, użycie PPP z innymi protokołami
+RFC 1994 opisuje protokół CHAP (ang. Challenge Handshake Authentication Protocol) wykorzystywany w połączeniach dial-up przez dostawców Internetu.
+RFC 2516 definiuje PPPoE, czyli wersję PPP, gdzie połączenie między modemem DSL lub ADSL i komputerem jest realizowane poprzez Ethernet.
+RFC 2364 opisuje PPPoA, metodę transmisji PPP przez ATM Adaptation Layer 5 (AAL5) znaną też jako PPPoATM (PPP over ATM).
+Implementacje PPP
+W Linuksie i inny Uniksach obsługa protokołu PPP jest możliwa dzięki demonowi pppd.
+PPP frame
+
+- Flaga [1] oznacza początek lub koniec ramki
+- Adres [1] adres rozgłoszeniowy
+- Kontrola [1] bajt kontrolny
+- Protokół [2] określa protokół w polu danych
+- Dane [zmienna (od 0)] zawiera datagram
+- FCS [2 (rzadziej 4)] suma kontrolna, kontrola błędów
+
+**TCP (Transfer Control Protocol)**
+
+W celu ustanowienia sesji mus najpier nastąpić TCP handshake, który składa się z reguł przestrzeganych po obu stronach do ustanawiania i kończenia połączenia używa mechanizmu zwanego znacznikami (ang. flags), które są umieszczone w nagłówku. Wymieniając pakiety serwery muszą potwierdzić każdy znacznik co umożliwia rozpoznanie kiedy proces połączenia jest zakończony i utrudnia przejęcie sesji przez atakującego
+w nagłówkach są tzw. bity znaczników (flag bits)
+
+Nawiązanie połączenia (trzyetapowe uzgadnianie połączenia - three-way handshake, triple handshake
+
+1. klient wysyła znacznik SYN i numer portu, którego cce używać podczas sesji, pakiet zawiera również ISN (Initial Sequence Number - numer początkowy sesji) klienta
+2. odpowiada własnym SYN (oznacza, że jest gotowy do połączenia) oraz ISN do portu klienta, odpowiada również ACK dla potwierdzenia znacznika SYN wysłanego przez klienta
+3. odpowiada używając znacznika w celu potwierdzenia w celu potwierdzenia SYN otrzymanego od serwera
+
+```
+SYN ----->
+klient<----- SYN ACKserwer
+ACK ----->
+```
+
+Protokoły warstwy aplikacji mogą teraz wysyłać dane używając tego połączenia TCP
+
+Kończenie połączenia (może zostać zainicjowane przez klienta lub przez serwer)
+
+1. kończący wysyła znacznik FIN, zazwyczaj wysyłany jest do klienta w odpowiedzi na wydanie polecenia close w aplikacji serwera, tzw. active close czyli czynne kończenie połączenia.
+ustawiony jest tam również ACK potwierdzający odebranie poprzedniego pakietu
+2. odpowiada przy użyciu znacznika FIN w celu potwierdzenia, że połączenie będzie zakończone
+3. kończący wysyła znacznik FIN, jest to często nazywane biernym zakończeniem połączenia (passive close)
+4. odpowiada znacznikiem ACK w celu potwierdzenia, że połączenie TCP jest zakończone
+
+```
+FIN ------>
+<-----ACK
+FIN ------>
+<-----ACK
+```
+
+Jeśli system A kończy połączenie a system B nadal ma dane do wysłania jest to połączenie półzamknięte i trwa do momentu, gdy B wyśle FIN ACK a A odpowie ACK
+
+Nagłówek TCP (w nawiasach kwadratowych długość pola nagłówka w bitach):
+
+1. - [16] port nadawcy
+- [16] port odbiorcy
+2. - [32] numer sekwencyjny, kolejny - spełnia taką samą rolę jak "identyfikator" w nagłówku IP: jest rodzajem licznika określającym bieżący stan transmisji danych
+3. - [32] numer potwierdzenia - przesyłany do odbiorcy dla potwierdzenia otrzymania informacji, dzięki temu nadawanie i potwierdzanie odbioru są zsynchronizowane; jeśli ustawiony jest bit ACK pole to zawiera klejny numer sekwencyjny oczekiwany przez host odbierający dane
+4. - [4] przesunięcie danych - zawiera liczbę słów 32-bitowych składających się na nagłówek TCP określa jego długość; wielkość nagłowka może być różna ze względu na możliwą zmienną liczbę opcji
+- [6] zarezerwowane dla przyszłych zastosowań - wszystkie muszą być ustawione na zero
+- [1] flaga URG - 1 oznacza ważność pola "wskaźnik pilności" pilny
+- [1] flaga ACK - 1 oznacza ważność pola "numer potwierdzenia" potwierdzenie otrzymania poprzedniego pakietu "usłyszałem cię"
+- [1] flaga PSH - 1 oznacza wykonanie funkcji push wysyłanie danych
+- [1] flaga RST - 1 oznacza wykonanie resetu połączenia zerwanie połączenia
+- [1] flaga SYN - 1 oznacza wykonanie synchronizacji numerów sekwencyjnych numery synchronizacji sekwencji, używane w celu ustanowienia połączenia zainicjowanie sesji, "chciałbym porozmawiać"
+- [1] flaga FIN - 1 oznacza koniec transmisji (koniec danych) nadawca zakończył połączenie, używane w celu zakończenia połączenia
+- [16] szerokość okna - pozwala odbiorcy poinformować nadawcę ile bajtów jest w stanie odebrać w danej chwili; ilość oktetów możliwych do zakceptowania przez host wysyłający bieżący fragment
+5. - [16] suma kontrolna - informuje czy transmisja przebiegła bezbłędnie, pozwala wykryć ewentualne przekłamania danych (obliczana dla całego pakietu łącznie z nagłówkiem i tzw. pseudonagłówkiem)
+- [16] wskaźnik priorytetu - np. wskaźnik "wysoki priorytet" pozwala wyróżnić wiadomości, które sa szczególnie ważne, np. informacje o zakłóceniach w pracy sieci, ma znaczenie tylko jeśli jest ustawiona flaga URG, specyfikuje ona położenie ważnych danych w przesyłanym segmencie; wartość ta nie ma żadnego znaczenia dla samego protokołu TCP, może jednak być interpretowana przez aplikację wyższego poziomu
+6. - [32] opcje - lista opcji nie jest ustalona i może się zmieniać, niezależnie od ilości są one w całości uwzględniane przy liczeniu sumy kontrolnej; istnieją dwa możliwe formaty opcji:
+
+- pojedynczy oktet specyfikujący rodzaj opcji
+- oktet specyfikujący rodzaj opcji, podający długość opcji, oktety danych opcji
+
+aktualnie zdefiniowane rodzaje opcji są następujące:
+- 0 - (End of Option List) koniec listy opcji; (postać: 000000) oznacza, że lista opcji się skończyła, można go użyć tylko wówczas jeśli lista opcji się skończyła a nie po każdej z nich oraz jeśli koniec opcji nie oznacza jednocześnie końca nagłowka TCP
+- 1 - (No Operation) brak operacji, nic nie rób; (postać: 00000001) może być używany między innymi opcjami dla ich logicznego rozdzielenia, jednak takie rozdzielenie nie jest obligatoryjne i host odbierający musi być przygotowany do obsługi listy opcji nie zawierającej znaczników rozdzielających
+- 2 - (Maximum segment size) maksymalny rozmiar segmentu (postać: 00000010 00000100) pierwszy bajt to rodzaj opcji drugi określa jej długość w oktetach (tu jest to cztery), dalej następują dwa bity danych, opcja ta na 16 bitach danych określa maksymalny rozmiar segmentu danych przyjmowany przez dany host; informacja ta wysyłana jest jedynie podczas inicjowania połączenia logicznego; jeśli nie jest używana oznacza to, że dozwolone są dowolne rozmiary segmentów
+- znak wypełnienia - opcje muszą zajmować wielokrotność 32-bitowych słów, jeśli zajmują mniej pozostałe miejsce zajmuje tzw. wypełnienie, czyli wolne bity wypełnia się zerami
+
+Tzw. pseudonagłówek składajacy się z trzech 32-bitowych słów (w nawiasach kwadratowych długość pola nagłówka w bitach):
+
+1. - [32] adres źródłowy
+2. - [32] adres docelowy
+3. - [] zero
+- [] protokół
+- [] długość nagłówka
+
+Poszczególne implementacje mogą różnić się w szczegółach jeśli chodzi o implementację interfejsu, niemniej każda z nich musi obsługiwać pewien standardowy zestaw usług tak by zagwarantować odpowiednią hierarchię protokołów. Oprócz przyjmowania komend musi również zwrócić pewne informacje o swoich usługach, można podzielić je na dwie grupy:
+
+- ogólne informacje o połączeniu (np. o przerwaniu czy zamknięciu)
+- odpowiedzi na otrzymane komendy informujące o tym czy zakończyły się sukcesem czy porażką (kod błędu)
+
+Poszczególne polecenia TCP.
+
+OPEN
+
+OPEN (port lokalny, gniazdo docelowe, flaga active/passive [, timeout] [, precedense] [, security/compartment] [, options])
+identyfikacja procesów i sprawdzanie praw do używania konkretnych połączeń, w zależności od implementacji identyfikatory będą dostarczane albo przez TCP albo przez protokół warstwy niższej (np. IP)
+flaga ustawiona na passive oznacza, że system ma oczekiwać na połączenia przychodzące, jeśli zdefiniuje się gniazda system będzie oczekiwał tylko na określonych gniazdach, jeśli nie zostanie zdefiniowane będzie przyjmował wszystkie połączenia
+flaga ustawiona na active - TCP od razu zacznie procedurę synchronizacji i nawiązania połączenia
+timeout (opcjonalnie) zdefiniowanie czasu w jaki wiadomość musi zostać dostarczona, w przeciwnym wypadku połaczenie zostanie przerwane; domyślnie 5 minut
+sprawdzanie uprawnień użytkownika do otwarcia połączenia z daną "ważnością" (precedence) oraz jego poziom bezpieczeństwa, jeśli w wywołaniu nie zostaną podane parametry zostaną użyte wartości domyślne; protokół przymie połaczenie tylko wtedy jeśli security/compartment po obu stronach są takie same oraz kiedy ważność jest taka sama lub większa niż w wywołaniu open
+po uzyskaniu poprawnego połączenia użytkownikowi zostanie zwrócona jego nazwa, która może być używana do jego definiowania zamiast pary (gniazdo lokalne/gniazdo zewnętrzne).
+
+SEND
+
+SEND (lokalna nazwa połączenia, adres bufora, ilość danych, flaga PUSH, flaga URGENT [, timeout])
+wysłanie danych z bufora, którego adres podany jest w parametrach do wyspecyfikowanego połączenia
+jeśli połączenie nie zostało wcześniej otwarte zwykle zgłoszony jest błąd, jednak niektóre implementacje mogą automatycznie wywołać open, jeśli proces wywołujący send nie jest uprawniony do korzystania z danego połączenia zgłoszony jest błąd
+ustawienie flagi PUSH - dane mają być transmitowane do systemu odbierającego natychmiast oraz, że flaga ta będzie dodana do ostatniego segmentu TCP tworzonego w buforze; jeśli ta flaga nie jest ustawiona dane mogą być składane z danymi z równoległych procesów wywołujących funkcję SEND w celu zwiększenia efektywności transmisji
+ustawienie flagi URGENT - segmenty wysyłane do portu przeznaczenia będą miały dodatkowy wskaźnik URGENT, który zostanie przekazany przez TCP do procesu, który żądał danych, jeśli ich wcześniejsza porcja nie została jeszcze przetworzona, wymusza to przetwarzanie pilnych danych przez proces odbierający, jeśli dane są przetwarzane na bieżąco TCP nie przekazuje wskaźnika do procesu
+timeout - jego podanie zmieni wartość domyślną; w najprostszej implementacji funkcja SEND nie zwróci sterowania dopóki transmisja nie zakończy się sukcesem lub nie nastąpi przekroczenie czasu podane parametrem timeout, ale jeśli z obu stron połączenia następują próby wysyłania a żaden proces nie odbiera danych może nastąpić zablokowanie więc bardziej zaawansowane systemy zwracają sterowanie do procesu od razu po wywołaniu, dzięki temu proces może kontrolować jednocześnie wysyłanie kilku segmentów danych
+
+RECEIVE
+
+RECEIVE (lokalna nazwa połączenia, adres bufora, wielkość bufora)
+Przydziela bufor pamięci dla podanego połączenia; jeśli nie otwarto wcześniej połaczenia poleceniem OPEN lub proces nie ma uprawnień do korzystania z połączenia identyfikowanego przez parametr nazwa wygenerowany zostanie błąd
+zakończenie występuje tak samo jak w SEND
+bufor przyjmuje tyle danych ile wynosi jego wielkość a potem przekazuje je do procesu, jeśli otrzymany zostanie sygnał PUSH nastąpi bezzwłoczne przekazanie danych do procesu wraz z informacją o przyczynie
+
+CLOSE
+
+CLOSE (lokalna nazwa połączenia)
+zamknięcie połączenia; jeśli nie zostało wcześniej otwarte lub proces nie ma uprawnień do zamknięcia podanego w parametrze połączenia zostanie wygenerowany błąd
+najpierw zostaną wysłane ostatnie dane, jeśli jakieś są w buforze, proces musi też nadal odbierać dane, których nie zakończył wysyłać nadawca, fizyczne zamknięcie kanału nastąpi dopiero po uzgodnieniu przez oba procesy, że nie ma już żadnych danych do wysłania
+gdy proces inicjujący zamknięcie z jakichś powodów nie może przyjąć ostatnich danych CLOSE generuje sygnał ABOR
+
+STATUS
+
+STATUS (lokalna nazwa połączenia)
+podaje bieżące informacje o stanie połączenia opierając się na danych zawartych w bloku kontroli transmisji
+
+- gniazdo lokalne (local socket)
+- gniazdo zewnętrzne (foreign socket)
+- lokalna nazwa połączenia (local connection name)
+- okno odbioru (receive window)
+- okno wysyłania (send window)
+- stan połączenia (connection state)
+- ilość buforów oczekujących na potwierdzenia (number of buffers awaiting acknoledgement)
+- liczba buforów w trakcie odbioru (number of buffers pending receipt)
+- stan wskaźnika pilności (urgent state)
+- pierwszeństwo (precedence)
+- opcje bezpieczeństwa (security options)
+- timeout (transmission timeout)
+
+w zależności od stanu połączenia lub implementacji część wskaźników może nie być dostępna lub nie mieć znaczenia
+informacje o połączeniu mogą uzyskać tylko procesy mające odpowiednie uprawnienia
+
+ABOR
+
+ABOR (lokalna nazwa połączenia)
+natychmiastowe przerwanie wykonywania będących w użyciu funkcji SEND i RECEIVE, usunięcie bloku kontroli transmisji oraz wysłanie sygnału RESET do procesu po drugiej stronie połączenia
+w zależności od implementacji użytkownik otrzyma potwierdzenie wykonania ABOR dla każdego będącego w toku wykonywania polecenia SEND i RECEIVE lub jedno wspólne dla całego połączenia
+
+#### UDP (User Datagram Protocol)
+
+Nagłówek składa się z dwóch 32-bitowych słów, po których następuje ciąg danych (w nawiasach kwadratowych ilość bitów):
+
+1. - [16] port źródłowy (source port) - port z którego korzysta proces wysyłający, wypełnienie tego pola jest opcjonalne, może być tam wartość zero; należy podać jeśli wymagamy odpowiedzi od hosta odbierającego
+- [16] port przeznaczenia (destination port) - port pod który jest wysyłany datagram
+2. - [16] długość - wielkość datagramu (łącznie z nagłówkiem) w bajtach; minimalna wielkość to 8
+- [16] suma kontrolna nagłówka - liczona tak samo jak w przypadku TCP; jeśli pole to zawiera zero system odbierający będzie to traktował jakby host wysyłający nie wyliczył sumy (nawet jeśli rzeczywiście wynosi zero) gdyż protokół wyższego poziomu tego nie wymagał
+
+Przed nagłówkiem właściwym znajduje się tzw. pseudonagłowek, składający się z trzech 32-bitowych słów (w nawiasach kwadratowych ilość bitów):
+
+1. - [32] adres źródłowy
+2. - [32] adres przeznaczenia
+3. - [] zera
+- [] protokół
+- [] długość UDP
+
+### Materiały
+
+#### Artykuły
+
+- Magazyn Internet: Jarosław Rafa "Internet od podstaw" cz 1-2 3-4/97; Marcin Kuchniak"Geneza i rozwój internetu" cz 1-2 7/8-9/97; Jacek Prucia "Sieciowe adresy" 8/98; Tomasz Tatar "Sekrety routingu" 11/98; Marcin Lis "Protokoły TCP/IP" cz 1-9 7-8/97-6/98
+- CHIP: Marcin Pawlak "Tajemnicze rozmowy przeglądarki", Cztery liczby, które zawładnęły światem" 2/99; Marcin Pawlak "Nowy Internet?" 7/99; Piotr Daniszewski "W stogu siana" 8/00; Artur Nowicki "Tajniki TCP/IP" 11/00; Marcin Nowak, Marcin Pawlak "WWW dla wszystkich" 9/99; Grzegorz Dąbrowski "NATura sieci" 1/03; Marcin Nowak "Jaki to komputer" 4/04;
+- Komputer Świat: KW "Apacz w pececie" 2/2003
+- .net: Marek Dudkowski "Jak robią to karty sieciowe" 7/00;
+
+#### Książki
+
+- [Aeleen Frisch "UNIX - Administracja systemu. Wydanie trzecie"](#)
+- [Matt Welsh, Matthias Kalle Dalheimer & Lar Kaufman "Linux"](#)
+- ["Linux Network Administrator's Guide"](#)
+- [Craig Hunt "TCP/IP Network Administration"](#)
+- [Cricket Liu, Paul Albitz "DNS i BIND"](#)
+- [Douglas Comer "Internetworking with TCP/IP"](#)
+- [W. Richard Stevens "TCP/IP Ilustrated"](#)
+
+#### Odnośniki
+
+- Wikipedia: [IPv4 (eng.)](http://en.wikipedia.org/wiki/IPv4), [IPv4 (pl.)](http://pl.wikipedia.org/wiki/IPv4), [IPv6 (eng.)](http://en.wikipedia.org/wiki/IPv6), [IPv6 (pl.)](http://pl.wikipedia.org/wiki/IPv6), [Internet_Protocol (eng.)](http://en.wikipedia.org/wiki/Internet_Protocol), [IP (pl.)](http://pl.wikipedia.org/wiki/IP), [IP_address (eng.)](http://en.wikipedia.org/wiki/IP_address), [Internet_Control_Message_Protocol (eng.](http://en.wikipedia.org/wiki/Internet_Control_Message_Protocol), [IANA (eng.)](http://en.wikipedia.org/wiki/IANA), [IANA (pl.)](http://pl.wikipedia.org/wiki/IANA), [InterNIC (eng.)](http://en.wikipedia.org/wiki/InterNIC), [IETF (eng.)](http://en.wikipedia.org/wiki/IETF), [IETF (pl.)](http://pl.wikipedia.org/wiki/IETF), [Simple_Network_Management_Protocol (eng.)](http://en.wikipedia.org/wiki/Simple_Network_Management_Protocol), [SNMP (.pl)](http://pl.wikipedia.org/wiki/SNMP), [DNS (pl.)](http://pl.wikipedia.org/wiki/DNS), [Domain_Name_System (eng.)](http://en.wikipedia.org/wiki/Domain_Name_System), [Internet_protocol_suite (eng.)](http://en.wikipedia.org/wiki/Internet_protocol_suite), [TCP-IP (pl.)](http://pl.wikipedia.org/wiki/TCP-IP), [Transmission_Control_Protocol (ang.)](http://en.wikipedia.org/wiki/Transmission_Control_Protocol), [TCP (pl.)](http://pl.wikipedia.org/wiki/TCP), [User_Datagram_Protocol](http://en.wikipedia.org/wiki/User_Datagram_Protocol), [Address_Resolution_Protocol (eng.)](http://en.wikipedia.org/wiki/Address_Resolution_Protocol), [Internet_Society (pl.)](http://pl.wikipedia.org/wiki/Internet_Society), [Internet_Society (eng.)](http://en.wikipedia.org/wiki/Internet_Society), [Classless Inter-Domain Routing (eng.)](http://en.wikipedia.org/wiki/CIDR), [DHCP (pl.)](http://pl.wikipedia.org/wiki/DHCP), [Dynamic_Host_Configuration_Protocol (emg.)](http://en.wikipedia.org/wiki/Dynamic_Host_Configuration_Protocol), [NAT (eng.)](http://en.wikipedia.org/wiki/NAT), [NAT (pl.)](http://pl.wikipedia.org/wiki/NAT), [Classes_of_IP_addresses (eng.)](http://en.wikipedia.org/wiki/Classes_of_IP_addresses), [Subnetwork (eng.)](http://en.wikipedia.org/wiki/Subnetwork), [Url (eng.)](http://en.wikipedia.org/wiki/Url), [Uniform_Resource_Identifier (eng.)](http://en.wikipedia.org/wiki/Uniform_Resource_Identifier), [FQDN (eng.)](http://en.wikipedia.org/wiki/FQDN), [Firewall_(networking) (eng.)](http://en.wikipedia.org/wiki/Firewall_(networking)), [URL_(informatyka) (pl.)](http://pl.wikipedia.org/wiki/URL_(informatyka)), [URI (pl.)](http://pl.wikipedia.org/wiki/URI), [Zapora_sieciowa (pl.)](http://pl.wikipedia.org/wiki/Zapora_sieciowa), [Network_address_translation (eng.)](http://en.wikipedia.org/wiki/Network_address_translation), [Port_address_translation (eng.)](http://en.wikipedia.org/wiki/Port_address_translation), [Routing (eng.)](http://en.wikipedia.org/wiki/Routing), [Stateful_firewall (eng.)](http://en.wikipedia.org/wiki/Stateful_firewall), [Stateless_firewall (eng.)](http://en.wikipedia.org/wiki/Stateless_firewall), [Netfilter (eng.)](http://en.wikipedia.org/wiki/Netfilter), [Bastion_Host (eng.)](http://en.wikipedia.org/wiki/Bastion_Host), [Demilitarized_Zone (eng.)](http://en.wikipedia.org/wiki/Demilitarized_Zone), [Routing (.pl)](http://pl.wikipedia.org/wiki/Routing), [Network_layer_firewall (eng.)](http://en.wikipedia.org/wiki/Network_layer_firewall), [Proxy_server (eng.)](http://en.wikipedia.org/wiki/Proxy_server), [URN (pl.)](http://pl.wikipedia.org/wiki/URN), [URN (eng.)](http://en.wikipedia.org/wiki/URN), [Application_layer_firewall (eng.)](http://en.wikipedia.org/wiki/Application_layer_firewall), [Router (eng.)](http://en.wikipedia.org/wiki/Router), [Koncentrator (pl.)](http://pl.wikipedia.org/wiki/Koncentrator), [Router (pl.)](http://pl.wikipedia.org/wiki/Router), [Hub (eng.)](http://en.wikipedia.org/wiki/Hub), [Hub (pl.)](http://pl.wikipedia.org/wiki/Hub), [Switch (pl.)](http://pl.wikipedia.org/wiki/Switch), [Switches (eng.)](http://en.wikipedia.org/wiki/Switches), [Modem (pl.)](http://pl.wikipedia.org/wiki/Modem), [Modem (eng.)](http://en.wikipedia.org/wiki/Modem), [Point-to-Point_Protocol (eng.)](http://en.wikipedia.org/wiki/Point-to-Point_Protocol), [PPP (pl.)](http://pl.wikipedia.org/wiki/PPP), [Server (eng.)](http://en.wikipedia.org/wiki/Server), [Client-server (eng.)](http://en.wikipedia.org/wiki/Client-server), [Client_(computing) (eng.)](http://en.wikipedia.org/wiki/Client_(computing)), [Serwer (pl.)](http://pl.wikipedia.org/wiki/Serwer), [Serwer_internetowy (pl.)](http://pl.wikipedia.org/wiki/Serwer_internetowy), [Host (pl.)](http://pl.wikipedia.org/wiki/Host), [Host (eng.)](http://en.wikipedia.org/wiki/Host), [Sieć_rozległa](http://pl.wikipedia.org/wiki/Sieć_rozległa), [Wide_area_network](http://en.wikipedia.org/wiki/Wide_area_network), [Sieć_lokalna](http://pl.wikipedia.org/wiki/Sieć_lokalna), [Local_area_network](http://en.wikipedia.org/wiki/Local_area_network), [Ethernet (eng.)](http://en.wikipedia.org/wiki/Ethernet), [Ethernet (pl.)](http://pl.wikipedia.org/wiki/Ethernet), [Wi-Fi (eng.)](http://en.wikipedia.org/wiki/Wi-Fi), [WiFi (pl.)](http://pl.wikipedia.org/wiki/WiFi), [Token_ring (eng.)](http://en.wikipedia.org/wiki/Token_ring), [Token_Ring (pl.)](http://pl.wikipedia.org/wiki/Token_Ring), [Fiber_distributed_data_interface (eng.)](http://en.wikipedia.org/wiki/Fiber_distributed_data_interface), [FDDI (pl.)](http://pl.wikipedia.org/wiki/FDDI), [Internet_Society (pl.)](http://pl.wikipedia.org/wiki/Internet_Society), [Internet_Society (eng.)](http://en.wikipedia.org/wiki/Internet_Society), [InterNIC (eng.)](http://en.wikipedia.org/wiki/InterNIC), [IANA (eng.)](http://en.wikipedia.org/wiki/IANA), [Internet_protocol_suite](http://en.wikipedia.org/wiki/Internet_protocol_suite), [IP_address](http://en.wikipedia.org/wiki/IP_address), [IPv4](http://en.wikipedia.org/wiki/IPv4), [IETF (eng.)](http://en.wikipedia.org/wiki/IETF), [Classful_network (eng.)](http://en.wikipedia.org/wiki/Classful_network)
+- CHIP.pl: [Nowy Internet? [1999-07-01]](http://www.chip.pl/archiwum/article_36754.html), [Tak działa TCP/IP [1997-10-01]](http://www.chip.pl/archiwum/article_30916.html), [W stogu siana [2000-08-10]](http://www.chip.pl/archiwum/article_11769.html)
+- [Index for /home/suod/tor/working/saclass/Slides/tcpip](http://bio3d.colorado.edu/~tor/sadocs/tcpip/index.html)
+- CHIP.pl: [Okna otwarte dla Pingwina [2005-05-10]](http://www.chip.pl/arts/n/article_131712.html) [Na straży sieci [2005-06-22]](http://www.chip.pl/arts/n/article_134990.html), [Bo pula się wyczerpuje [2005-07-28]](http://www.chip.pl/arts/n/article_138314.html)
+- [Governing the Internet](http://www.astalavista.com//data/governing_the_internet.htm)
+- [Internetworking Models](http://www.astalavista.com//data/models.shtml)
+- [System nazw domen (DNS) i konfiguracja serwera DNS (program BIND)](http://www.math.uni.lodz.pl/~polrola/strony/piiss/dns.html)
+- [HOWTO.PL: Lista stron](http://www.howto.pl/modules.php?name=Content)
+- Webdeweloper.pl - Bezpieczne sieci: [(1)](http://webdeveloper.pl/bezpieczne_sieci__1,123,1,1,pl.html), [(2)](http://webdeveloper.pl/bezpieczne_sieci__2,124,1,1,pl.html)
+- [Optymalizacja połączeń internetowych - wybrane parametry](http://www.agavk.p9.pl/strony/inter_mtu.php)
+- [Budujemy Firewall](http://www.clico.pl/software/checkpoint/html/budujemy_firewall.html) - (1997)
+- haking.pl: [Sniffowanie w sieciach przełączanych](http://www.haking.pl/pl/tutorials/switch/switch.html)
+
+- [The Independent: Dekada internetu](http://wiadomosci.o2.pl/?s=514&t=4218)
+- Bleeping Computer: [Basic Internet Concepts](http://www.bleepingcomputer.com/forums/index.php?act=Tutorials&CODE=01&CID=16), [Intermediate Internet Concepts](http://www.bleepingcomputer.com/forums/index.php?act=Tutorials&CODE=01&CID=39), [Advanced Internet Concepts](http://www.bleepingcomputer.com/forums/index.php?act=Tutorials&CODE=01&CID=17)
+
+##### DNS
+
+- [The DNS GLOSSARY](http://www.menandmice.com/online_docs_and_faq/glossary/glossarytoc.htm)
+- hacking.pl: [Zmiany w domenie .com [2006-03-02]](http://hacking.pl/5789), [Rozwiązania dynamicznej aktualizacji IP [2006-03-19]](http://hacking.pl/5851)
+
+##### TCP/IP
+
+- [Unix System Administration: PART II Network Services](http://wks.uts.ohio-state.edu/sysadm_course/html/sysadm-294.html) - [18.6.2 Internet (IP) address](http://wks.uts.ohio-state.edu/sysadm_course/html/sysadm-341.html)
+- About.com: [Wireless / Networking](http://compnetworking.about.com/)
+- [Network Sorcery, Inc. - RFC Sourcebook](http://www.networksorcery.com/enp/default.htm)
+- [The TCP/IP Guide](http://www.tcpipguide.com/free/index.htm) - [IP Protocol suite](http://www.networksorcery.com/enp/topic/ipsuite.htm)
+- Cisco Systems, Inc.: [Internetworking Technology Handbook](http://www.cisco.com/univercd/cc/td/doc/cisintwk/ito_doc/index.htm)
+- [Internet Protocol (RFC 791)](http://www.ietf.org/rfc/rfc0791.txt)
+- searchWebServices.com Definitions: [IP address](http://searchwebservices.techtarget.com/sDefinition/0,,sid26_gci212381,00.html)
+- Sangoma Technologies Corp.: [TCP/IP and IPX routing Tutorial](http://www.sangoma.com/fguide.htm)
+- [Connected: An Internet Encyclopedia](http://www.freesoft.org/CIE/index.htm)
+- networld.pl: [Protokoły routingu (wersja do wydruku)](http://www.networld.pl/nws/artykuly_txt/20910.html)
+- [8.3.2 Transmission Control Protocol - TCP](http://rainbow.mimuw.edu.pl/SO/Linux/Temat08/TCP.html)
+- [HOWTO's from Hell: Managing Core Network Services](http://www.microsoft.com/technet/prodtechnol/windowsserver2003/library/ServerHelp/30722e6f-ac62-44b4-839a-30e985b10d76.mspx)
+- O'Reilly Linux DevCenter Blog: [IPv6 For Real](http://www.oreillynet.com/linux/blog/2006/09/ipv6_for_real_1.html)
+- freeCodeCamp.org [Victoria Drake "What is the TCP/IP Model? Layers and Protocols Explained"](https://www.freecodecamp.org/news/what-is-tcp-ip-layers-and-protocols-explained/)
+
+##### Organizacje
+
+- [A Concise Guide to the Major Internet Bodies](http://www.acm.org/ubiquity/views/v6i5_simoneli.html)
+
+<!-- http://www.nask.org.pl http://www.apnic.net http://www.iahc.org http://www.ripe.net http://www.iana.org http://www.ietf.org http://www.iab.org http://info.iso.org http://rs.internic.net http://www.terena.org.info http://far.mit.edu/diig/Surveys/fnc.html http://www.w3.org/pub/WWW/Consortium/Prospectus/FAQ.html http://www.digi.de http://www.w3.org/pub/WWW/Press/Backgrounder.html http://www.networkcomputing.com/ [NetworkWorld.com](http://www.networkworld.com/) ISC: [Dynamic Host Configuration Protocol (DHCP)](http://www.isc.org/index.pl?/sw/dhcp/) [RASPPPOE](http://www.raspppoe.com/) [FreeBSD.hello.pl](http://www.freebsd.hello.pl/) -->

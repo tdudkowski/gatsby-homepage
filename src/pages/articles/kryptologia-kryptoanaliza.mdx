@@ -1,0 +1,85 @@
+---
+title: "Kryptoanaliza"
+comment: ""
+section: "it"
+subsection: "kryptologia"
+---
+
+### Zadanie
+
+Kryptoanaliza (Cryptanalysis z greckiego _kryptós_, "ukryty", i _analyein_, "rozwiązać") jest badaniem metod otrzymania znaczenia treści zaszyfrowanej wiadomości, bez dostępu do tajnej informacji, która normalnie jest do tego wymagana. Najczęściej chodzi o znalezienie tajnego klucza. Mówiąc nietechnicznie: jest to praktyka łamania kodu (_codebreaking_ lub _cracking the code_) chociaż te wyrażenia mają również specjalistyczne znaczenie.
+
+Oznacza także nie tylko próby ujawnienia treści zaszyfrowanych wiadomości, ale również złamanie bezpieczeństwa algorytmów i protokołów kryptograficznych. Zwykle jednak wyklucza ataki, które nie są skierowane na rzeczywiste słabości kryptografii: metody takie jak przekupstwo, fizyczne wymuszenie, kradzież, keylogging itp.
+Chociaż te typy ataków są ważne w bezpieczeństwie informacji i obecnie są bardziej efektywne niż tradycyjna kryptoanaliza.
+
+Wprawdzie cel jest ten sam, metody i techniki zmieniły się drastycznie, zwiększając złożoność od metod wymagających pióra i papieru poprzez maszyny takie jak Enigma, aż po współczesne metody komputerowe. Nawet rezultaty kryptografii się zmieniły - nie jest już możliwy nieograniczony sukces w łamaniu szyfrów. Istnieje hierarchiczna klasyfikacja określająca co składa się na atak.
+W połowie lat 70-tych pojawiła się nowa klasa kryptografii - asymetryczna, metody jej łamania są całkowicie odmienne i zwykle polegają na rozwiązywaniu czysto matematycznych problemów. Najbardziej znanym jest faktoryzacja liczb całkowitych.
+
+Może wyglądać na naturalnego przeciwnika kryptologii i do pewnego stopnia tak jest. Można widzieć ich rywalizację w historii kryptografii. Jednak bardziej precyzyjne będzie interpretowanie ich ról jako uzupełniających się - gruntowne zrozumienie kryptoanalizy jest konieczne do stworzenia bezpiecznej kryptografii.
+
+Ze względu na różnorodność ataków kryptoanalitycznych wygodnie jest je sklasyfikować.
+Rozważa się co atakujący może wiedzieć i zrobić, by dowiedzieć się jaka jest tajna wiadomość, np. czy ma dostęp tylko do szyfrogramów, czy może dowiedzieć się, lub odgadnąć jakieś korespondujące z nim jawne teksty; lub czy może wybrać jakiś arbitralny jawny tekst do zaszyfrowania (ciphertext only, znany jawny tekst, wybrany jawny tekst). Te scenariusze traktuja wszystkie szyfry jako abstrakcyjne czarne skrzynki.
+Inne ataki są bazowane na implementacji szyfru, jeśli jest dostęp np. do timingu[?] lub zużycia mocy można złamać szyfry nie do złamania innymi metodami.
+Jeśli kryptosystem używa klucza lub hasła jest narażony na BF, najczęściej jest to najsłabszy punkt takiego systemu, liniowa lub różnicowa analiza dotyczy kryptografii symetrycznej. Jeśli kryptografia polega na trudnych problemach matematycznych, algorytmy zadań takich jak faktoring stają się potencjalnymi narzędziami kryptoanalizy.
+
+### Ataki
+
+Charakterystyka ataków:
+Różnią się w możliwościach i jakim są zagrożeniem dla kryptosystemów, _certificational weakness_ jest teoretycznym atakiem, który prawdopodobnie nie znajdzie zastosowania w realnym świecie, większość rezultatów obecnej kryptoanalizy jest tego typu.
+Praktyczne znaczenie ataku jest zależne od odpowiedzi na poniższe trzy pytania:
+
+- Jaka wiedza i możliwości są potrzebne jako warunek wstępny? (co jest potrzebne do ataku?)
+- Ile dodatkowej tajnej wiedzy można wywnioskować? (czego można się dowiedzieć?)
+- Jaki wysiłek jest wymagany? (jaka jest złożoność obliczeniowa?)
+
+Uprzednia wiedza - scenariusze dla kryptoanalizy
+Kryptoanaliza może zostać przeprowadzona pod pewną ilością założeń, co do tego, ile może zostać zaobserwowane lub odkryte o atakowanym systemie. Podstawowym punktem startowym jest założenie, że ogólny algorytm jest znany. Jest to zasada Shannona "_wróg zna system_". Jest to praktyczne i uzasadnione przypuszczenie, ponieważ z historii znana jest olbrzymia ilość tajnych algorytmów, które zostały szerzej poznane (szpiegostwo, zdrada lub odwrotna inżynieria) - czasem na skutek prostej dedukcji np. szyfr Lorenza i japoński kod purpurowy i wiele klasycznych mechanizmów.
+
+Inne założenia:
+
+- Znany szyfrogram (_Ciphertext-only_): atakujący ma dostęp do zbioru szyfrogramów lub kodowanych tekstów.
+- Znany jawny tekst (_Known-plaintext_): ma zestaw szyfrogramów i korespondujących z nimi jawnych tekstów.
+- Wybrany jawny tekst (wybrany szyfrogram) (_Chosen-plaintext (chosen-ciphertext)_): atakujący może otrzymać szyfrogram (jawny tekst) odpowiadający wybranemu przez niego jawnemu tekstowi (szyfrogramowi).
+- (_Adaptive chosen-plaintext_): jak w powyższym, z tym, że atakujący może wybrać następny jawny tekst na podstawie informacji z poprzednich szyfrowań (analogicznie _Adaptive chosen ciphertext attack_).
+- (_Related-key attack_): jak w _chosen-plaintext attack_, poza tym, że atakujący może otrzymać szyfrogramy z dwóch różnych kluczy; klucze są nieznane ale związek pomiędzy nimi jest znany, np. różnią się jednym bitem.
+
+Te rodzaje ataków różnią się łatwością zastosowania, ale pomimo tego kryptografowie przyjmują najbardziej ostrożne stanowisko i zakładają najgorszy przypadek w czasie projektowania algorytmów, uzasadniając to tym, że jeśli mechanizm będzie bezpieczny nawet wobec nieralnych zagrożeń to powinien być odporny również na prawdziwą kryptoanalizę.
+To założenie często jest bardziej realistyczne niż mogłoby to na pierwszy rzut oka wyglądać. W przykładzie ataku ze znanym jawnym tekstem: kryptoanalityk może się dowiedzieć lub domyślić najbardziej prawdopodobnej części jawnego tekstu (np. zaszyfrowany list zaczynający się od słów "Dear Sir", lub sesja komputerowa zaczynająca się od "LOGIN:").
+Atak z wybranym jawnym tekstem jest mniej prawdopodobny, ale czasem możliwy: można zmusić do przekazania znanej wiadomości w zaszyfrowanej formie.
+_Related key atak_ jest głównie teoretyczny, ale może wystąpić w niektórych sytuacjach, np. kiedy używa się szyfrów blokowych do tworzenia funkcji haszujących.
+
+Klasyfikacja sukcesu:
+Rezultat kryptografii może się różnić także przydatnością, np kryptograf Lars Knudsen (1998) dokonał klasyfikacji różnych typów ataków na szyfry blokowe według ilości i jakości odkrytych tajnych wiadomości:
+
+- całkowite złamanie (_Total break_) - atakujący wywnioskował tajny klucz.
+- ogólne poznanie (_Global deduction_) - atakujący ujawnia funkcjonalny odpowiednik algorytmu (_functionally equivalent algorithm_) szyfrującego i rozszyfrującego, ale nie poznaje klucza.
+- lokalne poznanie (_Instance (local) deduction_) - atakujący odkrywa dodatkowe jawne teksty (lub szyfrogramy) uprzednio nieznane.
+- wywnioskowanie informacji (_Information deduction_) - atakujący pozyskuje trochę informacji Shannona o jawnych tekstach (lub szyfrogramach) uprzednio nieznanych.
+- rozpoznanie algorytmu (_Distinguishing algorithm_) - atakujący jest w stanie odróżnić szyfr od przypadkowych permutacji.
+
+Podobne rozważania stosują się do ataków na inne typy algorytmów kryptograficznych
+
+Złożoność:
+Ataki mogą być także scharakteryzowane przez ilość wymaganych zasobów:
+
+- Czas - ilość "podstawowych operacji" jakie muszą być wykonane (podstawowe instrukcje komputerowe takie jak dodanie, XOR, przesunięcie itp lub całe metody szyfrujące).
+- Pamięć - ilość pamięci wymagana do przeprowadzenia ataku.
+- Dane - wymagana ilość/wielkość jawnych tekstów i szyfrogramów.
+
+W akademickiej kryptografii słabość lub złamanie mechanizmu jest zdefiniowane bardzo ostro. Bruce Schneier podsumowuje to tak: "Złamanie szyfru oznacza po prostu znalezienie słabości w szyfrze, która może zostać wykorzystana ze złożonością mniejszą niż BF, nieważne, że BF może wymagać 2128 operacji, atak wymagający 2110 opercji może być uważany za złamanie... mówiąc inaczej złamaniem może być nawet certyfikacyjna słabość, dowód, że szyfr nie działa z reklamowaną sprawnością" (Schneier, 2000).
+
+Kryptoanaliza kryptografi asymetrycznej:
+Bezpieczeństwo tych szyfrów zależy od czysto matematycznych problemów, więc oczywiste jest rozwijanie metod rozwiazania tych problemów.
+Mechanizmy asymetryczne są zaprojektowane na - przypuszczalnej - trudności rozwiązania problemów matematycznych, jeśli zostanie odnaleziony jakiś udoskonalony algorytm i rozwiąże problem, narażony jest cały mechanizm.
+Np. bezpieczeństwo mechanizmu wymiany kluczy Diffie-Hellman zależało od trudności wyliczenia dyskretnego algorytmu. W 1983 Don Coppersmith znalazł obliczeniowo wykonalny sposób odnalezienia dyskretnych logarytmów i w ten sposób dał kryptoanalizie narzędzie do złamania kryptosystemu Diffie-Hellmana.
+Inny mechanizm popularny algorytm RSA pozostaje niezłamany, jego bezpieczeństwo zależy (częściowo) od trudności faktoryzacji liczb całkowitych - przełom w tej dziedzinie będzie miał wpływ na bezpieczeństwo RSA.
+W 1980 do złamania był 50 cyfrowy numer w 1012 krokach, do 1984 można było złamać 75-cyfrowy numer w 1012 krokach, postęp w technice komputerowej oznaczał także, że operacje te mogły zostać przeprowadzone dużo szybciej, prawo Moore'a przewiduje dwukrotne przyśpieszenie procesora w ciągu trzech lat.
+Techniki faktoryzacji również są udoskonalane, złamana została 150-cyfrowa liczba w rodzaju tych używanych w RSA. Z początkiem XXI wieku 150 cyfrowe liczby nie są już uważane za dostatecznie długie klucze dla RSA, natomiast mające klikaset cyfr tak, ale metody faktoryzacji są ulepszane, więc albo klucze będą musiały być coraz większe, albo wprowadzi się nowe algorytmy.
+Inną różnicą wobec ataków na szyfry symetryczne jest to, że kryptoanaliza ma możliwość zrobienia użytku z wiedzy pozyskanej z klucza publicznego.
+
+Kryptoanaliza kwantowa:
+Komputery kwantowe są potencjalnym narzędziem w kryptoanalizie, ponieważ stany kwantowe mogą istnieć w superpozycji (np. splątanie) możliwy jest nowy paradygmat obliczeniowy i jeśli taki komputer zostanie zbudowany wiele spraw się zmieni, równoległe obliczenia staną się normą i zmienią się pewne aspekty kryptografii.
+W szczególności ponieważ komputer kwantowy będzie mógł przeprowadzić bardzo szybkie przeszukiwania BF, długości klucza będą musiały być dużo większe - a niektórzy twierdzą, że żadne szyfrowanie nie przetrwa tej próby.
+Drugą możliwością jest to, że zwiększona moc obliczeniowa umożliwi ataki inne niż BF przeciwko obecnie odpornym szyfrom lub klasom algorytmów, np. nie cały postęp w faktoryzacji wynika z rozwoju algorytmów, część była możliwa dzięki rozwojowi mocy obliczeniowej a komputery kwantowe mogą znacząco zwiększyć możliwości faktoryzacji.
+To czego nie można przewidzieć to przełom teoretyczny wymagający komputerów kwantowych, który umożliwiłby obecnie niepraktyczne (lub nawet nieznane) ataki.
+Nie wiadomo czy istnieje polynomial time encryption algorithm[?] którego rozszyfrowanie wymaga wykładnikowego czasu, nawet dla komputera kwantowego.

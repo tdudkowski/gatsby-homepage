@@ -1,0 +1,868 @@
+---
+title: "Kryptologia - Aneks"
+comment: ""
+section: "it"
+subsection: "kryptologia"
+---
+
+Słownik pojęć; protokoły; ataki
+
+### Słownik pojęć
+
+algorytm kryptograficzny
+
+Jednoznacznie opisana procedura szyfrująca lub rozszyfrowująca dane; najczęściej używana w znaczeniu konkretnego, udokumentowanego rozwiązania.
+
+atak
+
+Próba złamania szyfru, odczytania szyfrogramu bez uprzedniej znajomości przekształceń jakim został poddany.
+Sformułowanie "zgłoszono atak" oznacza, że zakończył się przynajmniej częściowym powodzeniem.
+
+CA (Certyficate Authority)
+
+Instytucja, która wystawia podpisy cyfrowe i gwarantuje związek pomiędzy danymi w certyfikacie.
+
+CRL (Certificate Revocation List)
+
+Lista odwołanych certyfikatów - jest podpisywana przez CA i udostępniana publicznie. Każdy unieważniony certyfikat jest identyfikowany w CRL na podstawie swojego numeru seryjnego. Każdy wpis zawiera informację o dacie wystawienia, wystawcy oraz przyczynie odwołania.
+System wykorzystujący certyfikaty nie tylko sprawdza podpis certyfikatu oraz jego ważność, ale także sprawdza, czy numer seryjny certyfikatu znajduje się na aktualnej (najnowszej) CRL. Listy wydawane są regularnie w określonych interwałach czasowych i zwykle zawierają informację o spodziewanej dacie publikacji następnej listy. Możliwe jest także wydanie nadzwyczajne w celu przyspieszenia zawiadomienia o fakcie ujawnienia klucza prywatnego.
+Zaletą metody unieważniania za pomocą CRL jest możliwość rozprowadzania jej w dokładnie taki sam sposób, jak samych certyfikatów: poprzez dowolne systemy komunikacyjne i serwery. Wadą tej metody jest ograniczenie dokładności czasowej unieważnienia do częstotliwości wydawania CRL.
+Inną metodą służącą do tego samego celu jest Online Certificate Status Protocol (OCSP), która ma tą przewagę, że sprawdza status certyfikatu w czasie rzeczywistym.
+
+diceware
+
+Metoda wybierania frazy hasła: za pomocą kości do gry losowo wybiera się słowa ze specjalnej listy (nazywanej Listą Słów Diceware - _Diceware Word List_)
+[The Diceware Passphrase Home Page](http://world.std.com/~reinhold/diceware.html), [Piotr (DrFugazi): Diceware](http://drfugazi.eu.org/index.php?page=diceware)
+
+dowód bez przekazywania informacji, dowód wiedzy zerowej (ang. _zero knowledge proof_)
+
+W kryptografii oznacza metodę dowodzenia prawdziwości pewnego stwierdzenia drugiej stronie, tak, że nie zostaje ujawnione nic oprócz dowodzonego twierdzenia.
+Przyjęło się określać stronę dowodzącą jako Peggy (z ang. _prover_) a drugą jako Victor (z ang. _veifier_), czasem P i V to Pat i Vanna.
+Muszą zostać spełnione trzy warunki:
+
+- całkowitość (ang. _completeness_): jeśli twierdzenie jest prawdziwe uczciwy sprawdzający zostanie przekonany przez uczciwego dowodzącego
+- wiarygodność (ang. _soundness_): jeśli twierdzenie jest fałszywe, żaden oszukujący dowodzący nie może przekonać uczciwego sprawdzającego, że jest prawdziwe, lub jest to mało prawdopodobne
+- dyskrecja (ang. _zero-knowledgeness_): jeśli twierdzenie jest prawdziwe żaden oszukujący sprawdzający nie dowie się niczego poza tym faktem
+
+Powszechnie stosowany w mechanizmach uwierzytelnienia, gdzie jedna strona chce dowieść swojej tożsamości poprzez przekazanie pewnej pufnej wiadomości (np. hasła) ale nie chce, żeby ktoś uzyskał dostęp do tej wiadomości.
+Nie jest to dowód w sensie matematycznym, ponieważ istnieje pewne małe prawdopodobieństwo (zwany błędem wiarygodności), że oszukujący dowodzący będzie w stanie przekonać sprawdzającego do fałszywego stwierdzenia, istnieją jednakże standardowe techniki zmniejszające ten błąd do pewnej określonej, małej wartości.
+[Zero_knowledge_proof](http://en.wikipedia.org/wiki/Zero_knowledge_proof)
+
+E-Commerce
+
+Komercyjna sfera internetu, różnego rodzaju instytucje finansowe, sklepy i banki internetowe.
+
+FreeS/WAN
+
+Najbardziej znana implementacja IPsec, już nie rozwijana.
+Kontynuacją są projekty Openswan \[[www.openswan.org](http://www.openswan.org/)\] i Strongswan \[[www.strongswan.org](http://www.strongswan.org/)\]
+
+funkcja haszująca (ang. _hash function_)
+
+Funkcja, która przyporządkowuje obiektom - zwykle łańcuchom znaków dowolnej długości - jakąś liczbę ze skończonego przedziału (tzw. hasz lub skrót).
+Funkcja haszująca jest definiowana przez swoją dziedzinę (ciąg bajtów o dowolnej długości), swój przedział (sekwencja bitów o określonej długości) oraz funkcje definiującą (H); generalnie rzecz biorąc pożądana charakterystyka funkcji haszującej jest, że
+_H (x) =! H (y)_ więc _x =! y_ oraz, że _H (x) = H (y)_ prawdopodobnie implikuje, że _x = y_.
+Niestety nie można mieć pewności co do tego, ponieważ skoro wartości _H (x)_ jest dużo mniejsza od możliwych wartości _x_, co oznacza, że są takie _x_ i _y_, które _x ! = y_, dla których _H (x) = H (y)_ - sytuacja taka nazywana jest kolizją.
+Najważniejszym wymaganiem wobec funkcji haszującej jest brak prostych zależności między obiektem a wartością jego hasha (nieodwracalność).
+Dobra funkcja haszująca przy najdrobniejszej zmianie danych wejściowych zmienia około połowę bitów. Dzięki temu rzeczą niemal niemożliwą jest stworzenie dwóch różnych bloków danych dających taki sam rezultat - więc odnalezienie kolizji będzie wymagało ataku BF (co jest wymaganiem wobec każdego dobrego szyfru)
+Funkcje haszujące mają wiele zastosowań:
+
+- buduje się za ich pomocą efektywne struktury danych (ułatwia wyszukiwanie takich samych plików - "hash tables")
+- używa się ich do weryfikacji poprawności przesyłu danych (wykrywanie zmian w pliku)
+- stosuje się je w kryptografii
+
+Funkcje haszujące używane w kryptografii:
+
+- historyczne: MD2, MD4, SHA
+- współczesne: MD5, SHA1, RIPEMD
+
+Wyraz "hash" w znaczeniu używanym w informatyce wywodzi się prawdopodobnie ze standardowego znaczenia "mieszanka pociętych kawałków"; Knuth zauważa, że H.P. Luhn pierwszy raz użył tego pojęcia w notatce ze stycznia 1953; termin "hash" wszedł w użycie jakieś 10 lat później.
+[Funkcja_haszująca](http://pl.wikipedia.org/wiki/Funkcja_haszuj%C4%85ca), [Hash_function](http://en.wikipedia.org/wiki/Hash_function)
+
+generator liczb pseudolosowych (ang. _pseudo random number generator_ - _PRNG_)
+
+Procedura generująca sekwencję wartości numerycznych wyglądającą na przypadkową, prawie nie do przewidzenia; najczęściej używa się to do tego tzw. ziarna (ang. _seed_), czyli czysto losowej wartości (np. pochodzącej ze zdarzeń systemowych), która następnie jest przetwarzana.
+
+GPG (GNU Privacy Guard) \[[www.gnupg.org](http://www.gnupg.org/)\]
+
+Darmowy i kompletny zamiennik PGP; program Free Software Foundation zgodny ze standardem OpenPGP opublikowany na licencji GPL, wspierany przez niemiecki rząd, częśc projektu GNU.
+GnuPG wspiera następujące algorytmy: ElGamal, DSA, RSA, AES, 3DES, Blowfish, Twofish, CAST5, MD5, SHA-1, RIPE-MD-160, TIGER.
+
+hasło (ang. _password_)
+
+Tajny element używany do potwierdzenia tożsamości, najczęściej słowa, które łatwo jest zapamiętać. Z założenia znane jest tylko osobom, których tożsamośc ma potwierdzić. Klucz w postaci słowa.
+
+hasło jednorazowe (ang. _one time password_ - _OTP_)
+
+Hasło, które może zostać użyte tylko raz, zwykle generowane przez sprzętowy token.
+
+HTTPS (HyperText Transfer Protocol Secure)
+
+Zaszyfrowana, bezpieczniejsza wersja protokołu HTTP - wynalazek firmy Netscape Communications używany powszechnie w E-Commerce.
+Zamiast użycia w komunikacji klient-serwer czystego, niezaszyfrowanego tekstu stosuje się szyfrowanie SSL lub TLS. Dzięki uwierzytelnieniu i szyfrowaniu informacji zapobiega przechwytywaniu i zmienianiu przesyłanej informacji.
+HTTPS działa na porcie nr 443.
+Wywołania tego protokołu zaczynają się od https:, a zwykłego połączenia HTTP od http:.
+Poziom zabezpieczenia zależy od poprawnosci implementacji w przegladarce i oprogramowaniu serwera oraz konkretnego zastosowanego algorytmu kryptograficznego.
+Sam HTTPS nie zabezpiecza w pełni danych, które są przesyłane podczas transakcji - tylko szyfruje informacje pomiędzy klientem a serwerem, gdzie dane te są przechowywane w bazie danych - najczęściej właśnie ten serwer jest atakowany.
+[HTTPS](http://pl.wikipedia.org/wiki/HTTPS) [HTTPS](http://www.ccc.de/https/?language=en)
+
+IETF (Internet Engineering Task Force)
+
+Powstałe w 1986 roku międzynarodowe stowarzyszenie osób zajmujące się tworzeniem standardów sieciowych. Chociaż nie posiada żadnej formalnej władzy publikowane przez nie dokumenty (o nazwie RFC) specyfikują stosowane w internecie standardy.
+Dzieli się na wyspecjalizowane grupy robocze.
+[IETF](http://www.ietf.org/)
+[IETF (pl.)](http://pl.wikipedia.org/wiki/IETF), [Internet_Engineering_Task_Force](http://en.wikipedia.org/wiki/Internet_Engineering_Task_Force)
+
+IKE (_Internet key exchange_)
+
+Protokół używany do ustanowienia bezpiecznych połączeń w zestawie protokołów IPsec. Jest obligatoryjną częscią standardu IPv6, oraz opcjonalną (tak samo jak cały IPsec) IPv4.
+IKE jest zdefiniowany w RFC 2409. Używa mechanizmu wymiany kluczy Diffie-Hellmana do ustanowienia wspłdzielonego sekretu na czas sesji, z niego są tworzone klucze.
+
+IPsec
+
+Zbiór powiązanych ze sobą protokołów - opisanych w RFC 2401-2409 - które służą implementacji bezpiecznych połączeń oraz wymiany kluczy kodowych pomiędzy komputerami. Protokoły tej grupy mogą być wykorzystywane do tworzenia VPN (Virtual Private Network).
+VPN oparta na IPsec składa się z dwóch kanałów komunikacyjnych pomiędzy połączonymi komputerami:
+
+- kanał wymiany kluczy za pośrednictwem którego przekazywane są dane związane z autentykacją oraz kodowaniem (klucze) - dawniej używano ESP i AH a obecnie jest zdefiniowany tylko jeden protokół wymiany kluczy (IKE)
+- kanału (jednego lub więcej), który niesie pakiety transmitowane poprzeć sieć prywatną - protokoły zabezpieczające przepływ pakietów
+
+IPsec jest obligatoryjnym standardem IPv6 i opcjonalny dla IPv4, więc stanie się bardziej popularny po rozpowszechnieniu IPv6.
+Protokoły IPsec operują na trzecim poziomie modelu OSI dzięki czemu mogą chronić protokoły oparte zarówno na zarówno TCP i UDP.
+Implementacje:
+
+- [FreeS/WAN](http://www.freeswan.org/) zakończony w marcu 2004 - jego kontynuacją są Openswan \[[www.openswan.org](http://www.openswan.org/)\] i Strongswan \[[www.strongswan.org](http://www.strongswan.org/)\]
+- KAME \[[www.kame.net](http://www.kame.net/)\] włączony w projekty NetBSD i FreeBSD oraz kernel 2.6
+
+
+[IPsec (pl.)](http://pl.wikipedia.org/wiki/IPsec), [IPsec (eng.)](http://en.wikipedia.org/wiki/IPsec), [www.ipsec.pl](http://www.ipsec.pl/)
+
+KDF (Key Derivation Function)
+
+Tworzy klucz na podstawie hasła wymyślonego przez użytkownika, poddając je wielokrotnym przekształceniom w celu utrudnienia ataku BF.
+[Key_derivation_function](http://en.wikipedia.org/wiki/Key_derivation_function)
+
+Kerberos (Kerberos: The Network Authentication Protocol) \[[web.mit.edu/kerberos/www/](http://web.mit.edu/kerberos/www/)\]
+
+Powstały w MIT (Massachusetts Institute of Technology) w celu ochrony usług sieciowych projektu Athena protokół uwierzytelniania obiektów w sieci komputerowej.
+Pozwala na komunikację przez niezabezpieczoną sieć i potwierdzenia swojej tożsamości w bezpieczny sposób, zapobiega podsłuchiwaniu lub atakom przez powtórzenie (ang. _replay attacks_) i zapewnia integralność danych; zaprojektowany pierwotnie dla sieci klient-serwer i zapewnia wzajemne uwierzytelnienie - dotyczące zarówno użytkownik jak i usługi z której korzysta.
+Korzysta z kryptografii asymetrycznej (oparty jest na protokole Needham-Schroeder) i wymaga zaufanej trzeciej strony, tzw. Key Distribution Center (KDC), który składa się z dwóch logicznie oddzielnych części Authentication Server (AS) i Ticket Granting Server (TGS). Tożsamość użytkowników potwierdzona jest za pomocą tzw. biletów (ang. _tickets_).
+Kerberos używa bazy danych zawierających tajne klucze, każdy obiekt sieci - zarówno klient jak i serwer - współdzieli tajny klucz znany tylko sobie i serwerowi Kerberos, znajomość tego klucza używana jest do potwierdzenie tożsamości, dla komunikacji między obiektami Kerberos generuje klucz sesyjny używany do zabezpieczenia komunikacji
+[Kerberos_(protocol)](http://en.wikipedia.org/wiki/Kerberos_(protocol))
+
+_Key-agreement protocol_
+
+Protokół uzgodnienia wspólnego tajnego klucza używanego do zabezpieczenia komunikacji, użyty prawidłowo zabezpiecza przed wymuszeniem wyboru klucza przez trzecią stronę lub ujawnieniem go.
+Pierwszym znanym publicznie mechanizmem tego typu był _Diffie-Hellman key exchange_, w którym dwóch ludzi wspólnie exponentiate generator przypadkowych liczb w taki sposób, że podsłuchiwacz nie miał możliwości odgadnięcia jaki klucz został wybrany.
+Diffie-Hellman był rozwijany przez badaczy GCHQ, UK odpowiednika NSA. James Ellis udowodnił, że elementy tej techniki były znane w latach 60-tych a cała wymiana kluczy (Malcolm Williamson) we wczesnych latach 70. GCHQ nie zezwoliło na publikację, więc to Diffie and Hellman byli pierwszymi, którzy to opublikowali.
+
+_keysigning party_
+
+Metoda tworzenia i umacniania sieci zaufania PGP.
+Spotkanie, którego uczestnicy wymieniają się odciskami palców (_fingerprints_) swoich podpisów PGP zapisanymi na papierze w czasie weyfikacji swojej tożsamości., żeby zmniejszyć możliwość podstępu, nie używa się ani komputerów, ani cyfrowych nośników pamięci.
+Po _keysigning party_ uczestnicy podpisują swoje klucze PGP, sprawdzając przedtem czy zgadzają się z otrzymanymi wcześniej skrótami.
+[GnuPG Keysigning Party HOWTO](http://www.cryptnet.net/fdp/crypto/gpg-party.html) [Keysigning_party](http://en.wikipedia.org/wiki/Keysigning_party)
+
+klucz (ang. _key_)
+
+Informacja sprawiająca, że szyfr szyfruje informację w jednoznacznie określony sposób, konkretne klucze są zwykle związane z konkretną tożsamością.
+Parametry określajace sposób działania algorytmu szyfrującego (np. para liczb w RSA, ciąg bitów w DES).
+Im większa przestrzeń klucza tym trudniejszy jest atak BF.
+
+klucz prywatny (ang. _secret key_)
+
+W kryptografii asymetrycznej klucz służący do wykonywania zastrzeżonej czynności, którego rozpowszechnienie zagraża bezpieczeństwu systemu. Czynności te to najczęściej:
+
+- odszyfrowywanie (klucz publiczny szyfruje)
+- podpisywanie (klucz publiczny weryfikuje podpisy)
+
+Nazwa ta jest też czasem używana dla klucza w kryptografii symetrycznej.
+
+klucz publiczny (ang. _public key_)
+
+W kryptografii asymetrycznej klucz umożliwiający wykonywanie czynności, dostępu do których nie chcemy ograniczać, i który z tego powodu może być dowolnie rozpowszechniany. Czynności te to w szczególności:
+
+- szyfrowanie (klucz prywatny służy do odszyfrowywania)
+- weryfikacja podpisu (klucz prywatny służy do podpisywania)
+
+kolizja
+
+Kolizja funkcji haszującej H to taka para różnych wiadomości m1, m2, że mają one taką samą wartość hasza, tj. H(m1) = H(m2).
+Ponieważ funkcja haszująca zwraca skończenie wiele wartości, a przestrzeń argumentów jest nieskończona (w przypadku funkcji akceptujących dowolnie długie argumenty), lub przynajmniej znacznie większa od przestrzeni wyników, dla każdej funkcji haszującej jakieś kolizje istnieją.
+W wielu zastosowaniach zależy nam na tym, żeby nie znana była żadna kolizja funkcji haszującej. Jest to jednak bardzo silne wymaganie i często zależy nam na słabszej właściwości funkcji (od silniejszych do słabszych właściwości):
+
+- niemożliwość łatwego generowania nowych kolizji
+- niemożliwość znalezienia, dla danego m1 takiego m2, że H(m1) = H(m2), czyli _second preimage resistance_
+- niemożliwość znalezienia, dla danego h takiego m, że H(m) = h, czyli _preimage resistance_
+
+[Kolizja(kryptografia)](http://pl.wikipedia.org/wiki/Kolizja_%28kryptografia%29), [Hash_collision](http://en.wikipedia.org/wiki/Hash_collision)
+
+kryptoanaliza (ang. _cryptanalysis_)
+
+Dziedzina kryptologii zajmująca się łamaniem szyfrów i słabościami systemów kryptograficznych, badane są możliwości naruszenia wszystkich zakładanych cech bezpieczeństwa - ataki na protokoły, łamanie szyfrów, fałszowanie podpisów, naruszanie integralności wiadomości itd.; jest bardzo szybko rozwijającą się nauką i z zasady długość życia systemu kryptograficznego jest o wiele krótsza niż oczekiwali to jego autorzy.
+Ważniejsze metody: brute force, kryptoanaliza liniowa, kryptoanaliza różnicowa, kryptoanaliza statystyczna.
+
+kryptografia (ang. _cryptography_;z greckiego _kryptós_, "ukryty" i _gráphein_ "pisać")
+
+Dziedzina wiedzy zajmująca się zamianą (szyfrowaniem) informacji (w formie tekstu jawnego) w nieczytelną postać (szyfrogram).
+Pierwsze znane użycie słowa kryptografia jest Sir Thomas Browne's Discourse z 1658 zatytułowane The Garden of Cyrus... "the strange Cryptography of Gaffarel in his Starrie Booke of Heaven".
+
+kryptologia (ang. _cryptology_)
+
+Dziedzina wiedzy o utajnianiu informacji; generalnie rzecz biorąc składa się ze steganografii kryptografii i kryptoanalizy.
+
+kryptosystem
+
+Konkretny szyfr.
+
+kodowanie (ang. _coding_)
+
+Zamiana jednego ciągu znaków na drugi.
+
+LAN (Local Area Network)
+
+Lokalna sieć komputerowa.
+
+łamanie haseł (ang. _password cracking_)
+
+Proces odzyskiwania haseł, może służyć użytkownikowi do odzyskania zapomnianego hasła, włamywaczowi do przejęcia kontroli nad zasobami oraz administratorowi do prewencyjnego testowania siły haseł wybieranych przez użytkowników. Stosowane techniki: SE, podsłuchiwanie, keyloggery, fałszywe terminale logowania itp.
+Popularne programy (uwaga: nieostrożne używanie technik lub programów służących do łamania haseł może spowodować problemy prawne):
+
+- Crack / CrackLib \[[www.crypticide.com/users/alecm/](http://www.crypticide.com/users/alecm/)\]
+- John the Ripper password cracker \[[www.openwall.com/john/](http://www.openwall.com/john/)\]
+- Lepton's Crack \[[usuarios.lycos.es/reinob/](http://usuarios.lycos.es/reinob/)\]
+
+[Password_cracking](http://en.wikipedia.org/wiki/Password_cracking)
+
+MAC (Message Authentication Codes)
+
+Podobny do funkcji haszujących, ale do wyliczenia haszu używany jest klucz. Jak sama nazwa wskazuje jest powszechnie stosowany do uwierzytelniania wiadomości.
+Algorytm MAC (_keyed hash function_) przyjmuje tajny klucz i wiadomość a potem wytwarza MAC (tzw. znacznik - _tag_). MAC:
+
+- chroni integralność wiadomości poprzez zapewnienie, że jeśli wiadomość zostanie zmieniona zmieni się MAC
+- zapewnia uwierzytelnienie, bo tylko ktoś kto zna tajny klucz może wygenerować poprawny MAC
+
+Allgorytmy MAC stworzone są z innych krypograficznych składników, takich jak funkcje mieszające (w przypadku HMAC) lub algorytmów szyfrów blokowych (OMAC i PMAC).
+
+model OSI
+
+Model komunikacji sieciowej.
+Składa się z warstw:
+
+- górnych:
+  - aplikacji: użytkownik odbiera i wysyła dane
+  - prezentacji: w ruchu w dół przetwarza dane do postaci kanonicznej wymaganej, w górę usuwa niepotrzebne dane związane z protokołami sieciowymi
+  - sesji: łaczy procesy użytkownika
+- dolnych
+  - transportowa: szereguje dane i dba o poprawność przesyłu
+  - sieciowa: jest odpowiedzialna tylko za drogę przesyłania danych
+  - łącza danych: zarządza parametrami warstwy fizycznej by zapewnić najlepszą jakość transmisji
+  - fizyczna: sprzęt
+
+[Model_OSI (pl.)](http://pl.wikipedia.org/wiki/Model_OSI), [OSI_model (ang.)](http://en.wikipedia.org/wiki/OSI_model)
+
+niezaprzeczalność (ang. _non-repudiation_)
+
+Jedno z zadań kryptografii asymetrycznej - zapewnienie dowodu, że nastąpiło pewne działanie (np. odebranie lub wysłanie wiadomości).
+
+odcisk palca (ang. _fingerprint_)
+
+Skrót podpisu PGP, efekt działania funkcji haszującej.
+
+OpenPGP
+
+Opublikowany standard (RFC 2440) programu kryptograficznego powstały by zapewnić interoperacyjność pomiędzy programami i wtyczkami.
+Używany przez PGP, GNU Privacy Guard (GnuPG), Hushmail, Veridis i innych; powstał z powodu szerokiego użycia PGP aby standard kryptograficzny stał się własnością wspólnoty.
+
+OpenSSH \[[openssh.com](http://openssh.com/)\]
+
+Zintegrowany zestaw aplikacji powstały w ramach projektu OpenBSD - udostępniana na wolnej licencji implementacja SSH.
+
+OTP (One Time Pad)
+
+Szyfr, w którym jeden bit nowego, czysto przypadkowego klucza jest używany dla każdego bitu zaszyfrowanych danych.
+Teoretycznie nie do złamania, ale bardzo trudny w implementacji.
+[One-time_pad](http://en.wikipedia.org/wiki/One-time_pad)
+
+paradoks dnia urodzin
+
+Paradoks - w sensie niezgodności intuicją - polegający na tym, że np. dla przypadkowego zbioru 23 osób prawdopodobieństwo, że dwie z nich mają urodziny w tym samym dniu wynosi trochę ponad 50%, a dla 60 aż 99%.
+Jest to jeden z klasycznych problemów rachunku prawdopodobieństwa i ma duże znaczenie w kryptografii: np. jeśli funkcje haszujące zwracają 2k możliwych odpowiedzi, to znalezienie kolizji czyli takiego m1 i m2, że H(m1) = H(m2) wymaga sprawdzenia jedynie 2k/2 możliwości.
+[Birthday_paradox](http://en.wikipedia.org/wiki/Birthday_paradox), [Paradoks_dnia_urodzin](http://pl.wikipedia.org/wiki/Paradoks_dnia_urodzin)
+
+PGP (Pretty Good Privacy)
+
+Program autorstwa Phil Zimmermanna zapewniający kryptograficzną prywatnośc i uwierzytelnienie, w różnych swoich wersjach najczęściej używany system kryptograficzny na świecie, najbardziej zaawansowane z popularnych rozwiązań.
+Powstał w 1991; nazwa nawiązuje do znanego z programu radiowego sklepu spożywczego (artykuły kolonialne - _grocery_) o nazwie _Ralph's Pretty Good Grocery_, którego sloganem było, _"jeśli nie znalazłeś tego u Ralfa, najpewniej możesz się bez tego obyć"_.
+Wpływ PGP był tak duży, że stał się podstawą dla stworzenia standardu IETF - OpenPGP.
+
+PKC (Public Key Certificate)
+
+Cyfrowy certyfikat jednoznacznie wiążący tożsamość elementu systemu z wartością klucza publicznego i - najczęściej - dodatkowymi informacjami. Podpisana cyfrowo struktura danych poświadczająca kto jest właścicielem klucza publicznego.
+
+PKCS (Public Key Cryptography Standards)
+
+Specyfikacje pochodzące z współpracy RSA Laboratories i specjalistów z całego świata mające na celu popularyzację kryptografii asymetrycznej. Opublikowane po raz pierwszy w 1991 dokumenty PKCS mają wiele referencji i implementacji.
+Z prac nad PKCS wyłoniło się wiele standardów (formalnych jak i de facto), najbardziej znane to S/MIME i SSL.
+[RSA Security - PKCS](http://www.rsasecurity.com/rsalabs/node.asp?id=2124)
+
+PKI (Public Key Infrastructure)
+
+Infrastruktura Klucza Publicznego - system składający się z jednostek (pełniących różną rolę serwerów, agentów), które używają podpisów cyfrowych; zestaw sprzętu, oprogramowania, ludzi, polityk i procedur potrzebnych do tworzenia, zarządzania, przechowywania, dystrybucji i odwoływania podpisów cyfrowych opartych na kryptografii asymetrycznej.
+Najwazniejsze funkcje PKI to:
+
+- rejestracja użytkowników i wystawianie podpisów cyfrowych
+- odwoływanie podpisów
+- archiwizacja danych nezbędnych do sprawdzenia poprawności podpisów
+
+podpis cyfrowy (ang. _digital signature_)
+
+Dodatkowa informacja dołączona do wiadomości służąca do weryfikacji jej źródła i (lub) integralności.
+Podpisy cyfrowe korzystają z kryptografii asymetrycznej - tworzona jest para kluczy, klucz prywatny i klucz publiczny - klucz prywatny służy do podpisywania wiadomości, klucz publiczny natomiast do weryfikowania podpisu.
+Zwykle rezultat haszu kryptograficznego; wartość danych wygenerowana przez algorytm klucza publicznego oparta na zawartości skrótu bloku danych.
+Najważniejszymi kryptosystemami umożliwiającymi podpisywanie cyfrowe są RSA, ElGamal i DSA.
+Najpopularniejsze standardy pozwalające na złożenie podpisu elektronicznego to X.509 oraz PGP
+
+protokół kryptograficzny (ang. _cryptographic protocol_)
+
+Opis lub konkretny protokół realizujący funkcje związane z bezpieczeństwem i stosuje metody kryptograficzne, najbardziej rozpowszechnione protokoły kryptograficzne zabezpieczają transport danych na poziomie aplikacji i zwykle posiadają następujące możliwości:
+
+- uwierzytelnienie uczestnika
+- symetryczne szyfrowanie i uwierzytelnienie wiadomości
+- zabezpieczone przesyłania danych na poziomie aplikacji
+- mechanizmy niezaprzeczalności
+
+Na przykład: TLS jest protokołem zabezpieczającym połączenia HTTP, ma mechanizmy uwierzytelnienia jednostki, oparte na systemie X.509, fazę ustanowienia klucza, gdzie szyfrowanie symetryczne jest zapoczątkowane przy pomocy kryptografii asymetrycznej i funkcje transportu danych na poziomie aplikacji; wszystkie te trzy aspekty są połączone. Standard TLS nie wspiera niezaprzeczalności.
+[Cryptographic_protocol](http://en.wikipedia.org/wiki/Cryptographic_protocol)
+
+przestrzeń klucza (ang. _keyspace_)
+
+Zbiór wszystkich możliwych kombinacji dla danego rodzaju klucza. Im większa tym trudniejszy atak BF.
+
+RFC (Requests for Comments)
+
+Numerowane dokumenty powstałe w wyniku prac IETF, chociaż nie mają mocy prawnej wiele z nich jest oficjalnym opisem obowiązujących standardów.
+[RFC (pl.)](http://pl.wikipedia.org/wiki/RFC), [Request_for_Comments](http://en.wikipedia.org/wiki/Request_for_Comments)
+
+_russian copulation_ - jak to przetłumaczyć ;-)
+
+Przygotowanie jawnego tekstu przed zaszyfrowaniem, takie, żeby utrudnić odnalezienie regularności w kryptogramach.
+
+SASL (Simple Authentication and Security Layer)
+
+Protokół uwierzytelnienia użytkownika, najczęściej używany w połączeniach SMTP.
+
+sieć zaufania (ang. _web of trust_)
+
+Mechanizm potwierdzania poprawności kluczy PGP, zdecentralizowany - w przeciwieństwie do scentralizowanego PKI - i elastyczny, decyzje o zaufaniu do konkretnego podpisu pozostawia w rękach użytkownika. Polega na systemie wzajemnie potwierdających poprawność swoich podpisów użytkowników, np. jeśli trzech częściowo zaufanych lub jeden w pełni zaufany użytkownik potwierdzi poprawność (przynależność klucza do osoby) klucz uznany jest za poprawny.
+Ważną metodą tworzenia sieci zaufania są _keysigning parties_.
+[Explanation of the web of trust of PGP](http://www.rubin.ch/pgp/weboftrust.en.html) [Web_of_trust](http://en.wikipedia.org/wiki/Web_of_trust)
+
+S/MIME (Secure / Multipurpose Internet Mail Extensions)
+
+Standard szyfrowania kluczem publicznym i podpisywania e-maili kapsulkowanych w MIME; jest podobny choć niekompatybilny z OpenPGP i starszym PGP/MIME.
+Zapewnia podpis cyfrowy, sprawdzanie integralności i niezaprzeczalność z dowodem pochodzenia oraz szyfrowanie. Umożliwia także zastosowanie kompresji.
+[S/MIME](http://en.wikipedia.org/wiki/S/MIME)
+
+snifer (ang. sniffer)
+
+Program służący do analizy ruchu sieciowego, przez przechwytywanie, rejestrowanie i analizowanie pakietów przepływających w sieci. Narzędzie diagnostyczne używane przez administratorów sieci jak i również przez włamywaczy; może służyć również zwykłym użytkownikom do sprawdzenia czy i w jaki sposób działa szyfrowany kanał komunikacji.
+Nazwa po polsku oznacza węszyciel i prawdopodobnie pochodzi od komercyjnego programu Sniffer (produkcji Network Associates, Inc.).
+[Packet_sniffer (eng.)](http://en.wikipedia.org/wiki/Packet_sniffer), [Sniffer (pl.)](http://pl.wikipedia.org/wiki/Sniffer)
+[.:\[ packet storm \]:.](http://packetstormsecurity.com/), [insecure.org: Top 75 Security Tools](http://www.insecure.org/tools.html)
+Przykładowe sniffery (uwaga: nieostrożne użycie może spowodować problemy prawne):
+
+- dsniff: \[[www.monkey.org/~dugsong/dsniff/](http://www.monkey.org/~dugsong/dsniff/)\]
+- EtherApe \[[etherape.sourceforge.net](http://etherape.sourceforge.net/)\]
+- Ethereal \[[www.ethereal.com](http://www.ethereal.com/)\]
+- ettercap \[[ettercap.sourceforge.net](http://ettercap.sourceforge.net/)\]
+- Sniffit \[[reptile.rug.ac.be/~coder/sniffit/sniffit.html](http://reptile.rug.ac.be/~coder/sniffit/sniffit.html)\]
+- Snort \[[www.snort.org](http://www.snort.org/)\] [Network Monitoring with Snort](http://www.linux-mag.com/2003-05/guru_01.html)
+- tcdump \[[www.tcpdump.org](http://www.tcpdump.org/)\]
+
+sól (ang. _salt_)
+
+Arbitralna wartość składająca się z przypadkowych bitów (najczęściej 12 lub więcej), unikalna dla konkretnego użytkownika, dołączona do hasła przed uwierzytelnieniem hasza, oznacza to, że to samo hasło da inny rezultat haszu co utrudni atak słownikowy; osłabia to siłę działania polegającego na uprzednim przygotowaniu i przechowaniu haszy z popularnych haseł, sól ukrywa także używanie tego samego hasła na różnych systemach.
+[Salt_(cryptography)](http://en.wikipedia.org/wiki/Salt_(cryptography))
+
+SSH (Secure Shell)
+
+Protokół służący do utworzenia tunelu między dwoma obiektami w niezabezpieczonej sieci; najczęściej używany do przeprowadzenia operacji na zdalnym komputerze.
+
+SSL (Secure Sockets Layer) i TLS (Transport Layer Security)
+
+Protokoły zapewniające szyfrowaną łączność, uwierzytelnienie uczestników komunikacji i weryfikację integralności wiadomości działające na poziomie TCP dzięki czemu są przezroczyste dla warstwy aplikacji. Mogą być użyte do zabezpieczenia dowolnych protokołów warstwy aplikacyjnej, najczęściej służą do tworzenia bezpiecznego kanału WWW (HTTPS) lub ochrony przesyłanych haseł (email).
+
+suma kontrolna (ang. _checksum_)
+
+Wczesna i prosta forma wykrywania błedów w kodzie. najczęściej podsumowanie wartości danych w rejestrze o pewnej uzasadnionej wielkości, np. 16 bitów, niestety powiększanie tej wielkości nie polepsza metody.
+Bardziej zaawansowane formy sum kontrolnych używają zarówno wartości danych jak i ich pozycji.
+
+szyfr (ang. _cipher_)
+
+Składająca się z pewnej liczby przekształceń procedura zamieniająca jawny tekst w szyfrogram (i na odwrót); algorytm kryptograficzny.
+
+- każdy system używający szyfrowania - system szyfrowy
+- w ogólności wybrana kluczem tajna transformacja pomiędzy jawnym tekstem a szyfrogramem
+- w szczególności tajny mechanizm lub proces który operuje na pojedynczych znakach lub bitach niezależnie od ich znaczenia (w przeciwieństwie do tajnego kodu - który operuje na słowach wyrażeniach lub sformułowaniach, które przenoszą częśc znaczenia).
+
+szyfr asymetryczny (ang. _asymmetric cryptography_)
+
+Szyfr klucza publicznego - szyfr używający innych kluczy do szyfrowania i innych do odszyfrowania danych; najczęściej jest to uzupełniająca się para kluczy: publiczny do szyfrowania i prywatny do odszyfrowania (chociaż każdy z nich może zostać użyty do szyfrowania i odszyfrowania)
+Niestety szyfr klucza publicznego jest bardzo powolny, dlatego większość tzw. "szyfrów klucza publicznego" jest systemami hybrydowymi mającymi zarówno składniki szyfru asymetrycznego jak i symetrycznego, w systemach hybrydowych część asymetryczna jest używana tylko do zapewnienia klucza wiadomości sesyjnego dla szyfru symetrycznego, który tak naprawdę jest używany do ochrony danych
+Rzeczywista przestrzeń klucza publicznego takiego jak RSA jest dużo mniejsza niż mogłoby się to wydawać, 1000-bitowy komponent klucza publicznego ma siłę porównywalną z 80-bitowym kluczem tajnym, ta olbrzymie obniżenie słabości wynika z wymagania szyfrów asymetrycznych by ich klucze były w szczególnej i rzadkiej formie, większość możliwych wartości wielkości klucza publicznego nie jest akceptowalna jako klucze
+Popularne szyfry asymetryczne to RSA i ElGamal.
+
+szyfr jednostronny (ang. _one-way cryptography_)
+
+Używający funkcji haszującej szyfr nieodwracalnie przekształcający jawny tekst w szyfrogram (skrót).
+
+szyfr oparty na krzywej eliptycznej (ECC - Elliptic Curve Cryptography)
+
+Wynaleziona w 1985 niezależnie przez Neala Koblitza i Victora Millera metoda tworzenia szyfrów oparta na matematyce krzywych eliptycznych, zwolennicy tego rozwiązania twierdzą, że może tworzyć szybsze i mniejsze klucze zapewniające takie samo bezpieczeństwo jak starsze metody (jak np. RSA).
+[The Basics of ECC](http://www.certicom.com/index.php?action=res,ecc_faq), [Elliptic_curve_cryptography](http://en.wikipedia.org/wiki/Elliptic_curve_cryptography), [Primer on elliptical curve cryptography](http://www.windowsfordevices.com/articles/AT4461971842.html)
+
+szyfr symetryczny (ang. _symmetric cryptography_)
+
+Szyfr tajnego klucza - szyfr uzywjący tego samego klucza do szyfrowania i odszyfrowania danych; czasem też nazywany szyfrem klucza prywatnego, jednego klucza lub pojedynczego klucza.
+Szyfry symetryczne dzielą się na:
+
+- blokowe - szyfrują dane podzielone na grupy bitów (tzw. bloki) o określonej długości w jednym przebiegu (DES, IDEA i AES)
+- strumieniowe - szyfrują na raz jeden bit (RC4)
+
+Popularne szyfry symetryczne to m.in.: AES, Blowfish, DES i jego odmiany 3DES, DESX, IDEA
+
+szyfrogram (kryptogram) (ang. _ciphertext_)
+
+Informacja po przekształceniu za pomocą szyfru, co ma na celu zabezpieczenie oryginalnej informacji przed odczytaniem w czasie transportu lub przechowywania.
+Kryptografia ukrywa informację zmieniając jawną postać w jeden z licznych możliwych szyfrogramów wybrany kluczem. Efekt działania szyfru (szyfrogram) może być także widziany jako kod, który ma wiele możliwych postaci jawnego tekstu. Celem kryptografii jest było niewykonalne wiedzieć którą wersję jawnego tektu reprezentuje szyfrogram bez znajomości klucza.
+
+tekst jawny (ang. _plaintext_)
+
+Informacja w oryginalnej postaci, przed zaszyfrowaniem; najczęściej oznacza czytelną formę danych, ale mogą to być również np. dane w postaci binarnej.
+
+token (ang. _token_)
+
+Urządzenie lub program generujące jednorazowe hasła w celu potwierdzające tożsamość użytkownika.
+
+uwierzytelnienie (ang. _authentication_)
+
+Jeden z celów kryptografii. Najczęściej: zapewnienie, że wiadomość została wysłana przez konkretnego autora, jest to uwierzytelnienie wiadomości, czasem dotyczy też zapewnienia integralności wiadomości.
+Inną formą są uwierzytelnienie indywidualnych bloków (dla transmisji danych) lub kluczy publicznych.
+
+VPN (Virtual Private Network)
+
+Tworzona przy pomocy tuneli sieć zabezpieczonej komunikacji pomiędzy obiektami w niezabezpieczonej sieci.
+[Testowanie sieci SSL VPN](http://www.networld.pl/news/71579.html)[Virtual Private Network](http://www.nwfusion.com/links/Encyclopedia/V/472.html), [Virtual_private_network](http://en.wikipedia.org/wiki/Virtual_private_network) [Poptop - The PPTP Server for Linux](http://www.poptop.org/) [MPPE/MPPC kernel module for Linux](http://www.polbox.com/h/hs001/) [Cryptanalysis of Microsoft's Point-to-Point Tunneling Protocol (PPTP)](http://www.schneier.com/paper-pptp.html) [Cryptanalysis of Microsoft's PPTP Authentication Extensions (MS-CHAPv2)](http://www.schneier.com/paper-pptpv2.html) [OpenVPN(TM)](http://openvpn.net/)
+
+WAN (Wide Area Network)
+
+Rozległa sieć komputerowa.
+
+X.509
+
+Format podpisu cyfrowego, pełniący kluczową rolę w PKI. Zgodnie z nim sa zbudowane certyfikaty SSL.
+
+ziarno (ang. _seed_)
+
+Losowa wartość uzyskana najczęściej ze zdarzeń systemowych (lub ze sprzętowego generatora) używana przez generator liczb pseudolosowych.
+
+### Algorytmy
+
+#### symetryczne
+
+Blowfish
+
+Blowfish to szyfr blokowy stworzony przez Bruce'a Schneier'a w 1993 roku jako szybka i bezpłatna alternatywa dla istniejących ówcześnie algorytmów. Algorytm operuje na 64-bitowych blokach i używa kluczy od 32 do 448 bitów.
+Algorytm ma postać szyfru Feistela z 16 rundami z SBOXami zależnymi od klucza. Każda zmiana klucza wymaga dość sporej ilości wstępnych obliczeń, żeby ustalić SBOXy. Z tego powodu atak BF trwa znacznie dłużej niż możnaby się spodziewać.
+[Blowfish_(cipher)](http://en.wikipedia.org/wiki/Blowfish_(cipher)), [Blowfish_(kryptografia)](http://pl.wikipedia.org/wiki/Blowfish_(kryptografia))
+
+DES (Data Encryption Standard)
+
+Opracowany przez IBM w latach 1976-2001 standardowy algorytm szyfrujący używany przez rząd amerykański DES (ang. Data Encryption Standard - Standard Szyfrowania Danych) - szeroko używany algorytm kryptograficzny. Stworzony przez IBM na podstawie szyfru Lucifer, został zmodyfikowany przez amerykańską NSA. Zaakceptowany jako amerykański standard w roku 1977.
+64-bitowy blok szyfru z 56-bitowym kluczem 16 razy przetwarzany.
+Obecnie uznawany za zbyt słaby szyfr, głównie ze względu na zbyt mały rozmiar klucza, który był już łamany w czasie poniżej 24 godzin
+[DES (.ang)](http://en.wikipedia.org/wiki/DES)[DES (.pl)](http://pl.wikipedia.org/wiki/DES)
+
+3DES (Triple DES)
+
+ulepszony DES 3DES to algorytm polegający na zakodowaniu wiadomości DESem trzy razy: kodujemy pierwszym kluczem, dekodujemy drugim kluczem, kodujemy trzecim kluczem (użycie dekodowania jako drugiej fazy nie wpływa na siłę algorytmu (dekodowanie w DESie jest identyczne jak kodowanie, tylko ma odwróconą kolejność rund), ale umożliwia używania 3DESa w trybie kompatybilności z DESem - za klucz pierwszy i drugi, lub drugi i trzeci przyjmujemy dowolny taki sam klucz, a za ostatni zwykły klucz DESowski; 3DES używa takich samych rozmiarów bloków oraz trybów jak zwykły DES. Siła 3DESa jest tylko dwukrotnie, nie trzykrotnie większa od siły zwykłego DESa, ze względu na atak MITM
+
+AES (Advanced Encryption Standard - Rijandel)
+
+symetryczny szyfr blokowy przyjęty przez NIST w wyniku konkursu ogłoszonego w roku 1997. Bezpośrednią przyczyną rozpisania konkursu była niewystarczająca siła algorytmu DES. Konkurs wygrał algorytm Rijndael. Możliwe jest w nim użycie kluczy o długościach 128, 192 i 256 bitów, i operuje on na blokach danych o długości 128 bitów (oryginalna specyfikacja Rijndael dopuszczała również bloki 192 i 256 bitowe).
+AES wykonuje 10, 12 lub 14 (w zależnosci od długości klucza) rund szyfrujących podstawienie-permutacja, składających się z substytucji wstępnej, permutacji macierzowej (mieszanie wierszy, mieszanie kolumn), modyfikacji za pomocą klucza, przy czym funkcja substytucyjna ma bardzo oryginalną konstrukcję uodparniającą na znane ataki kryptoanalizy różnicowej i liniowej.
+Autorami są dwaj belgijscy kryptografowie Joan Daemen i Vincent Rijmen (stad nazwa Rijndael)
+Jest szybki i łatwy w implementacji, wymaga niewiele pamięci i jest wolny od problemów licencyjnych - dlatego obecnie jest powszechnie stosowany.
+[AES (.ang)](http://en.wikipedia.org/wiki/AES)
+
+IDEA (International Data Encryption Algorithm)
+
+Symetryczny szyfr blokowy operujący na 64-bitowych blokach wiadomości i mający 128-bitowy klucz opracowany w ETH w Zurychu).
+IDEA jest objęta patentem w USA i Europie, jest dostępna do darmowego użytku tylko w celach niekomercyjnych.
+Ze względów patentowych oraz ze względu na powstanie lepszych algorytmów (AES) i postępy w kryptoanalizie IDEA znacznie straciła na popularności, choć nie została nigdy złamana. Obecnie nie ma już powodów do stosowania tego szyfru, są lepsze i pozbawione komplikacji patentowych.
+[IDEA (.ang)](http://en.wikipedia.org/wiki/International_Data_Encryption_Algorithm)
+
+RC5
+
+Bardzo szybki i prosty algorytm autorstwa Ronalda Rivesta (MIT) - powstał w 1994.
+Rozmiar bloku, ilość rund i długość klucza może być dostosowywana do potrzeb.
+
+#### asymetryczne
+
+Diffie-Hellman
+
+Protokół uzgadniania kluczy Diffie'ego-Hellmana to protokół kryptograficzny, w którym dwie strony mogą wylosować pewną liczbę (tajny klucz), taką, że obie strony po wykonaniu protokołu będą ją znały, za to nie będzie jej znał nikt z podsłuchujących wymianę wiadomości. Liczba ta może być potem używana jako klucz symetryczny do szyfrowania komunikacji.
+Protokół nie zabezpiecza przed ingerencjami w komunikację (atak MITM, jedynie przed pasywnym podsłuchem. Dlatego należy go uzupełnić o zabezpieczenia przed atakiem aktywnym.
+Była to pierwsza praktyczna metoda ustanowienia wspólnej tajemnicy przez niechroniony kanał komunikacji.
+Szyfr złamany w 1980. Patent wygasł.
+[Diffie-Hellman (.ang)](http://en.wikipedia.org/wiki/Diffie-Hellman)
+
+ElGamal
+
+ElGamal to jeden z dwóch najważniejszych systemów kryptografii asymetrycznej (drugim jest RSA).
+ElGamal zapewnia szyfrowanie oraz podpisy cyfrowe. Wiele modyfikacji ElGamala (podobnie jak z modyfikacjami RSA) zapewnia różne inne usługi.
+Autor: Taher ElGamal
+Używany w GPG, obecnych wersjach PGP i innych kryptosystemach;
+[ElGamal_encryption (.ang)](http://en.wikipedia.org/wiki/ElGamal_encryption)
+
+RSA
+
+RSA to pierwszy i obecnie jeden z dwóch najpopularniejszych (obok ElGamal) systemów kryptografii asymetrycznej. Stworzony w roku 1978 przez zespół: Ronald Rivest, Adi Shamir, Leonard Adelman (wówczas pracowników MIT). RSA jest akronimem utworzonym z pierwszych liter nazwisk jego twórców. Pierwszy główny system klucza publicznego.
+Trudność RSA opiera się na trudności faktoryzacji dużych liczb - znalezienie szybkiej metody faktoryzacji doprowadziłoby do złamania RSA, aczkolwiek nie ma dowodu, że nie da się złamać RSA w inny sposób. Klucz RSA musi być około 10 razy większy od klucza tajnego by zapewnić podobne bezpieczeństwo.
+Patent MIT w USA (1983) wygasł we wrześniu 2000, gdzie indziej nie jest możliwe jego opatentowanie.
+Dużo wolniejszy od DES i innych szyfrów symetrycznych, więc najczęściej Bob szyfruje tajną wiadomość algorytmem symetrycznym, tajny klucz (relatywnie krótki) szyfruje RSA i przesyła zarówno zaszyfrowany RSA klucz symetryczny jak i zaszyfrowaną nim wiadomość do Alice. Ta procedura wymaga użycia silnego generatora liczb przypadkowych dla klucza symetrycznego, ponieważ w przeciwnym wypadku Eve będzie mogła ominąć RSA zgadując klucz symetryczny.
+Podatny na MITM
+Zasada działania: dwie liczby pierwsze (_p_ i _q_) są podstawą dla wyznaczenia wartości _n_ i _e_.
+
+- _n_ to iloczyn _p_ i _q_ (_n=pq_)
+- _e_ to liczba względnie pierwsza (czyli nie mająca wspólnych podzielników oprócz 1) do iloczynu _(p-1)(q-1)_ mniejsza od _n_
+- klucz publiczny to wartości(_n, d_) a prywatny (_n, d_)
+
+RSA jest trudny do złamania pod warunkiem użycia dużych liczb pierwszych, w praktyce wybierane są liczby prawdopodobnie pierwsze (duże losowe, nieparzyste liczby na których przeprowadza sie testy mające wykluczyć parzystość)
+
+- szyfrowanie - uzyskanie wiadomości _c_ z tekstu _m_ - _c=memod n_ (mod - dzielenie modulo)
+- odszyfrowanie - _m=cd mod n_
+- sygnatura s na wiadomości m - _s=md mod n_
+- sprawdzenie autentyczności podpisu _s_ - obliczenie wartości _se mod n_ (jeśli wynikiem jest wiadomość m podpis jest prawidłowy)
+
+[RSA (.ang)](http://en.wikipedia.org/wiki/RSA), [RSA_(kryptografia)](http://pl.wikipedia.org/wiki/RSA_(kryptografia))
+
+DSA
+
+DSA chociaż jest tylko mechanizmem uwierzytelnienia i nie zapewnia szyfrowania jest bardzo podobny do ElGamal
+
+#### jednostronne
+
+MD5 (Message-Digest algorithm 5)
+
+Popularny algorytm haszujący, który z dowolnego ciągu danych generuje 128-bitowy skrót; opracowany przez Ronalda Rivesta w 1991 roku. W roku 2004 stwierdzono istotne braki w poziomie bezpieczeństwa, co prawdopodobnie może spowodować rezygnację z tego algorytmu na korzyść silniejszych (np. SHA-1 lub RIPEMD-160)
+Obliczany jest kolejno hasz z każdego bloku w łańcuchu (z dodaniem początkowego _initial seed_ dla pierwszego), wartość ziarna z ostatniego bloku jest haszem całego łańcucha. Poprzednikiem był algorytm - MD4 -, który w wyniku analizy przeprowadzonej przez Hansa Dobbertina okazał się zbyt mało bezpieczny.
+Ataki na MD5:
+
+- w 1996 roku Dobbertin zaprezentował analizę kolizji funkcji haszującej algorytmu MD5 - nie był to jeszcze pełny atak na funkcję haszującą to jednak wystarczył, aby specjaliści w dziedzinie kryptografii zaczęli stosować silniejsze odpowiedniki
+- w marcu 2004 roku powstał rozproszony projekt nazywany MD5CRK - twórcą projektu był Jean-Luc Cooke i jego współpracownicy - miał on na celu wykazanie, że możliwe jest takie spreparowanie drugiej wiadomości na podstawie wiadomości wyjściowej aby obie dały ten sam skrót; używając internetu wykazano, że dysponując bardzo dużą mocą obliczeniową możliwe jest podrabianie generowanych podpisów.
+- 17 sierpnia 2004 chińscy naukowcy (Xiaoyun Wang, Dengguo Fen, Xuejia Lai i Hongbo Yu) opublikowali analityczny algorytm ataku, dzięki któremu do podrobienia podpisu wystarczyła godznia działania klastrowego komputera IBM P690; [\[1\] PDF](http://eprint.iacr.org/2004/199.pdf), [\[2\] PDF](http://eprint.iacr.org/2004/264.pdf). \[note that Wang et al's attack is a collision attack and not a preimage attack\]
+
+128 bitów jest uważane za zbyt mało, żeby zabezpieczyć przed kolizjami, dlatego do większości zastosowań lepiej jest używać funkcji zwracającej co najmniej 160 bitów.
+Sprawdzanie integralności: skrót MD5 jest często stosowany przy dystrybucji oprogramowania dla zapewnienia, że sprowadzony z internetu plik nie został zmieniony - dzięki porównaniu opublikowanego skrótu z sumą kontrolną sprowadzonego pliku można było upewnić się, że jest to ten sam plik, który opublikowali programiści; chroniło to nie tylko przed podmianą ale także przez zwykłym popsuciem pliku w czasie transferu lub niekompletnym transferem., żeby zweryfikować integralność plików należy sprowadzić plik MD5SUM do tego samego katalogu co sprawdzany plik i użyć programu MD5 (w systemach uniksowych polecenie md5sum).
+
+- Wikipedia: [MD5 (pl.)](http://pl.wikipedia.org/wiki/MD5), [MD5 (eng.)](http://en.wikipedia.org/wiki/MD5)
+- [MD5 crack](http://passcracking.com/)
+- CITS Insitute for Cryptology and IT-Security: [Attacking Hash Functions by Poisoned Messages "The Story of Alice and her Boss"](http://www.cits.rub.de/MD5Collisions/)
+- The Code Project: [Good Bye MD5](http://www.codeproject.com/useritems/GoodbyeMD5.asp), [Exploiting MD5 collisions (in C#)](http://www.codeproject.com/useritems/HackingMd5.asp)
+
+SHA (Secure Hash Algorithm)
+
+Rodzina powiązanych ze sobą funkcji haszujących zaprojektowanych przez NSA (National Security Agency) i publikowanych przez NIST (National Institute of Standards and Technology).
+Pierwszy z nich opublikowany w 1993 oficjalnie nazwany SHA (nieoficjalnie, żeby nie pomylić z następcami określany jako SHA-0).
+SHA-1 opublikowany został w 1995 i całkowicie zastąpił wycofanego (ze względu na nieujawnione oficjalnie wady) z użytku SHA-0. Potem od 2001 powstały cztery następne warianty określane jako SHA-2 (SHA-224, SHA-256, SHA-384, SHA-512).
+W 2004 zgłoszono udane ataki na funkcje haszujące mające strukturę podobną do SHA-1 co podniosło kwestię długotrwałego bezpieczeństwa SHA-1. NIST ogłosił, że do 2010 zaprzestanie stosować SHA-1 na rzecz róźnych wariantów SHA-2.
+SHA-0 i SHA-1 tworzą 160-bitowy skrót z wiadomości o maksymalnym rozmiarze 264 bity i jest oparty o podobne zasady co MD5.
+Podstawowym celem publikacji SHA był Standard Podpisu Cyfrowego (Digital Signature Standard), którego SHA był częścią.
+SHA jest podstawą szyfru blokowego SHACAL.
+Cały mechanizm ochrony przed nielegalnym kopiowaniem microsoftowego Xboksa zależy od bezpieczeństwa SHA-1 jeśli zostanie przeprowadzony skuteczny atak wykorzystujący przeciwobraz ([Image_(mathematics)](http://en.wikipedia.org/wiki/Image_(mathematics))) będzie możliwe dowolne kopiowanie gier bez pomocy modchipa.
+[SHA](http://en.wikipedia.org/wiki/SHA)
+
+### Ataki
+
+_brute force_ BF
+
+(atak siłowy; atak pełnego przeglądu) najprostsza forma ataku polegająca na wypróbowaniu wszystkich dających się przewidzieć możliwości aż do osiągnięcia sukcesu, czyli odzyskania jawnego tekstu, z którego powstał szyfrogram; przeszukanie całej przestrzeni klucza (_"keyspace"_). W większości przypadków odzyskanie jawnego tekstu nie jest równoważne ze złamaniem szyfru (czyli nie jest metodą odzyskania jawnych tekstów wszystkich szyfrogramów), zakończony sukcesem atak BF po prostu dostarcza jawne teksty zaszyfrowane konkretnym kluczem, chociaż może zapewnić wskazówki do dalszej kryptoanalizy.
+Generalnie rzecz biorąc szyfr uważany jest za bezpieczny jeśli nie ma mniej kosztownych (w czasie , mocy obliczeniowej itp.) metod niż BF; Claude Shannon określił to terminem _"work factor"_. Chociaż nie zostało to dowiedzione matematycznie dla żadnego innego szyfru niż _one time pad_, możliwe iż szyfr uznany dzisiaj za dobry, w przyszłości, może się kazać niebezpieczny w przyszłosci.
+Jeśli klucze były wybrane naprawdę losowo, lub są przeszukiwane losowo, jawny tekst będzie dostępny przeciętnie po połowie wszystkich wypróbowanych kluczy. Założeniem leżącym u podstaw BF jest oczywiście, że algorytm szyfru jest znany.
+Auguste Kerckhoffs wyraził to po raz pierwszy - podstawową zasadą kryptografii jest, że bezpieczeństwo w całości musi być zawarte w kluczu (_"security must reside only in the key"_), w czasach WWII Shannon wyraził to w stwierdzeniu "wróg zna system" (_'the enemy knows the system'_). Ze względu na dużą ilość dobrze rozpoznanych szyfrów, których szczegóły projektowe stały się z różnych powodów znane, była to doskonała rada dla kryptografów. Jednakże tylko kilka krajów opublikowało algorytmy, używane do ochrony tajemnic państwowych.
+
+- Algorytmy symetryczne
+Od 2002 szyfry symetryczne uzywające kluczy o długości poniżej 64 bitów były bardziej lub mniej podatne na atak BF; np. DES powszechnie używany szyfr używający 56-bitowego klucza został złamany przez EFF w 1998, a później został złamany RC5 (używający klucza 64-bitowego). Powszechnie się uważa, że mające duże środki organizacje takie jak NSA mogą bez przeszkód atakować 64-bitowe klucze brute forcem. Dla aplikacji wymagajacych długotrwałego bezpieczeństwa uważa się, że rozsądne minimum długości klucza jest 128-bitów, a dla istniejących systemów przynajmniej 90-bitowe klucze uważane są za nadal bezpieczne. NIST rekomenduje wycofanie do 2015 roku 80-bitowych projektów.
+Ale nawet jeśli używane są 128-bitowe lub dłuższe klucze dobrze zaprojektowanych szyfrów (jak AES), możliwy jest atak BF jeśli klucze nie zostały wygenerowane we właściwy sposób. Wiele programów komercyjnych (lub na licencji shareware) dumnie reklamuje "128-bitowe bezpieczeństwo" kluczy wygenerowanych przy pomocy wymyślonych przez użytkownika haseł. Ponieważ użytkownicy rzadko używają kluczy choćby zbliżonych do 128 bitowej entropii te systemy są w praktyce całkiem łatwe do złamania. Niektóre produkty nawet ograniczają maksymalną liczbę znaków jaką użytkownik może wprowadzić do długości poniżej właściwej frazy hasła. Oto przykłady haseł lub frazy haseł, które moga zapewnić 128-bitowe bezpieczeństwo jeśli są wytworzone przypadkowo i trzymane w tajemnicy:
+
+  - litery jednakowej wielkości (potrzebne 28 znaków): sqrnf oikas ocmpe vflte krbqa jwf
+  - litery różnych wielkości, numery i znaki specjalne (potrzebne 20 znaków): iTb.\\ /&/-} it/P; ^+22q
+  - fraza hasła wygenerowana przy pomocy diceware (potrzebne 10 słów): serf bare gd jab weld hum jf sheet gallop neve
+
+Prawie nikt nie używa haseł tej złożoności, jednym rozwiazaniem jest zaakceptowanie mniejszej siły, 16 literowe lub 6 słów diceware zapewnia 75-bitowe bezpieczeństwo, wystarczające do ochrony przed najpotężniejszymi agencjami kryptoanalitycznymi.
+Częściowym rozwiązaniem jest użycie KDF (Key Derivation Function), które przetwarza hasło w klucz za pomocą serii przekształceń matematycznych, co znacznie utrudnia atak BF. W praktyce ta technika dodaje 10 do 20 bitów siły do hasła, dostatecznie by można było używać łatwych do zrozumienia haseł, ale zbyt mało by zapezpieczyć krótkie hasła jakie używa większość ludzi. Niestety niewiele produktów bezpieczeństwa używa tej technologii.
+Być może najlepszym rozwiązaniem jest przechowywanie losowo generowanych haseł o pełnej mocy w zabezpieczonym przed sfałszowaniem tokenie, chronionym wewnętrznie przez hasło lub PIN.
+- Algorytmy asymetryczne
+Jeśli chodzi o algorytmy asymetryczne sytuacja jest bardziej skomplikowana i zależy od konkretnego algorytmu szyfrowania. Np. obecnie łamliwa długość klucza RSA jest do 512 bitów a rozwój badań sugeruje, że 1024 bitowy może być łamliwy w bliższym lub średnim okresie. Dla większości szyfrów opartych o eliptyczną krzywą (ECC) największa łamliwa długość klucza jest raczej krótsza, może aż 128 bitów.
+Obecnie (2004) za bezpieczne uznawane są 128 bitowe klucze szyfrów opartych o eliptyczną krzywą i 1024 bitów dla takich asymetrycznych szyfrów jak RSA.
+
+[Brute_force_attack](http://en.wikipedia.org/wiki/Brute_force_attack)
+
+atak słownikowy [Dictionary_attack](http://en.wikipedia.org/wiki/Dictionary_attack)
+
+W kryptoanalizie oznacza odkrycie hasła poprzez wyprobowywanie listy prawdopodobnych możliwości, często listy słów ze słownika. To odróżnia go od ataku brute force, gdzie wyprobówywane są wszystkie możliwości. Np. można próbować odgadnąć hasło w komputerze w kraju anglojęzycznym szyfrując każde z listy angielskich słów i porównując każde zaszyfrowanie z przechowywanymi zaszyfrowanymi wersjami haseł użytkowników. Ponieważ użytkownicy często wybierają niewłaściwe hasło (łatwe do odgadnięcia lub złamania) taki atak może się powieść jeśli użyta jest dostatecznie długa lista. Ponieważ słowniki większości ludzkich języków (nawet tych już nie używanych) są teraz łatwo dostępne w internecie, użycie mało znanych języków obcych (np. słów maoryjskich) już nie chroni przed atakiem słownikowym.
+Metodą pozwalająca na znaczne zwiększenie skuteczności takiego ataku jest zaszyfrowanie i przechowywanie listy zaszyfrowanych haseł posortowanych według zaszyfrowanej "wartości". Wymaga to dużo pamięci i często jest czasochłonne, ale dzięki temu atak jest właściwie natychmiastowy, co jest szczególnie efektywne jeśli na raz łamie się dużą listę haseł. Solenie jest techniką, która może zmusić zaszyfrowany słownik do osobnego przeliczania przy każdym znalezionym haśle.
+Przykład ataku słownikowego wydarzył się w WWII kiedy brytyjscy łamacze kodów pracujący nad niemieckimi wiadomościami szyfrowanymi Enigmą używali niemieckiego słowa "eins" jako części słownikowego ataku, słowo to pojawiało się w 90% wszystkich wiadomości szyfrowanych Enigmą, a klawiatura enigmy nie miała cyfr (więc niektórzy mogliby to zakwalifikować jako atak ze znanym jawnym tekstem).
+Książka Clifforda Stolla _"The Cuckoo's Egg"_, zawiera interesującą i czytelną relację z ataku słownikowego na zaszyfrowane hasła przechowywane w pliku passwd w systemie uniksowym i reakcji na zakończony sukcesem atak człowieka (Roberta Morrisa, Sr.), który wynalazł jednokierunkowy system szyfrowania haseł użytkowników.
+
+_MITM (man in the middle)_
+
+Atak polegający na podszywaniu się pod jedną ze stron komunikacji; wygląda to tak:
+Alice chce połaczyć się z Bobem, Mallory śledzi kanał łączności i podaje się za Boba (np. modyfikując dane DNS, lub wysyłając swój adres w odpowiednim momencie) przekazuje swój klucz publiczny jako klucz Boba i jednocześnie nawiązuje połączenie z Bobem a otrzymane od niego dane przekazuje Alicji; uczestniczy więc w transmisji jako niewidzialny element przechwytując hasła i inne tajne dane. Metoda ta nie wymaga ani znajomości hasła, ani łamania szyfru.
+
+```
+Alice <-[klucz Alicji]- -[klucz Mallory'ego 1]-> Mallory <-[klucz Mallory'ego 2]- -[klucz Boba]-> Bob
+```
+
+Zabezpieczenia: procedury certyfikacyjne, śledzenie opóźnień, używanie równocześbie kilku kanałów łaczności.
+
+atak przez powtórzenie (ang. _replay attack_)
+
+Pewna poprawna informacja - np. przechwycona podsłuchem - jest w złych intencjach powtórnie wysyłana przez napastnika w celu uzyskania dostępu; najczęściej dotyczy to haseł.
+[Replay_attack](http://en.wikipedia.org/wiki/Replay_attack)
+
+ze znanym szyfrogramem (ang. _known ciphertext attack_)
+
+Sytuacja gdzie atakujący dysponuje tylko szyfrogramem.
+Atak jest udany jeśli związany z nim jawny tekst jest odczytany lub jeszcze lepiej jeśli odkryty jest klucz. Możliwość uzyskania jakiejkolwiek informacji z szyfrogramu jest także uważana za sukces, np. jeśli utrzymywany jest ciągły ruch danych jest bardzo użyteczne jeśli można odróżnić prawdziwe wiadomości od fałszywych. Nawet sama informacja, że pozorny szum zawiera szyfrogramy może być pomocą dla napastnika.
+W historii kryptografii wczesne szyfry były systematycznie łamane przy użyciu wyłącznie szyfrogramu.
+Istnieje wiele technik analizy statystycznej - np. analiza częstotliwościowa _frequency analysis_. Mechaniczne szyfrowanie urządzeniami podobnymi do Enigmy uczyniło takie ataki dużo trudniejszymi. Jednakże wady Enigmy (konstrukcyjne i błedy w użyciu), pozwoliło polskim kryptografom na przeprowadzenie skutecznego ataku ze znanym szyfrogramem.
+Wprowadzenie elektroniki i komputerów do kryptografii uczyniło z ataków ze znanym szyfrogramem przeszłość, ponieważ wszystkie współczesne szyfry są przed nimi chronione już na etapie projektowania - testowanie nowego szyfru zajmuje wiele lat i składa się także z wyczerpujących testów dużych ilości szyfrogramu poddanych próbom czy czymkolwiek się różnią pod względem statystycznym od przypadkowego szumu.
+Niestety nieprawidłowe użycie szyfrów lub zastosowanie niepewnej wartości algorytmów, które nie były przedmiotem skrupulatnych badań zaowocowały wieloma systemami, które nadal mogą być obiektem takiego ataku:
+
+- wczesne wersje Microsoft PPTP virtual private network używały tego samego klucza dla nadawcy i odbiorcy (a późniejsze miały inne problemy)
+- szyfry mające za małą przestrzeń klucza są przedmiotem ataku BF ograniczonego tylko do szyfrogramu polegającego po prostu na wypróbowaniu wszystkich możliwych kluczy. Wszystko co jest potrzebne to możliwość odróżnienia prawidłowego jawnego tekstu od przypadkowego szumu, co nie jest problemem w przypadku języków naturalnych. Szyfry dodatkowo osłabia fakt, że użytkownicy rzadko używają haseł choćby zbliżonych do entropii przestrzeni klucza.
+
+[Ciphertext-only_attack](http://en.wikipedia.org/wiki/Ciphertext-only_attack)
+
+ze znanym tekstem jawnym (ang. _known plaintext attack_)
+
+Atak na bezpieczeństwo szyfru, w którym znane jest jedna lub więcej par tekstu jawnego i odpowiadającego mu szyfrogramu; jedyną brakującą rzeczą jest klucz.
+W Bletchley Park WWII, usiłowano zmusić Niemców do wyprodukowania wiadomości ze znanym jawnym tekstem. Znane jawne teksty nazywano ściągami (ang. _cribs_) a mechanizmy zmuszania Niemców do wyprodukowania ich nazywano "ogrodnictwem" (ang. _"gardening"_).
+[Known-plaintext_attack](http://en.wikipedia.org/wiki/Known-plaintext_attack)
+
+atak urodzinowy (ang. _birthday attack_)
+
+typ ataku wykorzystujący paradoks urodzin.
+Podpisy cyfrowe mogą być podatne na taki atak: wiadomość _m_ jest zwykle podpisana przez pierwsze przetworzenie _f(m)_ gdzie f jest kryptograficzną funkcją haszującą i wtedy używa się pewnego klucza prywatnego, żeby podpisać _f(m)_. Załóżmy,że Bob chce oszukać Alice, żeby podpisała oszukańczą umowę. Bob przygotowuje poprawny kontrakt _m_ i oszukańczy _m'_ Odnajduje pewną ilość miejsc, które mogą zostać zmienione bez zmiany znaczenia (umieszcza przecinki, spacje, puste wiersze itp.). Próbując tych miejsc tworzy dużą ilość wariacji _m_, które wszystkie są poprawnymi umowami, w ten sam sposób tworzy dużą liczbę wariacji oszukańczej umowy _m'_. Wtedy stosuje funkcie haszującą do wszystkich tych umów, tak aby odnaleźć wersje _m_ i _m'_, które mają tą samą wartość haszu _f(m) = f(m' )_. Kiedy już taką znajdzie daje Alice poprawną wersję umowy _m_ do podpisu. Wtedy może ten podpis dołączyć go do oszukańczej umowy. Poprawny podpis zaświadcza, że Alice podpisała oszukańczą umowę.
+Atak urodzinowy może zostać również zastosowany do przeliczenia dyskretnych logarytmów. Załóżmy, że _x_ i _y_ są elementami pewnej grupy i _y_ jest potęgą od _x_. Chcemy znaleźć wykładnik _x_, który daje _y_. Atak urodzinowy przelicza _xr_ dla wielu losowo wybranych liczb całkowitych _r_ i przelicza _yx-s_ dla wielu losowo wybranych liczb całkowitych _s_. Po jakimś czasie można znależć trafienie _xr = yx-s_ które oznacza _y = xr+s_.
+Jesli grupa ma n elementów, wtedy najprostsza metoda wypróbowywania wszystkich wykładników zabiera przeciętnie około n/2 kroków, atak urodzinowy jest znacząco szybszy i zabiera przeciętnie niewiele ponad 2√n.
+[Birthday_attack](http://en.wikipedia.org/wiki/Birthday_attack)
+
+z wybranym tekstem jawnym (ang. _chosen plaintext attack_)
+
+Zakłada, że atakujący ma możliwość wybrania dowolnego tekstu jawnego do zaszyfrowania i otrzymania odpowiadającego mu szyfrogramu, celem takiego ataku jest pozyskanie dalszych informacji, najczęściej tajnego klucza.
+Z pozoru wygląda na zupełnie nierealistyczny model, jest nieprawdopodobne, żeby atakujący zmusił człowieka do zaszyfrowania dużych ilości jawnego tekstu, który jest wybrany przez atakującego. Jednakże współczesna kryptografia jest zaimplementowana w oprogramowaniu i sprzęcie, ma wiele zastosowań, w których tego typu atak jest łatwy do przeprowadzenia.
+Można wyróżnić dwie formy ataku:
+
+- seryjny (ang. _batch chosen-plaintext attack_) - atakujący wybiera wszystkie jawne teksty przed zaszyfrowaniem
+- adaptacyjny (ang. _adaptive chosen-plaintext attack_) - analiza szyfrogramów z kolejno wybieranych jawnych tekstów, wybierane są na podstawie informacji uzyskiwanych z analizy poprzednich szyfrogramów
+
+Każdy szyfr odporny na ten rodzaj ataku jest również odporny na atak ze znanym tekstem jawnym oraz atak ze znanym szyfrogramem.
+Konwencjonalne szyfry symetryczne są często wrażliwe na taki atak, np. kryptoanaliza różnicowa szyfrów blokowych.
+Pewnym rodzajem tego ataku było "ogrodnictwo" (technika używana przez brytyjskich kryptografów w czasie WWII).
+[Chosen_plaintext_attack](http://en.wikipedia.org/wiki/Chosen_plaintext_attack)
+
+z wybranym szyfrogramem (ang. _chosen ciphertext attack_)
+
+Atakujący wybiera szyfrogram i powoduje jego odszyfrowanie nieznanym kluczem. Dla samo-synchronizującego się szyfru strumieniowego, taki atak może być przydatny jeśli klucz użyty do zaszyfrowania każdego bajtu zależy od poprzedniego szyfrogramu (?). Możliwe jest użycie tego ataku, żeby dostać wybraną wiadomość podpisaną RSA jeśli wiadomości są podpisane bez haszowania.
+Pewną wersją tego ataku jest wysłanie dużej liczby szyfrogramów do odszyfrowania, użycie tego odszyfrowania do wybrania następnych szyfrogramów i stopniowo ujawnienia informacji o zaszyfrowanej wiadomosci lub samym kluczu szyfrującym. Te ataki mogą zostać przeprowadzone przeciwko różnym mechanizmom klucza publicznego, włączajac w to RSA. Można temu zapobiec stosując właściwe użycie haszowania i sprawdzanie redundancji.
+[Chosen_ciphertext_attack](http://en.wikipedia.org/wiki/Chosen_ciphertext_attack)
+
+SE (_Social Engineering_)
+
+W dziedzinie bezpieczeństwa komputerowego oznacza sprawianie przez oszustwo by ludzie ujawniali istotne dane o systemie komputerowym. Powszechnie spotykany w internecie.
+Inżynieria społeczna to zestaw metod mających na celu uzyskanie niejawnych informacji przez oszusta. Przykładem może być sytuacja, w której cracker podszywa się pod inną osobę. W ten sposób usiłuje przekonać pracownika firmy, żeby podał mu swoje hasła. Dzięki ich znajomości może włamać się do systemu. Skuteczność inżynierii społecznej opiera się na ufności ofiar oraz ich niewystarczającej wiedzy informatycznej, oraz ogólnie dotyczącej procedur dystrybucji danych.
+Z powodu dużej ilości źle zabezpieczonych komputerów połaczonych z internetem większość ataków dokonywana jest na znane błędy bezpieczeństwa; jednakże, ataki SE pozostają bardzo powszechne i są sposobem na zaatakowanie systemów odpornych na innne rodzaje ataków - np. na komputery nie połączone z internetem. Powszechny - i uzasadniony - pogląd pośród ekspertów w tej dziedzinie głosi, że "użytkownicy są najsłabszym ogniwem"
+Popularnym współcześnie przykładem ataku SE jest użycie załączników e-mail, które zawierają złowrogi ładunek (np. taki, który z komputera ofiary wysyła olbrzymie ilości spamu). Po tym jak producenci programów pocztowych zaczęli wyłaczać automatyczne uruchamianie załączników użytkownicy muszą sami je uruchamiać i wielu tak czyni, bezmyślnie klikając w każdy załącznik jaki dostali.
+Być może najprostszym, ale wciąż skutecznym atakiem jest przekonanie użytkownika, że jest się administratorem i prosząc go o hasło w celach administracyjnych. Użytkownicy internetu ciągle dostają wiadomości z żądaniem haseł lub informacji o kartach kredytowych w celu 'ustawienia konta', 'przedłużenia ustawień' lub innych działań nazywanych fiszingiem.
+Użytkownicy muszą być regularnie pouczani, żeby nigdy nie ujawniać istotnych informacji ludziom podającym się za administratora. W rzeczywistości administratorzy w ogóle nie potrzebują znać hasła użytkowników do przeprowadzenia zadań administracyjnych. Ale nawet naiwne oszustwo może okazać się zbędne - w badaniu Infosurvey 90% pracowników biurowych dało swoje hasła w zamian za tani długopis.
+Każdy system komputerowy dostępny z Internetu, może być celem ataku i dlatego posiada szereg zabezpieczeń. Jednak nawet najlepsze algorytmy kryptografii nie uchronią ludzi przed ich własną niewiedzą. Posługując się inżynierią społeczną, można np. przekonać jednego z użytkowników ebanku, że jest się administratorem. Wystarczy wysłać mu e-mail z linkiem do strony łudząco podobnej do bankowej. Użytkownik wchodzi na nią, wpisuje swoje hasła i można pozbawić go wszystkich pieniędzy.
+Mówi się, że tylko wyłączony komputer jest odporny na atak. Jednak wystarczy zadzwonić o 2:00 w nocy do ochroniarzy. Udajemy przez telefon ważnego prezesa firmy przekonujemy ich, żeby włączyli ten komputer. Potem instruujemy ich jak zainstalować naszego trojana i firmowy intranet jest już nasz.
+Stosowanie technik inżynierii społecznej jest przestępstwem ściganym przez prawo polskie. Podszywanie się pod inną osobę oraz przejmowanie danych niejawnych jest zagrożone karą pozbawienia wolności. Instytucje publiczne oraz firmy muszą wprowadzać systemy weryfikacji tożsamości. Konieczne jest uczenie zasad bezpieczeństwa nie tylko pracowników działu informatycznego, ale również wszystkich innych.
+Warto wiedzieć, że nie zawsze zagrożenie jest tak bezpośrednie - jeden z największych problemów w Windowsach jest spyware, zawierające wykonywalny kod, który obiecuje coś zrobić, jednak w tle wykonuje inne zadania. Często jest to stosowane - udowodniono takie działania Chińczykom - do szpiegostwa przemysłowego.
+Najlepszym zabezpieczenem przed SE jest ciągłe pouczanie użytkowników w zakresie polityki bezpieczeństwa.
+Jednym z najbardziej znanych praktyków SE współcześnie jest Kevin Mitnick.
+[Social_engineering(computer_security)](http://en.wikipedia.org/wiki/Social_engineering_(computer_security))
+
+- władza: większość ludzi ma tendencję do wykonywania poleceń pochodzących od kierownictwa, socjotechnik może wmówić ofierze, że jest szefem lub wykonuje ważne dla niego zadanie, działa na jego polecenie
+- sympatia: ludzie okazują chęć do współpracy/pomocy jeśli spotykają kogoś sympatycznego lub mającego podobne podejście do życia, pozory bliskości (pomocny w przyszłej karierze, dobrze się prezentujący człowiek)
+- wzajemność: socjotechnik może wmówić ofierze, że pomógł jej chroniąc przed kłopotami, wykonał jakąś pożyteczną dla niej pracę (chociaż wcale nie musiał); np. informatyk, który pomaga usunąć nowego wirusa
+- konsekwencja: jeśli wcześniej ogłosiło się poparcie w jakiejś sprawie, wykonało już jeden drobiazg ciężko nagle się wycofać (instruktor polityki bezpieczeństwa)
+- przyzwolenie społeczne - jeśli inni już coś zrobili to my też (ankieter przemycający kilka istotnych pytań w ankiecie)
+- rzadka okazja - np. pierwszych 300 osób które założą konto na jakiejś tam stronie ma szansę wygrać nagrodę i zakładają podając dla wygody taką samą nazwę użytkownika i hasło
+
+Podstawowym działaniem jest zdobywanie informacji uwierzytelniających, które pozwolą uzyskać fałszywą tożsamość i używając jej zmuszenie ofiary do określonego działania [Inżynieria_społeczna_(informatyka) (pl.)](http://pl.wikipedia.org/wiki/Inżynieria_społeczna_(informatyka))
+
+### Biografie
+
+Daniel J. Bernstein
+
+Daniel Julius Bernstein (znany jako _djb_) jest profesorem University of Illinois w Chicago, matematyk, kryptolog i programista; jest autorem qmail i djbdns. Zwolennik oprogramowania wolnego od licencji.
+Bernstein prowadził sprawę Bernstein v. United States i później reprezentował się sam nie mając żadnego treningu jako prawnik. W wyniku tego procesu oprogramowanie zostało ogłoszone jako wypowiedź i jest chronione przez Pierwszą Poprawkę. W efekcie tego restrykcje na oprogramowanie szyfrujące zostały cofnięte.
+Zaproponował także Internet Mail 2000, alternatywny system poczty elektronicznej mający zamienić SMTP, POP3 i IMAP.
+Bezpieczeństwo oprogramowania.
+Jesienią 2004 zaczał uczyć w jednym z pierwszych formalnych kursów uniwersyteckich o bezpieczeństwie oprogramowania, zatytułowanym "UNIX Security Holes", 16 studentów odkryło 91 nowych dziur bezpieczeństwa.
+Bernstein od dawna jest promotorem idei, że pełne ujawnienie jest najlepszą metodą zapewnienia bezpieczeństwa komputerowego.
+Pomimo, że ogłosił $1K nagrody za znalezienie błędów bezpieczeństwa w swoim oprogramowaniu, chociaż jego programy są używane powszechnie nikt jej nie dostał. Bernstein wierzy, że możliwe jest napisanie bezpiecznego oprogramowania a ponieważ przeważają błedy powstałe w wyniku niedbałości i niekompetencji Bernstein argumentuje: "natychmiastowe ujawnienie i publikacja exploita jest karą dla programisty za zły kod. Panikuje, w pośpiechu naprawia problem, traci użytkowników. Zamiast się uskarżać, że taka kara jest bolesna, lepiej zauważyć, że ma wpływ na przyszłość, zachęca programistów do inwestowania czasu i wysiłków w celu eliminacji problemów bezpieczeństwa".
+[Daniel_J._Bernstein (eng.)](http://en.wikipedia.org/wiki/Daniel_J._Bernstein)
+
+Phil Zimmermann
+
+Phil Zimmermann (ur. 12 II 1954) jest twórcą PGP - pierwszego programu udostępniającego kryptografię asymetryczną użytkownikom.
+Z powodu restrykcji eksportowych trzy lata trwało śledztwo, ale na początku 1996 się zakończyło bez oskarżenia.
+Zimmerman założył PGP Inc., które w grudniu 1997 stało się częścią Network Associates (NAI) gdzie przez 3 lata był Senior Fellow. W 2002, PGP został pozyskany od NAI przez nowe przedsiębiorstwo PGP Corporation, gdzie Zimmermann jest specjalnym doradcą i konsultantem. Zimmermann należy także do Stanford Law School's Center for Internet and Society.
+Zimmermann dostał wiele nagród za pionierskie prace w kryptografii:
+
+- 1995 Newsweek - Zimmermann jednym z "Net 50" najbardziej wpływowymi ludżmi w internecie
+- 1995 otrzymał Chrysler Award for Innovation in Design i Pioneer Award (Electronic Frontier Foundation).
+- 1996 otrzymał Norbert Wiener Award for Social and Professional Responsibility za promowanie odpowiedzialnego używania technologii
+- 1998 otrzymał Lifetime Achievement Award (Secure Computing Magazine)
+- 1999 Louis Brandeis Award (Privacy International)
+- 2000 InfoWorld uznał go za jednego z Top 10 Innovators in E-business
+- 2001 został wprowadzony do CRN Industry Hall of Fame
+
+[Phil Zimmermann](http://en.wikipedia.org/wiki/Phil_Zimmermann)
+
+Bruce Schneier
+
+Bruce Schneier (ur. 15 I 1963) amerykański kryptograf, ekspert bezpieczeństwa komputerowego i pisarz, autor kilku książek o bezpieczeństwie komputerowym i kryptografii; założyciel i główny specjalista technologi Counterpane Internet Security.
+Pochodzi z NY, żyje w Minneapolis (Minnesota) z żoną Karen Cooper. Schneier ma Master's z informatyki z American University i stopień Bachelor of Science w fizyce z University of Rochester. Przed Counterpane, pracował w DoD i potem w Bell Labs.
+Applied Cryptography jest powszechnie uważana za podstawową pracę o kryptografii.
+Zaprojektował lub współzaprojektował kilka algorytmów kryptograficznych (m.in. Blowfish, Twofish i MacGuffin) oraz kryptograficznie bezpieczne generatory liczb pseudolosowych Yarrow i Fortuna. Solitaire jest algorytmem zaprojektowanym dla ludzi nie mających dostępu do komputera (nazwany Pontifex w Cryptonomicon).
+Obecnie jest większym sceptykiem, uważa, że nawet bardzo dobrej jakości algorytmy są tylko tak skuteczne jak najsłabsze ogniwo praktycznego zastosowania.
+Pisze miesięczny newsletter o bezpieczeństwie komputerowym i innych zagadnienich bezpieczeństwa: Crypto-Gram i security blog, jest często cytowany w prasie.
+[Bruce_Schneier (eng.)](http://en.wikipedia.org/wiki/Bruce_Schneier)
+
+dr Auguste Kerckhoffs (19 I 1835 - 1903)
+
+Flamandzki lingwista i kryptograf; profesor języków w School of Higher Commercial Studies w Paryżu w późnym XIX wieku.
+Kerckhoffs urodził się w Nuth, Holland, i zostałochrzczony jako Jean-Guillaume-Hubert-Victor-Francoise-Alexandere-Auguste-Kerckhoffs von Niuewenhof, chociaż później skrócił swoje imiona; studiował na Uniwersytecie Liege. Po okresie nauczania w szkołach w Holandii i Francji został profesorem niemieckiego w Parisian Ecole des Hautes Etudes Commerciales i Ecole Arago.
+Najbardziej znany jest dzisiaj z dwóch esejów, które opublikował w 1883 w Journal des Sciences Militaires ("Journal of Military Science") zatytułowanych La Cryptographie Militaire ("Military Cryptography"). Artykuły te były przeglądem stanu sztuki w kryptografii wojskowej i przyczyniły się do znaczącego udoskonalenia w francuskiej kryptografii. Zawierały także wiele praktycznych rad i reguły, także znane sześć zasad projektowania szyfrów.
+Z całego jego dorobku najbardziej znane jest drugie z jego sześciu zasad, znane także jako prawo Kerckhoffsa "bezpieczeństwo kryptosystemu musi zawierać się tylko w kluczu" a nie w tajemnicy jakiejkolwiek innej części systemu.
+Na wojnie nieprzyjaciel wieloma metodami może przechwycić i poddać analizie sprzęt lub inne elementy kryptosystemu. W informatyce można poddać oprogramowanie analizie, debuggerowi, lub przetestować sprzęt na różne sposoby. Ponieważ nigdy nie można takich sytuacji wykluczyć, bezpieczeństwo kryptosystemu jest zapewnione dopiero jeśli nie jest zależne od utrzymania w tajemnicy takich szczegółów.
+To samo odnosi się do kryptografii - zasada ta mówi, że kryptografia powina być bezpieczna nawet jeśli atakujący zrobił te rzeczy, lub inaczej mówiąc security by obscurity jest w kryptografii nieważna.
+Późniejsze prace:
+W 1885 Dr. Kerckhoffs zaczął się interesować tworzeniem języka Volapük, i przez wiele lat był przodującym członkiem ruchu Volapük i dyrektorem Academy of Volapük. Opublikował kilka książek na temn temat i wprowadził ruch do Francji, Hiszpani i Skandynawii serią publicznych wykładów.
+[Auguste_Kerckhoffs (eng.)](http://en.wikipedia.org/wiki/Auguste_Kerckhoffs)
+
+major Friedrich Wilhelm Kasiski (29 XI 1805 - 22 V 1881)
+
+Pruski oficer piechoty, kryptograf i archeolog, urodził się w Schlochau, West Prussia (obecnie Człuchów).
+Służba wojskowa.
+20 marca 1823 w wieku 17 lat zaciągnął się do 33-ego Wschodniopruskiego Regimentu Piechoty (East Prussia's 33rd Infantry Regiment). W maju 1824 został promowany do rangi starszego sierżanta (Master Sergeant), osiem miesięcy później w lutym 1825 został mianowany na stopień Second Lieutenant. Zabrało 14 lat do następnej promocji kiedy w maju 1839 awansował do rangi First Lieutenant, na kapitana w listopadzie 1842. Ostatecznie zwolnił się z aktywnej służby w randze majora 17 lutego 1852.
+Pomiędzy 1860 i 1868 był dowódcą batalionu Gwardii Narodowej (National Guard).
+Kryptografia:
+W 1863 opublikował 95-stronicową książkę o kryptografii, Die Geheimschriften und die Dechiffrierkunst ("Secret writing and the Art of Deciphering"). Było to pierwszy opublikowany przykład procedury ataku na zastąpieniowy szyfr polialbabetyczny, np. słynny szyfr Vigenere'a (chociaż Charles Babbage wymyślił to przed nim, ale trzymano to w tajemnicy). Metoda polegała na analizie przerw między powtarzającymi się fragmentami szyfrogramu, co mogło dać wskazówki co do długości użytego klucza. Jest to znane jako _Kasiski examination_.
+Znaczenie kryptoanalityczne tej pracy nie zostało docenione, więc zajął się archeologią. Późne lata życia spędził w Neustettin (Szczecinek). Historyk David Kahn pisze, "Kasiski umarł 22 maja, 1881, prawie na pewno nie zdając sobie sprawy, że dokonał przełomu w kryptoanalizie" (The Codebreakers).
+[Friedrich_Kasiski (eng.)](http://en.wikipedia.org/wiki/Friedrich_Kasiski)
+
+### Materiały
+
+#### Książki
+
+W nawiasie oryginalny tytuł i data pierwszego wydania.
+
+- Simon Singh "Księga szyfrów", Albatros 2001, s 447; ISBN: 83-7311-714-8 ("The Code Book: The Science of Secrecy from Ancient Egypt to Quantum Cryptography", 1999)
+- Bruce Schneier "Kryptografia dla praktyków", WNT 2002, s 900; ISBN: 83-204-2678-2 ("Applied Cryptography. Second Edition", 1996)
+- Niels Ferguson, Bruce Schneier "Kryptografia w praktyce", Helion 2004, s 296; ISBN: 83-7361-211-4 ("Practical Cryptography", 2003)
+- David Kahn "Łamacze kodów. Historia kryptologii", Zysk i S-ka 2019, s 1762; ISBN: 978-83-8116-632-4 ("The Codebreakers: The Comprehensive History of Secret Communication from Ancient Times to the Internet", 1996)
+- Douglas Stinson "Kryptografia. W teorii i praktyce", WNT 2005, s 438, ISBN: 83-204-2982-X
+- [Al Sweigart "Cracking Codes with Python" 2018](https://inventwithpython.com/cracking/)
+
+Inne:
+
+- ["Linux. Bezpieczeństwo. Receptury"](http://helion.pl/ksiazki/libezp.htm) Daniel J. Barrett, Richard E. Silverman & Robert G. Byrnes ([O'Reilly](http://oreilly.com/) oczywiście)
+- ["Hack Proofing Your Network. Edycja polska"](http://helion.pl/ksiazki/hacpro.htm) praca zbiorowa
+- ["Hack Proofing Linux. Edycja polska"](http://helion.pl/ksiazki/haplin.htm) Patrick T. Lane, James Stander
+
+#### Odnośniki
+
+##### Strony
+
+- [Crypto Museum](https://www.cryptomuseum.com/)
+- [Tutorialspoint: Cryptography Tutorial](https://www.tutorialspoint.com/cryptography/index.htm)
+- [Cryptologie](https://www.cryptologie.net) - ["Why I’m Writing A Book On Cryptography"](https://www.cryptologie.net/article/504/why-im-writing-a-book-on-cryptography/)
+- ["The Joy of Cryptography" Undergraduate textbook by Mike Rosulek](https://web.engr.oregonstate.edu/~rosulekm/crypto/)
+- Stanford Coursera [Cryptography I](https://www.coursera.org/learn/crypto)
+- Project Nayuki [Cryptography](https://www.nayuki.io/category/cryptography)
+- [Crypto 101](https://www.crypto101.io) an introductory course on cryptography
+- [hyperelliptic.org](http://www.hyperelliptic.org)
+- [Forums for discussing modern cryptographic practice.](https://moderncrypto.org)
+- [cryptography -- The Cryptography and Cryptography Policy Mailing List](http://www.metzdowd.com/mailman/listinfo/cryptography)
+
+##### YT
+
+- [Numberphile "Cryptography on Numberphile and Computerphile" \[YT playlist 16 filmów\]](https://www.youtube.com/playlist?list=PLt5AfwLFPxWLXe-ZqZyu0kSsaWd4FjXbj)
+- [AlwaysAsking Security "The Magic of Math in Modern Cryptography" \[YT 55:02\]](https://www.youtube.com/watch?v=mSMQ-xowqAg)
+- [Amazon Polska "Szyfrowanie na kartce" \[YT 1:11:17\]](https://www.youtube.com/watch?v=Dt1kBG801n4)
+- [Pasja informatyki "Seria hakerska - Capture The Flag" \[YT playlist 5 filmów\]](https://www.youtube.com/playlist?list=PLOYHgt8dIdowr-LCIN4bqSFmj-FSTG9Qn)
+- Computerphile ["AES Explained (Advanced Encryption Standard) - Computerphile" \[YT 14:13\]](https://www.youtube.com/watch?v=O4xNJsjtN6E) | ["Secret Key Exchange (Diffie-Hellman) - Computerphile" \[8:39\]](https://www.youtube.com/watch?v=NmM9HA2MQGI) | ["Diffie Hellman -the Mathematics bit- Computerphile" \[YT 7:04\]](https://www.youtube.com/watch?v=Yjrfm_oRO0w) | ["One Encryption Standard to Rule Them All! - Computerphile" \[YT 9:10\]](https://www.youtube.com/watch?v=VYech-c5Dic)
+
+##### Narzędzia
+
+- [Hat.sh - A Free, Fast, Secure and Serverless File Encryption.](https://hat.sh)
+
+##### Enigma
+
+- Crypto Museum [Enigma Cipher Machines](https://www.cryptomuseum.com/crypto/enigma/)
+- [miandoli/enigma-simulator](https://github.com/miandoli/enigma-simulator)
+- [ENIGMA](https://www.codeproject.com/Articles/831015/ENIGMA)
+- [Autoencoder](https://www.npmjs.com/package/@softnami/autoencoder)
+- [alichtman / deadbolt - file encryption tool](https://github.com/alichtman/deadbolt)
+- Computerphile ["Turing's Enigma Problem (Part 1) - Computerphile" \[YT 18:59\]](https://www.youtube.com/watch?v=d2NWPG2gB_A) | ["Tackling Enigma (Turing's Enigma Problem Part 2) - Computerphile" \[YT 22:48\]](https://www.youtube.com/watch?v=kj_7Jc1mS9k) | ["Cracking Enigma in 2021 - Computerphile" \[YT 21:19\]](https://www.youtube.com/watch?v=RzWB5jL5RX0)
+- World Science Festival ["The Enigma Machine Explained" \[YT 7:58\]](https://www.youtube.com/watch?v=ASfAPOiq_eQ)
+- Talks at Google ["Enigma Cipher Machine History | Ralph Simpson | Talks at Google" \[YT 1:16:06\]](https://www.youtube.com/watch?v=lsv_Li2FXzw)
+- tnmoc ["The real story of how Enigma was broken - Sir Dermot Turing" \[YT 1:07:49\]](https://www.youtube.com/watch?v=qn_BBQEjCxI)
+- Numberphile ["158,962,555,217,826,360,000 (Enigma Machine) - Numberphile" \[YT 11:51\]](https://www.youtube.com/watch?v=G2_Q9FoD-oQ) | ["Flaw in the Enigma Code - Numberphile" \[YT 10:58\]](https://www.youtube.com/watch?v=V4V2bpZlqx8) | ["Enigma Extra Footage - Numberphile" \[YT 8:23\]](https://www.youtube.com/watch?v=BdrrJ7qd4HA)
+- Videos By Kevin ["Paper Enigma Machine" \[YT 17:08\]](https://www.youtube.com/watch?v=UKbP3Rjxhy0)
+- Perimeter Institute for Theoretical Physics ["The Inner Workings of an Enigma Machine" \[YT 14:03\]](https://www.youtube.com/watch?v=mcX7iO_XCFA)
+- UC Davis ["The Enigma Code" \[YT 1:05:15\]](https://www.youtube.com/watch?v=ncL2Fl6prH8)
+- The Centre for Computing History ["Colossus - The Greatest Secret in the History of Computing" \[YT 1:00:26\]](https://www.youtube.com/watch?v=g2tMcMQqSbA)
+- Skeptic ["Dr. Andrew Hodges — Alan Turing: The Enigma" \[YT 1:39:22\]](https://www.youtube.com/watch?v=3NODW5sok5U)
+- Corvus ["How the Enigma machine works | Animation" \[YT 5:31\]](https://www.youtube.com/watch?v=QwQVMqfoB2E)
+- Doyle New York ["Enigma Machine Demonstration" \[YT 3:03\]](https://www.youtube.com/watch?v=-mdSvGUd0_c)
+- ajpitv ["Jak działa Enigma?" \[YT 6:26\]](https://www.youtube.com/watch?v=hMBXHSEi9b8)
+- [TechLving "How does the ENIGMA MACHINE work in the IMITATION GAME | MOVIE TECH" \[YT 13:00\]](https://www.youtube.com/watch?v=GcI-YlFSGYo)
+- [CBS Sunday Morning "The enigma of WWII codebreaker Alan Turing" \[YT 7:30\]](https://www.youtube.com/watch?v=nEomYB94TTI)
+- World War Two ["The Battle to Crack Enigma - The real story of 'The Imitation Game' - WW2 Special" \[9:40\]](https://www.youtube.com/watch?v=zALecS762ME)
+- PolisMultimedia ["IGF 2011: Jak łamie się szyfry - omówienie na przykładzie maszyny rotorowej Enigma" \[YT 2:22\]](https://www.youtube.com/watch?v=YU6GXeXji1c)
+- Code Bullet ["Building an Enigma Machine" \[YT 12:07\]](https://www.youtube.com/watch?v=2D2bJWHvqJo)
+- Dave Janelle ["Enigma II Encryption Machine & Puzzle - encode & decode cipher" \[YT 9:22\]](https://www.youtube.com/watch?v=hiOjqskDlS0) | ["Enigma Slide Rule Iinear Cipher Encryption machine" \[YT 9:18\]](https://www.youtube.com/watch?v=NbF_l7gss_A) | ["Enigma V Encryption machine with $150 solution challenge" \[YT 6:17\]](https://www.youtube.com/watch?v=E016UyT-eUU)
+- VilleKoo Virtanen ["How Enigma Works" \[YT 0:20\]](https://www.youtube.com/watch?v=uMPw0ObNJbQ)
+- Videos By Kevin ["Pringles Can Enigma Machine" \[8:38\]](https://www.youtube.com/watch?v=pZsuxZXN33g)
+- Bletchley Park ["The Enigma Machine - Bletchley Park takes a closer look at how it works" \[YT 17:29\]](https://www.youtube.com/watch?v=3Ux03qPgYVY)
+- G B ["How Alan Turing Cracked the Enigma Code Using Statistics" \[YT 6:56\]](https://www.youtube.com/watch?v=QIrC-8T_hqk)
+- PA3DMI ["Bletchley Park Tour \[docu in full\]" \[YT 1:13:51\]](https://www.youtube.com/watch?v=OuEHcJ7CCzg)
+- asciimation ["3D printed Enigma rotors." \[YT 17:53\]](https://www.youtube.com/watch?v=ncVOl6DNg88)
+- Gazeta Olsztyńska ["Oryginalna maszyna szyfrująca Enigma w Olsztynie." \[YT 4:42\]](https://www.youtube.com/watch?v=T6nGGQXmOEs)
+- Wirtualna Polska ["Sekrety maszyn szyfrujących \[Enigma\]" \[YT 16:50\]](https://www.youtube.com/watch?v=N9sLPtJDcbY)
+- ledermueller ["Enigma Machine Mechanism (feat. a 'Double Step')" \[YT 0:39\]](https://www.youtube.com/watch?v=hcVhQeZ5gI4)
+- Gideon Samid ["The ENIGMA of Modern Cryptography" \[YT 8:05\]](https://www.youtube.com/watch?v=ShOnhOGRXHk)
+- Sergio Morales ["Arduino 3D printed Enigma Machine" \[YT 4:59\]](https://www.youtube.com/watch?v=k2SRl5kKgS8)
+- opensources [Building an Enigma emulator and a Bombe](https://opensourc.es/blog/enigma-and-bombe/) | ["Enigma: Endless possibilities is not enough" \[YT 9:09\]](https://www.youtube.com/watch?v=4cf7dc_8u44) | ["How to crack the Enigma cipher?" \[YT 11:22\]](https://www.youtube.com/watch?v=bRT5YKez8m4)
+- Henry Hollingworth [Enigma machine videos \[YT playlist 3 filmy\]](https://www.youtube.com/playlist?list=PLBHQNO2azpeLzJUI4K_t8ynGfHIpXkwtF)
+- Shaun Durrani ["Paper Enigma Machine - CS430" \[YT 14:59\]](https://www.youtube.com/watch?v=cVdjxMjSQNo)
+- I Attenborough ["Building Enigma Machine using pringles tube" \[YT 4:07\]](https://www.youtube.com/watch?v=z1ehM1pHrIU)
+- Stanford ["Turing: Pioneer of the Information Age" \[YT 1:36:38\]](https://www.youtube.com/watch?v=p7Lv9GxigYU)
+
+##### Artykuły
+
+- ["The encryption debate is at a dead end"](https://www.techradar.com/news/the-encryption-debate-is-at-a-dead-end)
+- ["Public Key Cryptography Simply Explained"](https://skerritt.blog/how-does-public-key-cryptography-work/)
+- [Cryptography Explained](https://umento.wordpress.com/2019/01/24/diving-deep-into-cryptography/)
+- ["Learn cryptography"](https://www.reddit.com/r/cryptography/comments/awt85m/learn_cryptography/)
+- Medium: [Emily Williams "Cryptography 101: Data Integrity and Authenticated Encryption"](https://medium.com/@emilywilliams_43022/cryptography-101-data-integrity-and-authenticated-encryption-af273f30018e) | [Mohan Sundar "How to Hide Secrets in Strings— Modern Text hiding in JavaScript"](https://blog.bitsrc.io/how-to-hide-secrets-in-strings-modern-text-hiding-in-javascript-613a9faa5787)
+- ["Authentication in Real-World Web Apps with JavaScript"](https://gist.github.com/taniarascia/a2d35af43ce133de20ac0a8c72558fea)
+- ["The Basics and Benefits of SSL/TLS"](https://mediatemple.net/blog/web-development-tech/ssl-tls-tips/)

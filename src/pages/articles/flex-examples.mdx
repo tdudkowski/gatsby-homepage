@@ -1,0 +1,224 @@
+---
+title: "CSS Flexbox - przykłady"
+comment: ""
+section: "it"
+subsection: "css"
+---
+
+Podstawowe zasady:
+
+- minimum kodu, zarówno HTML jak i CSS.
+- tylko standardowe rozwiązania, żadnych obejść i trików
+- tylko model blokowy i flex, żadnego floatu i grida.
+- jest elastyczny i działa na wszystkich przeglądarkach
+
+### Schemat nagłówek, treść, stopka
+
+Zacznijmy od podstaw: flex jest świetnym narzędziem, ale służy do tworzenia układów jednowymiarowych. Do dwuwymiarowych mamy grida, o którym może później. To ograniczenie oznacza, że nie możemy powiedzieć elementom HTML, żeby będąc w jednym pojemniku układały się jedne pionowo, a inne poziomo. W klasycznym układzie strony mamy trzy podstawowe elementy: nagłówek, treść i stopkę ułożone linearnie, pionowo od góry do dołu. Treść natomiast składa się z przynajmniej dwóch elementów umieszczonych horyzontalnie. Dla flexa oznacza to konieczność użycia dodatkowego pojemnika/wrappera, który będzie tym środkowym elementem zawierającym treść (dopiero w gridzie jest to niepotrzebne).
+
+Mamy więc:
+
+- nagłówek `<header>`
+- treść `<main>`
+- stopkę `<footer>`
+
+W tym dla rozmieszczenia tych elementów wystarczy dla body:
+
+```
+ body {display: flex;
+ flex-direction: column;
+ min-height: 100vh;}
+```
+
+Pierwsze polecenie wprowadza model flex, drugie układa wszystkie elementy pojemnika pionowo, trzecie zapewnia zajęcie całego okna przegladarki..
+
+Na razie jednak wszystkie mają tę samą wysokość. Żeby to zmienić dla nagłówka i stopki wprowadzamy min-height (zapewnia to większą elastyczność układu niż samo height), a dla wewnętrznego pojemnika dla treści flex: 1;. I to na początek naprawdę wszystko. Wystarczą trzy elementy HTML i cztery (lub sześć - zależy jak liczyć) parametrów CSS, żeby stworzyć taki bazowy układ strony. Bez żadnych sztuczek footer ląduje na samym dole okna, a blok treści zajmuje całą dostępną przestrzeń. Jeśli treści jest więcej footer bez żadnych problemów jest na samym dole dokumentu.
+
+codepen.io: [Sticky Footer [Flexbox]](https://codepen.io/tdudkowski/pen/XyMJyJ)
+
+### Układ 2-kolumnowy asymetryczny
+
+Tu mamy dwa elementy:
+
+- pasek boczny (sidebar) `<aside>`
+- artykuł `<article>`
+
+Nie trzeba deklarować dla nich układu wiersza flex-direction: row;, bo jest on domyślny. Warto jednak wiedzieć, że wystarczy deklaracja odwróconego wiersza flex-direction: row-reverse;, żeby odwrócić kolejność wyświetlania. W ten sposób bez zmian w kodzie HTML możemy przerzucić pasek boczny z lewej na prawą stronę.
+
+Pasek boczny powinien mieć stałą szerokość, a artykuł powinien wypełniać pozostałą szerokość ekranu.
+
+Dla paska bocznego deklarujemy maksymalną szerokość, co zapewnia wypełnienie zaprojektowanej dla niego szerokości. Oprócz tego flex: 1;.
+
+Wygląda więc to tak:
+
+```
+ sidebar {flex: 1; max-width: [];}
+```
+
+Artykuł wypełniający cała pozostałą szerokość i wysokość tworzy się takim samym parametrem - flex: 1; i na tym w zasadzie można by skończyć jeżeli mowa o samym układzie strony.
+
+W praktyce ten układ, choć spełnia wszystkie założone kryteria, ma jedną poważną wadę. Otóż treść artykułu razem z nim wypełnia całą pozostała szerokość ekranu, co nawet przy standardowych współczesnych monitorach powoduje rozlanie jej zdecydowanie zbyt szeroko. Szerokość treści można ograniczyć dając zadeklarowaną szerokość dla wszystkich jej elementów (np.:
+
+```
+article > p {max-width: [];}
+```
+
+Ale po pierwsze jest to niewygodne, a poza tym co jeżeli będziemy potrzebowali jednorodnego tła dla treści i czegoś zupełnie neutralnego dla marginesu? Dlatego potrzebujemy drugiego pustego pojemnika na treść artykułu, dajmy na to, że będzie to `<div className="article-content">`.
+
+Mamy więc układ bloku treści:
+
+- pasek boczny (sidebar) `<aside>[treść paska bocznego]</aside>`
+- artykuł `<article>`
+- blok treści artykułu `<div className="article-content">[treść artykułu]</div>`
+- `</article>`
+
+Niezbyt skomplikowane, prawda?
+
+I dla tego wszystkiego następujący CSS:
+
+```
+ aside {flex:1; max-width: [];}
+ article {flex: 1; display: flex;}
+ div.article-content {flex: 1; max-width: [];}
+```
+
+I teraz to już naprawdę wszystko. Podsumowując: w pełni zgodny ze standardami, typowy układ dwukolumnowy można osiągnąć używając jedynie czterech elementów HTML (w tym tylko dwóch "nadmiarowych") i siedmiu parametrów CSS.
+
+codepen.io: [2 Column Layout CSS Flexbox](https://codepen.io/tdudkowski/pen/pZdrdJ)
+
+### Układ 3-kolumnowy asymetryczny
+
+Wszystko jest tak jak w powyższym przykładzie układu dwukolumnowego, z tym tylko wyjątkiem, że wprowadzamy dodatkowy element - właśnie tę trzecią kolumnę.
+
+Będziemy mieć więc następujący układ:
+
+- lewy pasek boczny `<aside className="sidebar-one">[treść lewego paska bocznego]</aside>`
+- artykuł `<article>`
+- blok treści artykułu `<div className="article-content">[treść artykułu]</div>`
+- `</article>`
+- prawy pasek boczny `<aside className="sidebar-two">[treść prawego paska bocznego]</aside>`
+
+Tutaj akurat żadne zmiany w CSS nie są potrzebne. Przyda się jednak najpierw określić minimalną szerokość drugiego (w tym wypadku prawego) paska bocznego, a potem minimalną szerokość bloku treści artykułu, tak żeby zsumowane z lewym paskiem bocznym dawały rozmiar breakpointu.
+
+Podobnie jak w układzie dwukolumnowym kolejność wyświetlania kolumn można zmienić parametrem flex-direction: row-reverse;, lub ustalić ją dowolnie dla każdej z kolumn dając odpowiedni parametr order: [];.
+
+codepen.io: [3 Column Layout CSS Flexbox](https://codepen.io/tdudkowski/pen/pZdXWO)
+
+### Układ z jednakowymi kolumnami
+
+Wyrzucamy z bloku treści wszystkie nasze obiekty. W układach gdzie kolumny są sobie równe, mamy:
+
+- `<div className="one">`
+- `<div className="two">`
+
+Natomiast w CSS (zakładając, że mamy ten sam jak w poprzednich przykładach schemat) dajemy tylko:
+
+```
+ main {flex: 1; display: flex;}
+ main > div {flex: 1;}
+```
+
+I to całkowicie wystarcza. Flex automatycznie rozmieszcza zawarte w pojemniku elementy.
+
+I jeszcze na zakończenie dwie dość oczywiste uwagi: po pierwsze, jeżeli tak jak w powyższym przykładzie zastosujemy uniwersalny selektor określając po prostu każdy div bezpośrednio wewnątrz pojemnika możemy dodać teoretycznie dowolną liczbę kolumn, flex będzie rozmieszczał je proporcjonalnie. Tak więc dodanie kolejnego bloku treści, kolejnej kolumny w layoucie jest po prostu dodaniem kolejnego diva i żadnej zmiany w kodzie ani HTML (oprócz dodania diva) ani CSS już nie trzeba.
+
+Po drugie, tak jak o tym była mowa w układach asymetrycznych, dokładnie w ten sam sposób z samego tylko CSS-a możemy zarządzać kolejnością wyświetlania kolumn: albo odwracając ją przez row-reverse, albo bezpośrednio we właściwościach obiektów przez order: [];.
+
+codepen.io: [2 [or more] Column Layout [all equal] CSS Flexbox](https://codepen.io/tdudkowski/pen/EePoZM)
+
+To samo dotyczy elementów strony, gdzie np. dwa albo trzy bloki umieszczone w kontenerze horyzontalnie muszą zachować tę samą wysokość. Wystarczy proste zagnieżdżenie bloków w kontenerze i display:flex dla kontenera oraz flex:1 dla zagnieżdżonych bloków. Resztę czyli układ poziomy i rozciągnięcie wysokości bloków do wysokości największego z nich załatwią właściwości domyślne Flexboxa. Cały czas można będzie ustawić parametr min-height zapewniający minimalną wysokość bloków.
+
+codepen.io: [Equal horizontal blocks [Flexbox]](https://codepen.io/tdudkowski/pen/gZrErE)
+
+### Menu
+
+Załóżmy, że mamy menu w HTML zbudowane z odnośników zawartych w elementach nienumerowanej listy. Chcemy by niezależnie od szerokości elementu menu wszystkie odnośniki dzieliły jego szerokosć po równo między siebie. Jest to coś co używając starego CSS-a można by zdefiniować np. w ten sposób:
+
+```
+ ul.menu > li {float: left;
+ display: block;
+ width: calc(100%/x);}
+```            
+
+Gdzie x to liczba elementów listy) i jeszcze byśmy byli zadowoleni, że tylko jedna zmiana w CSS wystarczy by dopasować kod do zmiany liczby elementów menu. Tymczasem we Flexboksie nic nie trzeba zmieniać, sam ułoży elementy proporcjonalnie. Ale po kolei.
+
+Najpierw dla całej listy deklarujemy użycie Flexboksa oraz wyłączamy wyróżniki listy, które mogą we Fleksie wchodzić w sąsiadów i wyłączamy lewy padding:
+
+```
+ ul.menu {display: flex;
+ list-style-type: none;
+ padding-left: 0;}
+```
+
+Dla elementów listy można by ustawić flex-direction: row;, ale ponieważ jest to opcja domyślna można ją pominąć, zaniast tego ustawiamy współdzielenie nadmiarowej przestrzeni:
+
+```
+ ul.menu li {flex: 1;}
+```
+
+I to w zasadzie wszystko jeżeli chodzi o układ menu, oczywiście dla samych odnośników przydaje się określić wyświetlanie jako element blokowy i wycentrowanie tekstu:
+
+```
+ {display: block;
+ text-align: center;}
+```
+
+I to już naprawdę wszystko. Jak więc widać dla utworzenia takiego menu wystarczą cztery dyrektywy, z tego bezpośrednio związane z rozmieszczeniem są tylko dwa.
+
+Warto też pamiętać, że w media query, dla mniejszych rozdzielczości dla listy trzeba ustawić wyświetlanie kolumny zamiast wiersza, czyli:
+
+```
+ ul.menu {flex-direction: column;}
+```
+
+codepen.io: [Proportional Menu [Flexbox]](https://codepen.io/tdudkowski/pen/BGdQmJ)
+
+### Układ liniowy dla mniejszych rozdzielczości
+
+Dla mniejszych rozdzielczości układ robimy przez media query, np: @media (max-width:800px) {[]}. I tu najważniejszą zmianą, którą musimy wprowadzić, wspólną dla wszystkich wymienionych powyżej układów jest nadanie elementom bloku treści układy kolumny:
+
+```
+ div.main-content {flex-direction: column;}
+```
+
+Jednakowe również jest ustawienie sposobu wyświetlania treści jeśli jest jej mniej niż wynosi wysokość ekranu. Jeżeli chcemy by treść była wyświetlana tylko w rzeczywistej długości dla body dajemy parametr display:blok;, a jeżeli chcemy żeby zawartość strony zajęła cały ekran nawet jeśli nie ma dość treści to wybieramy display:flex;.
+
+I te dwie rzeczy to jest naprawdę wszystko co trzeba zrobić dla układów o jednakowych kolumnach. Natomiast w przypadku układów asymetrycznych jedyne co trzeba dodatkowo zrobić to skorygować szerokości ustalone dla szerszych ekranów.
+
+Czyli w dwukolumnowym będzie to:
+
+```
+aside {min-width: 100%; max-width: 100%;}
+div.article-content {min-width: auto;}
+```
+
+W trzykolumnowym jak wyżej plus:
+
+```
+aside.second-aside {min-width: 100%;}
+```
+
+### Karta
+
+Tak jak na samym początku napisałem, Flexbox jest jednowymiarowym sposobem opisu układy treści. Jest linearny. Można jednak używając standardowych metod Flexboksa stworzyć typowy układ karty z dwoma wierszami treści, z których jeden jest jedno- a drugi wieloelementowy. Wystarczy użyć opcji:
+
+```
+{flex-direction:
+ column; flex-wrap:wrap;}
+```
+
+Oraz odpowiednio dla jednoelementowego (np. tytuł) dać width: 100%;, a dla wieloelementowego ustawić albo flex:1; albo użyć zwykłych parametrów CSS.
+
+codepen.io: [Title-Photo-Txt Element [Flexbox]](https://codepen.io/tdudkowski/pen/RqpWbO)
+
+Po utworzeniu klas odpowiadających elementom o dobranej wielkości można tworzyć karty składające się z sekwencji jedno- i wieloelementowych segmentów, bez dodatkowych kontenerów. W poniższym przykładzie można też zobaczyć jak używając calc-a nadać odpowiednie wielkości poszczególnym kartom.
+
+codepen.io: [Flex Card [Flexbox]](https://codepen.io/tdudkowski/pen/PxKaRJ)
+
+### Układ kafelkowy
+
+Kojarzony jest raczej z Gridem. Ale podobny efekt można osiągnąć przy pomocy flexa. Jeżeli chcemy mieć kafle (kafelki w wersji dla mobilek) w układzie dla mniejszych rozdzielczości, czyli układ dwu- i jednokolumnowy na przemian to dajemy flex-direction: row; flex-wrap: wrap; dla kontenera i flex-basis: 50%; dla dwóch elementów w wierszu (i 100% dla jednego).
+
+Żeby uzyskać uzyskać bardziej zaawansowane efekty trzeba użyć dodatkowego kontenera. Zmieniamy kierunek na flex-direction: column; flex-wrap: wrap; i dajemy odpowiedni flex dla każdego z elementów. Jeżeli chcemy mieć po jednej stronie trzy bloki/kafle, a po prawej jeden, to pierwsze trzy będą miały flex: 1 1 30%; a ostatni flex: 3 1 100%;.
+
+codepen.io: [Tiles Flexbox Layout](https://codepen.io/tdudkowski/pen/LMbayx)

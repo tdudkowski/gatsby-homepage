@@ -1,0 +1,1063 @@
+---
+title: "Internet"
+comment: ""
+section: "it"
+subsection: "internet"
+---
+
+Internet - sposób funkcjonowania
+
+### Organizacyjnie
+
+Internet jest to jak sama nazwa (międzysieć) wskazuje sieć łącząca wiele sieci.
+Poszczególne sieci są przyłączone w hierarchicznej strukturze, mniejsze sieci są częściami większych struktur. Przy takiej topologii przyłączenie nowej sieci jest proste i wymaga tylko uzgodnienia z osobami zarządającymi siecią do której się przyłącza. Dzięki właściwościom stosu protokołół TCP/IP przyłączanie i odłączanie kolejnych segmentów nie wpływa na działanie pozostałych fragmentów internetu, ani nie wymaga żadnych zmian w konfiguracji komputerów znajdujących się w odległych podsieciach.
+
+Internet jako całość nie ma żadnej władzy, zarządu ani właściciela.
+Na najwyższym poziomie jest zbiorem połączonych ze sobą sieci szkieletowych. Każda z nich ma swojego właściciela (z reguły jest to jakaś firma telekomunikacyjna, bo musi mieć możliwość budowania łącz dalekiego zasięgu), który ustala panujące w niej reguły, ale jego władza jest ograniczona do własnej sieci.
+Generalną zasadą jest, że "mniejszy płaci większemu". Jeśli łaczą sie podobne sieci nic nie płacą lub rozliczają się w oparciu o róznice ruchu w obu kierunkach, ale sieci miejskie płacą krajowym, instytycje sieciom miejskim itd. Właściciel każdej sieci lokalnej może nią zarządzać według swojego uznania uwzgledniając warunki umowy ze swoim ISP (np. zakaz przyłączania dalszych sieci)
+
+Choć nie ma władzy jednak pewne rzeczy muszą być centralnie koordynowane, np. rozdział adresów IP, musi zapewniać ich niepowtarzalność w skali całego internetu. Ktoś też musi ustalać standardy internetowe.
+Zagadnieniami takimi zajmują się wyłonione ze społeczności internetowej specjalne rady, komitety i grupy robocze.
+
+Najstarszym takim ciałem jest IAB (Internet Architecture Board), która powstała - jako Internet Control Configuration Board - jeszcze pod patronatem ARPA w 1979 i miała koordynować prace nad wprowadzaniem w sieci ARPANET protokołów TCP/IP.
+Gdy w 1983 ARPANET zamienił się w Internet zmieniła nazwę na Internet Activities Board i jej zadaniem było nadzorowanie całości zagadnień związanych z rozwojem technicznym internetu i chociaż rok póżniej internet przestał być zarządzany przez ARPA nadal funkcjonowała na mocy zwyczaju.
+W 1986 IAB wyłoniła dwie nowe, również nieformalne organizacje:
+
+- IETF (Internet Engineering Task Force) - której zadaniem jest bezpośrednia techniczna praca nad protokołami internetowymi
+- IRTF (Internet Research Task Force) - zajmująca się bardziej dalekosiężnymi projektami badawczymi związanymi z internetem
+
+W 1992 powstało ISOC (_Internet Society_) Jej podstawowym celem było ułatwienie korzystania i przybliżenie technologii internetowych, ale docelowo stała się odpowiedzialna za rozwijanie standardów i technlogii umożliwiających rozwój internetu.
+Zostało założone w 1991 roku przez grupę osób z wieloletnim doświadczeniem w pracy na rzecz IETF. Głównym, pierwotnym celem ISOC-u było wsparcie pracy IETF i pokrewnych nieformalnych grup specjalistów zajmujących się rozwojem Internetu. Ze względu na całkowicie nieformalny charakter IETF miała poważne problemy przy organizowaniu swoich zjazdów i opłacaniu sekretariatu. Osoby zaangażowane w prace IETF nie chciały regulować statusu prawnego tego ciała, z obawy, że zabije to ideę tej nieformalnej instytucji.
+Z pewnego punktu widzenia to z ISOC wyłonił się IETF - prawa autorskie do wszystkich IETF RFC ma ISOC (chociaż są dostępne bez opłat i ograniczeń). W innej perspektywy ISOC wyrosło z IETF by wspierać całość jego prac w zorganizowany sposób a nie taki zadaniowy jak funkcjonuje IETF.
+
+IAB pod obecną już nazwą została włączona w jej struktury władz.
+Większość wysiłków standaryzacyjnych idzie przez IETF i IAB. Niektóre funkcje obu organizacji są wspierane przez dzielone zasoby znane jako Sekretariat (Secretariat).
+
+Obecnie IAB wybierana jest przez zarząd ISOC spośród kandydatur proponowanych przez IETF i pełni funkcje ciała doradczego dla ISOC oraz nadzorczego dla IETF, która nadal jest luźną grupą bez formalnego członkostwa stanowi siłę napędową rozwoju internetu, bo w jej dyskusjach powstają nowe pomysły dotyczące sieci.
+Z chwilą gdy osiągną status proponowanego standardu, podlegają zatwierdzeniu przez IAB i publikacji jako dokumenty RFC (_Request For Comments_) - ta nazwa wywodzi się z czasów wczesnego ARPANET-u, kiedy zatrudnieni przy budowie sieci informatycy zaczęli spisywać swoje uwagi i propozycje dla współpracowników w postaci pierwszych RFC nie mających jeszcze formalnego standardu. Obecnie treść dokumentów RFC określa podstawy funkcjonowania internetu.
+
+RFC są przeglądane przez ekspertów i zostają oznaczone według pewnej klasyfikacji:
+
+Required
+funkcje, które muszą zostać zaimplementowane w każdym stosie TCP/IP, niezależnie od platformy i systemu
+
+Recommended
+funkcje, które powinny być częścią każdego systemu opartego na TCP/IP, ale ich implementacja nie jest konieczna; najczęściej są implementowane ze względu na swoją przydatność
+
+Elective
+mogą być zaimplementowane ale nie są konieczne do poprawnej pracy
+
+Limited Use
+przeznaczone do celów specjalnych, nie wykorzystuje się ich do normalnego użytkowania, często tworzone w celu testów
+
+Not recommended
+standardy, które nie powinny zostać zaimplementowane
+
+Kiedy dokument przejdzie poszczególne ścieżki (Proposed Sandard, Draft Standard, Internet Standard) zostanie mu nadany RFC, który już nie jest później zmieniany. Jeśli zachodzi konieczność zmian w dokumencie publikowane jest uaktualnienie (weryfikacja) z nowym numerem. Ważna jest weryfikacja lub dokument później opublikowany (z większym numerem).
+IAB publikuje kwartalną notatkę IAB Official Protocol Standard, która weryfikuje RFC (podaje najnowsze wersje) aktualnie obowiązujących standardów.
+
+Z upoważnienia IAB rozdziałem adresów zajmuje się IANA a jej ramieniem wykonawczym jest InterNIC utworzona w 1993 przez AT&T i Network Solutions przy częściowym udziale finansowym NSF.
+Poza przydziałem numerów IP operatorom sieci szkieletowych zajmuje się utrzymywaniem głównych serwerów nazw oraz rejestracją poddomen użytkowników w gTLD (przedtem zajmowało się tym SRI NIC z Stanford Research Institute).
+InterNIC rozdziela grupy adresów pomiędzy operatorów sieci szkieletowych, którzy rozdzielają je pomiędzy operatorów mniejszych sieci itd. dzięki czemu zapewniona jest unikalność adresów pomiędzy wszystkimi komputerami w internecie. Na mocy umów z InterNIC (lub odpowiadającymi mu instytucjami w innych częściach świata, w Europie jest to RIPE) działają także instytucje administrujące adresami krajowymi.
+
+### Instytucje
+
+ISOC (Internet Society)
+
+Naczelny organ Internetu. Jego zadania to promocja i upowszechnianie dostępu do sieci, zapewnienie otwartego rozwóju. Jego członkowie spotykają się na konferencji raz w roku. Dla rozwiązania problemów technicznych powołuje rozmaite Task Forces.
+Powierzono mu zadanie ustanawiania norm technicznych obowiązujących w internecie oraz podejmowania decyzji o kluczowym znaczeniu i nadawania podlegającym jej organizacjom prestiżowych i jednoznacznie identyfikowalnych adresów WWW. W pewnym sensie reprezentuje użytkowników Internetu przed rządowymi agencjami odpowiedzialnymi za nadzór nad Internetem w poszczególnych krajach.
+Zgodnie z RFC 1602 określającym relacje między ISOC i IETF, ISOC wspiera IETF w tych wszystkich działaniach, które wymagają osobowości prawnej oraz pomaga w oficjalnych kontaktach między IETF i agencjami rządowymi, ale nie ma prawa w jakikolwiek sposób wypływać na tok prac podejmowanych w IETF.
+Po pewnym czasie jednak Internet Society zaczęła żyć własnym życiem i oprócz współpracy z IETF rozwinęła szereg innych działań. Obecnie ISOC organizuje wiele konferencji, z których nasłynniejsza jest ogólnoświatowa konferencja INET, wydaje 4 czasopisma elektroniczne, "opiekuje się" IETF i IANA, oraz przyznaje doroczne nagrody im. Jona Postela.
+Internet Society utrzymuje się z dobrowolnych datków swoich członków oraz z dotacji czynionych przez firmy i organizacje.
+Internet Society jest stowarzyszeniem całkowicie otwartym i demokratycznym. Może do niego przystąpić każda osoba fizyczna. Dla osób fizycznych nie ma żadnych opłat członkowskich. Wystarczy wypełnić deklarację członkowską dostępną na stronie www ISOC-u i wyrazić chęć należenia. Do Internet Society mogą też przystępować całe przedsiębiorstwa i organizacje.
+Władzą Internet Society jest jego Rada. Prezydium (Board of Trustees) to najwyższe gremium decyzyjne w składające się z 15 członków.
+Jej członkowie wybierani są na trzyletnią kadencję przez oddziały regionalne, wspierające ISOC firmy oraz członków IETF. Rada powołuje Zarząd, którego przewodniczący oraz szef sekretariatu są oficjalnie zatrudnieni, a reszta pracuje społecznie. Oprócz tego ISOC zatrudnia kilkanaście osób w swoich dwóch biurach - w USA i w Szwajcarii oraz opłaca działalność sekretariatów IETF i IANA, a także zespół redakcyjny dokumentów RFC.
+Prawnie Internet Society jest amerykańską organizacją edukacyjną non-profit zarejestrowaną w sądzie miejskim miasta Washington. Istnieje oddział polski: Internet Society Poland.
+
+IAB (Internet Architecture Board)
+
+"Okrągły stół" ekspertów od Internetu. Tutaj zapadają decyzje o najważniejszych standardach internetowych przygotowanych przez Task Forces.
+
+IETF (Internet Engineering Task Force)
+
+ITEF opracowuje standardy internetu. Składa się z rozmaitych grup roboczych zajmujących się aplikacjami, zarządzaniem, routingiem. Zadaniem jest rozwój i promocja standardów internetowych. Jest to otwarta, w całości składająca się z wolontariuszy organizacją, bez formalnego członkostwa ani wymagań wobec biorących udział w pracach.
+Jest zorganizowana w dużą liczbę grup roboczych, każda z nich zajmuje się jakaś określonym zagadnieniem. Razem AD z IETF Chair tworzą IESG (Internet Engineering Steering Group), który jest odpowiedzialny za całość prac IETF.
+Całościowo jest nadzorowany przez IAB, który jest odpowiedzialny przed ISOC.
+W początkch lat 90-tych IETF była chwalona przez prasę komputerową za szybkość, otwartość i szczupłość w porówaniu z powolnymi i opasłymi biurokratycznymi ciałami w rodzaju International Organization for Standardization i ITU-T. W okolicach 1993 stało się jasne, że internet stanie się potężnym i ważnym medium oraz, że wysiłki OSI zmierzają właściwie donikąd. Wtedy wielu specjalistów przyłączyło się do IETF, grupy robocze rozrosły się a ich prace zwolniły.
+Najbardziej jaskrawym przykładem tego problemu był moment kiedy Tim Berners-Lee stał się szefem W3C by osobiście przewodzić rozwojem standardów WWW, jak to później wyjaśnił w książce "Weaving the Web" stał się sceptykiem po wielu posiedzeniach IETF kiedy każdy zabierał głos a właściwie nic nie zostało zrobione.
+
+IRTF (Internet Research Task Force)
+
+Odpowiedzialny za perspektywiczny rozwój technicznych standardów internetowych.
+
+W3C (World Wide Web Consortium)
+
+Odpowiedzialne za standardy i rozwój WWW. Przewodniczącym jest Tim Berners-Lee.
+"gdy dojdziemy do punktu, w którym warunkiem odczytania strony będzie posiadanie określonego oprogramowania, wówczas World Wide Web przestanie być ogólnodostępny".
+
+IANA (Internet Assigned Numbers Authority)
+
+Najwyższa z organizacji odpowiedzialnych za przyznawanie nazw w Internecie. Działa na zlecenie ISOC i FNC. IANA przydziela swym organizacjom podrzędnym przestrzenie nazw (na przykład ".pl"), którymi zarządzają one samodzielnie. Całą tą pracę wykonywał kiedyś jeden człowiek - Jon Postel.
+IANA jest kontrolowana przez ICANN (Internet Corporation for Assigned Names and Numbers), ale ostateczną kontrolę nad _DNS root zone_ ma United States Department of Commerce.
+IANA deleguje lokalnych rejestratorów adresów IP - Regional Internet Registries (RIR). Każdy RIR przydziela adresy dla innego obszaru świata, zbiorowo tworzą część Numbers Resource Organization utworzonej w celu reprezentacji ich interesy oraz zapewnienia globalnej koordynacji działań.
+IANA deleguje alokację większych obszarów adresowych IPv4 (zwykle /8 lub więcej na raz) a każdy RIR działa już zgodnie ze swoją polityką, zwykle deleguje przypisanie mniejszych przestrzeni adresów IP (np. /19 /20).
+
+inne:
+
+- Federal Networking Council (FNC): odpowiedzialna za przydzielanie domen organizacjom rządowym, edukacyjnym i wojskowym (adresy internetowe z sufiksami ".gov", ".mil" i ".edu").
+- Asian Pacific Network Information Center (APNIC): Odpowiedzialny za nadawanie adresów internetowych (nazw domen) w obszarze azjatyckim.
+- Reseau IP Européen (RIPE): Odpowiedzialny za adresy internetowe w Europie i obszarach przyległych (między innymi adresy internetowe z końcówką ".pl", ".at" i ".fr").
+- InterNIC (Internet Network Information Center): Odpowiedzialny za domeny nie związane z konkretnym krajem, jak ".com", ".net", ".org". Był ciałem zarządzajacym przydziałem adresów IP, teraz zajmuje się tym ICANN
+- NASK: Naukowa i Akademicka Sieć Komputerowa odpowiedzialna za nadawanie nazw w polskiej domenie ".pl". Działa na zlecenie RIPE.
+- Internet Ad Hoc Committee: Opracowuje obecnie propozycję reformy w systemie międzynarodowych domen najwyższego poziomu (top level).
+
+### Technicznie
+
+Podstawowym wymogiem jaki wojsko postawiło przed siecią jest decentralizacja, dlatego współczesny internet jest związkiem wielu sieci istniejących w obrębie ustalonej wspólnymi standardami struktury. Ideą takiego rozwiązania było, żeby każdy komputer mógł nawiązać połączenie z każdym niezależnie od tego jak bardzo zróżnicowane są sieci do których należą.
+
+Kluczowym elementem tej struktury są rutery łączące sieci - są to mechanizmy zajmujące się przesyłaniem pakietów danych z jednej sieci do drugiej. Mogą miec postać sprzętową lub być programami funkcjonującymi w systemie operacyjnym. Część z nich jest połączona na stałe z internetem, inne nawiązują połączenie w razie potrzeby.
+Dzięki możliwości przekierowania drogi rutowania (np. w razie awarii) internet spełnił zadanie postawione przez wojsko - może funkcjonować pomimo uszkodzenia podsieci.
+
+Koncepcja ogólnoświatowej sieci zawdzięcza swoją uniwersalność temu, że pozwala na połączenie ze sobą podsieci o zupełnie odmiennych strukturach i typach okablowania (Ethernet, Token Ring, ATM, ISDN itd), zapewnia łączność pomiedzy różnymi systemami operacyjnymi i osprzętem sieciowym. Na te różnice składają się różne sposoby kodowania fizycznych adresów sieciowych, inne maksymalne wielkości pakietów danych oraz różne metody dołączania sum kontrolnych.
+Warunki współpracy określają uniwersalne standardy, które dbają by odmienne właściwości poszczególnych podsieci były przezroczyste dla aplikacji sieciowych - zajmuje się tym warstwa sieciowa i transportowa czyli TCP/IP
+
+Protokół IP definiuje 20-bajtowy nagłówek, który umieszczony przed właściwymi danymi pełni funkcję etykiety adresowej, oprócz adresu nadawcy i odbiorcy zawiera informacje dodatkowe: długość pakietu suma kontrolna i tzw. licznik stacji (TTL).
+
+Adres IP to 4-bajtowy numer składający się z:
+
+- Net-ID: identyfikuje sieć do której należy dany host; tą częścią zarządza IANA, co gwarantuje ich unikatowość
+- Host-ID: identyfikuje host w obrębie sieci lokalnej; nadawany jest przez administratora podsieci
+
+Ten podział jest podstawowym warunkiem sprawnego kierowania ruchem pakietów IP (tzw. ruting), gdy host wysyła pakiet już na początku dzięki porównaniu Net-ID jest w stanie określić czy adresat jest w tej samej sieci lokalnej. Jeśli nie to wysyła pakiet do rutera, który określa najlepszą drogę według tabeli rutingu składającej się z uaktualnianych ciągle danych jakie wymieniają między sobą rutery.
+Z punktu widzenia rutera wysłanie pakietu oznacza umieszczenie ich w odpowiedniej dla danej sieci ramce. Ponieważ żadna sieć nie jest w stanie na poziomie warstwy pakietowej obsługiwać pakietów IP przesyłki muszą zostać umieszczone w ramkach specyficznych dla danego protokołu. Dzięki temu nie będą się odróżniały od standardowych pakietów danej sieci.
+Ponieważ często zdarza się sytuacja, że pakiety IP są zbyt duże by je w całości przesłać w ramkach, ważnym elementem protokołu IP jest mechanizm fragmentacji danych. Jeśli sytuacja tego wymaga rutery mogą podzielić pakiet IP na kilka specyficznych dla danej sieci przesyłek i wysłać je kolejno. W nagłówku IP są pola pozwalające odpowiednio je złożyć.
+
+Wysyłany jest specjalny pakiet ARP Broadcast skierowany do wszystkich urządzeń w danej sieci. Każde z nich sprawdza czy zawarty w nim adres IP odpowiada własnemu numerowi i jeśli się zgadza odpowiada. Jeśli żadna nie odpowie oznacza to, że dany adres nie jest znany w tej sieci i jego transmisja zostaje przerwana.
+Ruch w sieci jest kontrolowany przez ICMP jego pakiety są priorytetowe. Określa sposób tworzenia i wymiany informacji sterujących pomiędzy ruterami lub ruterami i hostami. Np. jakiś ruter może ogłosić, że dana podsieć jest przeciążona i ruch należy skierować inną drogą, może na zapytanie ICMP przesłać informację o numerze Net-ID aktualnej podsieci lub jej masce.
+Z protokołu ICMP korzysta ping, popularna funkcja za pomocą której można sprawdzić obecność zdalnego hosta i zmierzyć czas transmisji nadawanych do niego pakietów.
+
+Aby dokonać identyfikacji konkretnej aplikacji, do której kierowane są pakiety TCP używa tzw. portów, których funkcję pełni 16-bitowa liczba. Najważniejszą informacją zawartą w nagłówku TCP jest identyfikator portu adresata i nadawcy. Gdy oprogramowanie sieciowe otrzyma pakiet TCP lub UDP może za pomocą numeru portu rozpoznać do jakiej aplikacji należy dana przesyłka.
+Większość aplikacji musi mieć pewność, że dana przesyłka dotarła do celu dlatego TCP korzysta z pomocy sum kontrolnych, numerów bloków oraz potwierdzeń do odbiorcy. Wszystkie przesyłki które nie dotarły do adresata lub uległy przekłamaniu są nadawane ponownie. Dopiero gdy określona liczba prób nie odniesie skutku transmisja jest przerywana a nadawca informowany o jej niepowodzeniu.
+
+Transmisja przy pomocy np. PPP wymaga dodatkowych protokołów, choćby po to by zaznaczyć gdzie pakiety IP się zaczynają i kończą (ponieważ poprzez modem są transmitowane bajt po bajcie).
+Najprostszym i najstarszym jest SLIP, który na końcu każdego pakietu IP dołącza odpowiedni bajt rozpoznawczy. Trochę lepszą jego wersją jest CSLIP, który nie przesyła całych nagłowków IP a tylko różnice pomiędzy nimi.
+Obecnie powszechnie używany jest PPP. Wykorzystuje do przesyłania danych nie tylko specjalną ramkę, ale otwiera również specjalny kanał komunikacyjny dla obu końców łącza co umożliwia:
+
+- sprawdzenie haseł
+- uzgodnienie opcji szyfrowania
+- podłączenie kilku łączy w celu przyspieszenia transmisji
+- przesyłanie pakietów z innych sieci niż IP (tunneling)
+- przypisywanie dynamicznego numeru hostowi inicjującemu połączenie
+
+Żeby przyłączyć się do internetu trzeba skorzystać z usług ISP, którym jest firma mająca wykupione podłączenie do niego i zajmująca się jego komercyjnym udostępnianiem.
+
+### Usługi
+
+BBS
+
+Wdzwaniana usługa udostępniania plików.
+
+E-mail
+
+Poczta elektroniczna
+
+Gopher (ang. świstak)
+
+Przodek WWW, wprawdzie samo WWW powstało wcześniej jednak zanim się rozwinęły odpowiednie programy Gopher przeżył krótki okres świetności.
+Umożliwia przeglądanie zasobów sieci przez prosty hierarchicznie skonstruowany system menu.
+Zapewnia dostęp do plików (graficznych, tekstowych, dźwiękowych), baz danych jak i system poszukiwania informacji (Veronica).
+Wyparty przez znacznie prostsze w użyciu i mające większe możliwości WWW.
+
+Fidonet
+
+W pełni amatorska sieć BBS-ów udostępnianych przez użytkowników.
+FTN Fidonet Technology Network.
+
+Finger
+
+Prosta usługa umożliwiająca sprawdzenie kto jest aktualnie zalogowany na serwerze internetowym.
+
+FTP
+
+Kopiowanie plików między komputerami
+Sieciowe archiwa FTP
+
+IRC (Internet Relay Chat)
+
+Interfejs natychmiastowej komunikacji tekstowej - sieciowe pogawędki w czasie rzeczywistym. Powstała by umożliwić kontakt w czasie rzeczywistym. Ostatnio wyparty przez czaty WWW oraz IM
+Rozmowy na IRC-u toczą się na tzw. kanałach, z których każdy ma swoją nazwę określającą tematykę (#polska, #wroclaw #pecet #sex)
+Trzeba połączyć się z serwerem za pomocą klienta IRC (np. irssi) i przyłączyć się do, któregoś z otwartych kanałów (są też dostępne za hasłem i ukryte) używająć unikalnego nicku.
+Uprzywilejowany użytkkownik, tzw. op (od "operator") może zmieniać tryb pracy kanału, temat, wyrzucać użytkowników, lub banować ich.
+
+Listy dyskusyjne
+
+Usługa bazująca na swoistym systemie dystrybucji emaila, umożliwia publiczną dyskusję za pośrednictwem listserwerów.
+
+Telnet
+
+Umożliwia pracę na zdalnym serwerze.
+
+Usenet
+
+Grupy dyskusyjne.
+
+WAIS (Wide Area Information Server - serwer informacji w sieciach rozległych)
+
+Umożliwiał przeszukiwanie rozproszonych baz danych za pomocą prostego interfejsu.
+Wyparty przez WWW.
+
+WWW (World Wide Web)
+
+Dokumenty hipertekstowe, najpopularniejsza usługa internetu.
+
+### Warstwy sieci
+
+#### Model OSI
+
+Na początku lat 80-tych ISO opracowała warstwowy model protokołów stanowiący wzorzec do konstrukcji wszelkich innych międzyplatformowych rozwiązań. Jest to model OSI (Open Systems Interconnect Reference Model - Model Referencyjny Połączonych Systemów Otwartych). Został opublikowany w celu ułatwienia realizacji otwartych (czyli występujących w środowiskach wielosystemowych) połączeń komputerowych. Wydzielił warstwy funkcjonalne wymagane do obsługi połączeń.
+Pozwala to na podzielenie całego problemu komunikacji na oddzielne części, tzw. warstwy.
+
+Tak naprawdę podczas sesji komunikacyjnej pracują nie poszczególne protokoły lecz ich stos (złożenie).
+
+W nawiasie kwadratowym numer warstwy.
+
+[7] warstwa aplikacji (ang. _application layer_)
+
+Protokoły bezpośrednio wykorzystywane przez aplikacje (np. HTTP, FTP).
+Stanowi interfejs pomiędzy aplikacjami użytkownika a usługami sieci.
+
+[6] warstwa prezentacji (ang. _presentation layer_)
+
+Protokoły przygotowujące i formatujące odpowiednio dane (np. do wydruku).
+Dane z niższych warstw są przekształcane tak aby mogły być odebrane przez aplikację użytkownika, np konwersja między różnymi formatami liczb używanych przez serwer i klienta.
+Nie wszystkie stosy protokołów wyodrębniają tą warstwę, czasem traktowana jest jako pozostałość z epoki terminalowej. Jest odpowiedzialna za wygląd, a ściśle rzecz biorąc kodowanie wszelkich danych, także szyfrowanie i rozszyfrowanie.
+W większości przypadków warstwa prezentacji i sesji są połączone w jedną całość.
+
+[5] warstwa sesji (ang. _session layer_)
+
+Koordynacja wymienianych informacji za pomocą technik konwersacyjnych.
+Podobnie jak poprzednia pochodzi ze starszych rozwiązań komunikacyjnych. Zarządzanie połączeniami pomiędzy aplikacjami (gniazda - ang. _sockets_). Na tym poziomie nabiera znaczenia rodzaj przesyłanych informacji, kończy się czysta wymiana bitów. Pozwala zrealizować usługi w rodzaju pobierania z serwera zawartości katalogu dyskowego.
+Rzadko wydzielana ponieważ wiele protokołów funkcje tej warstwy dołącza do swoich warstw transportowych.
+
+[4] warstwa transportowa (ang. _transport layer_)
+
+Odpowiada na żądania usługi od warstwy sesji wysyła żądania do warstwy sieci. Zapewnia przezroczyste przesyłanie danych pomiędzy hostami, oraz zwolnienie wyższych warstw od zajmowania się wiarygodnym i efektywnym przesyłaniem danych. Przesyła wiadomości kanałem stworzonym przez warstwę sieciową. Zajmuje się bezpieczeństwem i pewnością wymiany danych.
+Odpowiada za to, żeby dane dotarły bez zniekształceń do odbiorcy. Zamienia mało wiarygodne bardzo podstawowe usługi sieciowe zapewniane przez warstwę sieciową w wiarygodną komunikację. Zapewnia poprawność komunikacji, integralność przesyłanych danych. Kontrola kompletności przekazywania informacji, właściwego uporządkowania pakietów, jest także odpowiedzialne za korektę błędów i kontrolę przepływu.
+Wszystkie warstwy leżące poniżej pomijają bezpieczeństwo skupiając się na szybkości.
+Funkcja podobna do warstwy łącza danych, ale w odróżnieniu od niej umożliwia również ich weryfikację poza lokalnym segmentem sieci LAN, potrafi np. wykrywać pakiety, które zostały odrzucone przez ruter i żądać ich ponownej transmisji. Ważną funkcją jest układanie nadchodzących danych w kolejności wysyłania, identyfikacja oryginalnej sekwencji pakietów przed wysłaniem ich do warstwy sesji.
+Istnieje wiele usług warstwy transportowej, ale najczęsciej używane są:
+
+- TCP - bardziej skomplikowany, zapewniający połączenie i zorientowany na bajty strumień, z kontrolą błędów, kierowaniem przepływem i dostarczeniem pakietów we właściwej kolejności
+- UDP - bardzo prosta datagramowa usługa, która zapewnia kontrolę błędów w ograniczonym stopniu
+
+Niektóre rzeczy takie jak orientacja na połączenie mogą zostać zaimplementowane albo na poziomie warstwy transportowej albo (co jest łatwiejsze) warstwy sieci.
+
+[3] warstwa sieciowa/sieci (ang. _network layer_)
+
+Ustalenie drogi jaką będą przesyłane dane.
+Dostarczenie pakietu pod wskazany adres, niezależnie od stopnia złożoności sieci. Odnajdywanie optymalnej trasy transmisji pomiędzy urządzeniem nadającym a odbierającym (ruting), w zależności od danych warunków (kontrola przepływu), przy czym dla kolejnych pakietów tej samej wiadomości drogi do celu mogą być różne.
+Zamienia ciąg bitów w kanał komunikacyjny, dba o to by informacje przepływały między odpowiednimi komputerami. Dane wymieniane są w postaci pakietów, ale nie jest sprawdzana ich zawartość, brak mechanizmów korekcji błędów.
+Odpowiada za żądania usług od warstwy transportowej i wydaje żądania do warstwy danych. Adresuje wiadomości i tłumaczy nazwy na adresy fizyczne, także określa drogę z żródła do miejsca przeznaczenia i reguluje ruch używając przełączników, ruterów i kontroli zagęszczenia pakietów danych.
+Zapewnia funkcjonalne i proceduralne środki przesyłu różnych długości sekwencji danych ze źródła do przeznaczenia przez jedną lub więcej sieci, utrzymując jakość usług żądaną przez warstwę transportową.
+Jeśli nie można skontaktować się z miejscem na poziomie tej warstwy to w ogóle nie można się z tym miejscem skontaktować.
+Protokoły dynamicznego trasowania pakietów (RIP czy OSPF) oraz ICMP kontrolują komunikację i informują o osiągalności hosta docelowego
+
+[2] warstwa łącza danych (ang. _link layer_)
+
+Protokoły definiujące zasady komunikacji pomiędzy połączonymi łączem fizycznym urządzeniami (protokoły warstwy wyższej nie wymagają istnienia bezpośredniego połączenia). Dane pakowane są w bloki zwane ramkami (PPP).
+Steruje fizyczną wymianą bitów; w większości przypadków połączona z warstwą fizyczną w jedną całość tworząc kartę sieciową.
+Odpowiedzialna za upakowanie instrukcji, danych w tzw. ramki zwierające informacje wystarczające do pomyślnego przesłania danych do ich miejsca przeznaczenia. Zbiera także bity danych przesłanych przez warstwę fizyczną i składa je ARP zapewniający odwzorowanie adresu logicznego warstwy internetu na adres sprzętowy karty sieciowej, co jest konieczne dla nawiązania komunikacji na obu tych warstwach
+Wykrycie oraz usuwanie błędów jakie mogły się pojawić w warstwie fizycznej.
+
+[1] warstwa fizyczna (ang. _physical layer_)
+
+Warstwa określająca specyfikacje techniczne łączących się urządzeń (np. parametry elektryczne, rodzaje złącz, parametry czasowe, itp.), zwane inaczej interfejsami fizycznymi (interfejsem jest np. RS 232, definiujący standardowy port szeregowy, do którego podłączony jest modem).
+Fizyczna transmisja danych bez kontroli ruchu i bez uwzględnienia rodzaju informacji, ciągłość transmisji nie jest zabezpieczona.
+Przesyłanie i odbieranie strumieni bitów. Nie rozróżnia wysyłanych sygnałów, "widzi" tylko zera i jedynki, jest zajęta tylko fizycznymi właściwościami elektrycznych, optycznych lub innych technik przenoszenia sygnałów.
+Fizyczne parametry urządzeń transmisyjnych, np. standard okablowania
+
+Tak wygląda odniesienie rzeczywistej komunikacji TCP/IP do modelu OSI (za Aeleen Frisch "UNIX - Administracja systemu").
+
+```
+                OSI                 TCP/IP
+                -------------------------------------------------------------------------
+                Warstwa aplikacji                | Warstwa aplikacji
+                określa jak aplikacje łączą się   |obsługuje wszystko inne. Usługi sieci
+                z siecią i zapewnia odpowiednie   |TCP/IP (zazwyczaj implementowane
+                usługi    |jako demony) muszą wykonać swoje
+                ----------------------------------|z warstwy prezentacji modelu
+                Warstwa prezentacji               |OSI i częściowo z warstwy sesji
+                określa sposób przedstawienia     |
+                danych aplikacji                  |Wiele protokołów, w tym NFS, DNS,
+                ----------------------------------|FTP, Telnet, SSH, HTTP itd.
+                Warstwa sesji                     |
+                tworzy połączenia sieciowe,       |--------------------------------------
+                zarządza nimi i je kończy         | Warstwa transportowa
+                |zarządza wszystkimi aspektami
+                ----------------------------------|dostarczania danych, w tym
+                Warstwa transportowa              |inicjowaniem sesji, kontrolą błędów
+                zapewnia kontrolę błędów          |i kolejności
+                i kolejności danych               |
+                przekazywanych siecią             |Protokoły TCP i UDP
+                |--------------------------------------
+                ----------------------------------| Warstwa internetowa
+                Warstwa sieciowa                  |odpowiada za adresowanie, transmisję
+                odpowiada za adresowanie          |i rutowanie danych oraz fragmentację
+                danych, rutowanie i sterowanie    |pakietów i ich ponowne składanie
+                przepływem|
+                |Protokoły IP i ICMP
+                -------------------------------------------------------------------------
+                Warstwa łącza danych              | Warstwa dostępu do sieci
+                definiuje metody dostępu          |określa procedury przekazywania
+                do nośnika fizycznego przez       |danych siecią, w tym sposoby
+                karty sieciowe i związane         |dostępu do nośnika fizycznego
+                z nimi sterowniki urządzeń        |
+                ----------------------------------|Protokoły Ethernetu i ARP
+                Warstwa fizyczna                  |(chociaż aktualnie nie
+                Określa parametry działania       |jest zaliczany do TCP/IP
+                nośnika fizycznego                |
+                -------------------------------------------------------------------------
+```
+
+#### Model DoD
+
+Model DoD (skrót DoD pochodzi od angielskiego Department of Defense, czyli Departament Obrony USA) to teoretyczny model warstwowej struktury protokołów komunikacyjnych. Model DoD został stworzony w latach 70-tych XX wieku w DARPA, aby pomóc w tworzeniu odpornych na atak sieci komputerowych. Potem stał się on podstawą struktury internetu.
+
+Podstawowym założeniem Modelu DoD jest podział całego zagadnienia komunikacji sieciowej na szereg współpracujących ze sobą warstw (ang. _layers_). Każda z nich może być tworzona przez programistów zupełnie niezależnie, jeżeli tylko ustali się zasady według, których wymieniają się one informacjami. Założenia Modelu DoD są pod względem organizacji warstw zbliżone do Modelu OSI. Jednak ilość warstw jest mniejsza i bardziej odzwierciedla prawdziwą strukturę Internetu. Model DoD składa się z czterech warstw:
+
+##### Warstwa aplikacji (ang. _process layer_)
+
+Najwyższy poziom, w którym pracują aplikacje użytkownika takie jak, np. serwer WWW czy przeglądarka internetowa. Obejmuje ona zestaw gotowych protokołów, które aplikacje wykorzystują do przesyłania różnego typu informacji w sieci.
+
+##### Warstwa transportowa (ang. _host-to-host layer_)
+
+Zapewnia pewność przesyłania danych oraz kieruje właściwe informacje do odpowiednich aplikacji. Opiera się to na wykorzystaniu portów określonych dla każdego połączenia. W jednym komputerze może istnieć wiele aplikacji wymieniających dane z tym samym komputerem w sieci i nie nastąpi wymieszanie się przesyłanych przez nie danych. To właśnie ta warstwa nawiązuje i zrywa połączenia między komputerami oraz zapewnia pewność transmisji.
+
+##### Warstwa sieciowa (ang. _internet protocol layer_)
+
+Warstwa sieciowa lub warstwa protokołu internetowego to podstawa działania internetu. W tej warstwie przetwarzanie są pakiety posiadające adresy IP. Ustalana jest odpowiednia droga do docelowego komputera w sieci. Niektóre urządzenia sieciowe posiadają tą warstwę jako najwyższą. Są to routery, które zajmują się kierowaniem ruchu w Internecie, bo znają topologię sieci. Proces odnajdywania przez rutery właściwej drogi określa się jako ruting (ang. _routing_).
+
+##### Warstwa dostępu do sieci (ang. _network access layer_)
+
+Warstwa dostępu do sieci lub warstwa fizyczna jest najniższą warstwą i to ona zajmuje się przekazywaniem danych przez fizyczne połączenia między urządzeniami sieciowymi. Najczęściej są to karty sieciowe lub modemy. Dodatkowo warstwa ta jest czasami wyposażona w protokoły do dynamicznego określania adresów IP.
+
+Model DoD a Internet:
+Każdy protokół sieciowy można przyporządkować do określonej warstwy Modelu DoD. Pewną szczególną cechą rodziny protokołów TCP/IP używanej w internecie jest podział protokołów z warstwy aplikacyjnej i połączeniowej. Niektóre protokoły z warstwy aplikacji wykorzystują tylko pewne protokoły z warstwy transportowej.
+Protokoły DNS, NTP wykorzystują tylko protokół UDP z warstwy transportowej. Protokoły FTP, SMTP, POP3, SSH, IRC posługują się tylko TCP. Natomiast ED2k czy SMB używają obu protokołów.
+Protokół SSL ma szczególną rolę. Może zostać umieszczony pomiędzy każdym połączeniowym protokołem warstwy aplikacji, a TCP. Dzięki jego wykorzystaniu dane przesyłane przez aplikacje mogą zostać zaszyfrowane.
+Niektóre protokoły z warstwy aplikacji, jak np. SMB nie działają zwykle w Internecie. Są wykorzystane w sieciach lokalnych do udostępniania usług, jak np. zdalne drukarki czy dyski.
+Od ogólnego modelu DoD są w Internecie wyjątki. Przykładem może być tutaj usługa Ping, w której aplikacja wysyła bezpośrednio pakiety ICMP w celu ustalenia jakości połączenia z innym komputerem.
+
+#### Zestaw protokołów internetowych (ang. _Internet protocol suite_)
+
+Jeszcze innym sposobem opisu jest tzw. zestaw protokołów internetowych
+
+##### Warstwa aplikacji (ang. _application layer_)
+
+Jest to warstwa sieciowych interfejsów programów działających w sieci; procesy w tej warstwie są specyficzne dla danej aplikacji, dane idą od programów sieciowych w ich wewnętrznym formacie i są kodowane w standard protokołu.
+W tej warstwie działają pewne specyficzne programy: HTTP (The World Wide Web), FTP (File transport), SMTP (Email), SSH (Secure remote login), DNS (Name &lt;-&gt; IP Address lookups) i inne (np. IRC, SNMP, SIP, RTP).
+Kiedy są już zakodowane w standard protokołu idą dalej w dół.
+W warstwie transportowej aplikacje najczęściej używają TCP lub UDP, najcześciej zwiazane z dobrze znanymi numerami portów, pierwotnie alokowane przez IANA - niektóre z nich:
+
+- HTTP - TCP port 80 lub 8080
+- SSH - TCP port 22
+- Telnet - TCP port 23
+- DNS lookups - UDP (a czasem TCP) port 53
+- RIP routing updates - UDP port 520
+
+Inne: DHCP (Kind-of), Echo, Finger, Gopher, HTTP, HTTPS, IMAP, IMAPS, IRC, NNTP, NTP, POP3, POPS, QOTD, RTSP, SNMP, Telnet, XDMCP.
+
+##### Warstwa transportowa (ang. _transport layer_)
+
+TCP, UDP, ICMP, SCTP, DCCP itd.
+Protokoły na poziomie transportowym są odpowiedzialne za niezawodność dotarcia pakietów do celu i zapewnienie, że dotrą tam we właściwym porządku. W zestawie protokołół TCP/IP warstwa transportowa określa również, dla jakiej aplikacji przeznaczone są dane.
+Protokoły dynamicznego rutingu, które technicznie występują w tej warstwie w zestawie TCP/IP (ponieważ idą przez IP) są generalnie uważane, za przynależne do warstwy sieci (przykładem jest OSPF - protokół IP numer 89).
+TCP (protokół IP numer 6) jest zorientowanym na połączenie mechanizmem transportowym zapewniającym wiarygodny ciąg bajtów, zapewniającym, że dane dotrą kompletne, nie zniekształcone i we właściwym porządku. TCP nieustannie sprawdza jak bardzo obciążona jest sieć i zapełnia ją dostosowując prędkość wysyłania danych tak by nie przeciążyć sieci. Ponadto TCP usiłuje dostarczyc dane we właściwym porządku. Są to główne różnice w porównaniu z UDP i może stanowić wadę np. w streamingu czasu rzeczywistego.
+UDP (protokół IP numer 17) jest bezpołączeniowym protokołem datagramu. Jest to protokół "najlepszych starań" lub "niewiarygodny" ponieważ nie przeprowadza weryfikacji czy pakiety osiągnęły miejsce przeznaczenia i nie daje żadnej gwarancji, że dotrą we właściwym porządku. Jeśli aplikacja potrzebuje takich mechanizmów musi sama ich dostarczyć lub użyć TCP. UDP jest zwykle używany dla takich aplikacji jak media strumieniowe (audio i wideo) kiedy przyjście na czas jest ważniejsze niż wiarygodność, lub dla prostych pytanie/odpowiedź aplikacji jak DNS lookups, gdzie koszt ustanowienia wiarygodnego połączenia byłby nieproporcjonalnie duży.
+Oba protokoły - TCP i UDP są używane by transportować dane aplikacje wysokiego poziomu, są rozróżniane według swojego numeru portu TCP lub UDP. Zazwyczaj pewne dobrze znane porty (ang. _well known ports_) są powiązane z pewnymi określonymi usługami.
+
+##### Warstwa sieci (ang. _network layer_)
+
+IPv4, IPv6, ARP itd.
+Tak jak to pierwotnie zdefiniowano warstwa sieciowa rozwiązuje problem przesyłania pakietów przez sieć. Przykładami takiego protokołu są X.25 i ARPANET-owy Host/IMP Protocol
+Kiedy pojawiła się koncepcja międzysieci (_internetworking_) została dodana dodatkowa funkcja - przesłanie danych z sieci źródłowej do sieci docelowej. Ogólnie rzecz biorąc włącza to rutowanie pakietów poprzez sieć sieci znaną jako internet.
+W zestawie protokołów internetowych IP spełnia zadanie przesyłania pakietów ze źródła do miejsca przeznaczenia. IP może przenosić dane dla pewnej liczby protokołów wyższego rzędu, są one zidentyfikowane przez unikalny _IP Protocol Number_. Np. ICMP i IGMP są odpowiednio protokołami 1 i 2.
+Niektóre protokoły przenoszone przez IP takie jak ICMP (używany do transmitowania danych diagnostycznych) i IGMP (używany do danych typu multicast) są umieszczone nad IP, ale wykonują zadania warstwy sieci, co ilustruje niezgodność pomiędzy modelem internetowym a modelem OSI.
+Wszystkie protokoły rutingu takie jak BGP, OSFP i RIP są również częścią warstwy sieci, chociaż mogłoby się wydawać, że są w stosie umieszczone wyżej.
+
+##### Warstwa łącza danych (ang. _data link layer_)
+
+Ethernet, Wi-Fi, Token ring, FDDI itd.
+Określa jak pakiety są transportowane w warstwie fizycznej, włączając w to dzielenie na ramki (tzn. specjalny wzór bitów, który oznacza początek i koniec pakietu). Ethernet np. włącza pola w nagłówek pakietu, które określają dla której/których maszyny/maszyn jest przeznaczony pakiet. Przykładami protokołów warstwy łącza danych są Ethernet, Wireless Ethernet, SLIP, Token Ring i ATM.
+PPP jest bardziej złożony ponieważ był początkowo zaprojektowany jako oddzielny protokół który działa nad innymi protokołami tej warstwy, HDLC/SDLC.
+Czasem jest dzielona na Logical Link Control oraz Media Access Control.
+
+##### Warstwa fizyczna (ang. _physical layer_)
+
+RS 232, Rs 449, itd.
+Opisuje fizyczną charakterystykę komunikacji, taką jak charakterystykę medium użytego do komunikacji (kable, światłowód lub łącza radiowe) i wszystkie inne powiązane szczegóły łącza.
+Zestaw protokołów internetowych nie dotyczy fizycznej warstwy żadnej sieci.
+
+Zestaw protokołów internetowych jest zbiorem protokołów komunikacyjnych, składających się na stos protokołów, umożliwiającą działalność internetu. Ponieważ dwa najważniejsze z nich to TCP i IP czasem jest nazywany złożeniem protokołów TCP/IP.
+Może być opisany przez analogię z modelem OSI, który opisuje warstwy stosu protokołów. Są pomiędzy nimi różnice. W stosie protokołów każda warstwa rozwiązuje pewien zestaw problemów, włączajac w to transmisję danych, oraz zapewnienie dobrze zdefiniowanych usług dla wyższych warstw, które są logicznie bliżej użytkownika i przetwarzają bardziej abstrakcyjne dane, na niższe warstwy przekładając przetworzenie danych w postać, która może być fizycznie przetwarzana.
+Model internetowy został powstał jako rozwiązanie praktycznych problemów inżynieryjnych. Z drugiej strony model OSI jest podejściem bardziej teoretycznym i powstał na wcześniejszym etapie ewolucji sieci, więc model OSI łatwiej zrozumieć, ale tak naprawdę model internetowy wszedł w życie.
+
+### Praktycznie
+
+Warstwy w stosie TCP/IP
+Model OSI nie jest dość bogaty w dolnych warstwach by uchwycić prawdziwe warstwy, potrzebna byłaby dodatkowa warstwa pomiędzy warstwą sieci a transportową (warstwa internetowa).
+Następujące warstwy istnieją w oryginalnym modelu OSI:
+
+- 7 - Aplikacji (_Application_) np. HTTP, SMTP, SNMP, FTP, Telnet, SSH i Scp, NFS, RTSP
+- 6 - Prezentacji (_Presentation_) np. XDR, ASN.1, SMB, AFP
+- 5 - Sesji (_Session_) np. TLS, SSH, ISO 8327 / CCITT X.225, RPC, NetBIOS, ASP
+- 4 - Transportowa (_Transport_) np. TCP, UDP, RTP, SCTP, SPX, ATP
+- 3 - Sieci (_Network_) np. IP, ICMP, IGMP, X.25, CLNP, ARP, RARP, BGP, OSPF, RIP, IPX, DDP
+- 2 - Łącza danych (_Data Link_) np. Ethernet, Token ring, PPP, HDLC, Frame relay, ISDN, ATM, 802.11 WiFi, FDDI
+- 1 - Fizyczna (_Physical_) np. elektryczność, radio, laser
+
+Najcześciej górne trzy warstwy tego modelu (aplikacji, prezentacji i sesji) są traktowane jako pojedyncza warstwa aplikacji w modelu TCP/IP. Ponieważ nie ma tam warstwy sesji funkcje te przejmują indywidualnie aplikacje, lub w ogóle nie są realizowane.
+Uproszczony model TCP/IP:
+
+- Aplikacji (_Application "layer 7"_) - np. HTTP, FTP, DNS (protokoły rutingu takie jak BGP i RIP, które z różnych powodów działają na odpowiednio TCP i UDP mogą być również uważane za część warstwy sieci)
+- 4 - Transportowa (_Transport_) np. TCP, UDP, RTP, SCTP (protokoły rutingu takie jak OSPF, które biegną na IP mogą być również uważane za warstwę sieci)
+- 3 - Sieci (_Network_) - dla TCP/IP jest to IP (wymagane protokoły takie jak ICMP and IGMP biegną na IP, ale nadal mogą być rozważane jako warstwa sieciowa; ARP nie biegnie na IP)
+- 2 - Łącza danych (_Data Link_) np. Ethernet, Token ring, etc.
+- 1 - Fizyczna (_Physical_) np. warstwa fizyczna i techniki kodowania, T1, E1
+
+W skrócie wygląda to tak: dane z aplikacji przekazywane są od warstwy aplikacji w dół do warstwy fizycznej, transmitowane do punktu docelowego, gdzie dokonywana jest czynność odwrotna: dane wędrują w górę od warstwy fizycznej do warstwy aplikacji.
+
+Transmisję danych można podzielić na dwa rodzaje:
+
+- połączeniowe - dane sa wysyłane po zestawieniu kanału komunikacyjnego
+- bezpołączeniowe - dane są po prostu wysyłane na adres, a sama trasa czy kolejność wysyłania poszczególnych pakietów nie ma znaczenia
+
+Komunikacja połączeniowa może być symulowana w kanale bezpołączeniowym poprzez wymianę pakietów danych i potwierdzeń ich odbioru. Możliwa jest też sytuacja odwrotna.
+
+W komunikacji sieciowej wszystkie dane dzielone są na fragmenty o pewnej, możliwej do jednorazowego przesłania długości nazwane ogólnie pakietami. Każdy protokół posiada własny rodzaj pakietu, np. dla IP nazywa się on datagramem, dla TCP segmentem, a na poziomie warstwy łącza danych ramką.
+
+Struktura pakietu zawsze jest podobna: na początku znajduje się nagłówek zawierający różne specyficzne dla danego protokołu informacje (w tym również polecenia), a następnie blok danych, których treść nie jest dla protokołu istotna, traktuje on je wyłącznie jako ciąg danych do przesłania.
+
+Dane po kolei przechodzą do protokołów niższych warstw, które uzupełniają otrzymany pakiet własnym nagłówkiem, przekazują go niżej, aż do warstwy fizycznej, a po dotarciu do celu zaczyna się odwrotny proces. W każdej warstwie następuje "rozebranie" pakietu o jeden stopień, tak aby odczytać dane przesłane przez odpowiednią warstwę po drugiej stronie. A mogą być one najróżniejsze - np. numer kolejny bieżącego pakietu, potwierdzenie otrzymania kolejnego pakietu, informacja o błędzie, informacja o chęci zakończenia połączenia, kontroli parzystości, itp.
+Każda warstwa świadczy pewne usługi w określonym zakresie wobec warstw wyższych, np. warstwa sieciowa, w której działa protokół IP, odpowiada za dostarczenie pakietu pod wskazany adres, niezależnie od złożoności struktury sieciowej, przez którą musi być przesłany (dlatego stał się taki popularny). Nie zawiera jednak żadnych mechanizmów, pozwalających na weryfikację poprawności, czy kontrolę kompletności otrzymanych danych. Tym zajmuje się funkcjonujący szczebel wyżej - czyli w warstwie transportowej - protokół TCP. Czyli IP tylko przesyła dane na właściwy adres, a TCP sprawdza czy dotarły nienaruszone.
+
+Na samej górze mamy do czynienia z blokami danych na których operują aplikacje użytkownika, są to pliki w jakimś określonym formacie i bezpośrednio nimi zajmują się protokoły warstwy aplikacji.
+Warstwa transportowa dzieli te pliki na własne jednostki nazwane pakietami, które zawierają nagłówek zawierający m.in. adres portu docelowego i portu źródłowego oraz porcję informacji do wysłania.
+
+TCP zajmuje się ustanawianiem i kończeniem połączeń między procesami, dba o niezawodność transmisji, odpowiednią kolejność danych. TCP gwarantuje poprawność transmisji, musi sprawdzać czy wszystkie wysyłane pakiety dotarły do adresata, a po odebraniu porcji informacji wysyła potwierdzenie do nadawcy. W przypadku braku potwierdzenia odbioru protokół żąda ponownego wysłania aż do chwili nadejścia potwierdzenia. Ten mechanizm zapewnia ciągłość danych, ale obniża wydajność całego systemu.
+UDP natomiast jest znacznie uboższy, nie realizuje kontroli przepływu, ale jest szybki i nieskomplikowany. Używany w aplikacjach, które same dbają o poprawność transmisji. Posiada tylko dwie właściwości, których nie posiada IP: numer portu oraz nieobowiązkowa suma kontrolna.
+
+Z kolei warstwa sieciowa leżąca poniżej warstwy transportowej, w ogóle nie zajmuje się portami, jedyne co ma tutaj znaczenie to adres sieciowy docelowego i źródłowego komputera. Protokołem działającym w tej warstwie jest IP, który pakuje każdy pakiet TCP lub UDP w inny pakiet (datagram IP) zawierający adresy źródłowy i docelowy IP. Jest bezpołączeniowy co oznacza, że każdy z datagramów jest traktowany niezależnie, a wszelkimi połączeniami pomiędzy kolejnymi paczkami informacji zajmują się wyższe warstwy. Oblicza sumy kontrolne dla pakietów i w przypadku wykrycia błędów nie przesyła go dalej - oczekuje się, że protokół wyższego poziomu ponowi wysłanie.
+
+Adres często określony jest w postaci przyjaznej dla człowieka (domena internetowa) ale zupełnie niezrozumiałej dla komputera, za translację pomiędzy tymi rodzajami adresów odpowiada rozproszona baza danych - DNS - zawierająca informacje jakiemu dokładnie adresowi IP odpowiada dana domena.
+
+Po trafieniu do interfejsu sieciowego docelowego komputera zaczyna się odwrotna droga. Dane są "odpakowywane".
+
+### Podsumowanie
+
+1. host wysyła zapytanie do znanego sobie serwera DNS (konfiguracja w parametrach protokołu TCP/IP)
+2. zapytanie wędruje przez hierarchię NDS i wraca jako adres IP
+3. host sprawdzi za pomocą maski podsieci, że adres należy do innego segmentu więc wysyła pakiet na adres rutera (również konfiguracja w parametrach protokołu TCP/IP)
+4. pakiet zostanie zapakowany do ramek, zgodnych z istniejącym w danej sieci standardem kart sieciowych i okablowania, ustalenie adresu MAC rutera następuje w wyniku protokołu ARP lub korzystając z tabeli odwzorowań w jego pamięci podręcznej
+5. ruter po odebraniu ramek ponownie składa pakiet i stwierdza, że nie należy on do żadnej przyłączonej do niego sieci i wysyła do następnego rutera
+6. podział na ramki odpowiednie dla sieci drugiego rutera i wysłanie na jego adres MAC
+7. drugi ruter składa z ramek pakiet IP i kiedy stwierdzi, że adres należy do jego sieci, przy pomocy ARP pyta o adres MAC danego IP (jeśli nie ma go we własnej tablicy odwzorowań)
+8. pakiet po podziale na ramki idzie do odbiorcy
+
+Dane nie są zamykane w jednym pakiecie, ale są w pakiecie, który jest w innym pakiecie itd., średnio używa się 4 takich warstw, są jak koperta włożone jedna w drugą, jest to tzw "kapsułkowanie" (ang. _encapsulation_).
+Jest to niezbędne, bo trasa przesyłania jest skomplikowana, a na każdym etapie nie powinno się zawierać w danych pakietu więcej informacji niż jest niezbędne. Trasa prowadzi przez różne sieci, różne systemy, koperta zawiera tylko te informacje, które są potrzebne w sieci bieżącej.
+Ruter zdejmuje warstwę pakietu i nakłada drugą zawierającą informację na temat podróży do kolejnej sieci bez potwierdzenia powodzenia transmisji - bezpołączeniowe.
+
+### Protokoły
+
+Najpopularniejsze protokoły internetowe
+
+#### DNS (Domain Name Service)
+
+konwersja adresu pomiędzy postaciami liczbowymi i domenowymi (używa TCP i UDP)
+
+#### FTP (File Transfer Protocol - Protokół Transferu Plików)
+
+służy do kopiowania plików pomiędzy komputerami w sieci (używa TCP)
+
+#### ICMP (Internet Control Message Protocol)
+
+kontrola statusu urządzeń w sieci, umożliwia dostrojenie parametrów transmisji i sterowanie przepływem danych pomiędzy ruterami
+
+#### IP (Internet Protokol - Protokół (Międzysieciowy) Internetowy)
+
+wysyłanie danych do węzłów w sieci, określa strukturę adresów internetowych i pakietów danych
+
+#### NFS (Network File System - Sieciowy System Plików)
+
+definiuje system plików umożliwiając ich współdzielenie przez wiele komputerów w sieci (używa UDP)
+
+#### TCP (Transfer Control Protocol - Protokół Kontroli Transferu)
+
+formowanie i przesyłanie danych z kontrolą ich poprawności
+określa strukturę zabezpieczonego kanału komunikacyjnego pomiędzy aplikacjami internetowymi
+
+#### Telnet
+
+praca na zdalnym komputerze (używa TCP)
+
+#### TFTP (Trivial File Transfer Protocol - Uproszczony Protokół Transferu Plików)
+
+uproszczona wersja FTP; m.in. brak kontroli uprawnień użytkowników (używa UDP)
+
+#### SMTP (Simple Mail Transfer Protocol - Prosty Protokół Transferu Poczty)
+
+przesyłanie poczty (używa TCP)
+
+#### SNMP (Simple Network Management Protocol - Prosty Protokół Zarządzania Siecią)
+
+zarządzanie siecią, udostępnia dane o zdarzeniach w sieci
+
+#### UDP (User Datagram Protocol - Protokół Datagramu Użytkownika)
+
+przesyłanie danych bez kontroli poprawności dostarczenia ich do adresata
+zapewnia transport pakietów danych pomiędzy aplikacjami internetowymi ale bez gwarancji ich dostarczenia
+
+W sieci komputery komunikują się za pośrednictwem urządzeń pośrednich, tzw. węzłów (ang. _node_ lub _hop_)
+
+Stos protokołów TCP/IP jest sposobem na połączenie niepodobnych do siebie systemów komputerowych. Istnieją dokładne wytyczne dotyczące sposobu ich implementacji. Dzięki ich restrykcyjności poszczególne stosy są kompatybilne i umożliwiają komunikację między różnymi systemami.
+Protokół jest rutowalny dlatego umożliwia tworzenie rozległych sieci i daje pewność, że dane biegną najbardziej optymalną drogą.
+
+TCP/IP to wspólna nazwa dwóch podstawowych protokołów sieci Internet. Powstała oczywiście przez połączenie nazw TCP i IP. Udostępnia metody transmisji informacji pomiędzy poszczególnymi komputerami w sieci, obsługując pojawiające się błędy oraz tworząc wymagane do transmisji informacje dodatkowe.
+TCP/IP zwane jest także stosem protokołów ze względu na strukturę warstwową i zastosowanie modelu OSI. Tymi warstwami dla modelu TCP/IP są:
+
+- warstwa aplikacji (programów użytkowych)
+- warstwa transportu
+- warstwa sieci (warstwa intersieci, internet)
+- łącza danych warstwa interfejsu sieciowego
+
+### Warstwa aplikacji
+
+SMTP, FTP, TFTP, HTTP, POP3
+
+### Warstwa transportowa (TCP i UDP)
+
+Jest długa lista usług które mogą być opcjonalnie zapewniane na tym poziomie, żadna z nich nie jest obowiązkowa, ponieważ nie wszystkie aplikacje potrzebują wszystkich usług. Niektóre z nich są nadmiarowe, lub mogłyby by obniżać wydajność.
+
+Musi zapewnić:
+
+- Podstawowy transfer danych (_basic data transfer_) - Przesyła ciągi oktetów (8-bitowe porcje danych) w obu kierunkach transmisji. Oktety przed transmisją pakowane są w segmenty danych. Protokół sam decyduje czy blok danych należy wysłać czy poczekać na jeszcze większą porcję. Czasem jednak użytkownik musi mieć pewność, że dane przesłane do protokołu TCP zostały wysłane do sieci (konkretnie do warstwy niższej, czyli IP) i nie są buforowane, wtedy wykorzystywana jest funkcja push powodująca wypchnięcie wszystkich oczekujących na transmisję danych - ale odbiorca nie otrzymuje żadnego znaku, że to ma miejsce i odbiera dane jak zwykły ciąg transmisji.
+- Wiarygodność transmisji (_reliability_) - Ma za zadanie naprawić wszystkie błedy jakie mogły pojawić się w niższej warstwie. Musi zapewnić odzyskanie danych, które zostały zagubione, zniekształcone, zniszczone, zduplikowane, albo dostarczone w niewłaściwej kolejności. Każdy oktet otrzymuje swój unikalny numer sekwencyjny, dzięki czemu po odebraniu danych można je zebrać w odpowiedniej kolejności oraz wyeliminować duplikaty.
+Host odbierający musi potwierdzić odbiór segmentu przez wysłanie sygnału ACK (ang. _acknowledgement_ - potwierdzenie), jeśli w określonym czasie komputer wysyłający nie otrzyma potwierdzenia odbioru nastąpi retransmisja danych; ewentualne uszkodzenie lub przekłamanie danych można wykryć dzięki zastosowaniu odpowiednich sum kontrolnych.
+Cały ten system zapewnia, że błędy w transmisji nie powinny mieć wpływu na poprawność przesyłanych danych. W przypadku bardzo złej jakości łączy dane w ogóle mogą zostać nie dostarczone, na to jednak nie ma rady.
+- Kontrola przepływu (_flow control_) - Komputer odbierający może sterować ilością danych wysyłanych przez komputer źródłowy ponieważ wysyła z każdym sygnałem potwierdzającym (ACK) tzw. okna, które informuje komputer wysyłający ile jeszcze oktetów może wysłać przed otrzymaniem kolejnego pozwolenia.
+Ilość pamięci w każdym komputerze jest ograniczona i bez kontroli przepływu szybszy komputer mógłby zalać każdego hosta taką ilością informacji z jaką tamten mógłby sobie nie poradzić. Kontrola przepływu zapewnia regulację szybkości przesyłania danych. Czasem jest to zapewnione przez samą sieć, jeśli jednak nie to warstwa transportowa może może dodać tę funkcję.
+- Multipleksowanie (_multiplexing_) - Ponieważ zwykle działa wiele programów, procesów, które potrzebują skorzystać z usług TCP/IP trzeba im umożliwić równoczesne korzystanie z sieci. W tym celu TCP udostępnia dodatkowy zbiór adresów (inaczej portów) przypisywanych konkretnym procesom.
+Porty są podstawowym sposobem na adresowanie do wielu jednostek w jednej lokacji, np. pierwsza linia adresu pocztowego jest rodzajem portu i rozróżnia pomiędzy różnymi mieszkańcami tego samego domu. Aplikacja będzie nasłuchiwała na informację na własnym porcie dzięki czemu można używać wielu aplikacji sieciowych w tym samym czasie.
+Numer takiego portu (jest to 16-bitowa liczba) w połączeniu z adresem sieci i hosta wziętymi z warstwy komunikacyjnej tworzy tzw. gniazdo (ang. _socket_), a para gniazd identyfikuje każde połączenie.
+
+- Połączenia (_connections_) - Opisane powyżej mechanizmy wymagają najpierw zainicjowania a potem utrzymywania pewnych informacji statusowych dotyczących każdego przesyłanego strumienia danych. Kombinacja tych informacji (gniazda, numery sekwencyjne oraz wielkości okien) nazywana jest "połączeniem", każde z nich jest jednoznacznie identyfikowane przez dwa gniazda, po jednym na każdą ze stron.
+Kiedy dwa procesy mają zacząć komunikację muszą najpierw nawiązać połączenie (czyli wymienić informację statusową) a po zakończeniu komunikacji połączenie jest zamykane w celu zwolnienia zasobów
+- Dostarczenie w tej samej kolejności (_same order delivery_) - Warstwa sieciowa generalnie nie gwarantuje, że pakiety danych dotrą w tej samej kolejności w jakiej zostały wysłane, ale często jest to pożądana właściwość i zapewnia ją warstwa transportowa. Najprostszym sposobem na zrobienie tego jest danie każdemu pakietowi numeru i pozwolenie odbiorcy na powtórne zamówienie pakietów.
+- Przetworzenie na strumień bajtów (_byte orientation_) - zamiast operowania na zestawach pakietów warstwa transportowa może umożliwić komunikację przez strumień bajtów.
+
+#### TCP (Transmission Control Protocol)
+
+TCP jest protokołem komunikacyjnym warstwy transportowej, zdefiniowanym w IETF RFC 793. Zapewnia wiarygodność transmisji (_reliable-delivery_), przesyła ciąg bajtów (_byte-stream_) i jest połączeniowym (_connection-oriented_) protokołem.
+Został stworzony przez Vintona Cerfa i Roberta Kahna w latach 70-tych w ramach projektu ARPANET.
+
+Przekłada proces komunikacji z poziomu łatwego do użycia przez człowieka na poziom łatwy do użycia (transmisji) przez sieć.
+
+Jest on częścią większej całości określanej jako stos TCP/IP.
+W modelu OSI TCP odpowiada warstwie transportowej.
+W zestawie protokołów internetowych TCP jest pośrednią warstwą pomiędzy leżącym poniżej IP i aplikacjami z wyższej warstwy, które często potrzebują wiarygodnej, połączeniowej (_pipe-like_) komunikacji - czego IP nie zapewnia, bo zajmuje się tylko przesyłaniem pakietów pomiędzy różnymi hostami.
+
+Pierwsza specyfikacja powstała w 1974, była to opublikowana w IEEE Transactions praca "A Protocol for Packet Network Intercommunication". Trzy lata później, w lipcu 1977 odbył się eksperyment, w którym tego protokołu użyto do transmisji danych przez różne media (sieć ARPANET, Packet Radio i łącza satelitarne) na dużą odległość (USA - Anglia i z powrotem).
+
+W pierwotnej wersji protokołu nie było rozróżnienia pomiędzy TCP i IP ale w trakcie eksperymentów nad przesyłaniem zakodowanego głosu okazało się, że retransmisja błędnych pakietów powoduje przerwy w odtwarzaniu dźwięku.
+Oddzielono więc protokół IP odpowiedzialny za adresowanie od TCP odpowiedzialnego za pakietowanie i oprócz TCP powstał UDP, w którym brak jest kontroli prawidłowości przesyłanych pakietów.
+W ten sposób transmisja danych została podzielona między dwie warstwy, z których jedna (IP) zajmuje się dostarczeniem ich do docelowego hosta poprzez różne rodzaje sieci, a druga (TCP lub UDP) komunikuje między sobą procesy na tych hostach.
+
+TCP jest złożonym i rozwijającym się protokołem. Ale pomimo upływu czasu podstawowe zasady nie uległy większym zmianom od RFC 739 opublikowanego w 1981.
+
+- RFC 739
+- RFC 1122, Host Requirements for Internet Hosts - wyjaśnił wymagania wobec implementacji protokołu TCP.
+- RFC 2581, TCP Congestion Control - opisuje uaktualnione algorytmy jakie powinny zostać użyte w celu uniknięcia nadmiernego przeciążenia.
+- RFC 3168 (2001) opisuje ECM (_Explicit Congestion Notification_) mechanizm unikania przeciążenia.
+
+Obecnie TCP jest używane w około 95% internetowych pakietów. Najpopularniejsze aplikacje używające TCP to m.in.: HTTP/HTTPS, SMTP/POP3/IMAP i FTP.
+W ciągu ostatnich lat znacznie wzrosła prędkość łączy sieciowych, protokół zaprojektowany dla powolnych sieci (kilka KBps) teraz musi przesyłać 1 Gbps. Implementacje wymagają więć znacznie wiecej mocy - 1 Gb komunikacji TCP pochłania 100% mocy procesora Pentium 2.4 GHz.
+
+TCP używa pojęcia numerów portów, żeby zidentyfikować wysyłające i odbierające aplikacje. Każda strona połączenia ma skojarzony 16-bitowy numer portu przydzielony do wysyłającej lub odbierającej aplikacji. Oficjalnie uznanych jest 65535 portów.
+Podzielone są na trzy podstawowe kategorie:
+
+dobrze znane:
+
+przydzielone przez IANA, są zwykle używane na poziomie systemu lub procesów roota, dobrze znane aplikacje, które działają jako serwery lub pasywnie nasłuchują na połączenia używają właśnie tych portów;
+przykłady: FTP (21), Telnet (23), SMTP (25), HTTP (80)
+
+zarejestrowane:
+
+zwykle używane przez aplikacje końcowego użytkownika jako efemeryczne porty źródłowe podczas kontaktowania się z serwerami, ale mogą także identyfikować usługi, które zostały zarejestrowane przez trzecią stronę.
+
+dynamiczne/prywatne:
+
+mogą być także używane przez aplikacje użytkownika, ale jest to rzadsze; nie posiadają żadnego znaczenia poza konkretnym połączeniem TCP
+
+W przeciwieństwie do UDP, TCP jest zorientowany na połączenie i zapewnia niezawodność, tworzy wiarygodne połączenie dla wyższych warstw komunikacyjnych przy pomocy sum kontrolnych i numerów sekwencyjnych pakietów, w celu weryfikacji wysyłki i odbioru. Brakujące pakiety są obsługiwane przez żądania retransmisji.
+Host odbierający pakiety TCP porządkuje je według numerów sekwencyjnych tak, by przekazać wyższym warstwom modelu OSI pełen, złożony segment.
+Protokół gwarantuje, że dane wysłane z jednego miejsca trafią do hosta docelowego w całości, bez utraty pakietów i we właściwej kolejności. Rozróżnia także dane skierowane do różnych aplikacji na tym samym komputerze.
+Posiada wbudowany mechanizm kontroli błędów, który naprawia błędy powstające w niższych warstwach, osiąga się to przez tworzenie odrębnych połączeń logicznych i zapewnienie, że wysyłane dane zostaną dostarczone do wyższych warstw we właściwej kolejności.
+
+Aplikacje wysyłają strumienie bajtów do TCP w celu przesłania przez sieć. TCP dzieli te strumienie bajtów na segmenty odpowiedniej wielkości zwykle określonej przez rozmiar największej jednostki transmisji - MTU (_maximum transmission unit_) poziomu łącza danych sieci, do której podłaczony jest komputer.
+
+Rozmiar okna TCP
+U odbierającego TCP jest to ilość otrzymywanych danych (w bajtach) która może być buforowana w czasie połączenia. Wysyłający host może wysłać tylko taką ilość danych zanim nie musi poczekać na potwierdzenia i uaktualnienie okna odbierającego hosta. Okno stosu TCP/IP jest zaprojektowane do samodostrojenia się w większości środowisk i używa większych domyślnych rozmiarów okien niż we wcześniejszych wersjach.
+Skalowanie okien: dla bardziej wydajnego użycia przepustowości sieci może zostać użyty większy rozmiar okna TCP. Pole okna TCP kontroluje przepływ danych i jest ograniczone do 2 bajtów lub rozmiaru okna 65535 bajtów.
+Ponieważ wielkość tego okna nie może być zwiększona używany jest czynnik skalowania - jest to opcja używana do zwiększania maksymalnego rozmiaru okna z 65535 bajtów do 1 GB. Stosowane tylko w czasie potrójnego uścisku dłoni TCP. Wartość skali okna reprezentuje ilość bitów przesunięcia w lewo 16-bitowego pola rozmiaru okna, może mieć wartość od 0 (brak przesunięcia) do 14.
+
+Potem TCP przekazuje pakiety do IP w celu przekazania przez internet do modułu TCP jednostki na drugim końcu połączenia.
+TCP nadaje każdemu bajtowi kolejny numer używany dla upewnienia się, że żadne pakiety nie zostały utracone, że dane zostały dostarczone we właściwej kolejności oraz, że nie są zduplikowane. Moduł TCP na drugim końcu odsyła potwierdzenia dla bajtów, które zostały odebrane pomyślnie. Zegar (_timer_) wysyłającego TCP określa limit czasu oczekiwania (_timeout_) - jeśli potwierdzenie nie zostało odebrane w przewidywanej ilości cyklów podróży i (przypuszczalnie utracony/zagubiony) dane będą wtedy retransmitowane. Zapewnia to wykrycie i dostosowanie się do utraty lub opóźnienia.
+TCP sprawdza czy żadne bajty nie zostały zniszczone używając sum kontrolnych - jedna jest wyliczana na komputerze wysyłającym dla każdego pakietu danych przed wysłaniem i sprawdzana u odbiorcy.
+
+W czasie fazy ustanowienia połaczenia TCP pomiędzy dwoma modułami TCP wymieniane są numery sekwencji począkowej (ISN - _initial sequence numbers_). Te numery sekwencji są używane do identyfikacji danych w strumieniu bajtów i są numerami, które identyfikują (i liczą) bajty danych aplikacji. Zawsze jest para numerów sekwencji włączonych w każdy segment TCP, które są określane jako numer sekwencji i numer potwierdzenia. Wysyłający TCP odnosi się do swojego własnego numeru sekwencji jako numer sekwencji, a do numeru sekwencji odbierającego jako numer potwierdzenia. Aby zapewnić wiarygodność odbiorca potwierdza segment danych przez wskazanie, że został przyjęty do pewnego miejsca w strumieniu bajtów. Rozszerzenie TCP nazwane selektywnym potwierdzeniem (SACK) pozwala odbierającemu na potwierdzenie popsutych bloków.
+Dzięki użyciu sekwencji i numerów potwierdzeń TCP może we właściwy sposób dostarczyć otrzymane segmenty we właściwym strumieniu bajtów do aplikacji. Numery sekwencji są to 32-bitowe niepodpisane numery, które wracają do zera w następnym bajcie w strumieniu po 232-1. Wybór ISN jest podstawowym mechanizmem bezpieczeństwa TCP.
+
+16-bitowa, suma kontrolna jest wyliczana przez nadawcę i włączana w transmisje segmentów.
+Suma TCP pokrywa także 96-bitowy pseudonagłówek zawierający adres źródłowy, adres przeznaczenia, protokół i długość TCP. To zabezpiecza przed błędnie rutowanymi segmentami.
+Jest jak na współczesne standardy dość słabe zabezpieczenie. Warstwa łącza danych z wysokim prawdopodobieństwem stopnia błędu bitów może wymagać dodatkowych możliwości wykrycia i naprawy błędu łącza. Słabość sumy jest częściowo kompensowana przez powszechne użycie CRC lub lepszą kontrolę na warstwie 2 poniżej TCP i IP - tak jak jest użyte w ramce PPP lub Ethernetu. Jednakże nie znaczy to wcale, że 16-bitowa suma kontrolna TCP jest redundantna. Badania ruchu internetowego pokazały, że programowe i sprzętowe błędy są pomimo tych zabezpieczeń powszechne, a 16 bitowa suma nagłówka TCP wychwytuje tylko większość z nich.
+
+Procedura nawiązania połączenia ponieważ zawiera trzy fazy nazywana jest potrójnym uściskiem dłoni (ang. _three-way handshake_), jest to sposób na nawiązanie sesji. Ma ona na celu synchronizację wysyłania i odebrania segmentu danych, informowania drugiego hosta o rozmiarze paczki (okna) danych, które jesteśmy w stanie odebrać, oraz utworzenie wirtualnego połączenia w sieci.
+
+1. Ustanowienie połączenia - inicjalizowane są parametry takie jak numery sekwencji, by można było zapewnić odpowiednią sprawność połączenia; chociaż zainicjowanie połaczenia równocześnie jest możliwe dla pary końcowych hostów, zazwyczaj jeden koniec otwiera gniazdo i biernie nasłuchuje na połączenie z drugiego - jest to powszechnie określane jako bierne/pasywne otwarcie i wyznacza stronę serwera w połączeniu
+1. Strona klienta inicjuje aktywne połączenie wysyłając inicjujący segment SYN do serwera; jeśli to host inicjuje połączenie wysyła pakiet zawierający segment TCP z ustawioną flagą SYN (_Synchronize_).
+2. Host (serwer) odbierający połączenie powinien odpowiedzieć na prawidłowe żądanie SYN przez SYN/ACK - odsyła pakiet z ustawionymi flagami SYN i ACK (_Acknowledge_ - potwierdzenie).
+3. Na końcu inicjujący host (klient) powinient eraz wysłać pierwszą porcję danych, ustawiając już tylko flagę ACK (gasząc SYN). Odpowiedź ACK kończy trzystopniowy uścisk dłoni i fazę ustanowienia połączenia.
+Jeśli host odbierający połączenie nie chce lub nie może odebrać połączenia, powinien odpowiedzieć pakietem z ustawioną flagą RST (_Reset_).
+2. Transfer danych
+3. Zakończenie połączenia - używa poczwórnego uścisku dłoni, przy czym każda strona może zacząć niezależnie, typowe przerwanie połączenia (_teardown_) wymaga pary segmentów FIN i ACK z każdego końca TCP
+
+Potwierdzenia dla wysłanych danych lub brak potwierdzeń są używane przez wysyłąjącego do pośredniego wnioskowania o stanie sieci pomiędzy wysyłającym a odbierającym. Dzięki użyciu zegara (_timer_) wysyłający i odbierający mogą zmieniać zachowanie strumienia danych, jest to nazywane jest kontrolą strumienia, przeciążenia i/lub unikaniem przeciążenia.
+TCP używa pewnych mechanizmów by osiągnąć wysoką wydajność i uniknąć przeciążenia sieci (np. przez wysyłanie danych szybciej niż odbierający może je przyjąć), te mechanizmy to: użycie przesuwanego okna, algorytm powolnego startu, algorytm unikania przeciążenia, algorytm szybkiej retransmisji i szybkiego odzyskania i inne.
+
+Aplikacje, w których zalety TCP przeważają nad wadami (większy koszt związany z utrzymaniem sesji TCP przez stos sieciowy) to między innymi HTTP, SSH, FTP czy SMTP/POP3 i IMAP4.
+Jednakże dla wielu aplikacji TCP nie jest właściwym rozwiązaniem. Nowsze protokoły warstwy transportowej są projektowane i wdrażane by zminimalizować wady komunikacji bezpołączeniowej. Dla przykładu niektóre aplikacje czasu rzeczywistego nie potrzebują takiej kontroli wiarygodności transmisji i łatwiej sobie radzą ze stratami danych.
+Przykładowe aplikacje tego typu to: streaming czasu rzeczywistego (np. radio internetowe), wieloosobowe gry czasu rzeczywistego i VoIP. W wielu przypadkach kiedy wymagany jest tylko multipleksing usług właściwszym wyborem będzie UDP.
+
+#### UDP (User Datagram Protocol)
+
+Wszystkie implementacje TCP/IP muszą również wspierać prostszy protokół.
+
+UDP jest minimalnym protokołem warstwy transportowej zorientowanym na wiadomość; udokmentowanym w IETF RFC 768.
+UDP często jest używany w aplikacjach działających na zasadzie żądanie - odpowiedź, lub kiedy transmisja skierowana jest do wszystkich urządzeń w danym segmencie (_broadcast_) lub do pewnej grupy urządzeń (_unicast_) - użycie w takim przypadku TCP spowodowałoby nadmiar niepotrzebnych informacji.
+Prośba o retransmisję segmentu danych jest zupełnie nieprzydatna w aplikacjach działajacych w czasie rzeczywistym.
+
+Został zaprojektowany tak aby jego implementacja była możliwie najprostsza. Nie zapewnia kontroli dostarczenia datagramu ani nie sprawdza czy nie wystąpiły błędy transmisji.
+
+W modelu TCP/IP UDP zapewnia bardzo prosty interfejs pomiędzy siecią leżącą poniżej a aplikacją z wyższych warstw. UDP nie gwarantuje dostarczenia wiadomości i wysłający UDP nie zachowuje stanu wiadomości UDP już wysłanych do sieci (i z tego powodu czasem skrót UDP jest rozwijany do "Unreliable Datagram Protocol".) UDP umożliwia tylko multipleksowanie i sprawdzanie sum kontrolnych na szczycie datagramu IP.
+
+Nagłówek UDP zawiera tylko 4 pola, z czego dwa są opcjonalne: porty źródłowy i przeznaczenia są 16 bitowymi polami, które identyfikują proces wysyłający i odbierający. Ponieważ UDP jest bezstanowe i wysyłający UDP może nie zwracać odpowiedzi port źródłowy jest opcjonalny (jeśli nie jest ustawiony powinien być ustawiony na zero).
+Po polach portów są pole o określonej długości określone jako bajty datagramu UDP zawierające dane, minimalna wartość długości pola jest 8 (oktetów). Pozostałe pole nagłówka jest 16 bitową sumą kontrolną obejmującą nagłówek i dane, która również jest opcjonalna, ale prawie zawsze używana.
+
+Ponieważ nie zapewniające wiarygodności transmisji aplikacje UDP muszą pogodzić się z pewną ilością utraconych, zduplikowanych i błędnych pakietów, niektóre aplikacje takie jak TFTP mogą dodać jakieś podstawowe mechanizmy wiarygodności w warstwie aplikacji jeśli jest to potrzebne. Ale najcześciej aplikacje UDP nie tylko nie wymagają mechanizmu wiarygodności, ale takie mechanizmy by im przeszkadzały. Media strumieniowe, wielosobowe gry czasu rzeczywistego i VoIP są przykładami takich aplikacji, które często używają UDP.
+
+Brak unikania przeciążenia i mechanizmów kontroli powoduje, że konieczne są oparte na sieci mechanizmy, które by zapobiegły przeciążeniu sieci przez niekontrolowany napływ pakietów UDP. Ponieważ wysyłający UDP nie jest w stanie wykryć przeciążenia potrzebne są oparte na sieci elementy takie jak rutery używające kolejkowanie pakietów i techniki porzucania, które będą czasem jedynym narzędziem które zmniejszy ruch UDP.
+DCCP (Datagram Congestion Control Protocol) jest zaprojektowany jako częściowe rozwiązanie tego potencjalnego problemu poprzez dodanie kontroli przeciążenia końcowego hosta dla szybkich strumieni UDP takich jak media strumieniowe.
+
+Chociaż całkowita ilość ruchu UDP w przeciętnej sieci nie przekracza kilku procent - tego protokołu używa duża liczba aplikacji: DNS, SNMP (simple network management protocol), DHCP, RIP (Routing Information Protocol).
+
+### Warstwa internetowa (IP i ICMP)
+
+#### IP (Internet Protocol)
+
+IP jest zorientowanym na dane protokołem używanym do przesyłania danych pomiędzy hostem źródłowym a przeznaczenia poprzez sieć pakietów kumutowanych (_packet-switched internetwork_).
+Dane w międzysieci IP są wysyłane w blokach nazywanych pakietami lub datagramami (te terminy są w zasadzie synonimami w IP).
+
+IP zapewnia usługi datagramu bez wiarygodności (nazwane czasem "_best effort_", czyli najlepszych starań) tzn. nie daje gwarancji co do pakietów, które mogą dotrzeć zniszczone, w zmienionym porządku, zduplikowane lub całkiem porzucone. Jeśli więc aplikacja wymaga wiarygodności musi go zapewnić innymi sposobami.
+
+Przełączniki pakietów lub międzysieciowe rutery przekazują datagramy IP poprzez dwie połączone sieci. Brak mechanizmów zapewniających gwarancjię dostarczenia, powoduje, że ten mechanizm jest prosty. Choć jeśli sieć porzuca, zmienia porządek lub w jakiś inny sposób psuje dużą ilość pakietów, efekt otrzymany przez użytkownika będzie kiepski.
+
+IP jest powszechnym elementem sieci, obecnie najpopularniejszym protokołem warstwy sieci jest IPv4, którego adresy się kończą i nastąpi zmiana na IPv6. Wersje 0 do 3 były zarezerwowane lub nieużywane, wersja 5 była używana dla ekperymentalnego protokołu strumieniowego. Inne numery zostały przydzielone zwykle dla eksperymentalnych protokołów ale nie były zeroko stosowane.
+
+Adresowanie i rutowanie jest prawdopodobnie najbardziej złożonym aspektem IP.
+Adresowanie odnosi się do tego jak końcowym hostom przydziela się adresy IP i jak podsieci adresów IP są podzielone i grupowane razem.
+Ruting IP jest wykonywany przez wszystkie hosty, ale najważniejszy przez rutery międzysieciowe, które zwykle używają IGPs (_interior gateway protocols_) lub EGPs (_external gateway protocols_), umożliwiających przekazywanie pakietów przez połączone sieci.
+
+Protokół IP pracuje w warstwie 2 modelu DoD, ale jego funkcjonalność odpowiada warstwie 3 modelu OSI. Przynależność do tej warstwy sprawia, że jest bezpołączeniowy, nie jest w stanie rozpoznać, które pakiety powinny zostać retransmitowane w przypadku wystąpienia błędu, ani nie zajmuje się ustawieniem pakietów w kolejności.
+
+#### IPv4
+
+Aktualnie obowiązującą wersją IP jest IPv4. Zawsze kiedy mowa o tym protokole bez uwzględnienia wersji chodzi właśnie o IPv4. Opisany jest w IETF RFC 791, opublikowanym we wrześniu 1981. IPv4 był pierwszą szeroko stosowaną wersją tego protokołu i tworzy większość współczesnego internetu.
+Obecnie używany protokół IP wykorzystuje 32 bitowy achemat adresowania, który umożliwia identyfikację sieci i urządzeń do niej podłączonych.
+
+Ponieważ ilość dostępnych adresów IPv4 jest na wyczerpaniu zostanie zamieniony na następną wersje, którą jest - zachowującą wsteczną kompatybilność - IPv6. Znacznie zwiększa możliwości adresowania i jest gotowa do wdrożenia, jednak przez najbliższe lata IP będzie oznaczało po prostu IPv4.
+
+Adresowanie:
+W wersji 4 adres IP ma 32 bity co teoretycznie daje ponad 4 miliardy (4,294,967,296) unikalnych hostów. Jednak w praktyce przestrzeń adresowa jest znacznie mniejsza stąd więc rosnąca potrzeba zmiany na IPv6. Wiele z adresów jest zarezerwowanych do specjalnych celów takich jak sieci lokalne lub adresy multicastowe.
+Adres IP jest najczęście wyrażony w postaci "kropkowo dziesiętnej" (_dotted decimal_): cztery oktety podzielone przez kropki. Np. host znany jako wikipedia.org ma w rzeczywistości numer 3482223596, zapisany jako 207.142.131.236: 3482223596 równa się 207x2563 \+ 142x2562 \+ 131x2561 \+ 236x2560.
+
+Rozwiązanie nazwy domenowej np. "www.isoc.org.pl" do właściwego numeru IP jest zadaniem, które wykonuje DNS.
+
+Historycznie adresy IP miały tylko dwie części, późniejsze zmiany zmieniły to na trzy części: sieć, podsieć i hosta, jednakże powszechne zastosowanie CIDR zmieniło ten stan rzeczy i adres może mieć dowolną liczbę poziomów hierarchii Technicznie to było zawsze możliwe z pojawieniem się podsieci, ponieważ witryna mogła zawierać więcej niż jedną warstwę podsieci.
+
+Sposoby zapisu: adresy IPv4 są zapisywane w formacie:
+
+- Kropkowo dziesiętnym (_Dotted Decimal_) - najczęściej używany
+
+207.142.131.235
+
+- Kropkowo heksadecymalny (_Dotted Hexadecimal_):
+
+0xCF.0x8E.0x83.0xEB
+
+- Kropkowo oktalny (_Dotted Octal_)
+
+0317.0216.0203.0353
+
+- dziesiętny (_Decimal_):
+
+3482223595
+
+- heksadecymalny (_Hexadecimal_)
+
+0xCF8E83EB
+
+
+Powyższe adresy działają w większości przeglądarek i wskazują na wikipedia.org.
+
+Fragmentacja i powtórne złożenie.
+IPv4 umożliwia zastosowanie elementów sieci (np. łączy punkt-punkt) używających pakietów o małych rozmiarach. Zatosowanie fragmentacji i złożenia na lokalnym łączu wymagałoby od rutera na drugim końcu zebrania oddzielnych kawałków i złożenia pakietu (skomplikowany proces szczególnie jeśli pakiety się gubiły by na skutek błędów na łączu).
+Ruter, który wykrywa, że pakiet jest za duży by zmieścić się na następnym łączu i pozwala na podzielenie go na fragmenty (oddzielne pakiety IPv4, z których każdy będzie zawierał część danych oryginalnego pakietu IPv4) dzieli go przy użyciu standardowych procedur, które pozwalają hostowi docelowemu złożyć pakiet z fragmentów, po tym jak je oddzielnie odebrał.
+Kiedy duży pakiet IPv4 jest podzielony na mniejsze (co zwykle, ale nie zawsze ma miejsce na ruterze gdzieś na drodze do przeznaczenia), to wszystkie fragmenty są normalnymi pakietami IPv4, np. mają pełen nagłówek IPv4. Porcja danych oryginalnego pakietu jest podzielona na mniejsze, które są dość małe (łącznie z nagłówkiem) by przejść do następnego łącza i w każdym fragmencie znajduje się jeden segment oryginalnych danych. Prawie wszystkie pola nagłówka mają takie same wartości jak w oryginalnym pakiecie, a w szczególności mają identyczną wartość pola identyfikacji.
+Różnice:
+
+- pole całkowitej długości będzie mniejsze, bo dostosowane do rozmiaru każdego z fragmentów
+- flaga pojedynczego bitu "more fragment" będzie ustawiona na 1 za wyjątkiem ostatniego fragmentu
+- pole "fragment offset" będzie niezerowe we wszystkich oprócz pierwszego fragmentu
+
+Czyli pakiet jest sfragmentowany jeśli w miejscu przeznaczenia w którymś z przychodzących pakietów:
+
+- flaga pojedynczego bitu "more fragments" jest ustawiona jeden
+- lub pole "fragment offset" jest niezerowe
+
+Żeby złożyć fragmenty z powrotem w oryginalny pakiet w miejscu przeznaczenia, host szuka przychodzących pakietów z tą samą wartością pola identyfikacji, wszystkie należą do tego samego oryginalnego pakietu. Pola offsetu i całkowitej długości wskazują gdzie jest miejsce każdej części oraz jaką cześć oryginalnego pakietu zawiera.
+Może to funkcjonować niezależnie od całkowitej wielkości oryginalnego pakietu. Dla pakietu z czystą flagą "more fragments", wartość pola wielkości w tym pakiecie plus wartość pola offsetu daje całkowitą długość oryginalnego pakietu.
+
+Ruter może powtarzać proces fragmentacji, nawet jeśli ma pojedynczy fragment (np. ostatni ruter po drodze) - dzieli go w taki sam sposób dzieląc na dwa lub więcej nowych fragmentów i dodając właściwe pola offsetu i całkowitej długości. Jedyną komplikacją jest jeśli flaga "more fragments" jest ustawiona na zero, potrzebuje je ustawić na jeden za wyjątkiem ostatniego fragmentu (jest to względnie proste ustawić proces tak, żeby ruter nie potrzebował wiedzieć czy dzieli oryginalny pakiet czy już fragment)
+
+Jeśli pakiet jest sfragmentowany i niektóre z fragmentów zostały stracone, wtedy w całości jest retransmitowany z tym samym numerem identyfikacyjnym i ta druga kopia również jest fragmentowana (z możliwością utraty niektórych fragmentów). Wtedy fragmenty z drugiej kopii mogą zostać użyte do wypełnienia dziur w pierwszym.
+
+Rzeczywisty przydział pakietów nie jest arbitralny, organizacja - zazwyczaj ISP - żąda przydzielenie bloku numerów z rejestru takiego jak np. American Registry for Internet Numbers (ARIN). Numer sieci zawiera zasięg adresów, które organizacja ma do dyspozycji i jeśli wyczerpie znaczącą ilość przestrzeni adresowej, może zażądać następnego bloku numerów.
+Na przykład ARIN alokował adresy 64.78.200.0 do 64.78.207.255 dla Verado, Inc. Verado alokowało adresy 64.78.205.0 do 64.78.205.15 dla Bomis. Bomis przydzielił konkretny adres 64.78.205.6 dla interfejsu hosta nazwanego www.wikipedia.com.
+
+Na styczeń 2005, niektóre duże bloki przydziału zawierają:
+Klasa A
+
+- [Organization] [Block]
+- Internet Assigned Numbers Authority 0.0.0.0 - 2.255.255.255
+- General Electric 3.0.0.0 - 3.255.255.255
+- Level 3 Communications 4.0.0.0 - 4.255.255.255
+- Internet Assigned Numbers Authority 5.0.0.0 - 5.255.255.255
+- Department of Defense Network Information Center 6.0.0.0 - 7.255.255.255
+- Level 3 Communications 8.0.0.0 - 8.255.255.255
+- IBM 9.0.0.0 - 9.255.255.255
+- Internet Assigned Numbers Authority 10.0.0.0 - 10.255.255.255
+- Department of Defense Network Information Center 11.0.0.0 - 11.255.255.255
+- AT&T WorldNet Services 12.0.0.0 - 12.255.255.255
+- Xerox Palo Alto Research Center 13.0.0.0 - 13.255.255.255
+- Internet Assigned Numbers Authority 14.0.0.0 - 14.255.255.255
+- Hewlett-Packard Company 15.0.0.0 - 15.255.255.255
+- Digital Equipment Corporation 16.0.0.0 - 16.255.255.255
+- Apple Computer, Inc. 17.0.0.0 - 17.255.255.255
+- Massachusetts Institute of Technology 18.0.0.0 - 18.255.255.255
+- Ford Motor Company 19.0.0.0 - 19.255.255.255
+- Computer Sciences Corporation 20.0.0.0 - 20.255.255.255
+- Department of Defense Network Information Center 21.0.0.0 - 22.255.255.255
+- Internet Assigned Numbers Authority 23.0.0.0 - 23.255.255.255
+- Various U.S. Cable Networks 24.0.0.0 - 24.255.255.255
+- Royal Signals and Radar Establishment 25.0.0.0 - 25.255.255.255
+- Department of Defense Network Information Center 26.0.0.0 - 26.255.255.255
+- Internet Assigned Numbers Authority 27.0.0.0 - 27.255.255.255
+- Department of Defense Network Information Center 28.0.0.0 - 30.255.255.255
+- Internet Assigned Numbers Authority 31.0.0.0 - 31.255.255.255
+- AT&T Global Network Services 32.0.0.0 - 32.255.255.255
+- Department of Defense Network Information Center 33.0.0.0 - 33.255.255.255
+- Halliburton Company 34.0.0.0 - 34.255.255.255
+- Merit Network, Inc. 35.0.0.0 - 35.255.255.255
+- Internet Assigned Numbers Authority 36.0.0.0 - 37.255.255.255
+- Performance Systems International, Inc. 38.0.0.0 - 38.255.255.255
+- Internet Assigned Numbers Authority 39.0.0.0 - 39.255.255.255
+- Eli Lilly and Company 40.0.0.0 - 40.255.255.255
+- Internet Assigned Numbers Authority 41.0.0.0 - 42.255.255.255
+- Japan Inet 43.0.0.0 - 43.255.255.255
+- Amateur Radio Digital Communications 44.0.0.0 - 44.255.255.255
+- Interop Show Network 45.0.0.0 - 45.255.255.255
+- Internet Assigned Numbers Authority 46.0.0.0 - 46.255.255.255
+- Bell-Northern Research 47.0.0.0 - 47.255.255.255
+- Prudential Securities Inc. 48.0.0.0 - 48.255.255.255
+- Internet Assigned Numbers Authority 49.0.0.0 - 50.255.255.255
+- Department of Social Security of UK 51.0.0.0 - 51.255.255.255
+- E.I. DuPont de Nemours and Co., Inc. 52.0.0.0 - 52.255.255.255
+- Cap debis ccs (Mercedes-Benz) 53.0.0.0 - 53.255.255.255
+- Merck and Co., Inc. 54.0.0.0 - 54.255.255.255
+- Department of Defense Network Information Center 55.0.0.0 - 55.255.255.255
+- United States Postal Service 56.0.0.0 - 56.255.255.255
+- SITA - Société Internationale De Telecommunications Aeronautiques 57.0.0.0 - 57.255.255.255
+- Asia-Pacific Network Information Centre (APNIC) 58.0.0.0 - 61.255.255.255
+- RIPE Network Coordination Centre 62.0.0.0 - 62.255.255.255
+- UUNet Technologies, Inc. 63.0.0.0 - 63.127.255.255
+- Internet Assigned Numbers Authority 73.0.0.0 - 79.255.255.255
+- RIPE Network Coordination Centre 80.0.0.0 - 80.255.255.255
+
+Część prywatnej przestrzeni adresowej została alokowana w RFC 1918, oznacza to, że te adresy są dostępne dla każdego użytku przez wszystkich więc te adresu mogą być powtórnie użyte. Jednakże nie są one rutowalne w internecie. Są uzywane intensywnie z powodu braku rejestrowalnych adresów., żeby połaczyć takie sieci z internetem wymagany jest NAT.
+Pomimo pewnych działań mających zaoszczędzić istniejącą przestrzeń adresową IPv4 (takich jak NAT i DHCP) liczba 32-bitowych adresów IP nie jest wystarczająca by zapewnić wzrost internetu na dłuższą metę, z tego powodu 128 bitowe adresowanie IPv6 zostanie zastosowane w przeciągu najbliższych 5 do 15 lat.
+
+#### IPv6
+
+W latach 90-tych opracowano następną wersję IP, która ma zapobiec wyczerpaniu się dostępnej puli adresów IP.
+Różne techniki oszczędzania adresów jak maski podsieci o zmiennej długości (VLSM) lub tłumaczenie adresów za pomocą NAT są rozwiązaniem krótkotrwałym.
+Początkowa nazwa - zanim został wybrany w procesie selekcji IETF - IP Next Generation (IPng).
+
+IPv6 jest drugą wersją IP jaka będzie powszechnie stosowana (było IPv5 ale nie był to następca IPv4 a raczej eksperymentalny zorientowany na przepływ protokół streamingu multimediów)
+Chociaż został adoptowany przez IETF jako następca IPv4 jeszcze w 1994 nadal nie ma więcej niż kilka procent internetu.
+
+Powodem dla utworzenia IPv6 był brak przestrzeni adresowej, szczególnie w zaludnionych krajach Azji takich jak Indie i Chiny.
+Problem ten częściowo jest rozwiązywany przez NAT, ale sprawia to problemy techniczne, lub w ogóle uniemożliwia działanie takich aplikacji jak VoIP i niektórych gier wielosobowych.
+Istotną przyczyną dla zastosowania IPv6 są nowe możliwości takie jak mobilność, jakość usług, rozszerzenia prywatności itd.
+IPv4 będzie wspierane nadal do 2025, żeby dać czas na naprawę błędów nowego systemu.
+
+Celem IPv6 jest zastąpienie poprzedniego standardu, IPv4, który ma do około 4 miliardów (4 x 109) adresów, podczas kiedy IPv6 ma ich 2128 inaczej mówiąc 3.4 x 1038 (34 [undecyliony](http://pl.wikipedia.org/wiki/Undecylion)), co jest odpowiednikiem:
+
+- 4.3 x 1020 (430 kwintylionów) na cal kwadratowy powierzchni Ziemi
+- 6.7 x 1017 (670 kwadrylionów) na milimetr kwadratowy powierzchni Ziemi
+
+Tą ilość można wyrazić takim porównaniem: jeśli Ziemia zrobiona by była w całości z ziarenek piasku wielkości jednego milimetra sześciennego, można by dać unikalny adres każdemu ziarenku dla 300 milionów planet wielkości Ziemi.
+
+Adresy IPv6 są złożone z dwóch logicznych części:
+
+- 64-bitowy prefix sieci
+- 64-bitowa część adresu hosta, która często jest generowana automatycznie z adresu MAC interfejsu
+
+Czasem argumentuje się, że 128-bitów to za dużo i internet nigdy nie będzie potrzebował tak dużej ilości. Główną przyczyną dla takiej długości nie jest wcale upewnienie się, że adresów nigdy nie zabraknie, ale raczej zapewnienie łatwości przeprowadzenia rutingu dzięki utrzymaniu części adresowej sieci niezfragmentowanej. Taka fragmentacja jest częsta w IPv4, gdzie duża ilość segmentów adresowych może być i często jest przydzielana dla jednej organizacji.
+
+Adresy IPv6 mają 128 bitów długości, wyrażonych w postaciu ośmiu wartości 16-bitowych, oddzielonych dwukropkami i zapisanych w notacji szesnastkowej (heksadecymalnej), na przykład:
+
+```
+1111:2222:3333:4444:5555:6666:7777:8888
+```
+
+Każda wartość jest liczona od 0x0 do 0xFFF (dziesiętnie od 0 do 65 535). Granica części hostowej została ustalona po 64 bitach.
+Przyjęto zasadę, że można usunąc zera rozpoczynające każdy segment
+
+Zapisany jest jako osiem 4-cyfrowych (16-bitów) heksadecymalnych liczb oddzielonych dwukropkiem, nieprzerwany ciąg zer może zostać pominięty więć 1080::800:0:417A jest tym samym co 1080:0:0:0:0:800:0:417A.
+
+- zwykle są zapisywane jako osiem grup po cztery heksadecymalne cyfry, np.: 2001:0db8:85a3:08d3:1319:8a2e:0370:7334 jest poprawnym adresem IPv6
+- jeśli czterocyfrową grupą jest 0000 może zostać pominięte, np: 2001:0db8:85a3:0000:1319:8a2e:0370:7344 jest tym samym adresem co: 2001:0db8:85a3::1319:8a2e:0370:7344
+- zgodnie z tą regułą jeśli dwa kolejne dwukropki wynikają z takiego ominięcia mogą być zredukowane do dwóch dwukropków, tak długo jak jest to tylko jedna grupa sąsiadujacych dwukropków, tak więc
+```
+2001:0DB8:0000:0000:0000:0000:1428:57ab
+2001:0DB8:0000:0000:0000::1428:57ab
+2001:0DB8:0:0:0:0:1428:57ab
+2001:0DB8:0::0:1428:57ab
+2001:0DB8::1428:57ab
+```
+są poprawnymi adresami, w przeciwieństwie do: 2001::25de::cade który jest nieprawidłowy bo nie wiadomo jak duża ilość grup 0000 jest po każdej stronie
+- zera z przodu mogą zostać pominięte, więc: 2001:0DB8:02de::0e13 jest tym samym co 2001:DB8:2de::e13
+- jeśli jest to przebrany adres IPv4 ostatnie 32 bity mogą zostać zapisane dziesiętnie, więc: ::ffff:192.168.89.9 jest tym samym co: ::ffff:c0a8:5909 ale nie tym samym co: ::192.168.89.9 lub ::c0a8:5909
+- mapowany adres IPv4 ::ffff:1.2.3.4
+
+format 1.2.3.4 jest kompatybilny z IPv4
+
+Adresy IPv4 są łatwe do konwersji na format IPv6, np. jeśli dziesiętny adres IPv4 to 135.75.43.52 (heksadecymalnie 0x874B2B34) może być konwertowany na 0000:0000:0000:0000:0000:0000:874B:2B34 lub ::874B:2B34.
+I znowu: możliwa jest hybrydowa notacja, w której ten adres to ::135.75.43.52.
+Te kompatybilne z IPv4 adresy mają status _deprecated_ ponieważ przejściowe mechanizmy IPv6 już ich nie używają.
+
+Segmenty adresowe są określone jak w nowoczesnej alternatywie dla IPv4: numer sieci potem slasz i liczba właściwych bitów w numerze sieci (w formie dziesiętnej).
+Przykład: 12AB::CD30:0:0:0:0/60 zawiera wszystkie adresy zaczynające się od 12AB00000000CD3.
+
+Adresy specjalne:
+Istnieje pewna liczba adresów, które mają specjalne znaczenie w IPv6 oto krótka lista w notacji CIDR.
+
+- ::/128 - adres składający się z samych zer używany jest by określić jakikolwiek adres i używany jest wyłącznie w oprogramowaniu.
+- ::1/128 - adres pętli zwrotnej - jest to lokalny adres hosta, który odnosi sie do niego samego, wszystkie wysłane tam pakiety wracają do niego (odpowiednik 127.0.0.1 z IPv4).
+- ::/96 - kompatybilny z IPv4 adres używany w w mechanizmach przejściowych w sieciach IPv4/IPv6.
+- ::ffff:0:0/96 - mapowany adres IPv4 (IPv4-mapped address) używany w mechanizmach przejściowych w hostach o podwójnym stosie.
+- fe80::/10 - prefiks lokalnego łącza określający, że ten adres jest prawidłowy tylko w łaczu lokalnej sieci fizycznej.
+- fec0::/10 - prefiks lokalnego łącza określający, że ten adres jest prawidłowy tylko w lokalnej organizacji. RFC 3879 (IX 2004) określa go jako _deprecated_ i przyszłe systemy nie muszą implementować jakiegokolwiek wsparcia dla tego typu specjalnych adresów.
+- ff00::/8 - prefiks multicastu, używany w adresach multicastowych.
+
+HMPTODO
+
+| Bity | Nazwa | Przeznaczenie (przykład zastosowania) |
+| --- | --- | --- |
+| 1 - 3 | Przedrostek formatu (FP) | Typ adresu (pojedynczy, grupowy) |
+| 4 - 16 | Identyfikator najwyższego poziomu agregacji (TLA ID)Top Levels Aggregators | Najważniejsze organizacje (główni ISP), operatorzy obsługujący podstawowy ruch w sieci, firmy telekomunikacyjne zapewniający funkcjonowanie szkieletowych, długodystansowych połaczeń sieciowych przez organizacje takie jak IANA |
+| 17 - 24 | | Zarezerwowane |
+| 25 - 48 | Identyfikator następnego poziomu agregacji (NLA ID)Next Level Aggregators | Organizacje regionalne (lokalni ISP), dla dużych dostawców usług, którzy rozdysponują SLA |
+| 49 - 64 | Identyfikator witrynowego poziomu agregacji (SLA ID)Site Level Aggregators | Podziały dla konkretnych witryn (podsieci), odpowiedniki dzisiejszych klas adresowych, przydzielane są organizacjom, które samodzielnie obsługują własną komunikację internetową (uczelnie, instytuty, duże firmy) lub bezpośrednim dostawcom usług internetowych, które z kolei przydzielają swoim użytkownikom lub klientom 64-bitowe adresy hostów. |
+| 65 - 128 | Identyfikator interfejsu | Adres konkretnego urządzenia: zmodyfikowany adres MAC |
+
+Jak widać witryny mają 16 bitów na utworzenie podsieci. Cały początkowy przedrostek złożony z 48 bitów dostarczają usługodawcy internetowi (ISP). Jedną z zalet adresów IPv6 jest to, że adresy hostów można tworzyć automatycznie na podstawie adresu MAC urządzenia, co pozwoli (ewentualnie) wyeliminować potrzebę konfigurowania hosta.
+Obecnie tablice przekierowań ruterów mogą liczyć nawet kilkadziesiąt tysięcy wpisów, wprowadzenie modelu hierarchicznego spowoduje znaczące odciążenie - każdy ruter będzie tłumaczył tylko część adresu: rutery obsługujące ruch na poziomie TLA będą interpretowały tylko segment TLA całego adresu i skierują go do właściwego TLA, który skieruje go do właściwego NLA (nie interpretując już TLA), który prześle go do określonego w segmencie SLA lokalnego dostawcy usług.
+Taki sposób organizacji ruchu pakietów pozwala by każdy ruter znał tylko swoje bezpośrednie otoczenie: ruter struktury nadrzędnej i podlegające mu urządzenia struktur niższego rzędu.
+
+Pakiet IPv6 złożony jest z dwóch części:
+
+- nagłówek (_header_) - pierwsze 40 bajtów pakietu zawiera zarówno adres przeznaczenia i źródła (każdy 128 bitów), również wersję IP (4 bity), klasę ruchu (_traffic class_ - 8 bitów Pacet Priority), wskaźnik przepływu (_flow label_ - 20 bitów, _QoS management_), długość ładunku (16 bitów) i limit skoków (_hops limit_) (8 bitów TTL)
+- ładunek (_payload_) - do 64 K w normalnym rozmiarze lub większy z opcją "jumbo payload".
+
+Istnieją dwie trochę odmienne wersje IPv6, obecnie _obsolete_ początkowa wersja opisana w RFC 1883 różniąca się od obecnej proponowanej wersji standardu opisanej w RFC 2460 w dwóch polach: 4 bity zostały przyznane z _flow label_ do _traffic class_, wszystkie inne róznice są drugorzędne.
+Fragmentacja jest przeprowadzana tylko przez hosta.
+
+W IPv6 również opcje zostały wyrzucone ze standardowego nagłówka i są określone przez pole Next Header - analogiczne z funkcją pola Protokołu z IPv4.
+Przykład: w IPv4 można dodać opcję SSRR (Strict Source and Record Routing) co wymusi konkretną drogę dla pakietu, ale w IPv6 można utworzyć pole Next Header, które będzie wskazywało, że nagłówek rutingu (Routing header) jest następny, wtedy nagłówek rutingu powinien wtedy określić dodatkową informację do pakietu i wskazać, że np. następny jest nagłowek TCP.
+Jest to analogiczne do AH i ESP w IPSec dla IPv4 (które stosuje się również do IPv6).
+
+IPv6 i DNS.
+Adresy IPv6 są reprezentowane w DNS przez rekordy AAAA (tzw. quad-A) (przez analogię do rekordów A dla IPv4). Zapytania odwrotne (_reversed lookups_) mają miejsce w ip6.arpa (poprzednio ip6.int).Ten schemat jest zdefinowany w RFC 3596 i został uznany za standard w RFC 3363 (sierpień 2002)
+
+Schemat IPv6 pozwoli zachować zgodność z modelem IPv4, przypisując adresy postaci 0:0:0:FFFF:a.b.c.d urządzeniom, które nie obsługują IPv6, gdzie a.b.c.d jest adresem IPv4. Takie adresy zapisuje się jako ::FFFF:a.b.c.d gdzie :: zastępuje ciągły blok zer (dowolnej długości) w adresie IPv6 (ale podwójny dwukropek może wystąpić tylko raz).
+Adres pętli zwrotnej jest zawsze zdefiniowany jako ::1, a adres rozgłoszeniowy - jako FF02::1.
+
+Kompatybilność jest zapewniona w obie strony:
+
+- adres IPv4 zapisywany jest na ostatnich 32 bitach adresu typu unicast a reszta wypełniana jest zerami
+- w drugą stronę stosuje się tzw. tunelowanie - pakiet IPv6 jest pakowany do postaci pakietu IPv4 (enkapsulacja) przesyłany do odbiorcy za pośrednictwem sieci zgodnej w IPv4 i przekształcany z powrotem na IPv6 (dekapsulacja).
+
+Mechanizmy tunelowania oraz szyfrowania przesyłanych danych, oprócz zapewnienia komunikacji pomiędzy sieciami pracującymi w w różnych wersjach protokołu ułatwiają również zestawienie VPN czyli bezpośrednich łącz komunikacyjnych przy wykorzystaniu sieci publicznej.
+
+Ważne dokumenty: RFC 791, RFC 1519 (adresy IPv4), RFC 2373 (adresy IPv6).
+
+Ponadto IPv6 zawiera dodatkowe informacje sterujące, posiada elastyczny format nagłówka i zapewnia przyszły rozwój (rozszerzalność) protokołu oraz wspiera rezerwowanie zasobów (QoS).
+Towarzyszy mu cały zestaw protokołów zabezpieczających IPSec zapewniających potwierdzenie tożsamości nadawcy i odbiorcy pakietu oraz szyfrowanie przesyłanych danych. IPSec działa niezależnie od aplikacji funkcjonujących w wyższych warstwach, więc nie zastępuje stosowanych w nich zabezpieczeń, a tylko je uzupełnia zabezpieczając przed próbami podszywania się pod innego nadawcę czy zmiany zawartości przesyłanego pakietu.
+
+Trzy typy adresów:
+
+- unicast - odpowiada point-to-point czyli o jednoznacznie zdefiniowanym odbiorcy, w celu ułatwienia organizacji ruchu pakietów w sieci lokalnej zdefiniowano dwa dodatkowe typy adresów unicastowych; rutery pośredniczące w komunikacji z resztą internetu nie będą tak adresowanych pakietów przesyłać dalej
+- segmentowy (LLUA link local unicast address) - ograniczony do określonego fagmentu intranetu
+- ośrodka (SLUA site local unicast address) ograniczony do wewnętrznej sieci firmy
+- multicast odpowiednik typu broadcast z IPv4, określa wielu odbiorców jednego pakietu
+- czasowe (transient) - definiuje się pod kątem konkretnego zastosowania, np. w celu zestawienie telekonferencji
+- trwałe (permament) - funkcjonalne typy odbiorców, np. serwery prowadzące mirror danego serwisu muzycznego
+- anycast - pakiety adresowane sa do grupy odbiorców, ale ich transmisja kończy się gdy dowolny z nich dotrze na miejsce przeznaczenia, mogą być używane tylko przez rutery, więc ich najpowszechniejszym zastosowaniem bedzie rozsyłanie zapytań w celu określenia najszybszej dostępnej ścieżki transmisji danych.
+
+Dwa mechanizmy automatycznej konfiguracji i przydzielania adresów IP:
+
+- autokonfiguracja z uwzględnieniem stanu (_stateful autoconfiguration_) analogiczny do DHCP host otrzymuje z serwera adres IP ze zdefiniowanej uprzednio puli wraz z informacją o dmyślnym ruterze i adresie serwera nazw
+- autokonfiguracja bez uwzględnienia stanu (_stateless autoconfiguration_) - na podstawie numeru MAC host konstruuje 64-bitowy identyfikator hosta (LLUA Link Local Unicast Address) po czym rozsyła do ruterów SLA tzw. zapytanie konfiguracyjne (_router solicitation_) w odpowiedzi otrzymuje prefiks adresu zawierający pozostałe segmenty po czym automatycznie konfiguruje adres IP przez dodanie utworzonego ID do otrzymanego prefiksu. W tej technice, żeby zmienić adresy wszystkich hostów wystarczy tylko zdefiniować na ruterze nowy prefiksu, a ruter sam go roześle do obsługiwanych hostów.
+
+[6bone.net](http://www.6bone.net/) - zamknięty 6 VI 2006
+
+#### ICMP (Internet Control Message Protocol)
+
+ICMP jest częscią zestawu protokołów internetowych jak to zostało zdefiniowane w RFC 792. Wiadomości ICMP są zwykle generowane w odpowiedzi na błędy w datagramach IP (jak to określono w RFC 1122) lub dla celów diagnostycznych lub rutingu.
+Wersja dla IPv4 jest znana jako ICMPv4 ponieważ jest to część IPv4. IPv6 ma analogiczny protokół.
+
+Urządzenia łączące sieci (_gateways_) komunikują się ze sobą przy użyciu protokołu GGP (_Gateway-to-Gateway Protocol_), ale do połączeń gatewaya z hostem używany jest ICMP.
+
+Używa IP jako warstwy usługowej podobnie jak TCP i UDP, ale zwykle przedstawia się go na tym samym poziomie co IP, bo traktowany jest jako integralna część modułu IP w oprogramowaniu karty sieciowej i każdy moduł musi obsługę tego protokołu zawierać.
+Wiadomości ICMP mogą być wysyłane w kilku różnych sytuacjach - błędach zachodzących w sieci: jeśli datagram nie może dotrzeć do hosta docelowego, w gatewayu brak miejsc na buforowanie datagramów, lub kiedy gateway może skierować ruch na krótszą i mniej obciążoną trasę.
+
+Wiadomości ICMP są opakowane w nagłówek IP (więc używają warstwy IP), wiadomość znajduje się w części danych datagramu IP. Zwykle powstaje z normalnego datagramu IP, który wygenerował odpowiedź ICMP.
+IP kapsułkuje odpowiednią wiadomość ICMP z nowym nagłowkiem IP (żeby otrzymać odpowiedź ICMP do wysyłającego hosta) i wysyła otrzymany datagram w zwykły sposób.
+Dla przykladu: każda maszyna (np. pośredniczące rutery), która przekazuje datagramy IP musi obniżyć TTL w nagłówku IP o jeden, jeśli TTL sięga 0 wiadomość ICMP "Time to live exceeded in transit" jest wysyłana do źródła datagramu.
+
+Każda wiadomość ICMP jest kapsułkowana dokładnie w pojedynczym datagramie IP i podobnie jak UDP ICMP nie gwarantuje dostarczenia.
+
+Chociaż wiadomości ICMP są zawarte w datagramie IP, są przetwarzane jako specjalny przypadek w odróżnieniu od reszty ruchu IP, a nie są traktowane jak po prostu pod-protokół IP. W wielu przypadkach niezbędne jest skontrolowanie zawartości wiadomości ICMP i dostarczenie właściwej wiadomości błędu do aplikacji, która wygenerowała błędny pakiet, który spowodował wysłanie wiadomości ICMP
+
+Wiele popularnych narzędzi jest bazowanych na wiadomościach ICMP.
+Polecenie traceroute jest zaimplementowane przez wysłanie datagramów ze specjalnie ustawionym polem TTL i wyczekiwaniem na wiadomości ICMP "Time to live exceeded in transit" i "Destination unreachable" generowane w odpowiedzi.
+Również ping jest zaimplementowany przez użycie wiadomości ICMP "Echo" i "Echo reply".
+
+Lista dozwolonych wiadomości kontrolnych (niekompletna):
+
+- 0 - Echo Reply
+- 1 - Reserved
+- 2 - Reserved
+- 3 - Destination Unreachable
+- 4 - Source Quench
+- 5 - Redirect Message
+- 6 - Alternate Host Address
+- 7 - Reserved
+- 8 - Echo Request
+- 9 - Router Advertisement
+- 10 - Router Solicitation
+- 11 - Time Exceeded
+- 12 - Parameter Problem
+- 13 - Timestamp
+- 14 - Timestamp Reply
+- 15 - Information Request
+- 16 - Information Reply
+- 17 - Address Mask Request
+- 18 - Address Mask Reply
+- 19 - Reserved for security
+- 20-29 - Reserved for robustness experiment
+- 30 - Traceroute
+- 31 - Datagram Conversion Error
+- 32 - Mobile Host Redirect
+- 33 - IPv6 Where-Are-You
+- 34 - IPv6 Here-I-Am
+- 35 - Mobile Registration Request
+- 36 - Mobile Registration Reply
+- 37 - Domain Name Request
+- 38 - Domain Name Reply
+- 39 - SKIP Algorithm Discovery Protocol
+- 40 - Photuris, Security failures
+- 41-255 - Reserved
+
+### Warstwa dostępu do sieci (ARP)
+
+#### ARP (Address Resolution Protocol)
+
+MAC - sprzętowy adres karty sieciowej zaszyty na stałe. Identyfkuje konkretne urządzenie a nie jak adres IP interfejs sieciowy. Składa się z dwóch części: 6 liczb poprzedzielanych dwukropkiem, gdzie pierwsze cztery identyfikują producenta, pozostałe są unikalnym numerem urządzenia. Nie mogą się pojawić dwie karty o tym samym adresie MAC - zapewniają to odpowiednie regulacje organizacyjne.
+Rzecz w tym, że jeśli w jednej sieci lokalnej znajdą się dwie lub więcej kart o tym samym numerze MAC komunikacja jest niemożliwa. Tylko karta sieciowa ma swój numer MAC, bo ma więcej niż jeden koniec. W modemie nie ma takiej potrzeby.
+
+Wygląda na przykład tak:
+
+```
+H6:ef:45:sf:3g:68
+```
+
+ARP jest metodą na znalezienie adresu sprzętowego (MAC) hosta z jego adresu IP. Wysyłający nadaje pakiet ARP zawierający internetowy adres innego hosta i oczekuje na odpowiedź w postaci adresu ethernetowego. Każdy host przechowuje w buforze tłumaczenia adresów co zmniejsza obciążenie sieci. ARP pozwalają być adresom IP niezależnym od adresów ethernetowych ale może działać tylko kiedy wszystkie hosty go wspierają.
+ARP jest zdefiniowany w RFC 826.
+Alternatywą dla hostów, które nie wspierają ARP jest użycie prekonfigurowanego mapowania adresów IP na adresy MAC.
+
+Warianty protokołu ARP:
+ARP może być użyty do tłumaczenia (rozwiązywania, _resolve_) adresów MAC na wiele różnych protokołów warstwy trzeciej. ARP został również zaadoptowany do tłumaczenia innych rodzajów adresów warstwy drugiej, np. ATMARP jest używany do tłumaczenia adresów ATM NSAP na IP poprzez protokół ATM.
+
+Miejscem styku ze sprzętem jest warstwa łącza danych, która podzielona jest na dwie podwarstwy: górną LLC i dolną MAC.
+Zasadnicze znaczenie ma MAC, odpowiada ona za takie przygotowanie odebranego z warstwy sieciowej pakietu IP, aby nadawał się do transmisji w sieci o określonej topologii. Sieci lokalne wykonane są zwykle w standardzie Ethernet o topologii magistrali, ale istnieją inne rozwiązania, każde z nich ma własne interfejsy, kable, sygnalizacje i szybkości transmisji wykorzystując jednocześnie najbardziej właściwe dla realizacji tego celu ramki.
+Ramka to odpowiednio sformatowana ilość informacji jaką można przesłać za jednym zamachem, a formatowanie polega na ogół na podziale pakietu IP na mniejsze części, zgodnie z wymogami standardu i opatrzenie każdej z nich nagłówkiem zawierającym m.in. adres docelowy i źródłowy. Ale nie IP tylko MAC. Informację o tym zbiera protokół ARP, który jest dla użytkownika zupełnie niewidoczny i nie wymaga żadnej konfiguracji.
+Działa w tle ogłaszając komunikaty, których celem jest odnalezienie właściwego adresata dla przesyłki, którą jest pakiet IP już podzielony na ramki i gotowy do wysyłki.
+
+Jeśli karta stwierdzi, że dany adres IP należy do tej samej podsieci, wysyła w sieć pytanie "jaki jest adres MAC komputera o danym adresie IP?". W polu adresu MAC takiej ramki są same jedynki, co określa wszystkie urządzenia podłączone do danego segmentu, więc przez wszystkie jest odbierany i przetwarzany.
+
+Adres rozgłoszeniowy fizyczny (ang. broadcast address):
+
+hh:hh:hh:hh:hh:hh
+
+a może?[?]
+
+FF:FF:FF:FF:FF:FF
+
+Taką ramkę (ARP-request) odbierają wszystkie karty w sieci lokalnej
+
+- adres IP nadawcy
+- adres fizyczny nadawcy
+- adres IP odbiorcy
+- adres fizyczny odbiorcy czyli w tym przypadku rozgłoszeniowy
+
+Każdy komputer na poziomie warstwy 3 porównuje podany w zapytaniu adres IP z własnym i odpowiada tylko ten, który wykryje zgodność - wyśle wypełnione pola nadawcy, czyli swój adres IP i fizyczny.
+Ramka odpowiedzi (ARP-reply) zawierająca adres sprzętowy skierowana jest tylko do pytającego, gdyż podał on swój adres.
+
+Wtedy pytający wkłada ten adres do swoich ramek i je wysyła.
+Proces jest przyspieszany przez buforowanie w tzw. cache ARP, zawierającym tablicę ostatnio używanych odwzorowań pomiędzy adresami IP i MAC, jego zawartość uaktualniana jest dynamicznie bez ingerencji użytkownika, ale istnieje możliwość ręcznego wprowadzenia odwzorowań statycznych instrukcją:
+
+```
+arp
+```
+
+#### Zasady dostępu do medium transmisyjnego
+
+Metoda określajaca kolejność nadawania przez dane medium (kabel lub eternet).
+
+- CMA/CD - najczęstszy w sieciach Ethernet tzw. wielodostęp z wykrywaniem zajętości kanału i detekcją kolizji, "kto pierwszy ten lepszy" opisana standardem IEEE 802.3; jeśli dochodzi do kolizji wszyscy przerywają nadawanie
+- Token Ring - pierścień z dostępem do znacznika, każde urządzenie uzyskuje dostęp w sposób cykliczny, w sieci krąży tzw. znacznik (token) który otrzymuje każdy z kolei i wtedy może nadawać (standard IEEE 802.5); stosowana w sieciach o tej samej nazwie oraz FDDI
+- Token Bus - magistrala z dostępem za pomocą znacznika; podobna do Token Ring z tym, że znacznik nie jest przekazywany cyklicznie a według numeracji stacji, która nie musi być zgodna z kolejnością ich włączenia do linii (zdefinowana w IEEE 802.4), obecnie raczej nie używana
+- Request Priority (Priorytet na żądanie) - scentralizowana metoda sterowania dostępem do medium, istnieje jednostka zarządzająca, która stale odpytuje stacje na okoliczność chęci przeprowadzenia transmisji (standard (IEEE 802.12); używana w systemie 100VG-AnyLAN

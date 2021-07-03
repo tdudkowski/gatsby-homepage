@@ -1,0 +1,85 @@
+---
+title: "Markdown"
+comment: ""
+section: "it"
+subsection: "js"
+---
+
+### Język znaczników
+
+Markdown - język znaczników. Powstał w 2004 jako prosty system formatowania tekstu, tak by był jednocześnie:
+
+- łatwy w tworzeniu
+- czytelny w swojej natywnej formie
+- łatwy do konwersji na inne formaty, gł HTML i LaTeX
+
+Z tych założeń wynika jego prostota. Znają go wszyscy wikipedyści, wikikod to po prostu markdown, z którego silnik mediawiki generuje treść strony.
+
+Dzięki powyższym cechom Markdown jest najlepszą formą tworzenia dokumentacji. Natywnie zawiera w sobie większość cech potrzebnych przy tworzeniu zhierarchizowanego tekstu. Brakujące łatwo można uzupełnić przez różnego rodzaju dodatki. Największe możliwości daje popularne środowisko Pandoc. Mając już czytelny i posiadający wszystkie elementy formatowania plik źródłowy .md można go skonwertować na większość formatów dokumentów, najważniejsze to PDF, HTML i Latex.
+
+Przejście do następnej lini: \\ na końcu wiersza
+
+### Visual Studio Code
+
+Lokalna kopia repozytorium na Githubie, pliki w formacie Markdown i VSC to - jak mi się zdaje - idealne połączenie na trzymanie i wygodną edycję, stale archiwizowanych plików i wygodnych w edycji plików z notatkami, dokumentacją, kodem.
+
+Także dotyczy to stale rozwijanych artykułów na CMS. W tym ostatnim przypadku jest to już HTML, ale zapisany w formacie Markdown. Jak zmusić VSC do stosowania skrótów Emmeta w Markdown? - [markdown not using emmet](https://stackoverflow.com/…/499569…/markdown-not-using-emmet). W konfiguracji:
+
+```
+ "emmet.triggerExpansionOnTab": true,
+ "emmet.excludeLanguages": [],
+ "emmet.includeLanguages": {
+ "markdown": "html"
+ },
+```
+
+Dodatki:
+
+- markdownlint by David Anson
+- Markdown Preview Enhanced by Yiyi Wang - podgląd
+- Markdown All in One by Yu Zhang - generowanie TOC
+- inne: LaTeX Workshop, Citation Picker for Zotero
+- [Dendron](https://www.dendron.so) The hierarchical note taking tool
+
+### Odnośniki
+
+- [Markdown Tutorial](https://commonmark.org/help/tutorial/index.html)
+- [Dillinger](https://dillinger.io) Online Markdown Editor
+- adam-p/markdown-here: [Markdown Cheatsheet](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet)
+- [Markdown Guide](https://www.markdownguide.org) - [Markdown Cheat Sheet](https://www.markdownguide.org/cheat-sheet/)
+- [cuonggt / markdown\_guide.md - Markdown Guide](https://gist.github.com/cuonggt/9b7d08a597b167299f0d)
+- GitHub Guides [Mastering Markdown](https://guides.github.com/features/mastering-markdown/)
+- [Chaitanya Baweja "Master Markdown in Ten Minutes A complete guide to designing content using Markdown"](https://betterprogramming.pub/master-markdown-in-ten-minutes-ce9721c51eb)
+- Daring Fireball [Markdown](https://daringfireball.net/projects/markdown/)
+- [GitbookIO/kramed](https://github.com/GitbookIO/kramed) - [GitBook Document Everything!](https://www.gitbook.com) - [GitbookIO/gitbook](https://github.com/GitbookIO/gitbook)
+- [Pandoc](https://pandoc.org/) - [Pandoc Tricks](https://github.com/jgm/pandoc/wiki/Pandoc-Tricks)
+- [Citation Style Language](https://citationstyles.org)
+- [Build an Amazing Markdown Editor Using Visual Studio Code and Pandoc](https://thisdavej.com/build-an-amazing-markdown-editor-using-visual-studio-code-and-pandoc/)
+- [Automatic TOC in github-flavoured-markdown](https://stackoverflow.com/questions/9721944/automatic-toc-in-github-flavoured-markdown)
+- [The Definitive, Non-Technical Introduction to LaTeX, Professional Typesetting and Scientific Publishing](https://mathvault.ca/latex-guide/)
+- [LATEX.css](https://latex.now.sh) almost class-less CSS library turns your HTML document into a website that looks like a LATEX document
+- [joaoofreitas / markdown-webserver](https://github.com/joaoofreitas/markdown-webserver) A NodeJS Application that transcripts Markdown to HTML, supporting MathJax and with GitHub flavoured style. Serving itself as a server.
+
+#### YT
+
+- [Will Ward "Building a Markdown Blog With React" \[YT playlist 6 filmów\]](https://www.youtube.com/playlist?list=PLASldBPN_pkBfRXOkBOaeCJYzCnISw5-Z)
+- Traversy Media ["Markdown Crash Course" \[YT 19:31\]](https://www.youtube.com/watch?v=HUBNt18RFbo)
+- Nicholas Cifuentes-Goodbody ["Academic Writing in Markdown" \[YT 10:44\]](https://www.youtube.com/watch?v=hpAJMSS8pvs)
+- Marco Lancellotti ["Markdown Tutorial (ITA)" [YT 27:30]](https://www.youtube.com/watch?v=JhkUdT49Z_c)
+
+#### Narzędzia
+
+- [pbek / QOwnNotes](https://github.com/pbek/QOwnNotes) plain-text file notepad and todo-list manager with markdown support and Nextcloud / ownCloud integration. - [QOwnNotes](https://www.qownnotes.org)
+- [readme.so](https://readme.so/) The easiest way to create a README | [James Q Quick "Don't Create Markdown ReadMe Files Without ReadMe.so!!" \[YT 6:00\]](https://www.youtube.com/watch?v=OeBoVOtIAOk)
+
+#### MDX
+
+- [MDX](https://mdxjs.com)
+- [MDX Playground](http://dump.jamesknelson.com/mdxc-playground.html)
+- CSS Tricks [Ollie Williams "Front-End Documentation, Style Guides and the Rise of MDX"](https://css-tricks.com/front-end-documentation-style-guides-and-the-rise-of-mdx/) | [Agney Menon "An Introduction to MDXJS"](https://css-tricks.com/an-introduction-to-mdxjs/)
+- Vsevolod ["ASTs, Markdown and MDX"](https://www.telerik.com/blogs/asts-markdown-and-mdx)
+- Marius Gundersen ["MDX"](https://mariusgundersen.net/mdx/)
+
+#### Dendron
+
+- [Dendron](https://www.dendron.so)

@@ -1,0 +1,558 @@
+---
+title: "Mediawiki"
+comment: ""
+section: "it"
+subsection: "cms"
+---
+
+### Farma wiki
+
+Uwaga: poniższy tekst dotyczy Mediawiki w wersji 1.30 i późniejszych.
+
+Wikipedia jest jednym z najbardziej znanych przedsięwzięć związanych z internetem i nie tylko. To już marka i punkt odniesienia. Dobry czy zły, stał się standardem.
+
+- Wikipedia jest przede wszystkim społecznością, która w otwarty, publiczny sposób rozwija
+- największą dostępną bazę wiedzy na świecie.
+- Poza tym to sposób notacji, formatowania kodu (tzw. wikikod), który oprogramowanie wyświetla w postaci czytelnego, zorganizowanego tekstu.
+- Za tym wszystkim stoi jeszcze [Mediawiki](https://www.mediawiki.org/), system publikacji treści ułatwiający edycję z poziomu zalogowanego lub nie użytkownika.
+
+Odkąd powstała Wikipedia (a był to rok 2001) powstało wiele takich systemów, które rozwinęły się w całą rodzinę. Część z nich jest bardziej zaawansowana, są sprofilowane pod konkretne potrzeby, maja inne wymagania, albo napisane są w innych językach niż PHP. Jednak Wikipedia od samego początku używa oryginalnej Mediawiki i od niej najlepiej zacząć poznawanie tej dość oryginalnej rodziny systemów publikacji treści.
+
+Notatnik
+
+Uwaga: poniższy artykuł ma charakter notatek, sporządzanych w różnych okolicznościach, z sukcesywnie dodawanymi fragmentami i licznymi poprawkami. Może zawierać informacje błędne lub nieaktualne. Czytelnik jest zachęcany by najpierw przeczytał całość, dopiero później - już wiedząc gdzie są jakie informacje - przeczytał uważnie to czego potrzebuje i po przemyśleniu ewentualnie przetestował je w praktyce, najpierw na testowym środowisku.
+
+Załóżmy, że mamy konto hostingowe z dostępem SSH i nasz userdir to katalog public_html. Ponieważ to nie jest nasz komputer nie mamy zbyt wielu możliwości konfiguracji, wszystkie pliki .htaccess możemy umieścić tylko w obrębie public_html. Mamy zainstalowane: Git i Composer. Używamy Mediawiki jako notatnika online do tworzenia hiperlinkowanych zbiorów danych. Obojętnie czy uczymy się języka, zbieramy materiały do pracy, artykuły na wybrany temat, uczestniczymy w kursie - jest to jedna z najprostszych form zbierania i udostępniania danych. Masz swoje dokumenty w GDrive? Super, a jak tam z porządkowaniem danych, wyszukiwaniem, kategoriami i - przede wszystkim - hipertekstem?
+
+Ponieważ są to zbiory rozłączne instalujemy kilka mediawiki, każda połączona z inną bazą danych. Katalog wiki zabezpieczamy w najprostszy sposób: hasłem zawartym w pliku .htpasswd. Wszystko to działa dobrze dopóki nie okazuje się, że właśnie Mediawiki wypuściła uaktualnienie, szczególnie jeśli jest związane z bezpieczeństwem. Warto regularnie uaktualniać wiki, choćby z tego powodu, że uaktualnienie pomiędzy odległymi od siebie wersjami jest już dość skomplikowane. Jeżeli jest to jedna, dwie wersje różnicy aktualizacja nie jest jakimś wielkim problemem, ale jeżeli jest ich więcej, jeżeli wiki jest używana przez większą liczbę osób i lepiej żeby działała to ręczna robota jest po prostu stratą czasu.
+
+Tu z pomocą przychodzi instrukcja instalacji, która zachęca do używania repozytorium Gita ["Manual:Upgrading"](https://www.mediawiki.org/wiki/Manual:Upgrading). Czytamy tę instrukcję, stosujemy się do niej i wszystko działa. Ale tu pojawia się inny problem. Rozpakowany plik instalacyjny Mediawiki to niecałe 30 MB. Kompletna, zwykła instalacja Git z całym potrzebnym oprogramowaniem zajmuje prawie ponad 400 MB. Hosting nie jest z gumy, każda kolejna wiki to kolejne 400 MB, po prostu nie ma sensu zajmować tym przestrzeni, która każdej chwili może się nagle okazać potrzebna.
+
+Potrzebna jest jedna instalacja mediawiki, która może obsłużyć niezależnie wiele baz danych, czyli wiele wiki. Każda z nich w innej poddomenie i każda z dostępem na hasło. Nazywa się to Wiki Family, albo - i to jest częściej spotykana nazwa - Farma Wiki. Jest to normalna wiki po prostu dość specyficznie skonfigurowana. Oficjalna instrukcja ["Manual:Wiki family"](https://www.mediawiki.org/wiki/Manual:Wiki_family), niestety nie okazała się zbyt przydatna. Istnieje kilka rozszerzeń udostępniających taką możliwość, najbardziej rozwiniętym jest [Extension:MediaWikiFarm](https://www.mediawiki.org/wiki/Extension:MediaWikiFarm). Ale można zrobić to jeszcze inaczej.
+
+Wszystko czego potrzebujemy to hosting z dostępem SSH, zainstalowane Git i Composer, możliwość tworzenia i konfiguracji poddomen. Ponadto bazy danych i pliki konfiguracyjne z dotychczas używanych wiki i to tylko trzy: LocalSettings.php, .htaccess oraz .htpasswd. Wszystkie są w katalogu głównym instalacji. To co chcemy uzyskać to jedna instalacja Mediawiki zainstalowana i uaktualniana Gitem, obsługująca wiele baz danych, a więc różnych wiki, każda z nich będzie w oddzielnej poddomenie i będzie dostępna po podaniu hasła, innego dla każdej z wiki. Proste i praktyczne.
+
+Kolejność czynności wygląda tak:
+
+1. Instalacja z repozytorium Git, przy okazji utworzymy dodatkową, bazową wiki
+2. Utworzenie i konfiguracja poddomen, po jednej na każdą wiki.
+3. Zapisanie właściwej konfiguracji w plikach konfiguracyjnych mediawiki.
+
+To wszystko. Potem zajmiemy się dostosowaniem wiki do potrzeb, trzeba będzie ustalić reguły dostępu, umożliwić umieszczanie obrazków i innych plików oraz zająć się nawigacją.
+
+#### 1. Repozytorium Git
+
+[Na górę strony - do spisu treści](#top)
+
+- ["Top 10 Git Tutorials for Beginners"](https://www.webpagefx.com/blog/web-design/git-tutorials-beginners/)
+- [Git](https://git-scm.com/) - [“Git Book”](https://git-scm.com/book/pl/v1)
+- ["Download from Git"](https://www.mediawiki.org/wiki/Download_from_Git)
+- endpoint: ["MediaWiki major upgrade process"](http://blog.endpoint.com/2016/01/mediawiki-major-upgrade-process.html) | ["MediaWiki minor upgrade with patches"](http://blog.endpoint.com/2014/10/mediawiki-minor-upgrade-with-patches.html)
+- [Using git to manage and upgrade a wiki with modifications to core (hacks)](https://blog.redwerks.org/blog/2012/09/28/using-git-to-manage-and-upgrade-a-wiki-with-modifications-to-core/)
+
+najpierw wchodzimy do katalogu public_html potem tworzymy katalog dla wiki:
+
+```
+ user@host:~$ cd public_html
+ user@host:~$ mkdir wiki
+ user@host:~$ cd wiki
+```
+
+Teraz korzystając z repozytorium instalujemy mediawiki, uwaga potrzeba do tego ponad 400 MB miejsca. Polecenie składa się z dwóch elementów, komendy Git, adresu repozytorium, na końcu możemy dodać nazwę katalogu docelowego. Domyślnie polecenie tworzy w miejscu w którym zostało wydane katalog core i w nim umieszcza instalację. Zajmuje to ok 2 minuti wygląda tak.
+
+```
+ user@host:~$ git clone https://gerrit.wikimedia.org/r/p/mediawiki/core.git
+ Cloning into 'core'...
+ warning: redirecting to https://gerrit.wikimedia.org/r/mediawiki/core.git/
+ remote: Counting objects: 18909, done
+ remote: Total 878369 (delta 0), reused 878369 (delta 0)
+ Receiving objects: 100% (878369/878369), 269.57 MiB | 16.58 MiB/s, done.
+ Resolving deltas: 100% (747947/747947), done.
+ Updating files: 100% (8107/8107), done.
+```
+
+Teraz wybieramy wersję Mediawiki. Wylistowanie dostępnych wersji można przeprowadzić na trzy sposoby: wg gałęzi, tagu lub wybrać wersję master. Ta ostatnia możliwość oznacza instalację bieżącej, najnowszej wersji produkcyjnej używanej przez Wikipedię. Wygląda to atrakcyjnie, ale tak naprawdę jest to odpowiednik znanego z firefoxa nightly i dla użytkownika oznacza konieczność ciągłych aktualizacji. Tego właśnie chcemy uniknąć. Dlatego najrozsądniej jest wybrać najnowszą wersję stabilną. Kiedy piszę ten artykuł jest to mediawiki 1.35.0
+
+Przechodzimy do /core
+
+```
+ $ cd core
+```
+
+Listing wg gałęzi wygląda tak:
+
+```
+ $ git branch -r | sort -V
+```
+
+Przełączenie na wybraną:
+
+```
+$ git checkout -b REL<release number> origin/REL<release number>
+```      
+
+Czyli będzie to wyglądało tak:
+
+```
+ $ git checkout -b REL1_30 origin/REL1_30
+ Checking out files: 100% (4030/4030), done.
+ Branch REL1_30 set up to track remote branch REL1_30 from origin.
+ Switched to a new branch 'REL1_30'
+```
+
+Natomiast wg tagu:
+
+```
+ $ git tag -l | sort -V
+ $ git checkout 1.35.0
+ Note: checking out '1.35.0'.
+```
+
+lub
+
+```
+$ git checkout 1.35.0
+Updating files: 100% (2708/2708), done.
+Note: switching to '1.35.0'.
+
+You are in 'detached HEAD' state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by switching back to a branch.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -c with the switch command. Example:
+
+  git switch -c <new-branch-name>
+
+Or undo this operation with:
+
+  git switch -
+
+Turn off this advice by setting config variable advice.detachedHead to false
+
+HEAD is now at 9b8a1684d4 Prep 1.35.0
+```
+
+A dla lubiących nowości i nieustanne aktualizowanie:
+
+```
+ $ git checkout master
+ Previous HEAD position was 830bb58... Bump $wgVersion
+ Switched to branch 'master'
+ Your branch is up-to-date with 'origin/master'.
+```
+
+I to były te trzy opcje. Teraz aktualizacja klonu (z poziomu /core):
+
+```
+ $ git pull
+```
+
+całość:
+
+```
+ $ git pull
+ warning: redirecting to https://gerrit.wikimedia.org/r/mediawiki/core.git/
+ You are not currently on a branch.
+ Please specify which branch you want to merge with.
+ See git-pull(1) for details.
+ 
+     git pull <remote> <branch>
+```
+
+Jednak to nie wszystko. Taka Mediawiki nie tylko nie będzie działać, w ogóle odmówi instalacji. Teraz trzeba zainstalować dodatkowe aplikacje. Możemy wydać polecenie ls, żeby zobaczyć czy mamy już plik composera. Jeżeli go nie ma to
+
+```
+ composer install --no-dev
+```
+
+Jeśli istnieje to "update --no-dev"
+
+```
+ $ composer update --no-dev
+ > ComposerHookHandler::onPreUpdate
+ Loading composer repositories with package information
+ Updating dependencies
+ Package operations: 49 installs, 0 updates, 0 removals
+   - Installing wikimedia/composer-merge-plugin (v1.4.1): Downloading (100%)         
+   - Installing cssjanus/cssjanus (v1.3.0): Downloading (100%)         
+   - Installing ralouphie/getallheaders (3.0.3): Downloading (100%)         
+   - Installing psr/http-message (1.0.1): Downloading (100%)         
+   - Installing guzzlehttp/psr7 (1.7.0): Downloading (100%)         
+   - Installing guzzlehttp/promises (1.4.0): Downloading (100%)         
+   - Installing symfony/polyfill-php72 (v1.18.1): Downloading (100%)         
+   - Installing symfony/polyfill-intl-idn (v1.17.0): Downloading (100%)         
+   - Installing guzzlehttp/guzzle (6.5.4): Downloading (100%)         
+   - Installing oojs/oojs-ui (v0.39.3): Downloading (100%)         
+   - Installing pear/pear_exception (v1.0.1): Downloading (100%)         
+   - Installing pear/console_getopt (v1.4.3): Downloading (100%)         
+   - Installing pear/pear-core-minimal (v1.10.10): Downloading (100%)         
+   - Installing pear/mail (v1.4.1): Downloading (100%)         
+   - Installing pear/mail_mime (1.10.8): Downloading (100%)         
+   - Installing pear/net_socket (v1.2.2): Downloading (100%)         
+   - Installing pear/net_smtp (1.9.1): Downloading (100%)         
+   - Installing wikimedia/base-convert (v2.0.1): Downloading (100%)         
+   - Installing wikimedia/cdb (1.4.1): Downloading (100%)         
+   - Installing wikimedia/cldr-plural-rule-parser (v1.0.0): Downloading (100%)         
+   - Installing pleonasm/bloom-filter (1.0.2): Downloading (100%)         
+   - Installing wikimedia/common-passwords (0.2.0): Downloading (100%)         
+   - Installing wikimedia/html-formatter (1.0.2): Downloading (100%)         
+   - Installing wikimedia/at-ease (v2.0.0): Downloading (100%)         
+   - Installing wikimedia/ip-set (2.1.0): Downloading (100%)         
+   - Installing wikimedia/less.php (v3.0.0): Downloading (100%)         
+   - Installing wikimedia/zest-css (1.1.3): Downloading (100%)         
+   - Installing wikimedia/wikipeg (2.0.4): Downloading (100%)         
+   - Installing wikimedia/scoped-callback (v3.0.0): Downloading (100%)         
+   - Installing wikimedia/utfnormal (v2.0.0): Downloading (100%)         
+   - Installing wikimedia/remex-html (2.2.0): Downloading (100%)         
+   - Installing psr/container (1.0.0): Downloading (100%)         
+   - Installing wikimedia/object-factory (v2.1.0): Downloading (100%)         
+   - Installing wikimedia/ip-utils (1.0.0): Downloading (100%)         
+   - Installing wikimedia/assert (v0.5.0): Downloading (100%)         
+   - Installing psr/log (1.1.3): Downloading (100%)         
+   - Installing liuggio/statsd-php-client (v1.0.18): Downloading (100%)         
+   - Installing composer/semver (1.5.1): Downloading (100%)         
+   - Installing wikimedia/parsoid (v0.12.0): Downloading (100%)         
+   - Installing wikimedia/php-session-serializer (v1.0.7): Downloading (100%)         
+   - Installing wikimedia/purtle (v1.0.7): Downloading (100%)         
+   - Installing wikimedia/relpath (2.1.1): Downloading (100%)         
+   - Installing wikimedia/running-stat (v1.2.1): Downloading (100%)         
+   - Installing wikimedia/services (2.0.1): Downloading (100%)         
+   - Installing wikimedia/wait-condition-loop (v1.0.1): Downloading (100%)         
+   - Installing wikimedia/wrappedstring (v3.2.0): Downloading (100%)         
+   - Installing wikimedia/timestamp (v3.0.0): Downloading (100%)         
+   - Installing wikimedia/xmp-reader (0.7.0): Downloading (100%)         
+   - Installing zordius/lightncandy (v1.2.5): Downloading (100%)         
+ Writing lock file
+ Generating optimized autoload files
+ > ComposerHookHandler::onPreUpdate
+ Loading composer repositories with package information
+ Updating dependencies
+ Generating optimized autoload files
+ > ComposerVendorHtaccessCreator::onEvent
+ > ComposerVendorHtaccessCreator::onEvent
+```
+
+Po kolei instalujemy skórki wymienione jako dostępne w LocalSettings.php (akurat wymieniona tu skórka Modern została wycofana w z pakietu wersji Mediawiki 1.31 na rzecz Timeless, wciąż jest dostępna, ale trzeba ją instalować i aktualizować osobno)
+
+```
+ $ cd skins
+ $ git clone https://gerrit.wikimedia.org/r/mediawiki/skins/Modern
+ Cloning into 'Modern'...
+ remote: Total 714 (delta 0), reused 714 (delta 0)
+ Receiving objects: 100% (714/714), 444.76 KiB | 0 bytes/s, done.
+ Resolving deltas: 100% (340/340), done.
+ Checking connectivity...
+ done.
+```
+
+Następnie:
+
+- https://gerrit.wikimedia.org/r/mediawiki/skins/CologneBlue
+- https://gerrit.wikimedia.org/r/mediawiki/skins/Vector
+- https://gerrit.wikimedia.org/r/mediawiki/skins/MonoBook
+- https://gerrit.wikimedia.org/r/mediawiki/skins/Timeless
+
+Ewentualnie rozszerzenia:
+
+```
+ $ cd extensions
+ $ git submodule update --init --recursive
+```
+
+Na koniec przeglądarką internetową wchodzimy na adres http://sitename/wiki/core/mw-config/ (wiki/core/mw-config/index.php) i tam kończymy konfigurację (to jest ostatni moment na utworzenie bazy danych dla nowej, bazowej wiki): potrzebne będą: adres serwera (najczęściej localhost), nazwa bazy danych, nazwa użytkownika bazy danych i jego hasło. W trakcie instalacji wybieramy prefiks tabel bazy danych. Jak zwykle domyślne ustawienia są najlepsze a na końcu instalator poprosi nas o ściągniecie przygotowanego pliku LocalSettings.php i umieszczenie go w katalogu głównym mediawiki.
+
+Mamy wiki. Koniecznie trzeba sprawdzić czy działa. Pora na farmę.
+
+#### 2. Poddomeny
+
+[Na górę strony - do spisu treści](#top)
+
+Zakładamy, że w public_html utworzyliśmy katalog wiki dla naszej instalacji, a Git w tym katalogu utworzył własny core. Tak więc adres wiki będzie wyglądał tak: http://domena/wiki/core
+
+Potrzebujemy wiki umieszczone w poddomenach wyglądających tak:
+
+- wiki1.domena
+- wiki2.domena
+- wiki3.domena
+
+Potrzebujemy adres absolutny katalogu głównego, najprościej wykonać w nim polecenie:
+
+```
+ $ pwd
+```
+      
+
+Po kolei tworzymy poddomeny i wszystkie je kierujemy do tego właśnie katalogu
+
+#### 3. Konfiguracja
+
+[Na górę strony - do spisu treści](#top)
+
+Konfigurację przeprowadzamy w dwóch plikach: .htaccess oraz LocalSettings.php
+
+.htaccess
+
+```
+ <IfModule mod_rewrite.c>
+ RewriteEngine On
+ RewriteCond %{REQUEST_FILENAME} !-f
+ RewriteCond %{REQUEST_FILENAME} !-d
+ RewriteRule . /index.php [L]
+ </IfModule>
+```
+
+LocalSettings.php - tu jest to bardziej skomplikowane bo będziemy mieć tych plików tyle ile jest wiki plus jeden. Dla każdej istniejącej wiki, w tym także dla naszej nowo utworzonej, bazowej wiki mamy oddzielny plik LocalSettings.php o trochę zmienionej nazwie, najlepiej zachować przy tym dla wygody pewną konwencję, np LocalSettings_nazwawiki.php i w każdym z nich odpowiednie ustawienia wyglądają tak:
+
+```
+ $wgScriptPath = "";
+ $wgArticlePath = "/wiki/$1";
+ $wgUsePathInfo = true;
+ 
+ ## The protocol and server name to use in fully-qualified URLs
+ $wgServer = "http://poddomena.domena";
+```
+
+Ok, teraz tworzymy nowy, pusty plik tekstowy o nazwie LocalSettings.php, zapisujemy do niego (za: ["How to create wiki-family on MediaWiki-Vagrant?"](https://stackoverflow.com/questions/35285413/how-to-create-wiki-family-on-mediawiki-vagrant):
+
+```
+<?php
+ $paths = explode('/' , $_SERVER['REQUEST_URI']);
+ if($paths[2] === NULL) {$path = 'map';} else {$path = $paths[1];}
+
+ switch ( $_SERVER['SERVER_NAME'] ) {
+
+     case 'wiki1.domena':
+             require_once "LocalSettings_wiki1.php";
+             break;
+
+     case 'wiki2.domena':
+             require_once "LocalSettings_wiki2.php";
+             break;
+
+     case 'wiki3.domena':
+             require_once "LocalSettings_wiki3.php";
+             break;
+
+     default:
+             header( 'HTTP/1.1 404 Not Found' );
+             echo 'This wiki is not available. Check configuration.';
+             exit( 0 );
+
+ }
+```
+
+Jedyne miejsca, które musimy zmienić w powyższym wzorze to adres domenowy każdej z wiki i nazwa odpowiedniego pliku LocalSettings.php.
+
+#### 4. Aktualizacja
+
+[Na górę strony - do spisu treści](#top)
+
+Aktualizacje najlepiej jest wykonywać na bieżąco, tak żeby różnica w numerach wersji była jak najmniejsza. Przed aktualizacją robimy kopie baz danych i wszystkich plików systemowych, które zostały zmodyfikowane (w tym wypadku index.php  i katalogów na pliki). Z poziomu /core wydajemy polecenia:
+
+```
+ $ git pull
+ $ git checkout [numer wersji np. 1.31.0]
+ $ composer update --no-dev
+```
+
+Czyli jak widać cała aktualizacja składa się z trzech czynności wykonanych po kolei: aktualizacja repozytorium git, potem wybór najnowszej wersji i na końcu aktualizacja całego dołączonego oprogramowania.
+
+Każde z tych poleceń generuje masę informacji, które lepiej jest przeczytać uważnie. Jeżeli nie ma żadnych komunikatów błędu wszystko powinno być w porządku. Na koniec sprawdzamy czy bazy nie wymagają aktualizacji. Już po aktualizacji sprawdzamy na stronie wersję oprogramowania.
+
+Jeżeli checkout nie wychodzi, np. dostajemy komunikat "error: Your local changes to the following files would be overwritten by checkout:    index.php Please, commit your changes or stash them before you can switch branches. Aborting" idziemy za tą radą i robimy git stash, co rozwiązuje problem.
+
+To jest aktualizacja samego oprogramowania wiki. Pora na aktualizację bazy danych, każdy kto miał pojedynczą wiki pamięta, że trzeba było uruchomić w przeglądarce adres adres_wiki/mw-config/. Jest to tzw. aktualizator webowy. W przypadku farmy wiki lepiej zrobić to z wiersza poleceń. Dla pojedynczej wiki wygląda to tak, że z katalogu /maintenance wykonujemy skrypt:
+
+```
+ $ php update.php
+```
+
+W przypadku farmy wiki musimy w tym poleceniu zdefiniować dwie dodatkowe rzeczy: [Wiki ID](https://www.mediawiki.org/wiki/Manual:Wiki_ID) (czyli w tym przypadku nazwę bazy danych) i lokalizację - oraz nazwę jeżeli ją zmieniliśmy - pliku konfiguracyjnego danej wiki. W poniższym przykładzie polecenie wykonywane jest z katalogu głównego dla wiki z osobną bazą danych o nazwie wiki1 i plikiem konfiguracyjnym o nazwie LocalSettings_wiki1.php znajdującym się w katalogu głównym:
+
+```
+ $ php maintenance/update.php --wiki=wiki1 --conf=LocalSettings_wiki1.php
+```
+
+Tak to wygląda jeżeli każda z wiki ma oddzielną bazę danych, możliwa jest też konfiguracja farmy wiki taka, że używają jednej bazy danych odróżniając swoje tabele po przedrostkach (prefiksach), wtedy identyfikator wiki (wspomniany powyżej Wiki ID) składa się z nazwy bazy i przedrostka rozdzielonych dywizem.
+
+Po aktualizacji testujemy działanie wiki, przede wszystkim na stronie Wersja oprogramowania - [Specjalna:Wersja], na której sprawdzamy numer zainstalowanej wiki i wszystkie rozszerzenia.
+
+### Dostęp
+
+[Na górę strony - do spisu treści](#top)
+
+Najprostsze i tymczasowe rozwiązanie - jest to podstawowe uwierzytelnienie w pliku .httaccess:
+
+```
+ AuthType Basic
+ AuthName "login"
+ AuthUserFile /absolutna_sciezka_dostepu/public_html/wiki/core/.htpasswd
+ Require valid-user
+```
+
+Plus odpowiedni zapis w pliku .htpasswd, tyle par użytkownik:hasło ile mamy w wiki. Jest to najprostsze i działa, ale ma ogromną wadę z punktu widzenia bezpieczeństwa, bo w tej sytuacji każdy poprawny zestaw użytkownik:hasło działa na wszystkie wiki. To wymaga poprawy.
+
+Dający elementarne bezpieczeństwo system logowania i niewymagający dodatkowej bazy danych daje się stworzyć dzięki konfiguracji .htaccess, ingerencji w jeden plik systemowy wiki oraz dodaniu jednego pliku php. Wygląda to tak:
+
+1. .htaccess - polecenie SetEnvIf Host tworzy parametr na podstawie danych domeny requestu, musimy utworzyć serię takich poleceń po jednym dla każdej poddomeny.
+2. Pierwszy plik systemowy wiki to /wiki/index.php. Jest to w sumie kilka poleceń i całość zamykamy w bloku else { }, a przedtem wykrywamy parametr domeny i porównujemy go na niezgodność z ustawionym w oddzielnym pliku php parametrem logowania. Podczas pierwszego uruchomienia oczywiście są niezgodne bo parametr logowania jest nieustawiony, jest pusty - to przekierowuje nas do pliku login.php, który jest też stroną logowania.
+3. login.php - zawiera formularz logowania, skrypt PHP pobiera parametr z .htaccess i na jego podstawie wybiera dane logowania, czyli pasujący do domeny zestaw user:password. Jeżeli wpisane przez użytkownika dane są zgodne, skrypt ustawia parametr logowania w ciasteczku (żeby nie tworzyć sesji) i przekierowuje na index.php, jeżeli są niezgodne lub puste blok else { } przekierowuje użytkownika znowu na login.php.
+4. index.php dostaje parametr logowania, i jak poprzednio porównuje go na niezgodność z parametrem domeny. Tym razem są zgodne więc przechodzi do bloku else { }, gdzie uruchamiana jest wiki.
+5. Ciasteczko tworzone jest na czas sesji, więc każde wywołanie realizuje część w bloku else { } - o ile przychodzi z poddomeny, z której użytkownik się zalogował.
+
+Powyższe zapewnia nam oddzielne, niezależne od siebie i w pełni niekolizyjne logowanie i uruchamianie rożnych wiki z tej samej farmy i rożnych poddomen. Wszystkie funkcje wiki: logowanie się na konta użytkowników, konfiguracja, edycja i wysyłanie plików działają poprawnie. Jeden użytkownik z tej samej przeglądarki niezależnie może się zalogować na każdą z wiki.
+
+### Uprawnienia
+
+[Na górę strony - do spisu treści](#top)
+
+Podczas instalacji mediawiki pyta nas o rodzaj wiki: publiczna, chroniona, prywatna. To dość poważna kwestia, bo od tego zależy komu udostępniamy treści lub możliwość ich edycji, jeżeli zastrzeżemy przeglądanie czy edycję dla zalogowanych użytkowników pojawia się z kolei kwestia zakładania kont, czy każdy może założyć konto, czy istniejący użytkownicy mogą zakładać konta innym ludziom czy tylko admin ma tę możliwość. W czasie instalacji możemy kierować się doświadczeniem (to najlepiej), rozumieniem opisów tych opcji (warto poświęcić na to trochę czasu) lub intuicją bo nazwy są w zasadzie intuicyjne właśnie: określają jak bardzo restrykcyjny jest dostęp do tych trzech rzeczy: przeglądania treści, edycji i zakładania kont. Warto wiedzieć, że żaden dokonany wówczas wybór nie jest nieodwracalny. Jeśli na tym etapie popełnimy jakiś błąd, można go później naprawić. Jak to zrobić jest opisane w instrukcji konfiguracji dostępu, której w całości dokonuje się w pliku LocalSettings.php - ["Manual:Preventing access"](https://www.mediawiki.org/wiki/Manual:Preventing_access)
+
+Jak widać mamy po kolei:
+
+- parametr $wgGroupPermissions (lub np $wgWhitelistRead)
+- określenie kogo dotyczy: "*" to każdy, czyli użytkownik anonimowy, "user" to użytkownik zalogowany, a "sysop" to właśnie admin
+- określenie czego dotyczy: "read" przeglądanie treści, "edit" edycja, "createpage" tworzenie nowych stron, "createaccount" tworzenie kont
+- parametr logiczny true lub false
+
+Prościej się nie da, niestety w praktyce nie jest to aż tak intuicyjne. Oto przykłady z powyższej instrukcji, więc jak najbardziej kanoniczne
+
+W pierwszym przykładzie blokujemy możliwość przeglądania wiki użytkownikom niezalogowanym, ale ponieważ jest to całkowita blokada więc trzeba pamiętać o udostępnieniu możliwości zalogowania. Każdy więc ma blokadę, ale też może się zalogować i wtedy wiki jest dostępna.
+
+```
+ $wgGroupPermissions['*']['read'] = false;
+ $wgWhitelistRead = array ("Special:Userlogin");
+```
+
+W drugim przykładzie blokujemy anonimową edycję, ale ponieważ każdy może założyć konto, więc nawet anonimowy użytkownik może to łatwo obejść tworząc konto bez wiedzy admina. dlatego potrzebna jest kontrola zakładania kont. Tylko admin może zakładać konta.
+
+```
+ $wgGroupPermissions['*']['edit'] = false;
+ $wgGroupPermissions['*']['createaccount'] = false;
+```
+
+Można tworzyć dowolne, nawet nie mające sensu, kombinacje uprawnień. Jeśli chcemy żeby wiki działała zgodnie z naszymi zamierzeniami trzeba na spokojnie rozważyć system uprawnień. Jego wdrożenie jak widać nie jest trudne. Załóżmy, że chcemy każdemu udostępnić możliwość przeglądania treści, ale zachować pełną kontrolę nad jej tworzeniem. Admin ma możliwość założenia kont innym użytkownikom, ale przecież tylko od niego zależy czy i kiedy z tej możliwości skorzysta. Każdy może przeglądać treść, ale tylko zalogowani mogą ją edytować.
+
+```
+ $wgGroupPermissions['*']['read'] = true;
+ $wgGroupPermissions['*']['edit'] = false;
+ $wgGroupPermissions['*']['createaccount'] = false;
+```
+
+Inną możliwością jest zabezpieczenie dostępu w pliku .htaccess i dostęp do treści dla niezalogowanego użytkownika, edycja dla zalogowanego i zastrzeżenie możliwości tworzenia kont tylko dla admina, nawet jeżeli nie ma w danym momencie zamiaru udostępniać komuś edycji, może zachować taką możliwość i jeśli zmieni zdanie nie będzie musiał zmieniać konfiguracji.
+
+```
+ $wgGroupPermissions['*']['createaccount'] = false;
+ $wgGroupPermissions['*']['edit'] = false;
+```
+
+Całkowicie prywatna wiki:
+
+```
+ $wgGroupPermissions['*']['createaccount'] = false;
+ $wgGroupPermissions['*']['edit'] = false;
+ $wgGroupPermissions['*']['read'] = false;
+```
+
+Wprawdzie nie ma tego w dokumentacji, ale wygląda na to, że użytkownik niezalogowany domyślnie ma możliwość dostępu do treści, a zalogowany domyślnie nie ma uprawnień do tworzenia kont.
+
+### Pliki
+
+[Na górę strony - do spisu treści](#top)
+
+Sama tekstowa wiki może wystarczyć do pewnych zastosowań, ale najczęściej będziemy potrzebowali możliwości umieszczania w niej obrazków lub innych plików. Dla bezpieczeństwa aktualizacji każda wiki ma mieć swój odrębny katalog w /wiki ale poza /core. Niestety nie jest to domyślna opcja i też trzeba zabrać się za konfigurację. Na szczęście w całości dotyczy ona pliku LocalSettings.php. Tak więc po kolei:
+
+Najpierw włączamy taką możliwość, domyślnie jest wyłączona: "$wgEnableUploads = false;"
+
+```
+ ## To enable image uploads, make sure the 'images' directory
+ ## is writable, then set this to true:
+ $wgEnableUploads = true;
+```
+
+Potrzebujemy wkompilowanego w php pakietu ImageMagick, poniżej jest absolutna ścieżka dostępu, ponieważ może różnić się od domyślnej sprawdzamy ją poleceniem
+
+```
+ $ whereis convert
+ convert: /usr/bin/convert
+```
+
+Tak to wygląda w LocalSetings.php
+
+```
+ $wgUseImageMagick = true;
+ $wgImageMagickConvertCommand = "/usr/local/bin/convert";
+```
+
+Następny kawałek jest trochę bardziej skomplikowany. Określamy dwie ścieżki dostępu, do tego samego katalogu, ale jedna będzie używana do umieszczania plików, a drugiej mediawiki będzie używać do ich odczytu. Ponadto każda z nich zapisywana jest nieco inaczej. $wgUploadDirectory - to zwykła ścieżka wyznaczona od miejsca pliku LocalSettings.php. Natomiast $wgUploadPath musi używać parametru $wgScriptPath. Domyślnym katalogiem jest images w katalogu głównym programu. Ale my mamy wiele wiki i lepiej, żeby każda używała osobnego katalogu do plików. Ponieważ w tej dość prostej konfiguracji ze względu na użycie $wgScriptPath musi się znajdować w katalogu głównym. Moglibyśmy więc te oddzielne katalogi dla każdej wiki utworzyć według wzoru:
+
+- upload_wiki1
+- upload_wiki2
+- upload_wiki3
+
+Ale nie chcemy w katalogu głównym robić zbytniego zamieszania, Powinien być to jeden katalog, a w nim umieścimy powyższe. Jest to nie tylko bardziej eleganckie ale również wygodniejsze. Ważne: $wgUploadDirectory nie akceptuje podkatalogów jeśli ścieżka nie jest zamknięta w cudzysłowie. Tak więc, ostatecznie, wygląda to tak:
+
+```
+ $wgUploadDirectory = "upload_dir/nazwa_wiki";
+ $wgUploadPath = "$wgScriptPath/upload_dir/nazwa_wiki";
+```
+
+Oczywiście te katalogi trzeba utworzyć i docelowy powinien mieć uprawnienia 755. 
+Natomiast poniższe ustawienia blokują zalogowanym użytkownikom możliwość umieszczania plików i ich nadpisywania. Może to być przydatne jeżeli przewidujemy tworzenie kont użytkowników.
+
+```
+ $wgGroupPermissions['user']['upload'] = false;
+ $wgGroupPermissions['user']['reupload'] = false;
+```
+
+A co jeżeli chcemy mieć katalog z plikami w ogóle poza core? Rozwiązaniem może być ["Manual:$wgForeignFileRepos"](https://www.mediawiki.org/wiki/Manual:$wgForeignFileRepos), ale można znaleźć coś prostszego - link symboliczny.
+
+W katalogu wiki tworzymy katalog upload_dir, więc teraz mamy tam dwa: core i upload_dir. W tym ostatnim tworzymy podkatalogi wiki1, wiki2 itd. Potem przechodzimy do katalogu core i tworzymy link symboliczny do katalogu upload dir
+
+```
+ $ cd core
+ $ ln -s ../upload_dir upload_dir
+```
+
+To wszystko, teraz cała zawartość katalogów z plikami jest bezpieczna poza core i jest dostępna dla wiki. Link symboliczny upload_dir w katalogu core może zostać skasowany, katalog z plikami nadal będzie istniał.
+
+Czasem trzeba znaleźć coś poza instrukcją (i zwykle wynika to z konfiguracji serwera), np. kiedy w zasadzie wszystko działa, ale następuje ogólny błąd przy tworzeniu miniatur. Pliki są wysyłane na serwer, wiki je pokazuje kiedy umieszczamy je w dokumentach, ale na podglądzie miniatury mamy error 127 i co wtedy? [[RESOLVED] Error creating thumbnail: Unable to save thumbnail to destination](https://www.mediawiki.org/wiki/Thread:Project:Support_desk/Error_creating_thumbnail:_Unable_to_save_thumbnail_to_destination/reply) - okazuje się, że pomogło:
+
+```
+ $wgUseImageMagick = false;
+```
+
+### Nawigacja
+
+[Na górę strony - do spisu treści](#top)
+
+Domyślna nawigacja w wiki nie ma wiele wspólnego z treścią, którą tworzymy. Możemy tworzyć własną wewnątrz strony wiki, np. za pomocą kategorii albo skonfigurowanych boxów, ale najprościej jest dodać własne menu do paska bocznego ["Manual:Interface/Sidebar"](https://www.mediawiki.org/wiki/Manual%3aInterface/Sidebar). Najłatwiej zrobić to dodając "MediaWiki:Sidebar" do adresu wiki. Czyli w naszej domyślnej konfiguracji będzie to http://poddomena.domena/wiki/MediaWiki:Sidebar - i już jesteśmy w edycji menu paska bocznego.
+
+Naturalnie możliwości zarówno konfiguracji wyglądu jak i nawigacji jest o wiele więcej. Ale to jest podstawa.
+
+### odnośniki
+
+[Na górę strony - do spisu treści](#top)
+
+- [Category:Extensions by category](https://www.mediawiki.org/wiki/Category:Extensions_by_category) | [Help:Templates](https://www.mediawiki.org/wiki/Help:Templates) | [Manual:Wiki in site root directory](https://www.mediawiki.org/wiki/Manual:Wiki_in_site_root_directory) | [Manual:Shared database](https://www.mediawiki.org/wiki/Manual:Shared_database) | [Manual:Securing database passwords](https://www.mediawiki.org/wiki/Manual:Securing_database_passwords) | [Extension:LDAP Authentication](https://www.mediawiki.org/wiki/Extension:LDAP_Authentication) | [Extension:LDAP Authorization](https://www.mediawiki.org/wiki/Extension:LDAP_Authorization)
+- [Wikidata Walkabout](https://wikidatawalkabout.org)
+- [Wikimedia Phabricator](https://phabricator.wikimedia.org/)
+- [MediaWiki: Semantic MediaWiki](https://en.wikipedia.org/wiki/Semantic_MediaWiki) | [Semantic MediaWiki (SMW)](https://www.semantic-mediawiki.org/wiki/Semantic_MediaWiki)
+- [PaulGu Wiki](http://www.paulgu.com/wiki/Home)
+- [XWiki - The Advanced Open Source Enterprise and Application Wiki (XWiki.org)](http://www.xwiki.org/xwiki/bin/view/Main/)
+- [wikiHow - How to do anything](https://www.wikihow.com/)
+- Edycja Wiki: [[MediaWiki:Common.css|CSS wszystkich skórek]] | [[MediaWiki:Sidebar|Sidebar]]
+
+Inne wiki
+
+- Mediawiki: [Comparison of wiki software](https://en.wikipedia.org/wiki/Comparison_of_wiki_software)
+- [Professional.Wiki](https://professional.wiki)
+- [WikiMatrix - Compare them all](https://www.wikimatrix.org/)
+- [dokuwiki [DokuWiki]](https://www.dokuwiki.org/dokuwiki)
+- [BlueSpice - The MediaWiki Enterprise Distribution](https://bluespice.com/)
+- [Tiki Wiki CMS Groupware](https://tiki.org/)
+- [XWiki - The Advanced Open Source Enterprise and Application Wiki (XWiki.org)](https://www.xwiki.org/xwiki/)
+- ["Semantic Wikibase released"](https://professional.wiki/en/news/semantic-wikibase-released)
+
+[Do spisu treści](#top)

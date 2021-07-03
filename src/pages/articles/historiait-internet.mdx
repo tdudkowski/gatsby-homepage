@@ -1,0 +1,1064 @@
+---
+title: "Historia Internetu"
+comment: ""
+section: "it"
+subsection: "historia"
+---
+
+4.[Internet](#internet)
+- [Pierwsze projekty](#concept) (lata 60-te)
+- [ARPANET](#arpanet) (1969-1990)
+- [Sieć sieci](#nets) (lata 80-te)
+- [Powstanie Internetu](#internet_beginning) (1990-1995)
+5.[Materiały](#appendix)
+- [Timeline](#timeline)
+- [Słownik osób](#dic_persons)
+- [Słownik pojęć](#dic_inf)
+- [Konstrukcje](#dic_machines)
+- [Odnośniki](#links)
+
+**Ostatnia aktualizacja 20 IX 2005.**
+
+### Pierwsze projekty
+
+Wystrzelenie przez Sowiety sputnika w 1957 spowodowało powołanie ARPA, której zadaniem było zapewnić USA przodującą pozycję w zastosowaniach militarnych nauki i techniki.
+Agencja ta miała bardzo szeroki zakres działalności. Ponieważ Departament Obrony był wówczas największym użytkownikiem komputerów w USA więc w polu zainteresowania ARPA znalazły się różne dziedziny informatyki.
+Duże znaczenie i szerokie zastosowanie wyników badań finansowanych przez ARPA wynikało z tego, że w początkowym okresie działalnosci agencja nie wymagała utajniania wyników prac ani ograniczania ich tematyki wyłącznie do zagadnień militarnych.
+
+Na początku lat 60-tych w RAND Corporation (agencja zajmująca się bezpieczeństwem narodowym) zaczęto rozważać problem funkcjonowania władz i dowództwa armii USA w wyniku wojny nuklearnej.
+RAND Corporation w 1962 opublikowała raport Paula Barana (naukowiec na kontrakcie sił powietrznych) "_On distributed Communications Networks_" w którym przedyskutowany został sposób ochrony wojskowego systemu komunikacyjnego w wypadku zmasownego ataku.
+Została w nm naszkicowana idea systemu komunkacyjnego, który byłby w stanie taki atak przetrwać: miał być pozbawiony centralnego punktu kontroli i dowodzenia a ilość połączeń między węzłami byłaby na tyle duża że w wypadku zniszczenia niektórych z nich sieć nadal by funkcjonowała dzięki pozostałym połączeniom, na które byłby kierowany ruch.
+Jedna z propozycji autora zakładała podjęcie prac nad stworzeniem narodowego systemu analogicznego do istniejącej sieci łączy telefonicznych umożliwiającego transport danych pomiędzy dużymi grupami użytkowników.
+System taki mógł zostać stworzony z wykorzystaniem technologii przełączanych sieci pakietowych (_packet switching_) opracowanej w latach 60-tych - jej podstawą było fragmentowanie informacji w pakiety i kierowanie ich w odpowiednie miejsca docelowe i dopiero tam składanie z powrotem w całość.
+Najważniejsze cechy takiej sieci:
+
+- umożliwia wspólne korzystanie przez wielu użytkowników jednocześnie z tego samego łącza
+- redukuje skutki przekłamań podczas transmisji; w wypadku błędu wytarczy przesłać ponownie tylko błędny pakiet a nie całą informację
+- pakiety mogą również nieść informację o miejscu wysłania i przeznaczenia, o przebytej i planowanej drodze, mogą być również kompresowane lub szyfrowane
+- równorzędność znajdujących się w niej komponentów
+
+Pierwsza funkcjonująca sieć tego typu powstała w National Physical Laboratories w UK w 1968.
+
+W ramach eksperymentu finansowanego przez ARPA agencję zajmującą się koordynowaniem badań naukowych na potrzeby wojska, miał na celu zbadać możliwość zbudowania sieci komputerowej bez wyróżnionego punktu centralnego, która mogłaby funkcjonować nawet pomimo uszkodzenia pewnej jej części.
+Wszystkie dotychczasowe sieci były zarządzane przez jeden komputer, którego awaria pozbawiała możliwość pracy całą sieć; nie nadawała się do dowodzenia armią w czasie wojny gdyż taki główny węzeł byłby głównym celem ataku postanowiono więc wypróbować zaproponowaną przez RAND Corporation koncepcję sieci rozposzonej.
+
+Praca Barana była punktem wyjściowym planu stworzenia sieci bez centralnego ośrodka, wszystkie węzły sieci miały być równorzędne, a każdy z nich miałby mieć prawo do nadawania, przekazywania dalej i odbierania wiadomości rozbijanych na pakiety, dla których istotne było tylko miejsce pochodzenia i przeznaczenia - trasa ich wędrówki byłaby uwarunkowana aktualnym stanem połączeń co zapewniłoby automatyczną zmianę drogi w razie zaniku funkcjonowania częsci sieci.
+Idea Barana zainteresowała wielu naukowców m.in. pracującego nd relacjami człowiek-komputer J.C.R "Lick" Licklidera, który rozważał możliwość wykorzystania komputerów w komunikacji międzyludzkiej, został on pierwszym szefem IPTO (Information Processing Technology Office), biura w ARPA, które zajmowało się m.in. sieciami komputerowymi, jego zasługą było otwarcie ARPA na różne projekty informatyczne i nawiązanie ścisłej współpracy z naukowcami ze akademickich.
+
+### ARPANET
+
+W latach 1966-67 DoD finansował prace nad eksperymentalnym łączeniem odłegłych od siebie komputerów. Wykorzystano w nich wcześniejsze doświadczenia z systemami wielodostępnymi (_timesharing_), w których przyłączano wiele terminali do jednego komputera. Okazało się, że nie było problemów z łączeniem komputerów, a tylko z łączami telefonicznymi.
+
+Plan sieci szkieletowej został przedstawiony w 1967. Składał się z kilku węzłów, w każdym z nich do dużego mainframe miał zostać przyłączony minikomputer pełniący funkcję węzła przełączającego nazwanego IMP (_interface message processor_). Miała to być sieć komputerów równorzędnych (_peer-to-peer_).
+Kontrakt na dostawę maszyn dostał Honeywell DDP-516 otrzymała firma BBN (Bold, Beranek and Newman). Miały zostać połączone liniami dzierżawionymi o przepustowości 50 Kbps dostarczonymi przez AT&T.
+1 IX 1969 w Uniwersystecie Kalifornijskim (UCLA) zainstalowano pierwsze węzły ARPANET-u, wkrótce potem w trzech następnych uniwersytetach (SRI UCSB i Uniwersytet Utah).
+Pierwsza transmisja zakończyła się częściowym sukcesem. Przesyłano litera po literze słowo LOGIN i przy "G"... komputer odbierający się zawiesił. Później szło już sprawniej.
+
+Do końca roku wszystkie połączenia między czterema węzły funkcjonowały, sieć ARPANET zaczęła pracować dzięki czemu można było zaimplementować teoretycznie opracowane protokoły.
+W ciągu kilku miesięcy opracowano symetryczny protokół komunikacyjny NCP (_Network Control Protocol_mógł połaczyć maksymalnie 255 IMP i zapewniał on pewność dostarczenia informacji do serwera), potem dodano do niego najprostsze usługi zdalne logowanie i kopiowanie plików.
+
+Żeby komputery mogły się porozumiewać trzeba było uzgodnić pewne konwencje dotyczące transmisji blokowej, sprawdzania błędów i retransmisji oraz identyfikacji komputerów tzw. protokoły.
+Zajmował się tym zespół nazwany Network Working Group (NWG), który efekty swoich prac publikował w formie RFC.
+Pierwsze RFC "Host Software" opublikował Steve Crocker - 7 kwietnia 1969.
+
+To, że przesyłając dane na odległość, można się obyć bez kabla, udowodnił w1969 roku Norman Abramson z Uniwersytetu Hawajskiego, budując ALOHAnet - pierwszą pakietową sieć radiową.
+
+W 1970 roku firma Corning Glass opracowała światłowód.
+
+Jeszcze przed powstaniem sieci na komputerach uniwersyteckich pracownicy zostawiali sobie w umówionych wcześniej katalogach wiadomości w plikach tekstowych. Zbiory te nazywano w taki sposób, żeby odbiorca mógł łatwo zidentyfikować ten z komunikatami dla siebie, na przykład for_Peter_from_IT.txt.
+W 1965 roku Noel Morris, pracownik jednej z uczelni w USA, napisał program o nazwie _mail_, który pozwalał na automatyczne kopiowanie plików do katalogów domowych użytkowników komputera. Dodatkowo po zalogowaniu się wyświetlał on komunikat "You have new mail".
+Dopiero w 1971 roku inżynier Ray Tomlinson (zatrudniony w Cambridge w BBN Technologies) wysyła pierwszego maila do innego komputera w sieci. Pracował nad programem SNDMSG, który miał pozwalać na pozostawianie wiadomości dla innych użytkowników tego samego komputera (można powiedzieć, że była to wersja e-maila dla pojedynczej maszyny). W tym samym czasie zajmował się on również testowaniem programu CYPNET, który z kolei pozwalał na przesyłanie plików na inne komputery komunikujące się ze sobą poprzez sieć ARPANET. Połączenie ze sobą tych dwóch projektów pozwoliło na łatwe przesyłanie wiadomości w sieci. W czasie eksperymentów z użyciem opracowywanych narzędzi pojawił się problem adresowania e-maili wychodzących na zewnątrz. Tomlinson, analizując klawiaturę, szukał symbolu, który nie pojawia się w imionach ludzi i nie jest cyfrą. Wybór padł na znaczek "@". Chociaż ten symbol pozostaje w użyciu już przez 30 lat, to - jak mówi sam Tomlinson - wymyślenie go zajęło mu około 30 sekund.
+Obecnie Ray Tomlinson nadal pracuje w firmie BBN i zajmuje się tworzeniem oprogramowania logistycznego.
+Mechanizm wysyłania wiadomości był wtedy podobny do zasady działania FTP (File Transfer Protocol).
+Dopiero w 1982 powstaje SMTP, a w 1983 sendmail (dla BSD).
+
+W ciągu dwóch następnych lat sieć była rozbudowywana i opracowano kolejne aplikacje umożliwiające wykorzystanie możliwości komunikacyjnych, jednym z pierwszych było zdalen wykonywanie obliczeń na komputerach dużej mocy.
+W kwietniu 1971 było już 23 hosty w 15 węzłach.
+Zaczęły powstawać zalążki społeczności sieciowej, jedną z pierwszych list dyskusyjnych był SF-LOVERS.
+
+W 1972 pierwszej implementacji Telnetu (zwanej ad hoc Telnet Protocol), która umożliwiała zdalną pracę na serwerze.
+W październiku 1972 w ramach międzynarodowej konferencji dotyczącej łączności komputerowej w Waszyngtonie odbyła się pierwsza publiczna prezentacja działania ARPANETu (zademonstrowano węzeł z 40 terminalami; prezentację prowadził Bob Kahn z BBN). Zdecydowano o powstaniu Międzynarodowej Grupy Roboczej do spraw Sieci (International - lub InterNetwork? - Network Working Group) jej pierwszym szefem był Vinton Cerf z UCLA.
+W tym roku przyłączono satelitarnym łączem węzeł na Hawajach.
+
+1973 - włączono do sieci węzły specjalnymi łączami satelitarnymi dwa węzły: w Norwegii (Royal Radar Establishment) i UK (University College of London), ARPANET stał się międzynarodową i międzykontynentalną siecią.
+W 1973 powstał FTP.
+
+W 1974 BBN udostępniła pierwszą publiczną sieć szkieletową Telenet - komercyjna alternatywa dla ARPANET-u.
+
+Okazało się, że nie tylko zrealizowano cel eksperymentu, ale i stworzono bardzo sprawną sieć komunikacji. Dlatego w 1975 kierownictwo ARPA zdecydowało o zmianie statusu ARPANETu z eksperymentalnej na użytkową i przekazało pod zarząd DCA (Defence Communications Agency).
+W 1976 roku brytyjska królowa Elżbieta II wysyła e-maila.
+W 1977 było już 111 węzłów i opracowano ostateczną używaną do dziś wersję poczty elektronicznej.
+
+Bob Kahn sformułował problem tzw. międzysieci: jak umożliwić hostom komunikację przez wiele sieci pakietowych nie znając technologii sieciowej każdej z nich. We współpracy z innym entuzjastą technologii sieciowych Vintonem Cerfem z University of California (Los Angeles) pracowali nad tym problemem. Wkrótce wypracowali podstawowy rozwiązania, gdzie różnice pomiędzy protokołami sieciowymi były ukryte dzięki zastosowaniu wspólnego protokołu międzysieciowego i zamiast jak to było w przypadku ARPANET-u to nie sieć a host był odpowiedzialny za nezawodność. Herbert Zimmerman i Louis Pouzin (projektant sieci CYCLADES) mieli wpływ na jego zastosowane rozwiązania. Ważne również były wczesne prace nad sieciami w Xerox PARC.
+Kiedy zredukowano rolę sieci do minimum stało się możliwe połączenie każdej sieci, niezależnie od jej charakterystyki - był to rozwiązanie problemu, który przedstawił Kahn (popularne było powiedzenie, że protokół, który zamierza stworzyć będzie działać nawet na "puszkach połączonych żyłką"). Za utworzenie interfejsu pomiędzy dowolnymi sieciami i przekazywanie pakietów w obie strony odpowiedzialny był komputer nazwany _gateway_ (później zmieniono to określenie na ruter - ang. _router_ - w celu uniknięcia pomyłki z innym typem gateway'a).
+W 1974 Cerf i Kahn opublikowali w IEEE Transactions pracę "A Protocol for Packet Network Intercommunication" w której przedstawili specyfikację projektu protokołu TCP/IP. Prace nad jego implementacją prowadziły trzy ośrodki Stanford, BBN i University College w Londynie.
+
+W lipcu 1977 odbyła się pierwsza demonstracja łącza pakietowego - pakiety wędrowały od ciężarówki krążącej w okolicach San Francisco przez sieć Packet Radio potem ARPANETEM i łączem satelitarnym do Londynu, z powrotem do USA łączem satelitarnym SATNETu i znów siecią ARPANET do jednego z dużych ośrodków obliczeniowych. Po drodze nie zginął ani jeden bit.
+
+W pierwotnej wersji protokołu nie było rozróżnienia pomiędzy TCP i IP, ale w trakcie eksperymentów nad przesyłaniem zakodowanego głosu okazało się, że retransmisja błędnych pakietów powoduje przerwy w odtwarzaniu dźwięku.
+Oddzielono więc protokół IP odpowiedzialny za adresowanie od TCP odpowiedzialnego za pakietowanie i oprócz TCP powstał UDP, w którym brak jest kontroli prawidłowości przesyłanych pakietów.
+Technologia ta bardzo zainteresowała wojsko. Powołano zespół Internet Configuration Control Board, a w 1980 zdecydowano że TCP będzie preferowanym protokołem do zastosowań militarnych.
+
+W 1981 powstaje IP (Internet Protocol) - ostatecznie w 1982 agencje DCA (Defence Communications Agency) i DARPA przedstawiły zestawienie tych protokołów znanych odtąd jako stos protokołów TCP/IP.
+
+W 1983 nastąpiły trzy bardzo ważne dla historii internetu wydarzenia:
+
+- 1 stycznia wszystkie systemy ARPANET-u zostały przełączone na TCP/IP
+- Nastąpił podział ARPANETU na dwie części: wojskową MILNET i cywilną ARPANET. Coraz częściej były określane razem jako internet (od protokołu IP), zwłaszcza, że znaczenie oryginalnego ARPANET-u malało, szczególnie kiedy przyłączono NSFNet (zresztą siedem lat później ARPANET całkowicie zlikwidowano).
+- Na Uniwersytecie Berkeley pojawiła się wersja Uniksa z wbudowaną implementacją protokołów TCP/IP. Umożliwiło przyłączenie całych sieci lokalnych, a nie tylko pojedynczych, dużych maszyn typu mainframe.
+
+Jednym z ograniczeń wczesnego internetu był system dystrybucji nazw hostów. Network Information Centre (NIC) utrzymywał centralny plik z nazwami hostów i każdy komputer w sieci miał go ściągać regularnie.
+W 1984 Paul Mockapetris opracował hierarchiczny system nazw domenowych i protokół DNS. Rolę pliku hosts.txt przejęła rozproszona baza danych o zasobach w poszczególnych domenach, których każda musiałą być zarejestrowana w którymś z serwerów nazw. Wkrótce umożliwiono rejestrowanie w DNS-ach nieinternetowych systemów poczty elektronicznej oraz bramek do nich co stworzyło wspólną z internetem przestrzeń adresową i umożliwiło zarzucenie starszej notacji _bang path_. Kilka lat później URL stał się centralną cześcią systemu adresowania.
+
+W ten sposób powstała niezależna od charakterystyki sieci lokalnych możliwość połączenia dowolnych hostów, stos protokołów TCP/IP oraz system adresowania DNS.
+
+### Sieć sieci
+
+#### UUCP (Unix-to-Unix CoPy)
+
+W 1976 w AT&T Bell Labs powstał protokół, a w zasadzie program UUCP (Unix-to-Unix CoPy), który umożliwiał przenoszenie plików pomiędzy połączonymi linią telefoniczną komputerami. Inicjatorem jego powstania był Mike Lesk, a pierwotnym przeznaczeniem - wspomaganie konserwacji i testowania oprogramowania w labolatorium. Dzięki wykorzystaniu łącz stałych i telefonicznych oraz modemów ułatwiono rozprowadzanie plików pomiędzy wieloma komputerami.
+W 1977 UUCP został włączony do siódmego wydania Uniksa. Ponieważ był to system bardzo popularny na wielu uczelniach ze względu na niski koszt (AT&T nie miała prawa czerpać dochodów z innej działalności niż telekomunikacyjna) i wydajność względem wymagań (w Bell Labs dominowały PDP-11) UUCP bardzo szybko stał się popularną platformą komunikacyjną.
+W następnych latach powstało kilka sieci komunikacyjnych UUCP, które opierały swoje działanie na zasadzie "zgromadź i przekaż dalej" (_store-and-forward_) do transmisji danych wystarczały linie kumutowane więc nie była potrzebna własna warstwa fizyczna. Był to system logicznych połączeń przez publiczną sieć komunikacyjną, połączenia następowały zgodnie z ustalonym harmonogramem.
+Nie było w niej co prawda wielu usług ARPANET-u (np. zdalnego dostępu do zasobów), ale była wystarczająca do elektronicznej wymiany informacji (przede wszystkim mechanizmy rozproszonej dytrybucji informacji). Co najważniejsze nie wymagała kosztownych inwestycji - własnie z tego powodu UUCP nazywano "internetem dla biednych" (Poor Man's Internet).
+Znacznie zwiększyła zasięg sieci, spopularyzowała ją, wpłynęła na anarchiczną strukturę i dała początek niektórym popularnym usługom. Z tego protokołu wywodzi się również jedna z najpopularniejszych usług internetowych - usenet, który istniał na długo przed formalnym powstaniem internetu właśnie w formie aplikacji działającej na połączonych linią telefoniczną uniksowych klientach UUCP.
+Stopniowo ten protokół był zastępowany przez działający na TCP/IP NNTP, który jest współcześnie używany i obecnie prawie cały ruch w usenecie jest już częścia internetu.
+
+#### Usenet
+
+W 1979 dwaj doktoranci Duke University w Północnej Karolinie Tom Truscott i Jim Ellis, zaproponowali użycie UUCP do połączenia komputerów i wymiany interesujących informacji pomiędzy ludźmi w społeczności uniksowej. Steve Bellovin doktorant Uniwersytetu Północnej Karoliny napisał oprogramowanie konferencyjne. Była to seria skryptów powłoki, które obsługiwały proces automatycznego łączenia się poprzez sieć telefoniczną, sprawdzania czasu ostatniej modyfikacji określonych plików i pobierania tych plików które zostały zmodyfikowane od czasu ostatniego połączenia. Potem połączyli trzy komputery w Duke i UNC (nazwane "unc" "duke" i "phs") używając własnoręcznie wykonanych 300 bodowych modemów.
+W ten sposób powstał system, w którym użytkownik tworzył artykuł (_article_, _posting_) o dowolnym temacie (_subject_) przypisany do grupy dyskusyjnej poświęconej określonemu zagadnieniu, który następnie był rozprowadzany na inne komputery. Inni użytkownicy mogli czytać wybrane przez siebie na podstawie tematu artykuły, a odpowiedzi na nie mogły trafiać na grupę (_follow-up_) albo pocztą elektorniczną bezpośrednio do autora (_reply_). System ten nazwano Netnews a stworzoną w ten sposób sieć Usenet (prawdopodobnie od User's Network).
+Na początku w tej sieci były 3 komputery, a przesyłano 2 artykuły dziennie.
+Ponieważ skrypty działały bardzo wolno, inny doktorant z Duke Stephen Daniel napisał ulepszoną implementację w C, do której poprawki wniósł Tom Truscott. Efekt ich pracy stał się pierwszą publiczną wersją oprogramowania newsowego - "A" News.
+
+Rozwiązanie to zostało zaprezentowane na konferencji Usenix w styczniu 1980. Autorzy zaprosili wszystkich do rozwijania tego pomysłu. A News znalazło się na taśmie dystrybucyjnej letniej konferencji Usenix i szybko się rozpowszechniło.
+Na przełomie 1980 i 81 do usenetu został przyłączony komputer z Uniwersytetu Kaliforni w Berkeley (UCB) który już był przyłączony do ARPANET-u. Dzięki Markowi Hortonowi z UCB niektóre listy dyskusyjne ARPANET-u zostały zbramkowane z grupami Usenet News. Przyciągnęło to nowych użytkowników i wytworzyło presję na rozszerzenie ARPANET-u.
+Większa ilość hostów spowodowała, że w 1981 Horton i Matt Glickman napisali B News, którego kolejne wersje były udostępnianie w latach 1982-84.
+Początkowo zakładano, że ten system będzie służył do wymiany informacji w obrębie kampusa, ale szybko okazało się, że najbardziej atrakcyjna jest właśnie możliwość dyskusji bez barier geograficznych. Przeszkodą były koszty połaczeń, ale administratorzy z AT&T i DEC (bez wsparcia kierownictwa) udostępnili systemy i łącza długodystansowe należące do tych firm, więc wystarczyło się połączyć z dowolnym komputerem obsługującym UUCP, który był już w usenecie.
+W celu optymalizacji wymiany danych na dużych odległościach w 1983 Gene Spafford zainicjował stopniową budowę sieci szkieletowej (_backbone_) - struktury dużych komputerów, mających dostęp do dobrych łącz i niezawodne oprogramowanie oraz przekazujących wszystkie grupy newsów z podstawowego zbioru. Poprawne funkcjonowanie tej struktury było możliwe dzięki pracy administratorów poszczególnych systemów, głównie tych dużych hostów. Ponieważ przez lata współpracowali ze sobą, z powodu stałych kontaktów znali się dobrze, przylgnęło do nich określenie kliki szkieletowej (_Backbone Cabal_).
+
+W początkowym okresie wszystkie grupy znajdowały się w hierachii net., listy zbramkowane z ARPANET-u stworzyły hierachię fa. (From ARPANET), w 1984 powstała hierarchia mod. (grupy moderowane) i ciągle powstawały nowe hierarchie grup regionalnych.
+W latach 1986-87 przeprowadzono wielką reorganizację [The Great Renaming 1985 - 1988](http://www.vrx.net/usenet/history/rename/) - utworzono podzieloną tematycznie jednolitą hierarchię składającą się z 7 podstawowych gałęzi. Tworzeniem i udostępnianiem grup zarządzała klika szkieletowa, ale utworzenie i popularność całkowicie od niej niezależnej gałęzi alt. spowodowało, że kilka miesięcy później klika abdykowała (było to tzw. Breaking of the Backbone Cabal ) i przekazała władzę w ręce Spafforda (jeden z najbardziej zasłużonych administratorów).
+
+Z biegiem czasu coraz większa część ruchu w usenecie odbywała sie przez ARPANET co doprowadziło do stopniowego wypierania UUCP przez NNTP - mechanizm transmisji newsów po łączach TCP/IP.
+Nadal jednak wielu użytkowników indywidualnych używało UUCP, w latach 1987-89 pojawiło się C News (Henry Spencer z Uniwersytetu w Toronto i Geoff Collyer). Na początku lat 90-tych upowszechniły się pełnoekranowe, wątkowe czytniki newsów: nn, trn, tin.
+W marcu 1986 wprowadzono NNTP (_Network News Transfer Protocol_ - [RFC 977](http://www.faqs.org/rfcs/rfc977.html)) i od tego czasu Usenet działając już w połączeniach TCP/IP stał się częścią Arpanetu.
+Od 1992 popularnym pakietem NNTP jest INN (_Internet Net News_), który jest kompletnym systemem newsowym.
+
+Powstanie usenetu było inicjatywą całkowicie oddolną i jego rozwój (dotyczy to i oprogramowania i udostępniania usługi na serwerach) był wynikiem aktywności społeczności użytkowników, która stała się później wzorem dla innych społeczności sieciowych. Tworzono standardy i zwyczaje (np. głosowanie nad stworzeniem grupy, gdzie 100 głosów więcej musiało być za niż przeciw).
+Dzisiaj to tylko jedna z usług, ale usenet stał się pierwszym modelem sieciowej społeczności, wirtualnego społeczeństwa rządzącego się własnymi prawami i czułego na łamanie obowiązujących w nim zasad (m.in. zakaz wykorzystywania do celów komercyjnych).
+
+#### BBS
+
+W 1978 roku Ward Christianson i Randy Suess zbudowali w Chicago lokalną namiastkę ARPANET-u: Computerized Bulletin Board System, czyli BBS.
+1979 - CompuServe w ramach serwisu dla hobbystów udostępnia online bazy danych, gry i właśnie BBS.
+Ofertę dla zwykłych użytkowników, nie dysponujących dostępem do łączy naukowych ani wojskowych, przygotowała w 1980 roku firma Texas Instruments. Jej modemy uzyskiwały szybkość 300 bitów na sekundę.
+
+#### CSNET (Computer Science Network)
+
+Ponieważ dostęp do ARPANETu był przywilejem należącym do niewielkiej ilości instytutów mających kontrakt z ARPA. Ponieważ przyciągało to studentów powstała presja na stworzenie sieci dostępnej również dla pozostałych naukowców. UUCP, modemy i telefony stanowiły gotową strukturę do transmisji danych której koszta nie były wygórowane.
+W maju 1979 Larry Landweber zorganizował spotkanie DARPA, NSF oraz naukowców z róznych uczelni - w celu stworzenia CSNET. Początkowo miała to być oddzielna sieć, ale póżniej przewidziano również bramkę do ARPANET-u.
+Latem 1980 Vinton Cerf zaproponował plan międzysieciowego połączenia między ARPANET-em a CSNET-em, który miał być logiczną siecią złożoną z wielu fizycznych sieci. Komunikacja z ARPANET-em byłaby przezroczysta, tzn. używane tam protokoły byłyby takie same z punktu widzenia użytkowników po obu stronach. Do połączeń pomiędzy sieciami stworzono by specjalną bramkę (internetwork gateway), tzw. VAN (Value Added Network), w której komunikację miałby zapewnić nie mający jeszcze wówczas szerszych zastosowań protokół TCP/IP - był to krok w stronę współczesnego internetu.
+Zatwierdzone plany CSNET-u zakładały docelowo dostęp dla wszystkich naukowców, koszt uczestnictwa zależny od ilości i jakości usług oraz samowystarczalność finansową (z wyjątkiem fazy projektu i implementacji). Pierwsza faza realizacji zakończona latem 1982 dostarczyła narzędzi do wymiany poczty elektronicznej opartej o dostęp modemowy.
+W 1983 stworzono prototypowy serwer nazw na Uniwersytecie Wisconsin.
+Ponieważ w sieci uczestniczyło coraz więcej naukowców niezwiązanych z informatyką, zmieniono nazwę na Computer and Science Network.
+W szczytowym okresie znajdowało się w niej ponad 200 hostów z około 15 krajów. Na początku lat 90-tych okazało się, że większość z tych maszyn jest przyłączona do innych sieci i CSNET został zlikwidowany.
+
+#### BITNET (Because It's Time Network)
+
+W 1981 powstała BITNET (_Because It's Time Network_) łącząca duże komputery mainframe z centrów obliczeniowych Uniwersytetu w Nowym Jorku i Yale. Używała opracowanego w tym celu w IBM protokołu NJE (Network Job Entry). Obejmująca głównie uczelnie i inne instytucje naukowe. Szybko rozrosła się do 225 węzłów w 1984, kiedy to sformalizowano jej strukturę poprzez powołanie ciała zarządzającego. Ponieważ częściowo była finansowana przez IBM i pracowały w niej głównie maszyny IBM - powstało mylne wrażenie że jest to sieć IBM.
+W 1989 BITNET i CSNET zostały połączone w CREN (Corporation for Research and Educational Networking) szczyt rozwoju przypadł na początek lat 90 - 49 krajów.
+Z powodu używania niestandardowego protokołu znaczenie nie było zbyt wielkie, ale to właśnie tam powstała popularna usługa list dyskusyjnych obsługiwanych przez oprogramowanie LISTSERV (oferujące wiele dodatkowych możliwości w porównaniu z listami ARPANET-u). Dzięki bramkom mogli z nich korzystać użytkownicy z innych sieci.
+W BITNET listy te były popularne bo użytkownicy nie mogli korzystać z wielu usług internetu (np. usenet, ftp), z czasem wiele z tych list pojawiło się również jako bramkowane grupy usenetu tworząc hierarchię bit.listserv.
+
+#### NSFNET
+
+W połowie lat 80 NSF zaczęła tworzyć ośrodki superkomputerowe. Ze względu na koszty funduszy starczyło tylko na pięć wielkich centrów rozrzuconych po całym kraju (JVNC - Princeton; PSC - Pittsburg; SDSC - San Diego; NCSA Illinois; Theory Center - Cornell). Aby udostępnić ich zasoby maksymalnie dużej ilości osób zadecydowano o włączeniu ich w sieć. Początkowo NSF chciała użyć do tego struktur ARPANET-u, ale sprawa ugrzęzła z powodów biurokratycznych. Dlatego zdecydowano zbudować nową sieć: NSFNET.
+W końcu 1986 łącza dzierżawione 56 Kbps połączyły sześć ośrodków - pięć centrów NSF i Narodowe Centrum Badań Atmosferycznych (NCAR).
+Kontrakt na rozbudowę i zarządzanie NSFNET-em dostała firma Merit (konsorcjum uniwersytetów ze stanu Michigan, które od lat 60-tych świadczyło usługi sieciowe dla kampusów). Merit zaprosiła do wspólpracy IBM, który dostarczył niezbędny sprzęt m.in. rutery i oprogramowanie i MCI operatora telekomunikacyjnego, który zapewnił łącza.
+W ten sposób uczelnie miały dostęp do szybkiej i nowoczesnej sieci, a firmy dostały dostęp do technologii opracowanych na uniwersytetach.
+W 1987 zdecydowano o zastosowaniu szybkich łącza T1 o przepustowości 1.5 Mbps. Ruszyły w drugiej połowie 1988, architektura była oparta o TCP/IP, gdyż w tym czasie większość kapusowych sieci wykorzystywała ten standard.
+
+Wprowadzono trójpoziomową strukturę:
+
+- główna sieć szkieletowa (backbone) T1: 13 węzłów: Merit, 6 dotychczasowych
+- oraz 6 regionalnych sieci średniego poziomu (BARRNet, MIDNET, Westnet, NorthWestNet, SEQUINET i SURAnet (dodatkowo NYSERNet i JVNCnet były połączone przez centra superkomputerowe)
+- sieci poszczególnych uczelni i instytucji przyłączone do sieci regionalnych
+
+W celu minimalizacji kosztów topologię zaprojektowano tak by łączna długość była jak najmniejsza.
+Szkieletem zarządzało specjalnie powołane Centrum Operacji Sieciowych (Network Operation Center), które m.in. zbierało dane statystyczne o ruchu i opracowało mechanizm komunikowania o wszelkich awariach, przerwach w ruchu itd.
+W skład NSFNETu wchodziło wówczas łacznie 170 sieci.
+W 1989 wprowadzono dodatkowe nadmiarowe łacza T1, stopniowo przyłączane były inne kraje (Kanada, Francja, kraje skandynawskie).
+Technologia T1 i stale rosnący zasięg sprawił, że stopniowo zastąpił on ARPANET.
+
+Rosnąca liczba użytkowników, głównie ze społeczności naukowo-badawczej wymusiła wprowadzenie łącz T3 o przepustowości 45 Mbps w 1990-91. Ilość węzłów doszła do 16 ilość przyłączonych sieci do 3500. Zarządzanie siecią przeszło w gestię ANS (Advanced Networks & Services) instytucji non-profit powołanej przez IBM, NSF i Merit, z której później wyrosła komercyjna ANS CO+RE.
+
+Na przełomie lat 80 i 90 ustanowione zostały pierwsze bramki umożliwiające wymianę poczty elektronicznej pomiedzy internetem, a istniejącymi sieciami komercyjnymi (np. MCI Mail), ale szkielet NSFNETu mógł być wykorzystywany jedynie przez środowiska naukowe i akademickie co zostało sprecyzowane w dokumencie Acceptable Use Policy (AUP).
+Analogiczne regulacje posiadały również sieci regionalne, chociaż niektóre z nich widziały w przyłączeniu firm komercyjnych szansę na samowystarczalność finansową. Właśnie z tych środowisk i sieci wywodziły się pierwsze komercyjne sieci (UUNET Technologies i Performance Systems International), które powołały CIX (Commercial Internet exChange).
+
+### Powstanie internetu
+
+Ponieważ podstawowym zadaniem ARPA było prowadzenie badań naukowych i eksperymentalne technologie, a nie zarządzanie powszechnie używanym środkiem komunikacji, po około dziesięciu latach istnienia ARPANET-u uznano, że czas przekazać to zadanie innej agencji.
+Ostatecznie przekazano zarząd w ręce Defense Communications Agency (również część Departamentu Obrony).
+Wczesny internet oparty o struktury ARPANET-u był przedsięwzięciem rządowym i dlatego ograniczonym tylko do użytku niekomercyjnego, którego przeznaczeniem były głównie cele badawcze. Początkowo to ograniczenie oznaczało przyłączanie tylko jednostek wojskowych i uniwersyteckich. Stopniowo jednak w ciągu lat 80-tych przyłączano coraz więcej instytucji edukacyjnych i również uczestniczących w projektach badawczych przedsiębiorstw (jak np. Digital Equipment Corporation and Hewlett-Packard), które z czasem coraz bardziej przejmowały sferę usług.
+W połowie lat 80-tych w rozwój internetu poważnie włączyła się inna instytucja rządowa - National Science Foundation. Sieć szkieletowa NSFNET-u poważnie wpłynęła na upowszechnienie dostępu do sieci, zapewniając dostęp do internetu dla dużej ilości instytucji naukowych i badawczych. Równolegle do internetu istniały inne sieci takie, centralnie zorganizowane takie jak BITNET i CSNET, oraz bardziej amatorskie, powstające oddolnie takie jak UUCP.
+Pod koniec lat 80-tych Departament Obrony zadecydował, że rozwój sieci zrealizował założone cele i zakończył finansowanie jej podstawowych struktur. ARPANET został stopniowo wyłączany - ostatni węzeł zamknięto w 1989. Odpowiedzialność za utrzymywanie łącz dalekiego zasięgu przeszła w gestię inne agencji rządowej, cywilnej NSF.
+Była to sieć naukowa z zakazem działalności komercyjnej.
+
+Podstawy technologi wywodzą się z ARPANET-u ale szerokie upowszechnienie i popularyzacja internetu ma swoje korzenie w szerokim udostępnieniu tej sieci na amerykańskich uczelniach. NSF finansowała przyłączanie poszczególnych kampusów tylko wtedy gdy wiązało się to z umożliwieniem dostępu innym instytucjom, głównie edukacyjnym z najbliższej okolicy.
+
+1988 pierwszy robak internetowy [The Internet Worm of 1988](http://world.std.com/~franl/worm.html)
+
+Pod koniec lat 80-tych powstały pierwsze komercyjne przedsiębiorstwa świadczące publicznie dostępne usługi internetowe (PSINet, UUNET, Netcom, Portal), początkowo zajmowały się głównie serwisem dla siec badawczych.
+W 1989 działalność rozpoczał world.std.com - pierwszy wdzwaniany ISP (Internet Service Provider).
+Komercja w internecie wywołała powszechną debatę. Chociaż działalność tego typu była w sieci zabroniona, nie było do końca jasna definicja działalności komeryjnej. Paradoksalnie chociaż to uczelnie najbardziej były za utrzymaniem niekomercyjnego charakteru sieci to właśnie ze środowisk akademickich wywodziły się pierwsze firmy oferujące komercyjne usługi internetowe i to one obniżyły cenę dostępu do internetu tak, że stał się możliwy nawet dla szkół średnich.
+
+Ponieważ pojawiło się zapotrzebowanie ze strony jednostek komercyjnych i zaczęły powstawać komercyjne sieci szkieletowe (np. AlterNet) oraz komercyjni ISP w 1995 rząd USA zadecydował o komercjalizacji internetu.
+NSFNET został formalnie zlikwidowany a poszczególne fragmenty jego rdzenia przypadły pięciu krajowym operatorom.
+
+W 1993 powstał plan zastąpienia NSFNET-u jeszcze szybszą siecią o przepustowości 155 Mbps będącą połączeniem kilku komercyjnych sieci szkieletowych dostępnych dla wszystkich skłonnych za to zapłacić (dostęp dla uczelni nadal finansowałby NSF).
+
+Plan ten został wcielony w 1995 - 30 kwietnia niezauważalnie dla użytkowników przestał istnieć NSFNET, do którego było wówczas podłączonych 50766 sieci z 93 krajów (w tym 131 z Polski obecnej w nim od 1991).
+W ten sposób powstał internet.
+
+### WWW
+
+Jedną z najbardziej popularnych usług internetu jest WWW (_World Wide Web_).
+W miarę rozwoju internetu wielu ludzi rozumiało, że coraz bardziej potrzebna jest możliwość znalezienia i organizowania plików i powiązanych ze sobą informacji. Projekty takie jak Gopher, WAIS, i Anonymous FTP Archive Site zaczęły wprowadzać tego typu mechanizmy i organizować dystrybuowane dane w postaci łatwiejszej do użycia.
+Niestety wszystkie te projekty miały niewielką możliwość przystosowania do wielu rodzajów plików i typów danych i rozwoju bez centralnego ośrodka (problem ze skalowalnością).
+Rozwój Gophera został zatrzymany później kiedy University of Minnesota głupio zastrzegł prawa intelektualne do tej techniki.
+
+Tymczasem jednym z najbardziej obiecujących paradygmatów interfejsu był hipertekst. Stworzenie tej technologii zainspirował Vannevar Bush ("memex") i rozwijana była przez Teda Nelsona w czasie badań w Project Xanadu oraz badania Douglasa Engelbarta nad NLS. Powstało wiele tego typu rozwiązań - np. Apple i jego HyperCard - ale przed internetem nikt nie pracował nad skalowalnością technologii tak, żeby mogła się odnosić do dowolnego dokumentu na świecie. Wśród współpracowników Nelsona i Engebarta były wprawdzie teoretyczne rozważania na ten temat, ale donikąd nie zaprowadziły
+
+Rozwiązanie wymyślił Tim Berners-Lee w 1989. Zajął się tym ze zwykłego niezadowolenia, ponieważ pomimo, że podnosił tą ideę na konferencjach nikt w internecie ani w społeczności hipertekstowej nie chciał się zająć stworzeniem takiego systemu. Był programistą pracującym w CERN w European Particle Physics Laboratory i chciał, żeby fizycy mieli prostą metodę dzielenia się informacjami o swoich badaniach.
+
+Jego pomysł zawierał trzy wynalazki, które zapewniły sukces WWW:
+
+- URL (Uniform Resource Locator) - łatwy sposób na określenie położenia dokumentu gdziekolwiek w internecie, w prostej nazwie, która określała nazwę komputera, ścieżkę dostępu do dokumentu oraz protokół użyty do sprowadzenia tego pliku.
+- HTML (HyperText Markup Language) - zapewnił prosty sposób na dołączenie kodu określającego strukturę dokumentów i włączenie odnośników wskazujących na inne dokumenty.
+- HTTP (HyperText Transfer Protocol) - dostosowany do transferu danych hipertekstowych protokół pozwolił na przyspieszenie transferu i zmniejszenie obciążenia.
+
+W okolicach 1992 zrozumiano, że możliwości prostych znaczników HTML pozwalają na włączenie do tekstowych dokumentów grafiki (tzw. inline graphics).
+Powstały pierwsze graficzne przegladarki Viola i Mosaic. Mosaic powstał w National Center for Supercomputing Applications na Uniwersytecie Illinois w Urbana-Champaign (NCSA-UIUC), który prowadził Marc Andreesen.
+Andreesen opuścił NSCA-UIUC i przyłączył się do Jima Clarka jednego z założycieli SGI (Silicon Graphics, Inc.). Stworzyli Mosaic Communications, który stał się później Netscape Communications Corporation. Netscape Navigator był pierwszą przeglądarką która odniosła sukces komercyjny.
+Kiedy WWW stawał się coraz większy powstały wyszukiwarki i katalogi. Pierwsza wyszukiwarka - Lycos - powstała w 1993 jako projekt uniwersytecki. W 1993 przez studenta University of Maine został opublikowany pierwszy magazyn webowy - Virtual Journal.
+Pod koniec 1993 Lycos zindeksował 800 tysięcy stron WWW - pod koniec 2003 najpopularniejsza wyszukiwarka (Google) zindeksowała ponad 8 miliardów stron.
+
+Internet rozwinął znaczącą subkulturę przywiązaną do idei, że sieć nie jest zawłaszczona ani kontrolowana przez żadną osobę, firmę, grupę ani organizację.
+Niemniej jednak jakiś stopień standaryzacji jest konieczny i dlatego funkcjonuje system RFC (Request for Comments), które opisują szczegółowo każdy aspekt funkcjonowania sieci. Organizacja standaryzująca IAB przeszła pod zarząd ISOC.
+Inną próbą standaryzacji był stworzony w latach 80-tych przez ISO (International Organization for Standardization) udokumentowany model OSI (Open Systems Interconnect), który miał zastąpić zależne od dostawców, firmowe (proprietary) standardy, ostatecznie jednak w 1996 ISO przyznała, że TCP/IP wygrało i odesłało do lamusa model OSI, który jednak przydał się bardzo jako wzorzec opisu.
+
+Wczesny e-mail nie był ograniczony do internetu, bramki łączyły internetowy SMTP z mailem UUCP, BITNET-em i siecią BBS-ów: Fidonetem. Komercyjni dostawcy tacy jak CompuServe i The Source.
+
+Pierwszą centralną organizacją był NIC (Network Information Centre) w SRI (Stanford Research Institute in Menlo Park, California). InterNIC, IETF, IANA, ICANN
+
+### Polska
+
+W 1991 działalność rozpoczął Zespół Koordynacyjny Naukowych i Akademickich Sieci Komputerowych przy Uniwersytecie Warszawskim. Jako pierwszy w Polsce podjął się on budowy ogólnokrajowej sieci WAN, łączącej największe ośrodki naukowo-akademickie i połączonej ze światowymi zasobami (pierwsze łącze - ze Sztokholmem - 8 Mbps).
+
+W lutym 1994 formalnie utworzono Jednostkę Badawczo-Rozwojową Naukową Akademicką Sieć Komputerową (NASK).
+W latach 1994-96 JBR NASK rozbudowywała sieć krajową oraz finansowała największą w Polsce inwestycję: miejską sieć komputerową w Warszawie o nazwie WARMAN, działającą w technologii ATM. Podwodne połączenie NASK-u ze Sztokholmem (do sieci międzynarodowego operatora Telia) istnieje dopiero od 1998 roku i początkowo miało przepustowość 10 Mbps.
+
+W 1996 Centrum Systemów Teleinformatycznych TP SA Polpak zawarł umowę z NASK-iem co zapewniło połączenie o przepustowości 64 kbps. Sieć szkieletowa w kraju pozwalała wówczas na przesyłanie danych z prędkością 2 Mbps.
+W czerwcu tego roku TP SA uruchomiła ogólnopolski numer dostępowy 0202122 dający możliwość połączenia się przez PPP bez dodatkowych opłat za cenę połączenia. Do dyspozycji użytkowników oddano 800 modemów rozlokowanych w największych miastach Polski. Było to pierwsze tego typu przedsięwzięcie w Europie.
+We wrześniu 1997 TP SA uruchomiła własne połączenie międzynarodowe z Nowym Jorkiem o przepustowości 2 Mbps, a liczba modemów dostępowych wzrosła ponadtrzykrotnie i wyniosła 2760. Kolejne lata przynosiły coraz szybszy transfer międzynarodowy oraz coraz więcej modemów dostępowych (5,4 tys. w marcu 1998, 9 tys. w lutym 1999 oraz 18 tys. w marcu 2000).
+
+W styczniu 1993 roku zawiązała się spółka Tel-Energo SA, której założycielami były firmy zajmujące się przesyłaniem i dystrybucją energii, czyli Polskie Sieci Elektroenergetyczne SA, Spółki Dystrybucyjne oraz Polskie Towarzystwo Przesyłu i Rozdziału Energii Elektrycznej. Rozwojowi sieci Tel-Energo sprzyjały niskie koszty umieszczenia włókien światłowodowych w lince odgromowej sieci energetycznych, podwieszanej do linii wysokiego napięcia.
+Węzły dostępowe Tel-Energo znajdują się we wszystkich większych miastach Polski. Tel-Energo jako właściciel linii przesyłowych oferuje dzierżawę swoich linii, polegającą na udostępnieniu łącza pomiędzy dwoma dowolnymi miejscami w Polsce, jednak nie jest operatorem internetowym i tym samym nie zapewnia dostępu do Sieci. Z usług Tel-Energo korzystają jednak dostawcy, tacy jak Internet Partners, oraz m.in. tacy potentaci z branży teleinformatycznej, jak: Era GSM, Plus GSM, Netia czy Telefonia Lokalna (Dialog).
+
+### Materiały
+
+### Timeline
+
+- **1931**
+
+- **1932**
+
+- **1933**
+
+- **1934**
+
+- **1935**
+
+- **1936**
+- Alan Turing opisuje "maszynę Turinga"
+- **1937**
+
+- **1938**
+- V1 (Konrad Zuse)
+- **1939**
+- prototyp Atansoff-Berry Computer (John V. Atanasoff i Clifford Berry)
+- **1940**
+- V2 (Konrad Zuse)
+- **1941**
+- V3 (Konrad Zuse)
+- **1942**
+- Colossus Mk I i Mk II
+- **1943**
+- Harvard Mk I (znany też jako IBM ASCC - Howard Aiken)
+- **1944**
+
+- **1945**
+- ENIAC (John W. Mauchly i John P. Eckert)
+- **1946**
+
+- **1947**
+- tranzystor bipolarny ( Bell Telephone Laboratories - John Bardeen, William Shockley i Walter Brattain)
+- **1948**
+
+- **1949**
+- CSIRAC
+- EDSAC (Maurice Wilkes)
+- projekt Remington Rand 409
+- Zuse KG (w 1967 sprzedane Siemensowi)
+- **1950**
+
+- **1951**
+- LEO I
+- **1952**
+- EDVAC (John W. Mauchly, John P. Eckert, John von Neumann)
+- UNIVAC 60
+- IBM 701
+- **1953**
+- UNIVAC 120
+
+- **1954**
+- TRADIC (Bell Laboratories)
+- **1955**
+
+- **1956**
+- TX-0 (MIT - Lincoln Laboratory)
+- 305 RAMAC (pierwszy dysk twardy - IBM, Reynold B. Johnson)
+- FORTRAN
+- **1957**
+- sputnik (w odpowiedzi powołano ARPA)
+- **1958**
+- układ scalony (Texas Instruments, Jack St. Clair Kilby)
+- ALGOL
+- **1959**
+- COBOL
+- obwód scalony: Jack Kilby, Texas Instruments, Robert Noyce, Fairchild Semiconductors
+- **1960**
+
+- **1961**
+
+- **1962**
+- raport Paula Barana "On Distributed Communications Network" dla RAND Corporation
+- **1963**
+- myszka (Douglas C. Engelbart)
+- Spacewar!
+- **1964**
+- IBM OS/360
+- **1965**
+- DEC PDP-8 - pierwszy minikomputer
+- IBM S/360
+- **1966**
+
+- **1967**
+- pierwsze plany sieci ARPANET
+- **1968**
+- powstaje Intel
+- pierwsza funkcjonująca sieć pakietowa w National Physical Laboratories w UK
+- **1969**
+- pamięci półprzewodnikowe
+- DoD zleca opracowanie sieci ARPANET
+- uruchomienie pierwszych 4 węzłów ARPANETu: UCLA, SRI, UCSB i Utah
+- pierwszy dokument z serii RFC Steve Crocker "Host Software"
+- **1970**
+- wprowadzenie w węzłach ARPANETu protokołu NCP (Network Control Protocol)
+- **1971**
+- 15 listopada - 4004 (Intel)
+- **1972**
+- C (Dennis Ritchie)
+- pierwsza publiczna prezentacja funkcjonowania ARPANETu zorganizowana podczas Międzynarodowej Konferencji Komunikacji Komputerowej
+- telnet
+- pierwszy program do wymiany poczty elektronicznej
+- **1973**
+- FTP
+- **1974**
+- 1 kwiecień - Intel 8080 (2 MHz)
+- Bravo (pierwszy WYSIWYG - Xerox PARC)
+- grudzień - Popular Electronics reklamuje MITS Altair 8800
+- Specyfikacja protokołu TCP (Vinton Cerf i Bob Kahn "A Protocol for Packet Intercommunication", IEEE Transactions)
+- **1975**
+- Byte
+- Micro-soft
+- **1976**
+- Apple I
+- ZiLOG Z80
+- UUCP (Mike Lesk AT&T Bell Labs)
+- **1977**
+- kwiecień - Apple II
+- konsola Atari
+- Commodore PET
+- TRS-80
+- pierwsza demonstracja funkcjonowania zestawu protokołów TCP/IP z wykorzystaniem różnych rodzajów długodystansowych łącz (ARPANET, Packet Radio, SATNET)
+- **1978**
+
+- **1979**
+- VisiCalc dla Apple II (Dan Bricklin)
+- połączenie pierwszych komputerów w sieci usenet z wykorzystaniem protokołu UUCP i modemów 300 bps (Duke, UNC)
+- pierwsze plany sieci CSNET
+- **1980**
+- Sinclair Z80
+- PacMan
+- MS-DOS
+- **1981**
+- Sinclair Z81
+- 12 sierpnia - IBM PC
+- BITNET
+- pierwsze połączenia pomiędzy usenetem a ARPANET-em
+- IP
+- **1982**
+- styczeń - Commodore 64
+- kwiecień - ZX Spectrum
+- **1983**
+- 1 styczeń - przełączenie ARPANETu na TCP/IP
+- styczeń - Apple Lisa
+- marzec - IBM XT
+- wyodrębnienie z ARPANETu części militarnej - Milnet
+- EARN (europejski odpowiednik BITNET-u)
+- **1984**
+- styczeń - Apple Macintosh
+- sierpień - IBM AT
+- Richard Stallman opuszcza MIT i rozpoczyna projekt GNU
+- Amstrad 464
+- DNS (Paul Mockapetris i Jon Postel)
+- **1985**
+- Intel 80386, 16 MHz; pierwsze 32-bitowe procesory
+- pierwsze programy DTP
+- styczeń - Amiga 1000
+- Atari ST
+- CD-ROM
+- **1986**
+- NNTP nowa metoda transmisji Usenet News po TCP/IP
+- HP wprowadza pierwsze komputery z procesorami RISC
+- **1987**
+- 2 kwiecień - IBM PS/2
+- Apple Macintosh II, Commodore Amiga 500 i Amiga 2000
+- Sun - pierwsze stacje robocze na procesorach SPARC
+- VGA (IBM)
+- **1988**
+- wprowadzenie łącz T1 (1.5 Mbps) w sieci szkieletowej NSFNET
+- IRC
+- **1989**
+- 80486 25 MHz i RISC i860 (Intel)
+- WWW
+- **1990**
+- maj - Windows 3.0
+- zakończenie działania ARPANETu
+- Archie
+- **1991**
+- 80486SX (Intel)
+- sierpień - Linux
+- wprowadzenie łącz T3 (45 Mbsp) w sieci szkieletowej NSFNET
+- CIX
+- WAIS
+- Gopher
+- PGP
+- **1992**
+- Internet Society (ISOC)
+- Wolfstein
+- **1993**
+- Intel Pentium 60 MHz
+- PowerPC (Motorola)
+- 22 marzec - Intel Pentium
+- Mosaic - pierwsza graficzna przeglądarka WWW
+- Lotus Notes - integracja prac biurowych
+- **1994**
+- Netscape Navigator 1.0; SSL 2.0 (Netscape Communications Corporation)
+- Intel Pentium 100 MHz
+- 14 marzec - Linux 1.0
+- pierwszy wielki spam w internecie
+- Doom (ID Software)
+- **1995**
+- Intel Pentium 133 MHz
+- Java
+- 24 sierpień - Windows 95
+- zastąpienie sieci szkieletowej NSFNET przez połączenie kilku komercyjnych sieci szkieletowych
+- Netscape Navigator 2.0 - JavaScript
+- **1996**
+- Netscape Navigator 2.0; SSL 3.0 (Netscape Communications Corporation)
+- 9 czerwiec - Linux 2.0
+- **1997**
+
+- **1998**
+- 4 września Google
+- **1999**
+- 25 styczeń - Linux 2.2.0
+- TLS
+- **2000**
+
+- **2001**
+- 4 stycznia Linux 2.4.0
+- 15 stycznia Wikipedia
+- **2002**
+
+- **2003**
+- 17 grudzień - Linux 2.6.0
+- **2004**
+- Powstaje Facebook, od 2006 powszechnie dostępny
+- 1 kwietnia Gmail
+- **2005**
+
+- **2006**
+- 15 lipca Twitter
+- **2007**
+
+- **2008**
+- 2 września Chrome; 11 grudnia pierwsza stabilna wersja
+- **2009**
+- 27 maja Node.js
+- **2010**
+- 25 maja Chrome 5.0 pierwsza stabilna wersja na wszystkie systemy
+- **2011**
+
+- **2012**
+
+- **2013**
+- 29 maja React
+- **2014**
+
+- **2015**
+- czerwiec ES6 (ECMAScript 6)
+- **2016**
+- czerwiec ECMAScript 2016 (ES7)
+- **2017**
+- czerwiec ECMAScript 2017 (ES8)
+- **2018**
+
+- **2019**
+
+- **2020**
+
+
+### Słownik osób
+
+#### Howard Aiken (1900-1973)
+
+[Howard_Aiken](http://en.wikipedia.org/wiki/Howard_Aiken)
+
+#### John Vincent Atanasoff (1903-1995)
+
+[John_Vincent_Atanasoff](http://en.wikipedia.org/wiki/John_Vincent_Atanasoff)
+
+#### Charles Babbage (26 XII 1791 -18 X 1871)
+
+Angielski matematyk, astronom i mechanik, autor tablic logarytmicznych.
+Wynalazca idei programowalnego komputera, części niekompletnego mechanizmu są w London Science Museum. W 1991 na podstawie oryginalnych planów zbudowano Maszynę Różnicową i działała doskonale.
+Wczesne lata:
+Charles był alumnem Trinity College, Cambridge i Peterhouse (Cambridge). Ukończył Cambridge w 1814, a w lipcu poślubił Georgianę Whitmore w St. Michael's Church w Teignmouth, Devon. Mieli ośmioro dzieci, ale tylko trzy dożyły wieku dorosłego. Ojciec i żona i jeden z synów zmarli w 1827.
+Projekt komputerów:
+Z powodu dużej ilości błędów obliczeniowych w tablicach matematycznych, szukał metody wykonywania obliczeń przez maszynę, która nie popełniałaby błędów i nie podlegałaby zmęczeniu lub nudzie. Wymyślił to w 1812. Wpłynęły na niego trzy elementy: niechęć do niedbałości, świadomość tablic logarytmicznych i prace nad maszynami obliczeniowymi dokonane przez Wilhelma Schickarda, Blaise Pascala i Gottfrieda Leibniza. W 1822, w liście do Sir Humphrey Davy'ego o zastosowaniu maszyn do obliczeń i drukowania tablic matematycznych rozważa zasady maszyny obliczeniowej.
+Maszyna różnicowa:
+Był to rodzaj ulepszonego (jak na tamte czasy) "kalkulatora", który wykorzystywał pewne fakty z matematyki, zasada opierała się o metodę różnicową.
+Model tego co nazwał Maszyną Różnicową zaprezentował 14 czerwca 1822 w Royal Astronomical Society w dokumencie zatytułowanym "Note on the application of machinery to the computation of astronomical and mathematical tables". Jego celem było wielomianów przy użyciu metody różnicowej. Idea zostałą zaakceptowana i w 1823 dostał grant Ł1.5K od rządu brytyjskiego. Royal Astronomical Society odznaczyło go Złotym Medalem w 1824.
+Zaczęła się budowa maszyny, ale pojawiły się dwa problemy. Pierwszym było tarcie, mechanika w tamtych czasach nie była dość dobra i ciągłym problemem były wibracje. Drugim były ciągłe zmiany projektowe. Dochodziły do tego spory z mechanikami. W 1834 po zainwestowaniu Ł23K (w tym Ł6K pieniędzy Babbage'a) prace nad nieukończoną maszyną zostały przerwane.
+Maszyna analityczna:
+Szczególnie ważnym pomysłem Babagge'a była maszyna analityczna, która okazała się rewolucyjną koncepcją. Co prawda, nie doczekała się ona realizacji praktycznej, jednak jej konstrukcja posłużyła poźniejszym twórcom (głównie Johnowi von Neumannowi) do opracowania dzisiejszych komputerów.
+Pomiędzy 1833 i 1842 Babbage próbował znowu, tym razem próbował zbudować maszynę która byłaby programowalna do wykonywania dowolnego rodzaju obliczenia, a nie tylko jednego do wyliczania wielomianów.
+
+- urządzenie wejściowe używało kart perforowanych (pomysł Josepha Marie Jacquarda)
+- arytmetyczny procesor obliczał liczby
+- jednostka kontrolna, która określała czy podjęte zostało właściwe działanie
+- mechanizm wyjścia
+- pamięć, gdzie liczby mogły być przechowywane czekając na przetworzenie
+
+Było to urządzenie, które było pierwszym na świecie komputerem, zasadniczy projekt pojawił się w 1835, jednakże częściowo z powodu problemów podobnych do poprzednich oraz z powodu konfliktów z mechanikami, którzy budowali części (i trzymali je w zastawie) maszyna nigdy nie została ukończona. W 1842 z powodu ciągłych niepowodzeń w otrzymywaniu funduszy od Pierwszego Lorda Skarbu (First Lord of the Treasury), Babbage poszedł do Sir Roberta Peela po fundusze, Peel odmówił i zaoferował tytuł rycerza (knighthood) co Babbage odrzucił. W tym momencie prace się skończyły.
+Babbage otrzymał duże wsparcie od Ady, Lady Lovelace. Była ważnym współpracownikiem, aktywnie promowała maszynę analityczną i dostarczyła kilku programów w czymś co dzisiaj zostało by nazwane językiem maszynowym (assembly language). Dokładna wartość tych programów nie jest znana, możliwe, że po prostu debuggowała programy napisane przez Babbage'a. Ada jest uważana za pierwszego programistę, przynajmniej w teoretycznym tego słowa znaczeniu.
+Późne lata
+W 1855 dwaj Szwedzi, ojciec i syn Georg i Edvard Scheutz, zbudowali Maszynę Różnicową. Była oparta na projekcie Babbage'a z 1834. Babbage sprawdził ją i zakceptował. W 1859 rząd brytyjski zamówił jedną z nich do użytku w Registrar General's Office. Ale nie miało to wpływu na odmowy zbudowania maszyny analitycznej.
+Częściowo dzięki wysiłkom Babbage w tworzeniu tych maszyn Brytyjczycy mieli doskonałą mechanikę na następnych kilka dekad co przyczyniło się to do dominacji brytyjskiej floty podczas WWI.
+Promocja rachunku analitycznego:
+Po wstąpieniu w 1810 roku na uniwersytet Cambridge Babbage wraz z dwoma wybitnymi kolegami: Johnem Hershelem i Georgiem Peackokiem w 1812 założyli Towarzystwo Analityczne mające publikować zapiski matematyczne. Celem tego towarzystwa,na czele którego stał student George Woodhouse, była promocja analitycznego rachunku (Leibnizian) zamiast rachunku w stylu Newtona używanego wtedy na wyspach brytyjskich bardziej ze względów politycznych niż praktycznych (był niewygodny). Do Towarzystwa należeli także także Sir John Herschel i George Peacock.
+W 1814 wydali dwutomowy podręcznik matematyki, z dużą życzliwością przyjęty przez angielskie szkolnictwo. W wieku niewiele ponad 24 lat Babbage został członkiem Royal Society. W 1819 wraz z Herschelem wybrali się do Francji, gdzie spotkali się z Arago, Biotem, Fourierem, Laplacem, Bertholetem. Dla Babbage'a najważniejsze było jednak spotkanie z dyrektorem Szkoły Inżynieryjnej baronem de Prony, którego prace popchnęły Babbage w kierunku maszyn liczących.
+W latach 1815-17 napisał trzy artykuły o "Calculus of Functions" dla Philosophical Transactions i od 1816 był członkiem Royal Society.
+Babbage zajmował się też , organizacją fabryk. Poświęcił 35 lat życia na konstruowanie maszyn liczących. Można mówić o dwóch zasadniczych projektach, nad którymi pracował i których idee w poźniejszym okresie miały wpływ na informatykę. Był przekonany, że zastosowanie nauk ścisłych do procesów pracy jednocześnie zwiększyło by ich wydajność i obniżyło koszty. Uważał, że każda operacja przemysłowa powinna być analizowana w celu wyodrębnienia różnych zaangażowanych w niej umiejętności. Następnie należałoby wyszkolić robotnika w określonej czynności i powierzyć mu odpowiedzialność tylko za tą czynność całej operacji, a nie za całość zadania. W ten sposób można by ograniczyć kosztowne szkolenie, a ciągłe powtarzanie czynności zwiększałoby wprawę i wydajność robotników.
+Inne osiągnięcia:
+W 1824 Babbage wygrał Złoty Medal Royal Astronomical Society "za swój wynalazek maszyny do wyliczania tabel matematycznych i astronomicznych.
+Od 1828 do 39 był profesorem matematyki w Cambridge. Współpracował z kilkoma czasopismami naukowymi i przyczynił się do założenia Astronomical Society w 1820 i Statistical Society w 1834.
+W 1837 odpowiadając na oficjalny Eight Bridgewater Treatises "On the Power, Wisdom and Goodness of God, as manifested in the Creation", opublikował swój Ninth Bridgewater Treatise prezentując tezę, że wszechmocny bóg miał moc przewidywania w akcie twórczym jako boski prawodawca, tworząc prawa (lub programy) które wytworzyły gatunki we właściwym czasie a nie tworzył poszczególne z nich za pomocą cudów. Książka zawierała fragmenty korespondencji z Johnem Herschelem.
+Osiągnał także znaczące rezultaty w kryptografii. Złamał słynny szyfr Vigenere'a i jego dużo słabszą wersję, która jest dzisiaj nazywany szyfrem Vigenere. Był powszechnie nazywany "nierozszyfrowalnym szyfrem". Odkrycie Babbage'a zostało użyte w czasie angielskich kampani wojennych i dlatego nie było opublikowane. Z tego powodu odkrycie zostało przypisane Kasiski'emu.
+Babbage w 1938 wymyślił także pilota (nazywanego także chwytakiem na krowy) - metalową ramę przymocowaną do przodu lokomotywy. W 1832 walczył o mandat poselski w okręg wyborczym Finsbury.
+Maszyna Analityczna:
+W wieku 43 lat Babbage zaproponował rozwiązanie, które w praktyce zastosowano dopiero sto lat później. W najmniejszej wersji maszyna analityczna miałaby prawie 5 m wysokości i 8 m długości. Jednocześnie dopuszczalne tolerancje wykonania były w połowie XIX wieku nie do pomyślenia - miały nie przekraczać 50 mikrometrów.
+Jednostka licząca miała składać się ze skomplikowanych zespołów kół, tarcz dziesiętnych i połączeń mechanicznych. Podstawowe elementy to dziewięć osi stanowiących tabliczkę mnożenia, trzy wielkie rejestry używane do dodawania, odejmowania i pamiętania wyników. Pamięć składać miała się z pionowych osi z kołami dziesiętnymi (w wersji minimalnej co najmniej 4 tysiące przekładni). Aby wykorzystać liczbę zapisaną w pamięci trzeba było ją przenieść z osi początkowej na oś wtórną, skąd za pomocą skomplikowanego układu zębatek była kierowana do jednostki liczącej.
+Komunikacja między maszyną a operatorem wymagała programu. Zapis operacji powierzono trzem walcom kontrolnym. Składały się one z 50 lub 100 listew, a w każdej z nich można było umieścić po 4 kołki. Było więc od 200 do 400 pozycji do zakodowania poleceń. Na przykład kiedy jednostka licząca otrzymywała polecenie mnożenia zapisane na karcie perforowanej, odpowiedni walec był obracany aż do listwy kierującej mnożeniem. Odpowiednie kołki łącząc się z zespołem dźwigni powodowały wykonanie określonej operacji.
+Najlepszy opis działania i programowania maszyny analitycznej pochodzi nie od samego Babbage, ale od współpracującej z nim przez pewien czas córki wybitnego angielskiego poety lorda Byrona - Ady Lovelace: "[...] Można powiedzieć, że maszyna analityczna tkać będzie wzory algebraiczne, tak jak krosna Jacquarda tkają liście i kwiaty [...] Maszyna nie rości sobie pretensji do tworzenia czegoś sama z siebie. Może wykonać wszystko co będziemy umieli jej polecić. Może dokonywać analiz, nie jest wszakże zdolna dochodzić związków analitycznych czy prawd. Zadaniem jej jest pomagać wykonywać to, co już opanowaliśmy." [_](http://www.fsmw.uni.wroc.pl/abacus/kha98may.htm) [Charles_Babbage (eng.)](http://en.wikipedia.org/wiki/Charles_Babbage) [Charles_Babbage (pl.)](http://pl.wikipedia.org/wiki/Charles_Babbage)
+
+#### Clifford Berry (1918-1963)
+
+[Clifford_Berry](http://en.wikipedia.org/wiki/Clifford_Berry)
+
+####George Boole (1815-1864)
+
+[George_Boole (eng.)](http://en.wikipedia.org/wiki/George_Boole) [George_Boole (pl.)](http://pl.wikipedia.org/wiki/George_Boole)
+
+#### John Presper Eckert (1919-1995)
+
+[J._Presper_Eckert (eng.)](http://en.wikipedia.org/wiki/J._Presper_Eckert) [John_Presper_Eckert (.pl)](http://pl.wikipedia.org/wiki/John_Presper_Eckert)
+
+#### Lee De Forest (1873-1961)
+
+[Lee_De_Forest (eng.)](http://en.wikipedia.org/wiki/Lee_De_Forest) [Lee_De_Forest (pl.)](http://pl.wikipedia.org/wiki/Lee_De_Forest)
+
+#### John Ambrose Fleming (1849-1945)
+
+[John_Ambrose_Fleming (eng.)](http://en.wikipedia.org/wiki/John_Ambrose_Fleming) [John_Ambrose_Fleming (pl.)](http://pl.wikipedia.org/wiki/John_Ambrose_Fleming)
+
+#### Herman Heine Goldstine (1913-2004)
+
+[Herman_Goldstine (eng.)](http://en.wikipedia.org/wiki/Herman_Goldstine) [Herman_Heine_Goldstine (pl.)](http://pl.wikipedia.org/wiki/Herman_Heine_Goldstine)
+
+#### Thomas (Tommy) Harold Flowers (1905-1998)
+
+[Tommy_Flowers](http://en.wikipedia.org/wiki/Tommy_Flowers)
+
+#### Herman Hollerith (1860-1929)
+
+[Herman_Hollerith (eng.)](http://en.wikipedia.org/wiki/Herman_Hollerith) [Herman_Hollerith (pl.)](http://pl.wikipedia.org/wiki/Herman_Hollerith)
+
+#### Grace Murray Hopper (1906-1992)
+
+[Grace_Hopper](http://en.wikipedia.org/wiki/Grace_Hopper)
+
+#### Joseph Marie Jacquard (1752-1834)
+
+[Joseph_Marie_Jacquard (eng.)](http://en.wikipedia.org/wiki/Joseph_Marie_Jacquard) [Joseph_Marie_Jacquard (pl.)](http://pl.wikipedia.org/wiki/Joseph_Marie_Jacquard)
+
+#### Augusta Ada King, kontessa Lovelace (10 XII 1815-27 XI 1852)
+
+Ada była jedynym ślubnym dzieckiem poety Lorda Byrona i jego żony Annabelli Milbanke, kuzynki Lady Caroline Lamb, z którą Byron miał romans będący przyczyną skandalu w ówczesnym Londynie. Ada została nazwana po siostrze przyrodniej Byrona, Auguście Leigh, która rozpuściła pogłoskę, że Byron został ojcem. Za namową Augusty Byron niechętnie poślubił Annabellę, żeby uniknąć skandalu. 16 stycznia 1816 Annabella porzuciła Byrona, zabierają ze sobą miesięczną Adę. 21 kwietnia Byron zawarł z nią umowę o separacji i kilka dni później opuścił Anglię na dobre.
+
+Biografie są rozbieżne w kwestii czy Ada mieszkała ze swoją matką: w jednych można wyczytać, że matka zdominowała jej życie nawet po ślubie, a w innych, że Ada nigdy nie znała żadnego ze swoich rodziców. Jedyne źródło mówi, że Annabella była zamiłowana w matematyce i nauczała jej Adę w dzieciństwie. Ada uczyła się prywatnie matematyki i nauk przyrodniczych; jednym z jej nauczycieli był August De Morgan, aktywny członek Londyńskiej społeczności. W wieku 17 lat uczyła się matematyki pod opieką Mary Somerville, z którą tłumaczyła prace Laplace'a na angielski. W młodości była członkinią Bluestockings.
+Jej mężem był William King - ósmy baron Ockham, a później pierwszy hrabia Lovelace.
+
+Znała Mary Fairfax Somerville, uznaną badaczkę i naukowca XIX wieku, która przedstawiła ją z kolei 5 czerwca 1833 r. Charlesowi Babbage. Miała też styczność z Sir Dawidem Brewsterem, Charlesem Wheatstonem, Charlesem Dickensem i Michaelem Faradayem.
+
+Z czasem związała się z pomysłem maszyny analitycznej Charlesa Babbage'a.
+
+O maszynie analitycznej najprawdopodobniej po raz pierwszy usłyszała w listopadzie 1834 roku, gdy jeszcze zamieszkiwała u Mary Somerville; kolejny raz dopiero siedem lat później, jesienią 1841 roku, kiedy to Babbage prezentował plany maszyny na seminarium w Turynie. Kontakt z samym Babbage'em zdobyła dzięki tłumaczeniu artykułu Włocha, niejakiego Menabrea, który opisywał w nim ideę maszyny analitycznej. Gdy zaprezentowała wynik ostateczny - który w rezultacie był trzykrotnie dłuższym tekstem niż oryginał, gdyż zawierał wiele jej własnych sugestii - Babbage od razu poznał się na talencie Lady Ady. Od tej pory prowadzili między sobą bardzo żywą korespondencję, a prócz tego, Lady Lovelace prowadziła pamiętniki, w których tak opisała ideę Babbage'a: "Przewyższa ona swoje poprzedniczki zarówno możliwościami obliczeń, które może wykonać, w ich pewności, dokładności, i w braku konieczności podejmowania przez człowieka inteligentnych decyzji w czasie wykonywania obliczeń". Wspominając o możliwości użycia kart dziurkowanych napisała tak: "Można słusznie powiedzieć, że maszyna analityczna tka algebraiczne wzory podobnie jak krosna Jacquarda tkają materiały w kwiaty i liście.".
+
+W dziewięć miesięcy, w latach 1842-1843, Ada przetłumaczyła dla Babbage'a rozprawę włoskiego matematyka Louisa Menebreana na temat najnowszej propozycji Babbage'a - maszyny analitycznej. Do artykułu dołączyła zbiór uwag, które opisywały szczegółowo metodę obliczania liczb Bernoulliego za pomocą maszyny, opis ten uznano pierwszym komputerowym programem. Przypuszczała, że taka maszyna mogłaby tworzyć grafikę albo komponować muzykę. Babbage nigdy nie zbudował działającego modelu.
+
+Jednak biografowie zanotowali, że Lovelace zmagała się z matematykami i trwa spór, czy Lovelace naprawdę rozumiała dogłębnie idee ukryte za programowaniem maszyny Babbage'a, czy raczej była wykorzystywana przez Babbage'a do celów public relations. Jako jedna z pierwszych kobiet w historii informatyki Lovelace zajmuje ważne politycznie miejsce i przez to ciężko jest oszacować czy jej, czy Babbage'a wkład jest ważniejszy.
+
+Później, w projekcie Babbage'a pełniła rolę teoretyka i metodologa, obmyślając problemy, z którymi po zrealizowaniu maszyna mogłaby się zetknąć. W 1842 roku zostaje przez nią napisany, a w 1843 r. opublikowany, historyczny artykuł, w którym sugeruje, iż maszyna ta nigdy nie będzie mogła wyjść poza program, czyli wytyczne, które nią kierują. Od tej pory uwagę taką zwie się argumentem Lady Lovelace przeciw możliwości skonstruowania sztuczniej inteligencji. Ponad sto lat później (1950) będzie próbował się z nim zmierzyć Alan Turing, w słynnym artykule Computing machinery and intelligence.
+
+Odegrała wielką rolę w pracach Babbage'a, pomagając mu uzyskać finansowe wsparcie ze strony rządu brytyjskiego. Ponieważ tworzyła zestawy instrukcji dla Maszyny Analitycznej może być uważana za pierwszego programistę.
+
+Ada Lovelaca zmarła w wieku 37 lat na raka pozostawiając troje dzieci. Na swoje życzenie została pochowana obok ojca, którego nigdy nie znała, w kościele Świętej Marii Magdaleny w Hucknall, Nottingham.
+
+10 grudnia 1980 r. Ministerstwo Obrony U.S. zatwierdziło opis nowego języka programowania nazwanego "Ada".
+
+Jest jedną z głównych postaci książki The Difference Engine napisanej przez Bruce'a Sterlinga i Williama Gibsona, która opisuje świat w którym maszyny Babbage'a weszły do masowej produkcji i era komputerów zaczęła się o wiek wcześniej.
+
+[Biografia Ady Lovelace](http://www.cs.yale.edu/homes/tap/Files/ada-bio.html) [Ada_Lovelace (eng.)](http://en.wikipedia.org/wiki/Ada_Lovelace) [Ada_Lovelace (pl.)](http://pl.wikipedia.org/wiki/Ada_Lovelace)
+
+#### Gottfried Wilhelm von Leibniz (1646-1716)
+
+[Gottfried_Leibniz (eng.)](http://en.wikipedia.org/wiki/Gottfried_Leibniz) [Gottfried_Wilhelm_Leibniz (pl.)](http://pl.wikipedia.org/wiki/Gottfried_Wilhelm_Leibniz)
+
+#### Jan Łukasiewicz (1878-1957)
+
+[Jan_Lukasiewicz (eng.)](http://en.wikipedia.org/wiki/Jan_Lukasiewicz) [Jan_Łukasiewicz (pl.)](http://pl.wikipedia.org/wiki/Jan_Łukasiewicz)
+
+#### John William Mauchly (1907-1980)
+
+[John_Mauchly (eng.)](http://en.wikipedia.org/wiki/John_Mauchly) [John_W._Mauchly (pl.)](http://pl.wikipedia.org/wiki/John_W._Mauchly)
+
+#### John Napier (1550-1617)
+
+[John_Napier (eng.)](http://en.wikipedia.org/wiki/John_Napier) [John_Napier (pl.)](http://pl.wikipedia.org/wiki/John_Napier)
+
+#### John von Neumann (1903-1957)
+
+[John_von_Neumann (eng.)](http://en.wikipedia.org/wiki/John_von_Neumann) [John_von_Neumann (pl.)](http://pl.wikipedia.org/wiki/John_von_Neumann)
+
+#### Max Newman (1897-1984)
+
+[Max_Newman](http://en.wikipedia.org/wiki/Max_Newman)
+
+#### Blaise Pascal (1623-1662)
+
+[Blaise_Pascal (eng.)](http://en.wikipedia.org/wiki/Blaise_Pascal) [Blaise_Pascal (pl.)](http://pl.wikipedia.org/wiki/Blaise_Pascal)
+
+#### Marian Rajewski (1905-1980)
+
+[Marian_Rejewski (eng.)](http://en.wikipedia.org/wiki/Marian_Rejewski) [Marian_Rejewski (pl.)](http://pl.wikipedia.org/wiki/Marian_Rejewski)
+
+#### George Scheutz (1785-1873)
+
+[Per_Georg_Scheutz](http://en.wikipedia.org/wiki/Per_Georg_Scheutz)
+
+#### Edvard Scheutz
+
+Syn Georga Scheutza.
+
+#### Wilhelm Schickard (1592-1635)
+
+Przyjaciel Keplera - z Tybingi (Wirtembergia)
+[Wilhelm_Schickard (eng.)](http://en.wikipedia.org/wiki/Wilhelm_Schickard) [Wilhelm_Schickard (pl.)](http://pl.wikipedia.org/wiki/Wilhelm_Schickard)
+
+#### Claude Elwood Shannon (30 IV 1916 - 24 II 2001)
+
+Amerykański matematyk i inżynier, profesor Massachusetts Institute of Technology (MIT). Jeden z twórców teorii informacji.
+Shannon urodził się w Petoskey, Michigan (był dalekim krewnym Thomasa Edisona), w młodości pracował jako kurier Western Union. W 1932 zaczął studiować na University of Michigan i w końcu trafił na kurs, który wprowadził go w prace George Boole'a i w 1936 uzyskał dyplomy w dziedzinie matematyki i inżynierii elektrycznej. Doktorat obronił w MIT w roku 1940; od roku 1958 był tam profesorem. W latach 1936-40 pracował w MIT, m.in. przy budowie mechanicznego analizatora dyferencjałów opracowanego przez Vannevera Busha. W latach 1941-1972 pracował również w słynnych Laboratoriach Bella. W latach 1958-78 był profesorem MIT. Na emeryturę przeszedł w roku 1978.
+
+Jako jeden z pierwszych pojął doniosłość kodu binarnego i już jako młody człowiek proroczo twierdził, że ciągami zer i jedynek da się opisać tekst, obraz i dźwięk.
+
+Dla upamiętnienia jego osiągnięć uczczono jego prace i obecnie są trzy kopie statuy Shannona: University of Michigan, MIT w Laboratory for Information and Decision Systems i jedna w Bell Labs.
+
+W swojej 1937 MIT pracy dyplomowej "A Symbolic Analysis of Relay and Switching Circuits" udowodnił, że algebra boolowska i arytmetyka binarna może być użyta do uproszczenia sieci elektromechanicznych przekaźników używanych wtedy w telefonicznych przełącznikach rutujących (telephone routing switches). Wtedy odwrócił tą koncepcję i udowodnił także, że można użyć przekaźniki do rozwiązywania problemów algebry boolowskiej. Ten pomysł użycia właściwości elektrycznych do matematyki jest podstawą wszystkich współczesnych komputerów cyfrowych. Stało się to podstawą projektowania obwodów elektrycznych. Stała się szeroko znana w czasie i po WWII. Ówczesne eksperymenty były prowizoryczne i brakowało im teoretycznego rygoru, zapewnionego dopiero przez nowatorską pracę Shannona.
+
+Profesor Howard Gardner, z Harvard University, nazwał ją "prawdopodobnie najważniejszą i najbardziej znaną pracą doktorską stulecia". Została opublikowana w 1938 wydaniu Transactions of the American Institute of Electrical Engineers i w 1940, dała Shannonowi nagrodę Alfred Noble American Institute of American Engineers Award.
+
+Pod wpływem tego sukcesu Vannevar Bush zaproponował Shannonowi przejście do Cold Spring Harbor Laboratory, w celu rozwijania tych samych matematycznych metod do genetyki mendelowskiej, czego rezultatem była praca doktorska w 1940 w MIT, An Algebra for Theoretical Genetics. Póżniej pracował w Bell Labs, a w latach 50-tych wrócił do MIT.
+
+Stworzył modele procesu komunikacyjnego wykorzystywane później przez psychologów. Jego najsłynniejsze dzieło to "Matematyczna teoria komunikacji" (Mathematical Theory of Communication) opublikowana w 1948 roku.
+
+Praca ta koncentruje się na problemie jak odtworzyć w punkcie docelowym informację wysłaną przez nadawcę. Jego późniejsza książka napisana z Warrenem Weaverem, The Mathematical Theory of Communication, jest krótka i zaskakująco przystępna dla niespecjalistów. Inny znany artykuł opublikowany w 1949 to Communication Theory of Secrecy Systems wkład do rozwoju matematycznej teorii kryptografii. Odznaczył się także wprowadzeniem teorii próbek (Sampling Theory), która zajmuje się reprezentacją ciągłych w czasie sygnałów z (jednolitego) dyskretnego zestawu sampli/próbek.
+
+Znany był z tego, że rzadko zapisywał swoje myśli na papierze lub tablicy woląc wszystko opracować w głowie. Wiele osób potwierdza, że był w stanie napisać całe artykuły akademickie dyktując je z pamięci bez żadnego błędu. Poza swym akademickim zajęciem żonglował, jeździł na monocyklu i grał w szachy. Wynalazł także wiele urządzeń, np. maszynę do grania w szachy, napędzany rakietą kij pogo, przenośny komputer do przewidywania rezultatów ruletki i rzucającą płomienie trąbkę na wystawy naukowe. Swoją żonę, Betty spotkał kiedy był analitykiem liczbowym w Bell Labs.
+
+W roku 1948, zajmując się zagadnieniem przepustowości linii telefonicznych, Shannon opracował wiele ważnych do dziś formuł matematycznych, które stanowią podstawę nowoczesnej teorii informacji. Jego twierdzenia nabrały szczególnego znaczenia praktycznego po wynalezieniu układów scalonych.
+
+"Rewolucja cyfrowa zaczęła się od niego" powiedział na wieść o śmierci wielkiego uczonego słynny amerykański informatyk Neil Sloane, wydawca i redaktor dzieł zebranych Shannona. "Był to jeden z największych umysłów minionego stulecia, bez niego nie istniałyby dziś najważniejsze zdobycze naszej cywilizacji".
+
+Shannon zafascynowany był maszynami liczącymi i urządzeniami, które dziś określilibyśmy mianem gadżetów - zaprojektował np. pianino odtwarzające w kolejności losowej zaprogramowane uprzednio utwory muzyczne, czy samouczącą się mysz (znajdowała drogę przez labirynt, na którego końcu Shannon kładł kawałek sera). Pracował także nad sztuczną inteligencją, rozwijając koncepcje maszyn Turinga, czego efektem było m.in. stworzenie w 1956 r. komputera szachowego Maniac. Zafascynowany algebrą Boole'a starał się znaleźć jej zastosowanie w programowaniu przełączników obwodów elektrycznych.
+
+Claude Shannon znany był z tego, że uprawianie nauki było dla niego nie tylko poważnym zajęciem, ale również radością i zabawą. Dla czystej zabawy na przykład skonstruował dziwaczną maszynę o nazwie THROBAC-I, która liczyła, wykorzystując rzymski zapis liczb.
+
+Shannon opracował zasady wyspecjalizowanego komputera do tej gry na blisko pół wieku przed głośnym meczem szachowym Garego Kasparowa z komputerem Deep Blue.
+
+Zmarł 24 lutego 2001 po długotrwałych zmaganiach z chorobą Alzheimera.
+
+[Claude_E._Shannon (eng.)](http://pl.wikipedia.org/wiki/Claude_E._Shannon) [Claude_Elwood_Shannon (eng.)](http://en.wikipedia.org/wiki/Claude_Elwood_Shannon)
+
+- Scientific American: [Claude E. Shannon: Founder of Information Theory](http://www.sciam.com/article.cfm?articleID=000745C4-9E66-1DA5-815A809EC5880000)
+- [Websites with Information about Claude Shannon](http://essrl.wustl.edu/~jao/ee550/shannonurls.html)
+
+#### Alan Mathison Turing (23 VI 1912 - 7 VII 1954)
+
+Angielski matematyk, logik, kryptograf, twórca maszyny Turinga i jeden z twórców informatyki. Znany też z prac nad łamaniem niemieckich szyfrów w czasie II wojny światowej oraz jako twórca (1950) tzw. testu Turinga - eksperymentu będącego próbą formalnego zdefiniowania sztucznej inteligencji.
+Był szanowanym naukowcem i bohaterem wojennym, później prześladowanym za homoseksualizm. Umarł śmiercią samobójczą w wyniku depresji spowodowanej przymusowym "leczeniem" hormonalnym jego homoseksualizmu.
+Na jego cześć powstała Nagroda Turinga (Turing Award).
+Był maratończykiem klasy światowej, najlepszy czas 2h46m3s był tylko 11 minut dłuższy niż zwycięzcy Olimpiady z 1948.
+Znaczący wkład w formalizację koncepcji algorytmu i informatyki przez maszyne Turinga, formułując szeroko dzisiaj znaną wersję pracy Church-Turing, mianowicie każdy model komputera jest odpowiednikiem lub podzestawem możliwości maszyny Turinga. W Blechtley Park w czasie WWII był głównym uczestnikiem łamania niemieckich szyfrów, był szefem Hut 8, grupy zadaniowej łamiącej Enigmę marynarki. Po wojnie zaprojektował jeden z pierwszych programowalnych komputerów cyfrowych w National Physical Laboratory, zbudował także inną maszynę na University of Manchester.
+Został poczęty w 1911 w Chatrapur (Indie) jego ojciec, Julius Mathison Turing był członkiem indyjskiej służby cywilnej, ponieważ z żoną (Ethel) chcieli by się wychowywał w Anglii wrócili do Paddington (Londyn), z powodu obowiązków ojca wczesne dzieciństwo upłynęło na podróżach między Guildford (Anglia) a Indiami. Już wtedy wykazywał nadzwyczajne umiejętności, podobno nauczył się sam czytać w ciągu trzech tygodni i lubił łamigłowki i puzzle.
+Rodzice zapisali go do St. Michael dzienna szkoła w wieku 6 lat.
+W 1926 w wieku 14 lat poszedł do Sherborne boarding school w Dorset. Jego pierwszy dzień wypadł w strajk generalny i sam przejechał rowerem ponad 60 mil z Southampton nocując w zajeździe, co opisano w lokalnej gazecie.
+Naturalne zdolności w dziedzinie matematyki i nauki zostały zauważone przez nauczycieli w Sherborne (znana i droga szkoła publiczna, brytyjska prywatna szkoła ze statusem charytatywnej) gdzie raczej uczono przedmiotów klasycznych.
+W 1928 (16 lat) przeczytał pracę Einsteina, nie tylko zrozumiał ją, ale przewidział zakwestionowanie przez niego praw Newtona, mimo, że nikt mu tego tekstu nie objaśniał.
+Z powodu niechęci do klasyki nie dostał się do Trinity College, Cambridge i poszedł do King's College, Cambridge.
+Studiował u G.H. Hardy'ego znanego matematyka, który miał Sadleirian Chair w Cambridge (31-34). W 1925 został wybrany na Fellow at King's College. Hardy był członkiem niesławnego kręgu Apostatów Cambridge, ale nie wiadomo czy nie zaproponował Turingowi przyłączenia się czy może Turing odmówił.
+W celu ścisłego zdefiniowania procedury algorytmicznej wprowadził w 1936 r. pojęcie maszyny (maszyna Turinga). Pomysł polega na potraktowaniu formuł (równań) matematycznych jako programów kierujących obliczaniem, z którymi współdziałają urządzenia do wczytywania danych i zapisu wyników oraz pamięci. Maszyna zaopatrzona w program do naśladowania wszystkich możliwych tego rodzaju obliczeń, nazwana przez Turinga uniwersalną, stanowi teoretyczny projekt komputera cyfrowego. Wynik główny należy do logiki i podstaw informatyki. Jest nim dowód, że dla każdej maszyny istnieje liczba, której ona nie jest w stanie obliczyć, a więc że istnieją w matematyce problemy nierozstrzygalne. Wynik ten uzyskał Turing dzięki metodzie kodowania formuł-programów w postaci liczb naturalnych (której wzór dał Gödel w 1931 r.). Dzięki temu, przy zastosowaniu tzw. dowodu przekątniowego Cantora, staje się widoczne, że zbiór wszystkich maszyn (zdolnych obliczać z dowolną dokładnością nieskończone rozwinięcia dziesiętne), jako równoliczny ze zbiorem liczb naturalnych (co widać dzięki zakodowaniu), jest przeto mniej liczny niż zbiór wszystkich liczb mających takie rozwinięcia. A więc istnieją liczby nie dające się policzyć na żadnej maszynie.
+W swojej słynnej pracy "On Computable Numbers, with an Application to the Entscheidungsproblem" (złożonym 28 V 1936) przeformułował wyniki Kurta Gödela o ograniczeniach dowodów i obliczeń, zamieniając formalny język oparty na uniweralnej arytmetyce przez proste i sformalizowane urządzenia zwane dzisiaj maszynami Turinga. Dowiódł, że taka maszyna będzie w stanie przeprowadzić każdy wyobrażalny problem matematyczny jeśli tylko można przedstawić go w formie algorytmu - nawet jeśli żadna rzeczywista maszyna Turinga nie będzie miała zastosowania będąc znacznie wolniejsza niż inne rozwiązania. Maszyny Turinga do dzisiaj są głównym przedmiotem badań w teorii obliczeń. Udowodnił, że nie ma rozwiązania Entscheidungsproblem przez pokazanie, że nie da się oszacować kiedy maszyna Turinga skończy pracę, nie jest nawet możliwe określenie czy w ogóle skończy.
+W 1938 dostał stopień doktora w Princeton, jego rozprawa wprowadziła wyobrażenie _hypercomputation_ - maszyny Turinga zostały uzupełnione o tzw. wyrocznie, pozwalając badać problemy, których nie można rozwiązać algorytmicznie.
+W Cambridge w 1939 słuchał wykładów Ludwiga Wittgensteina o podstawach matematyki. Turing bronił formalizacji, natomiast Wittgenstein twierdził, że matematyka jest przewartościowana i nie odkrywa żadnych absolutnych praw.
+Kryptoanaliza:
+W czasie WWII był najważniejszym naukowcem w Bletchley Park. Do lat 70-tych było to tajemnicą, nawet jego bliscy przyjaciele o tym nie wiedzieli. Prowadził prace nad Enigmą i maszyną Lorenz SZ 40/42. Zrozumiał, że nie jest potrzebne przetestowanie wszystkich możliwych kombinacji do złamania Enigmy, dowiódł, że było możliwe przetestowanie poprawnych ustawień rotorów (około 1M kombinacji) bez analizy ustawień _plugboard_ (około 157M kombinacji). Chociaż nadal było to trudne zadanie było wykonalne przy użyciu elektromechanicznych maszyn - bomb (nazwanych tak od polskiego projektu), które mogły służyć do eliminacji dużej liczby ustawień Enigmy. Dla każdego możliwego ustawienia, łańcuch logicznych dedukcji był implementowany elektrycznie i można było wykryć kiedy zachodzi sprzeczność i ustawienie można odrzucić/wykluczyć. Bomba Turinga z udoskonaleniami zaproponowanym przez matematyka Gordona Welchmana była podstawowym narzędziem używanym przez brytyjskich i amerykańskich kryptoanalityków (pod koniec WWII ok. 200 szt). Projekt i produkcja - Harold Keen z British Tabulating Machine. W tym czasie Turing był szefem Hut 8 sekcji odpowiedzialnej za łamanie niemieckich szyfrów floty. wymyślił także technikę Banburismus do pomocy łamania Enigmy.
+Wymyślił metody na złamanie Tummy, nazwane Turingismus lub Turingery, choć niebyła to jedyna zastosowana metoda. Ostatecznie do łamania szyfrów Tummy zbudowano komputery Colossus (zaprojektowane i zbudowane w Post Office Research Station w Dollis Hill pod kierownctwem Thomasa Flowersa w 1943). Turing nie brał w tym bezpośredniego udziału.
+W późniejszym okresie wojny Turing podjął (z inżynierem Donaldem Bayley'em) projekt przenośnej maszyny o nazwie kodowej Delilah, mającym umożliwić bezpieczną komunikację głosową. W tym czasie uczył się teorii elektroniki. Zbudowano ją zbyt późno żeby weszła do użytku na wojnie, chociaż Turing zademonstrował ją oficjelom kodując/dekodując nagranie mowy Churchilla. Nigdy nie została zastosowana.
+Wczesne komputery i Test Turinga.
+1945-47 był w National Physical Laboratory, gdzie pracował nad projektem ACE (Automatic Computing Engine), pomino sukcesów ze względu na opóźnienia w rozpoczęciu projektu stracił nadzieje na osiągnięcie powodzenia i pod koniec 1947 wrócił do Cambridge. W 1949 prowadził laboratorium informatyczne University of Manchester i pracował nad oprogramowaniem dla jednego z pierwszych prawdziwych komputerów Manchester Mark I.
+W tym czasie kontunuował bardziej abstraktcyjne prace i w "Computing machinery and intelligence" (Mind, X 1950) podjął problem sztucznej inteligencji i zaproponował eksperyment znany jako test Turinga, próba zdefiniowana standardu dla maszyny, która mogłaby zostać określona jako świadoma.
+W latach 40-tych zaczął pisać program szachowy dla komputera, który jeszcze nie istniał, w 1952 z powodu braku mocy obliczeniowej do wykonania programu zagrał partię gdzie symulował komputer, jeden ruch zajmował około pół godziny, gra została zarejestrowana ale program zaginął.
+Praca nad tworzeniem wzorów i matematyczną biologią:
+1952-54 pracował nad matematyczną biologią, głównie morfogenezą. Opublikował artykuł "The Chemical Basis of Morphogenesis" w 1952. Jego głównym zainteresowaniem było zrozumienie Fibonacci phyllotaxis, obecności liczb Fibonacciego w strukturach roślinnych.
+Używał równań reakcja dyfuzja, które teraz są główne na polu tworzenia wzorów.
+Późne prace pozostały nieopublikowane aż do 1992 (Collected Works of A.M. Turing)
+Prześladowania za homoseksualizm i śmierć:
+W 1952 jego kochanek był uwikłany we włamanie i kradzież. Turing poszedł na policję, w wyniku śledztwa został oskarżony o związek seksualny z 19-latkiem, z czego groziły mu kary za zgorszenie i zboczenie seksualne. Nie okazał skruchy i nie bronił się, został skazany. Dano mu wybóru więzienie lub kurację hormonalną redukującą libido. Wybrał zastrzyki hormonalne - estrogen - co trwało rok i urosły mu piersi. W 1954 umarł po zjedzeniu połowy jabłka zatrutego cyjankiem, uważa się to za samobójstwo, chociaż jego matka zawzięcie tłumaczyła to przypadkiem wynikłym na skutek niedbałego traktowania chemikaliów, ale możliwe, że w ten dziwny sposób się zabił żeby umożliwić swojej mamie inne wyjaśnienie śmierci.
+Nagroda Turinga (Turing Award) jest przyznawana przez Association for Computing Machinery - powszechnie uważana za odpowiednik Nobla w informatyce.
+Latem 2004 powstał Instytut Alana Turinga (UMIST i University of Manchester).
+[_](http://www.turing.org.uk/turing/) [Alan_Turing (eng.)](http://en.wikipedia.org/wiki/Alan_Turing) [Alan_Mathison_Turing (pl.)](http://pl.wikipedia.org/wiki/Alan_Mathison_Turing)
+
+#### Konrad Zuse (1910-1995)
+
+[The Life and Work of Konrad Zuse by Prof. Horst Zuse](http://www.epemag.com/zuse/) [Konrad Zuse](http://ei.cs.vt.edu/~history/Zuse.html) [102.pdf](http://www.science.uwaterloo.ca/physics/p13news/pdfs/102.pdf) [0616.pdf](http://www.zib.de/zuse/Inhalt/Texte/Chrono/60er/Pdf/0616.pdf) [Konrad_Zuse (eng.)](http://en.wikipedia.org/wiki/Konrad_Zuse) [Konrad_Zuse (pl.)](http://pl.wikipedia.org/wiki/Konrad_Zuse)
+
+### Słownik pojęć
+
+#### Architektura von Neumanna
+
+to do
+[Von_Neumann_architecture](http://en.wikipedia.org/wiki/Von_Neumann_architecture) [Architektura_von_Neumanna](http://pl.wikipedia.org/wiki/Architektura_von_Neumanna)
+
+Komputer
+
+Jaki jest każdy widzi.
+
+#### Maszyna Turinga
+
+W 1936 roku Turing zajmował się on problemem z dziedziny czystej matematyki - możliwością użycia metod standardowych, schematycznych, do znajdowania rozwiązań problemów matematycznych. Wiele czynności przy dowodzeniu teorematu sprowadza się bowiem do mechanicznego operowania symbolami wedle określonych reguł. Procedura mechaniczna jest krokowym, dokładnie określonym, jednoznacznym operowaniem symbolami. Wyraża ją algorytm, opis postępowania w każdym wyznaczonym stanie.
+Zasługą Turinga jest stworzenie szczególnie eleganckiej i prostej postaci takiej maszyny, nazywanej na jego cześć Maszyną Turinga. Maszyna ta jest abstrakcyjna - zamiast arkusza papieru ma wyobrażoną nieskończoną jednorzędową taśmę na której kratkach zapisuje symbole. Każda komórka taśmy może być albo pusta lub zawierać jeden symbol ze skończonego ich zbioru, np. liczb lub liter alfabetu. Maszyna Turinga ma jakby "głowicę odczytująco-zapisującą", może więc określać jaki symbol znajduje się w danej komórce oraz zmienić go na inny, oczywiście wedle wskazanych reguł.
+Mniej więcej w dziesięć lat po pierwszej sugestii Turinga, matematyk John von Neumann i kilku jego kolegów uświadomiło sobie znaczenie logicznego schematu Turinga i zaczęło pracować nad jego urzeczywistnieniem w układach fizycznych, które działały jako procesory logiczne. [Turing_machine](http://en.wikipedia.org/wiki/Turing_machine) [Maszyna_Turinga](http://pl.wikipedia.org/wiki/Maszyna_Turinga)
+
+#### ONP
+
+
+[Polish_notation](http://en.wikipedia.org/wiki/Polish_notation) [Notacja_polska](http://pl.wikipedia.org/wiki/Notacja_polska) [Odwrotna_notacja_polska](http://pl.wikipedia.org/wiki/Odwrotna_notacja_polska) [Reverse_Polish_notation](http://en.wikipedia.org/wiki/Reverse_Polish_notation)
+
+#### Maszyna von Neumanna
+
+Zmienny wewnętrzny program działania. Ta przełomowa idea programowania pamięci została wymyślona przez Johna von Neumanna. Komputer mógł więc być programowany przez te same zewnętrzne urządzenia, klawiaturę czy taśmę perforowaną, które służą do wprowadzania danych. Mógł też szybko i łatwo zmieniać swoje działanie stosownie do uzyskiwanych wyników pośrednich.
+Nową i niezwykle ważną cechą schematu komputera von Neumanna było to, że programy i dane magazynuje w ten sam sposób, czyli jako ciągi cyfr dwójkowych. Program, tzn. zbiór rozkazów do dodawania, odejmowania lub manipulowania danymi, jest wprowadzany razem z samymi danymi do pamięci komputera. Procesor arytmetyczny maszyny odróżnia rozkazy od danych wyłącznie na podstawie ich różnego miejsca w pamięci.
+
+### Konstrukcje
+
+#### ABC
+
+to do
+
+- [Reconstruction of the Atanasoff-Berry Computer (ABC)](http://www.scl.ameslab.gov/ABC/)
+- [Atanasoff: Inventor, Problem-Solver and Inventor of Real Computer](http://www.intercom.net/local/shore_journal/joc10225.html)
+
+#### Apple
+
+
+[Apple_Computer](http://en.wikipedia.org/wiki/Apple_Computer) [Apple_I](http://en.wikipedia.org/wiki/Apple_I) [Apple_II_family](http://en.wikipedia.org/wiki/Apple_II_family) [Apple_Lisa](http://en.wikipedia.org/wiki/Apple_Lisa) [Apple_Macintosh](http://en.wikipedia.org/wiki/Apple_Macintosh)
+
+- [apple-history.com](http://www.apple-history.com/)
+- [Apple II History Home](http://apple2history.org/)
+- [Apple Computer Reading List](http://www.landsnail.com/apple/)
+- [Apple Computer The Early Days A Personal Perspective](http://www.laughton.com/Apple/Apple.html)
+- [Apple's 1984 Commercial](http://www.uriah.com/apple-qt/1984.html)
+- [Washington Apple Pi](http://www.wap.org/)
+- [Apple History, 1976-80](http://lowendmac.com/time/)
+- [Mac Systems: Apple](http://www.everymac.com/systems/apple/)
+- [Apple Emulator Resources Guide](http://www.zip.com.au/~alexm/faq/)
+- [Apple-II Public Domain File Archive](http://ground.icaen.uiowa.edu/)
+- [AppleCare Site Index](http://www.info.apple.com/siteindex.html)
+- [Jory's Apple Icon Garden](http://icongarden.jory.org/)
+- [Making the Macintosh: Technology and Culture in Silicon Valley](http://library.stanford.edu/mac/)
+- slashdot.org: [Apple: First to Latest](http://slashdot.org/article.pl?sid=01/04/09/0222250) [Making The Macintosh 1.0](http://slashdot.org/article.pl?sid=00/09/02/1245242) [NeXT Lives -- In Apple](http://slashdot.org/article.pl?sid=01/01/19/0423206) [The History Behind the Lisa UI](http://slashdot.org/article.pl?sid=00/02/12/1912229)
+- [The Apple Museum](http://www.theapplemuseum.com/)
+- [The Apple](http://reagan-era.martnet.com/Apple/)
+- [apple-history.com](http://www.apple-history.com/)
+- [Apple II Word](http://www.apple2world.jp/)
+
+#### Atari
+
+
+[Atari_ST](http://en.wikipedia.org/wiki/Atari_ST)
+
+- [atariarchives.org](http://www.atariarchives.org/)
+- [Atari 8 Bit](http://www.faqs.org/faqs/atari-8-bit/)
+- [Atari computers hardware](http://www.myatari.com/)
+- [Atari](http://www.atari.com/)
+- [Atari Explorer](http://www.atari-explorer.com/)
+- [Atari History Museum](http://www.atarimuseum.com/)
+
+#### CSIRAC
+
+
+[CSIRAC](http://en.wikipedia.org/wiki/CSIRAC)
+
+- [CSIRAC](http://www.cs.mu.oz.au/csirac/)
+- [Guide to the Records of CSIRAC](http://www.asap.unimelb.edu.au/pubs/guides/csirac/)
+
+#### Colossus
+
+
+[Bombe](http://en.wikipedia.org/wiki/Bombe) [Lorenz_SZ_40/42](http://en.wikipedia.org/wiki/Lorenz_SZ_40/42) [Colossus_computer](http://en.wikipedia.org/wiki/Colossus_computer)
+
+- [Colossus - The Worlds First Electronic Computer](http://www.picotech.com/applications/colossus.html)
+
+#### Commodore
+
+
+[Commodore_International](http://en.wikipedia.org/wiki/Commodore_International) [Commodore_PET](http://en.wikipedia.org/wiki/Commodore_PET) [Commodore_64](http://en.wikipedia.org/wiki/Commodore_64) [Amiga](http://en.wikipedia.org/wiki/Amiga) [A1000](http://en.wikipedia.org/wiki/A1000)
+
+- [Commodore 8-bit server](http://www.hut.fi/Misc/cbm/)
+- [PET User's Group](http://www.icomm.ca/tpug/) commodore
+- [Dan's 8-bit Commodore Info](http://www.npsnet.com/danf/cbm/)
+- [Commodore Article Index](http://home.att.net/~rmestel/articleindex.html)
+
+- [The Amiga Web Directory](http://www.cucug.org/amiga.html)
+- [Amiga: The Computer That Wouldn't Die](http://www.spectrum.ieee.org/WEBONLY/publicfeature/mar01/amig.html)
+- [NVG's Amiga page](http://oldwww.nvg.ntnu.no/amiga/index.eng.phtml)
+- [The Return of a Desktop Cult Classic (No, Not the Mac)](http://www.nytimes.com/library/tech/00/06/circuits/articles/22amig.html)
+- [My AMIGA page](http://darcy.flyingsquirrel.ca/amiga.html)
+
+#### DEC PDP
+
+- [PDP Unix Preservation Society Home Page](http://minnie.tuhs.org/PUPS/)
+- [DEC FAQ](http://www.faqs.org/faqs/dec-faq/)
+- [PDP 1](http://www.dbit.com/~greeng3/pdp1/)
+- [PDP 6](http://www.ai.mit.edu/people/tk/pdp6/pdp6.html)
+- [Highgate's PDP-8 Page](http://highgate.comm.sfu.ca/pdp8/)
+- [Online PDP-8 Home Page](http://www.pdp8.net/)
+- [PDP-8 Technology Before The Millennium](http://www.pdp8.com/)
+- [PDP-8.org a LINC, PDP-5, PDP-8 and PDP-12 resource](http://pdp-8.org/)
+- [Joe Smith PDP-10](http://www.inwap.com/pdp10/)
+- [PDP-10 FPGA clone](http://neil.franklin.ch/Projects/PDP-10/)
+- [YAPP - Yet another PDP-11 Page](http://www.psych.usyd.edu.au/pdp-11/)
+- [PDP 11 RT 11 Games](http://www.geocities.com/CapeCanaveral/5517/pdp11.htm)
+- [The PDP-11 FAQ](http://www.village.org/pdp11/faq.html)
+- [Ersatz-11 PDP-11 Emulation System](http://www.dbit.com/)
+- [nocrew's PDP-11 stuff](http://pdp11.nocrew.org/)
+- [ftp://ftp.village.org/pub/pdp-11](ftp://ftp.village.org/pub/pdp-11)
+
+#### EDVAC
+
+[EDVAC (eng.)](http://en.wikipedia.org/wiki/EDVAC) [EDVAC (pl.)](http://pl.wikipedia.org/wiki/EDVAC)
+
+#### EDSAC
+
+[EDSAC (eng.)](http://en.wikipedia.org/wiki/EDSAC)
+
+- [The Edsac Simulator](http://www.dcs.warwick.ac.uk/~edsac/)
+- [EDSAC 99](http://www.cl.cam.ac.uk/UoCCL/misc/EDSAC99/)
+
+#### ENIAC
+
+to do
+[ENIAC (eng.)](http://en.wikipedia.org/wiki/ENIAC) [ENIAC (pl.)](http://pl.wikipedia.org/wiki/ENIAC)
+
+- [The Women of ENIAC](http://www.gecdsb.on.ca/d&g/women/women.htm)
+- [The ENIAC, by Kevin W. Richey](http://ei.cs.vt.edu/~history/ENIAC.Richey.HTML)
+- [J. Presper Eckert & John Mauchly](http://inventors.about.com/library/inventors/bleniac.htm)
+- [John W. Mauchly and the Development of the ENIAC Computer](http://www.library.upenn.edu/exhibits/rbm/mauchly/jwmintro.html)
+- [ENIAC-on-a-Chip](http://www.upenn.edu/computing/printout/archive/v12/4/chip.html)
+- [ENIAC Computer](http://mason.gmu.edu/~montecin/eniac.html)
+- [ENIAC Versus the Pentium](http://www.bergtraum.k12.ny.us/cybereng/nyt/databox.htm)
+- [The ENIAC Museum Online](http://www.seas.upenn.edu/~museum/)
+- [Comparision - Eniac: 1946 Paragon: 1994](http://csep1.phy.ornl.gov/comp-phys/seminar/compare.html)
+- [ENIAC is built](http://www.pbs.org/wgbh/aso/databank/entries/dt45en.html)
+- [A Short History of the Second American Revolution](http://www.upenn.edu/almanac/v42/n18/eniac.html)
+- [Eniac Virtual Museum](http://www.cis.upenn.edu/~aakera/www_eniac.html)
+- [ENIAC-on-a-Chip](http://www.ee.upenn.edu/~jan/eniacproj.html)
+- [John Mauchly: The Computer and the Skateboard ENIAC EDVAC-UNIVAC](http://www.blastoffmedia.com/mauchly/)
+
+#### IBM
+
+[IBM_PC_compatible](http://en.wikipedia.org/wiki/IBM_PC_compatible) [IBM_PC](http://en.wikipedia.org/wiki/IBM_PC)
+
+#### Intel
+
+[Intel](http://en.wikipedia.org/wiki/Intel)
+
+#### LEO
+
+[LEO_computer](http://en.wikipedia.org/wiki/LEO_computer)
+
+- [About LEO](http://is.lse.ac.uk/leo/About_LEO.htm)
+- [LEO Computers Society](http://www.leo-computers.org.uk/)
+
+#### MITS Altair 8800
+
+- [Altair_8800](http://en.wikipedia.org/wiki/Altair_8800)
+- [The Virtual Altair Museum](http://www.virtualaltair.com/)
+- [MITS Altair 8800 Computer](http://mason.gmu.edu/~montecin/altair.html)
+- [The SIMH Altair 8800 Z80 simulator](http://www.schorn.ch/cpm/intro.html)
+
+#### Pentium
+
+to do
+[Pentium (eng.)](http://en.wikipedia.org/wiki/Pentium)
+
+#### Sinclair
+
+[Sinclair_Research](http://en.wikipedia.org/wiki/Sinclair_Research) [Sinclair_ZX80](http://en.wikipedia.org/wiki/Sinclair_ZX80) [Sinclair_ZX81](http://en.wikipedia.org/wiki/Sinclair_ZX81) [ZX_Spectrum](http://en.wikipedia.org/wiki/ZX_Spectrum)
+
+- [World of Spectrum](http://www.worldofspectrum.org/)
+- [Planet Sinclair](http://www.nvg.ntnu.no/sinclair/)
+
+#### SSEM
+
+[Small-Scale_Experimental_Machine](http://en.wikipedia.org/wiki/Small-Scale_Experimental_Machine) [Manchester_Mark_I](http://en.wikipedia.org/wiki/Manchester_Mark_I)
+
+- [Baby/Manchester SSEM](http://acorn.cybervillage.co.uk/emulation/baby/index.HTM)
+
+#### Tandy
+
+[TRS-80](http://en.wikipedia.org/wiki/TRS-80)
+
+- [Tandy Color Computer 3](http://www.axess.com/twilight/sock/)
+- [TRS-80 Revived Site](http://www.trs-80.com/)
+- [TRS-80 Support Site](http://www.trade80.com/trs80/)
+- [TRS-80 Home Page](http://www.kjsl.com/trs80/)
+- [Tim Mann's TRS-80 Pages](http://www.tim-mann.org/trs80.html)
+
+#### TX-0
+
+[TX-0](http://en.wikipedia.org/wiki/TX-0)
+
+#### UNIVAC
+
+- [univac](http://members.tripod.com/~Helicopterman/blank-7.html)
+- [UNIVAC Memories](http://www.fourmilab.ch/documents/univac/)
+
+#### VAX
+
+- [VAXarchive](http://vaxarchive.org/)
+- [VAXbar](http://toyvax.glendale.ca.us/~vance/vaxbar.html)
+- [eVAX](http://www.forest-edge.net/evax.html)
+- [VAX images](http://www.netbsd.org/images/machines/vax/)
+
+#### ZiLOG
+
+[ZiLOG](http://en.wikipedia.org/wiki/Zilog) [Zilog_Z80](http://en.wikipedia.org/wiki/Zilog_Z80)
+
+### Odnośniki
+
+#### Ogólnie
+
+- Stephen White: [A Brief History of Computing](http://www.ox.compsoc.net/~swhite/history/) [[_2_]](http://www.ox.compsoc.org.uk/~swhite/history/)
+- [Meccano - Computing Machinery web site](http://www.meccano.us/)
+- Computational Science Education Project - An Overview Of Computational Science: [3\. A Brief History of Computer Technology](http://csep1.phy.ornl.gov/ov/node8.html)
+- [Historia komputera](http://historia.adrem.pl/)
+- [Serwis Edukacyjny - I LO Informatyka - Historia](http://www.i-lo.tarnow.pl/edu/inf/hist.html) [Historia Komputerów](http://www.i-lo.tarnow.pl/edu/inf/hist/historia/)
+- [Skąd się to wzięło?](http://www.phys.uni.torun.pl/~duch/books-fsk/historia/historia.html)
+- [Prehistoria informatyki](http://www.ii.uni.wroc.pl/~eko/Prehistoria/)
+- [historia informatyki: spis treści](http://www.pldos.pl/bogus/spis.htm)
+- [wikipedia: Category:Computing](http://en.wikipedia.org/wiki/Category:Computing) [wikipedia: Kategoria:Informatyka](http://pl.wikipedia.org/wiki/Kategoria:Informatyka) [Heliopedia - sieciowa encyklopedia informatyki](http://encyklopedia.helion.pl/index.php/Strona_główna)
+- [NetHistory](http://nethistory.dumbentia.com/)
+- [Informatyka - i10 - magazyn](http://www.wszpwn.com.pl/i10/index.htm)
+- [Gresham College "Computers: A History" [YT 1:01:35]](https://www.youtube.com/watch?v=OwQ9DFeJysw)
+
+#### Artykuły
+
+- John A. Clark's Website: [History of Computers](http://members.lycos.co.uk/johnclark/comput.htm)
+- Cyberspace Companion: [Computers: From Past to Present - A Lecture by Michelle A. Hoyle](http://w3.aces.uiuc.edu/AIM/scale/comphistory.html)
+- [Timeline of the development of digital computers](http://www.labyrinth.net.au/~saul/history/compute.html)
+- [Historia komputerów](http://users.vlo.ids.gda.pl/~okrasz/polski/komputer/)
+- CHIP.pl: [Współczesny Robin Hood? [2004-02-10]](http://www.chip.pl/arts/archiwum/n/articlear_84001.html), [Stulecie tranzystora [2001-01-24]](http://www.chip.pl/archiwum/article_10882.html), [Zaplątani w Sieć [2001-03-8]](http://www.chip.pl/archiwum/article_10617.html)
+- [Cmentarzysko technologii](http://komputery.wp.pl/kat,12773,wid,8070156,wiadomosc.html)
+
+#### Konkretne urządzenia
+
+#### Liczydło
+
+- [The Abacus](http://www.ee.ryerson.ca:8080/~elf/abacus/)
+- [The Abacus: A History](http://fenris.net/~lizyoung/abacus.html)
+- [Abacus in Various Number Systems](http://www.cut-the-knot.com/blue/Abacus.shtml)
+- [The Abacus - Mathematics and the Liberal Arts](http://mtcs.truman.edu/~thammond/history/Abacus.html)
+- [From Abacus to Computer: The History of Computing Machines](http://teacher.scholastic.com/fieldtrp/math/compute.htm)
+- [The Abacus](http://www.ee.ryerson.ca:8080/~elf/abacus/)
+
+#### Mechanizm z Antikythery
+
+- [Antikythera_mechanism](http://en.wikipedia.org/wiki/Antikythera_mechanism)
+- [The Antikythera Mechanism](http://www.giant.net.au/users/rupert/kythera/kythera.htm)
+- [The Antikythera Mechanism I](http://www.math.sunysb.edu/~tony/whatsnew/column/antikytheraI-0400/kyth1.html) [The Antikythera Mechanism II](http://www.math.sunysb.edu/~tony/whatsnew/column/antikytheraII-0500/diff1.html)
+
+#### Paskalina
+
+- [Blaise Pascal i paskalina](http://www.robo.pl/index.php?sa=1&id=010601&jezyk=0)
+
+#### Maszyny Babbage'a
+
+- [The Analytical Engine](http://www.fourmilab.to/babbage/) [[_2_]](http://www.fourmilab.ch/babbage/)
+- [Babbage Difference Engine #2 - How to Initialize the Machine](http://ed-thelen.org/bab/)
+- [Charles Babbage Institute](http://www.cbi.umn.edu/)
+
+- [The History of the Web](https://thehistoryoftheweb.com)
+
+#### YT
+
+- Robert Klips ["John von Neumann" [YT 59:32]](https://www.youtube.com/watch?v=Y2jiQXI6nrE)
+
+#### inne
+
+inne: [Czy komputer przecieka?](http://kiosk.onet.pl/art.html?DB=162&ITEM=1213403&KAT=243) [Proroctwa Billa Gatesa](http://gospodarka.gazeta.pl/gospodarka/1,49621,2826811.html) http://www-db.stanford.edu/~backrub/google.html The Anatomy of a Large-Scale Hypertextual Web Search Engine [Report on Last Decade of Online Advertising](http://slashdot.org/article.pl?sid=05/04/19/1847254) A History of the Microprocessor http://www.intel.com/intel/museum/25anniv/ index.htm History of IBM http://www.ibm.com/ibm/history/ Computing's Millennium Timeline http://www2.vnu.co.uk/v5_static/v5_features/ timelines The Virtual Altair Museum http://exo.com/~wts/wts10005.HTM The Apple Museum http://www.applemuseum.seastar.net/ The Virtual Museum of Computing http://www.nma.gov.au/vlmp/ computing.html#museums Mind Machine Museum http://userwww.sfsu.edu/~hl/mmm.html Obsolete Computer Museum http://www.obsoletecomputermuseum.org/ http://www.chip.pl/archiwum/article_10617.html Zaplątani w Sieć [2001-03-8] http://www.telegeography.com/

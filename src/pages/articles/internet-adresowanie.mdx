@@ -1,0 +1,853 @@
+---
+title: "Internet - adresowanie"
+comment: ""
+section: "it"
+subsection: "internet"
+---
+
+## Adresowanie
+
+### Adresowanie IP
+
+Adresowanie IP
+
+Adresy IP to unikalny w ramach danej sieci ciąg 32 bitów. Dla wygody podzielony jest na 4 bajty (lub używając pierwotnej, starszej terminologii: oktety; pojęcie bajtu pojawiło się później niż adresy IP). Wygląda to tak:
+
+```
+10101100 00011101 00100000 01000010
+```
+
+Zwykle zapisywany jest w dużo wygodniejszej formie dziesiętnej (tzw. format kropkowo-dziesiętny):
+
+```
+172.29.32.66
+```
+
+Czasem jest jeszcze używany zapis szesnastkowy (heksadecymalny):
+
+```
+Oxacld2042
+```
+
+Adres IP składa się z dwóch części:
+
+- adres sieci - wskazuje na sieć, do której jest przypięty komputer, zawiera starsze bity, pierwsze z nich określają klasę sieci, w pierwotnej wersji był to pierwszy oktet, ale ponieważ szybko się okazało, że ARPANET połączy więcej niż 256 sieci wydzielono trzy klasy 32-bitowych adresów
+- Klasa A - pierwszy bit adresu jest równy 0, kolejne 7 określa sieć (identyfikator sieci), a pozostałe 24 adres komputera w tej sieci (deskryptor hosta); 0.b.c.d i 127.b.c.d są zastrzeżone: 0.0.0.0 oznacza tzw, drogę domyślną (default route) w konfiguracjach ruterów a każdy adres z 127. jest traktowany jako adres zwrotny (loopback address), pod tym adresem każdy komputer widzi samego siebie niezależnie od własnego adresu sieciowego (mechanizm loopback jest potrzebny do prawidłowej pracy oprogramowania sieciowego)
+- Klasa B - pierwsze bity to 10 (dwubitowy prefiks 10), kolejne 14 określa sieć (14-bitowy adres sieci), pozostałe 16 hosta (16-bitowy identyfikator hosta)
+- Klasa C - trzy pierwsze bity to 110 (trzybitowy prefiks 110), dalsze 21 to adres sieci, pozostałe 8 to komputer
+- adres hosta - jest adresem komputera w obrębie powyższej sieci
+
+adresy prywatne:
+10.0.0.0 10.255.255.255
+172.16.0.0 172.31.255.255
+192.168.0.0 192.168.255.255
+169.254.0.0 169.254.255.255
+a 0.0.0.0 127.255.255.255
+b 128.0.0.0 191.255.255.255
+c 192.0.0.0 223.255.255.255
+
+HMPTODO
+
+| Klasa adresu | Początkowe bity | Zakres; przybliżony i dokładny | Część sieciowa / hostowa | Maksymalna liczba sieci / hostów w sieci | Adresy przeznaczone do użytku w sieciach prywatnych(mogą być używane bez zgody InterNIC)adresy prywatne - nierutowalne |
+| --- | --- | --- | --- | --- | --- |
+| Klasa A | 0... | 1 - 1261.0.0.0 - 126.0.0.0 | a / b.c.d | 126 / 16 777 214 | 10.0.0.0 - 10.255.255.255maska: 255.0.0.0 |
+| Klasa B | 10... | 128 - 191128.0.0.0 - 191.255.255.255 | a.b / c.d | 16 384 / 65 534 | 172.16.0.0 - 172.31.255.255(14 bitów na adres sieci, 16 bitów na adres hosta)maska: 255.240.0.0 |
+| Klasa C | 110.. | 192 - 223192.0.0.0 - 223.255.255.254 | a.b.c / d | 2 097 152 / 254 | 192.168.0.0 - 192.168.255.255maska: 255.255.0.0 |
+| Klasa D | 1110... | 224 - 239224.0.0.0 - 239.255.255.255 | Adresy grupowe | | |
+| Klasa E | 1111... | 240 - 254 | Zarezerwowane do badań, eksperymentów | | |
+
+Adres hosta nie może składać sie z samych zer (0) i samych jedynek (255).
+
+Zakresy adresów
+
+- Klasa A: a.0.0.1 - a.255.255.255
+- Klasa B: a.b.0.1 - a.b.255.254
+- Klasa C: a.b.c.1 - a.b.c.254
+
+Adresy grupowe (ang. _multicast addresses_) są częścią zarezerwowanego zakresu adresów (a=224-254). Służą do adresowania całej grupy hostów, tak jakby stanowiły jednostkę. Wykorzystuje się je do aplikacji (np. wideokonferencje) i przydziela tymczasowo. W przeciwieństwie do nich zwykłe adresy IP są czasami określane jako adresy indywidualne (ang. _unicast addresses_).
+Domyślna maska podsieci: 240.0.0.0; nie wprowadza się podziału na część sieciową i hostową.
+
+Niektóre wartości bajtów adresu sieciowego mają specjalne znaczenie:
+
+- Adres, którego część hostowa jest równa 0 (0 oznacza "ta sieć"), odwołuje się do samej sieci. Sieć 0.0.0.0 jest czasem wykorzystywana do odwoływania się do sieci lokalnej
+- Adres 127.0.0.1 jest zawsze przypisywany interfejsowi pętli zwrotnej (ang. loopback). Reszta sieci 127.0 jest zarezerwowana.
+- Adres, w którym wszystkie bity części hostowej są jedynkami (255), definiuje adres rozgłoszeniowy (ang. broadcast address) dla sieci: adres docelowy, którego komputer używa, gdy chce wysłać żądanie do każdego hosta w sieci lokalnej. burze broadcastowe sa zatrzymywane segmentacją sieci przez rutery, które uniemożliwiają ich przesyłanie
+- 127 - końcówka zarezerwowana dla pętli, kiedy host odwołuje się do tego adresu dostaje odpowiedź od samego siebie
+
+Maska podsieci jest 32-bitowym adresem, którego zadaniem jest oddzielić identyfikator sieci od identyfikatora hosta, ma umożliwić weryfikację czy docelowy adres znajduje się w tej samej sieci.
+
+Domyślne maski podsieci wyglądają tak: HMPTODO
+
+| Klasa | Maska w postaci binarnej | Maska w postaci dziesiętnej |
+| --- | --- | --- |
+| Klasa A | 11111111 00000000 00000000 00000000 | 255.0.0.0 |
+| Klasa B | 11111111 11111111 00000000 00000000 | 255.255.0.0 |
+| Klasa C | 11111111 11111111 11111111 00000000 | 255.255.255.0 |
+
+Przykładowo dla klasy A wygląda to tak:
+
+```
+bajt a.b.c. d
+adres 121. 168. 100. 20
+maska 255.0.0. 0
+adres sieci 121.b.c. d
+adres hosta a. 168. 100. 20
+```
+
+Jest to IP hosta o adresie 168.100.20 wpiętego do sieci o adresie 121.
+Tak duża sieć może zostać podzielona poprzez zmianę domyślnej maski 255.0.0.0 na np. 255.255.0.0.
+
+```
+bajt a.b.c. d
+adres 121. 168. 100. 20
+maska podsieci255. 255.0. 0
+adres sieci 121.b.c. d
+adres podsiecia. 168.c. d
+adres hosta a.b. 100. 20
+```
+
+W tym przypadku jest to host o adresie 100.20 wpięty do sieci o adresie 168 należącej do sieci 121
+
+Istnieje możliwość podzielenia dostępnej dla danej sieci puli adresowej na podsieci przy użyciu tzw. maski podsieci. Jest zbudowana tak jak adres IP tylko, że składa się z samych jedynek i zer (wyrażając to w bajtach: 255 i 0) - jedynki wskazują na adres podsieci, zera na adres hosta w tej podsieci.
+
+```
+128.17.75.20 - adres
+255.255.255.0 - maska podsieci
+128.17.75.0 - adres sieci
+20 - adres hosta w tej sieci
+```
+
+Czyli zamiast hosta przyłączonego do sieci 187.17, który ma w niej adres 75.20 mamy host o adresie 20 w podsieci 75 w sieci 187.17.
+
+Maska podsieci służy także do sprawdzania czy dany adres należy do tej samej podsieci.
+Sprawdzane jest to za pomocą operacji nazwanej ANDowaniem (od operatora logicznego AND; iloczyn logiczny).
+Przeprowadzane jest to w następujący sposób na posatci binarnej adresu.
+
+```
+adres źródłowy 11000000 10101000 01100100 01000110
+maska podsieci 11111111 11111111 11111111 00000000
+wynik 11000000 10101000 01100100 00000000
+```
+
+Taka sama operacja dokonywana jest na adresie docelowym, jeśli ich wynik jest identyczny oznacza to, że oba adresy należą do tej samej sieci, jeśli się różnią pakiet wysyłany jest na domyślny adres rutera.
+
+Granice maski podsieci nie muszą przebiegać na końcach bajtów.
+
+| Liczba zajętych bitów | Maska podsieci | Ilość sieci / hostów w podsieci |
+| --- | --- | --- |
+| Klasa A | | |
+| 2 | 255.192.0.0 | 2 / 4 194 302 |
+| 3 | 255.224.0.0 | 6 / 2 097 150 |
+| 4 | 255.240.0.0 | 14 / 1 048 574 |
+| 5 | 255.248.0.0 | 30 / 524 286 |
+| 6 | 255.252.0.0 | 62 / 262 142 |
+| 7 | 255.254.0.0 | 126 / 131 070 |
+| 8 | 255.255.0.0 | 254 / 65 534 |
+| Klasa B | | |
+| 2 | 255.255.192.0 | 2 / 16 382 |
+| 3 | 255.255.224.0 | 6 / 8 190 |
+| 4 | 255.255.240.0 | 14 / 4 094 |
+| 5 | 255.255.248.0 | 30 / 2 046 |
+| 6 | 255.255.252.0 | 62 / 1 022 |
+| 7 | 255.255.254.0 | 126 / 510 |
+| 8 | 255.255.255.0 | 254 / 254 |
+| Klasa C | | |
+| 2 | 255.255.255.192 | 1-2 / 62 |
+| 3 | 255.255.255.224 | 3-6 / 30 |
+| 4 | 255.255.255.240 | 7-14 / 14 |
+| 5 | 255.255.255.248 | 15-30 / 6 |
+| 6 | 255.255.255.252 | 31-62 / 2 |
+
+#### CIDR (Classless InterDomain Routing), supernetting
+
+##### Wprowadzenie CIDR
+
+Adres IP jest podzielony na dwie części: adres sieci (który identyfikuje sieć i podsieć) i adres hosta (który identyfikuje połączenie lub interfejs seciowy konkretnej maszyny w tej sieci), ten podział jest używany do kontrolowania jak ruch jest rutowany w i przez sieci IP.
+Historycznie adres IP był podzielony na trzy główne klasy sieci, gdzie każda klasa miała określoną wielkość sieci, klasa a więc długość maski podsieci i liczba hostów w sieci była określona przez najbardziej znaczące bity w adresie IP. Bez żadnego innego sposobu określnia długości podmaski protokoły rutingu musiały używać klasy adresu IP określonego w ogłoszeniach rutingu (route advertisements) by wyznaczyć wielkość rutującego prefixu do ustawienia w tablicach rutingu.
+
+Wprowadzony w 1993 CIDR jest usprawnieniem sposobu interpretacji adresu IP, zamienił poprzednią generację składni adresów IP: sieci klasowych (classful networks). Pozwoliło to zwiększyć elastyczność dzielenia zakresów adresów IP pomiędzy oddzielne sieci; zalety:
+
+- Wydajniejsze wykorzystanie adresów IPv4
+- Grupowanie prefiksów - co obniża przeciążenie rutingu
+
+Ponieważ duża część adresów klasy A i B nie zostaje wykorzystana, niewiele organizacji, którym przydzielono te klasy potrzebuje milionów adresów. Zasada działania techniki CIDR polega na tym, że zamiast pełnej klasy A czy B przyznaje się ciągły blok adresów klasy C o wspólnych najbardziej znaczących bitach określających podsieć, przy czym najmniej znaczące bity adresu sieci przydzielane są na potrzeby identyfikacji hosta.
+I tak przykładowo wykorzystując trzy kolejne klasy C od 192.199.199.5 do 192.199.199.7 otrzymujemy podsieć o pojemności 768 adresów określaną maską 255.255.252.0 - wspólne 22 najstarsze bity adresu.
+Jednak technikę tę można zastosować tylko dla co najwyżej kilku tysięcy adresów (trudno znaleźć większy blok wolnych adresów) a wszystkie urządzenia w tej sieci muszą obsługiwać tą technikę.
+
+Umożliwia jednostkom które wystąpiły o adres klasy B przydzielenie ciągu klasy C.
+
+##### CIDR i maski
+
+Maska podsieci jest maską bitową która pokazuje gdzie się kończy adres sieci a gdzie zaczyna adres hosta. CIDR używa zmiennej długości maski podsieci (VLSM - variable length subnet masks), żeby alokować adres IP do podsieci zgodnie z potrzebami raczej niż z jakąś ogólną dla całej sieci zasadą, tak więc podział na część sieciową i hostową może wypaść na każdej granicy bitów w adresie, proces może być rekursywny, z częścią przestrzeni adresowej będącą dalej dzieloną na mniejsze części, poprzez użycie masek zakrywających więcej bitów.
+Ponieważ podział na normalne klasy jest pomijany, ten system nazywany jest bezklasowym i dlatego poprzedni system został nazwany, przez analogię rutowaniem klasowym (_classful routing_).
+Adresy sieci CIDR/VLSM są teraz używane zarówno w publicznym internecie jak i w dużych sieciach prywatnych, ale w przeciętnej wielkości sieci LAN raczej używa się specjalnych prywatnych adresów określonych przez RFC 1918.
+
+Inną zaletą CIDR jest możliwość agregacji prefiksów (_prefix aggregation_), np. 16 ciągłych /24 sieci może być połączonych razem i ogłoszonych zewnętrznemu światu jako pojedyncza /20 droga (route) (jeśli pierwszych 20 bitów ich sieci pasuje), dwie ciągłe /20 mogą być połączone w jedną /19 itd. To pozwala na znaczącą redukcję w liczbie rutowań, które muszą być ogłoszone w sieci, zabezpieczając przed "eksplozją tablicy rutowań" co przeciażyłoby rutery i zatrzymało rozwój internetu.
+Obecnie większość publicznego internetu nie rutuje niczego dłuższego niż prefix /19, efektywnie zabezpieczając małe sieci od wychodzenia poza agregator rutingu taki jak ISP.
+
+##### Zapis CIDR
+
+Standardowy zapis zasięgu adresów CIDR zaczyna się od adresu sieci dopełnionego w prawo właściwą liczbą bitów zero - do 4 oktetów dla IPv4 i do 18 heksadecymalnych pól dla IPv6) potem jest znak slasza "/" i długość prefiksu w bitach, definująca długość maski podsieci, określającej rozmiar sieci.
+Na przykład:
+
+- 192.168.0.0 /24 reprezentuje 256 adresów IPv4 od 192.168.0.0 do 192.168.0.255 włącznie, z 192.168.0.255 jako adresem rozgłoszeniowym (broadcast) dla sieci.
+- 192.168.0.0 /22 reprezentuje 1024 adresów IPv4 od 192.168.0.0 do 192.168.3.255 włącznie, z 192.168.3.255 jako adresem rozgłoszeniowym (broadcast) dla sieci.
+- 2002:C0A8::/48 reprezentuje adresy IPv6 od 2002:C0A8:0:0:0:0:0:0 do 2002:C0A8:0:FFFF:FFFF:FFFF:FFFF:FFFF, włącznie.
+
+Dla IPv4 alternatywna reprezentacja używa adresów sieci po których jest maska podsieci zapisana w kropowo-dziesiętnym formacie:
+
+- 192.168.0.0 /24 może być zapisane jako 192.168.0.0 255.255.255.0
+- 192.168.0.0 /22 może być zapisane jako 192.168.0.0 255.255.252.0
+
+Zakresy adresów w podsieci są najcześciej określane za pomocą notacji CIDR:
+
+192.168.249.42/23 oznacza, że adresy IP w tej podsieci muszą mieć pierwsze 23 bity takie same jak w adresie 192.168.249.42 - który ma reprezentację dwójkową:
+
+```
+11000000 101010000 11111001 00101010
+```
+
+zatem każdy host z pierwszymi 23 bitami jak w powyższej masce należy do sieci, czyli zakres obejmuje od
+
+```
+11000000 101010000 11111000 00000000 - 192.168.248.0
+```
+
+do
+
+```
+11000000 101010000 11111001 11111111 - 192.168.249.255
+```
+
+podobnie podsieć 192.168.249.42/29 obejmuje adresy od 192.168.249.40 do 192.168.249.47
+
+#### NAT (Network Address Translation), network masquerading, IP-masquerading
+
+Technika translacji adresów sieciowych.
+Wraz ze wzrostem ilości komputerów w Internecie, zaczęła zbliżać się groźba wyczerpania puli dostępnych adresów internetowych IPv4.
+Aby temu zaradzić, lokalne sieci komputerowe, korzystające z tzw. adresów prywatnych (specjalna pula adresów tylko dla sieci lokalnych), mogą zostać podłączone do internetu przez jeden komputer (lub router), posiadający mniej adresów internetowych niż komputerów w tej sieci.
+Router ten, gdy komputery z sieci lokalnej komunikują się ze światem, dynamicznie tłumaczy adresy prywatne na adresy zewnętrzne, umożliwiając użytkowanie Internetu przez większą liczbę komputerów niż posiadana liczba adresów zewnętrznych.
+
+NAT stał się popularny jako sposób radzenia sobie z brakiem adresów IPv4 i żeby uniknąc trudności związanych z rezerwowaniem adresów IP. Użycie NAT stało się szczególnie popularne w krajach innych niż USA, gdzie z historycznych powodów zostało już niewiele bloków adresowych per capita. Jest właściwie standardową właściwością w ruterach domowych i dla małych biur.
+
+Adresy IP źródłowy i/lub przeznaczenia pakietów są przepisywane kiedy przechodzą przez ruter lub firewall, najczęściej w celu umożliwienia wielu hostom z prywatnej sieci dostępu do internetu przy użyciu pojedynczego publicznego adresu IP. Zgodnie ze specyfikacją rutery nie powinny postępować w ten sposób, ale jest to powszechnie stosowana i popularna technika. Niestety NAT wprowadza komplikacje w komunikację pomiedzy hostami.
+
+Polega na zastosowaniu w sieci wewnętrznej odmiennej puli adresów niż te które są wykorzystywane do komunikacji z resztą internetu. W tym celu niezbędny jest serwer, który dokona konwersji adresów internetowych na właściwe adresy używane do komunikacji zewnętrznej.
+
+Mechanizm NAT tłumaczy (multipleksuje czyli przełącza) adresy prywatne na publiczne wykorzystując mechanizm portów, komputer pełniący rolę bramy udostępnia na żądanie maszyny z sieci lokalnej własne porty TCP/IP modyfikując odpowiednio nagłowki wysyłanych przez nie pakietów, zmieniany jest adres (a czasem i port) źródłowy. Od strony internetu widziany jest tylko ruter, jest to nazywane overloadingiem (najpopularniejszy sposób implementacji NAT) bo adres publiczny jest przeciążany.
+Aby przesłać pakiety dalej ruter dokonujący translacji korzysta ze specjalnej tabeli kojarzącej adresy portów TCP/IP rutera na adresy prywatne komputerów w sieci lokalnej. Tabela ta może być statyczna (ustalona przez administratora) lub dynamiczna (tworzona przez ruter w trakcie pracy), na jej podstawie przeprowadzana jest operacja odwrotna adresy docelowe są zmieniane tak, żeby dane docierały do maszyn lokalnych
+
+W typowej konfiguracjil lokalna sieć używa jednego z zarezerwowanych prywatnych podsieci (takich jak 192.168.x.x lub 10.x.x.x) i ruter tej sieci ma prywatny adres (taki jak 192.168.0.1) w tej przestrzeni adresowej. Jest również połączony z internetem pojedynczym adresem IP przydzielonym przez ISP. Kiedy ruch idzie z prywatnej sieci do internetu, źródłowe adresy pakietu są tłumaczone w locie z prywatnych adresów na publiczne, ruter śledzi podstawowe dane o każdym aktywnym połączeniu (szczególnie o adresie i porcie przeznaczenia). Kiedy odpowiedź wraca do rutera, te dane o połączeniu przechowane podczas wysyłania (outbound phase) służą do określenia, w które miejsce w wewnętrznej sieci przekazać odpowiedź. Dla systemu w internecie ruter pojawia się jako źródło/przeznaczenie tego ruchu.
+
+Nawet pełna klasa adresów C przydzielona komputerom w sieci wewnętrznej może być widziana od strony internetu jako jeden adres IP. Same adresy wewnętrzne nie muszą spełniać wymogu niepowtarzalności w skali całego internetu, gdyż pakiety z sieci wewnęrznej nigdy nie są przez mechanizm NAT wysyłane bezpośrednio do adresata. Dodatkowo można wykorzystać specjalne klasy zalecanych adresów intranetowych - pochodzące z tych adresów pakiety są blokowane przez rutery obsługujące ruch w internecie, co zabezpiecza przed kolizjami pomiędzy sieciami intranetowymi wykorzystującymi te same klasy adresowe.
+
+NAT jest też wykorzystywany do prostej i skutecznej dystrybucji ruchu TCP/IP w sieci lokalnej, jeśli kilka maszyn ma być widzianych pod jednym adresem (dla rozłożenia obciążenia), stosuje się wtedy mechanizm odwrotny tzw. DNAT (Destination NAT) w pakiecie incjującym połączenie zmienia się adres docelowy a nie źródłowy
+
+Zalety:
+Brak bezpośredniego połączenia może być czasem korzyścią, a nie wadą.
+NAT jest często stosowany w sieciach korporacyjnych (w połączeniu z proxy) oraz sieciach osiedlowych.
+Zaletą takiego systemu jest większe bezpieczeństwo komputerów znajdujących się za NAT-em.
+Powodem zastosowania NAT jest bezpieczeństwo, ponieważ wszystkie interfejsy sieciowe są widoczne na zewnątrz jak jeden adres o wiele trudniej przeprowadzić skanowanie i atak, trudne jest ustalenie topologii sieci i zaatakowanie konkretnej maszyny. To utrudnienie wrogiej aktywności zabezpiecza prywatność i często stosowane jest jako metoda ochronna.
+
+Z korzystaniem z Internetu poprzez NAT wiążą się wady:
+
+- Hosty za używającym NAT-u ruterem nie mają prawdziwej łączności end-to-end i nie mogą brać udziału w niektórych protokołach internetowych. Usługi wymagające inicjacji połączenia z zewnętrznej sieci lub bezstanowe protokoły takie jak te, które używają UDP mogą być przerywane. O ile ruter NAT nie zostanie specjalnie skonfigurowany, żeby wspierać takie protokoły przychodzące pakiety nie będą mogły dotrzeć od celu, niektóre protokoły są w stanie przystosować jedną instancję NAT-u pomiędzy hostami (np. tryb pasywny w FTP), czasem z pomocą Application Layer Gateway, ale zawodzą kiedy oba komputery są za NAT-em. Także komplikuje protokoły bezpieczeństwa takie jak IPSec (fragmenty pakietów zamieniane przez NAT są zaszyfrowane więc translacja adresów jest niemożliwa) i utrudnia korzystanie z P2P i bezpośredniego wysyłania plików.
+Translacja powoduje, że niektóre aplikacje nie będą prawidłowo działać, gdyż serwer danej usługi wstawia adres odbiorcy do danych pakietu (a więc w tym przypadku adres serwera NAT a nie rzeczywistego odbiorcy pakietu) a tego serwer NAT nie jest w stanie zmienić.
+- Połączenia end-to-end były podstawową zasadą internetu, wspieraną dla przykładu przez IAB i dlatego niektórzy uważają NAT za uszczerbek dla internetu. Niektórzy ISP przydzielają klientom tylko lokalny IP i łączą ich z internetem przez NAT, powstaje wtedy pytanie czy rzeczywiście można to nazwać usługą internetową.
+- Niestety sposób działania niektórych protokołów uniemożliwia prostą translację adresów, np. aktywne FTP jest niemożliwe bo wtedy klient nawiązuje połączenie i wskazuje prywatny adres i port, który jest niezgodny z NATem, jedynym wyjściem jest skorzystanie z trybu pasywnego gdzie to serwer nakazuje klientowi połączenie z odpowiednim adresem/portem i pobieranie danych
+- Trudności sprawiają również PING, IRC i ICQ.
+- Utrudnione jest również udostępnienie jakiejkolwiek usługi (np. serwera) na maszynie za NATem, bo bedzie widoczna tylko w sieci lokalnej, rozwiązaniem tego problemu jest mechanizm przekazywania adresów IP (IP forwarding), który polega na statycznym ustawieniu translacji określonego portu rutera na adres /port komputera w sieci lokalnej.
+- Obniża wydajność sieci, gdyż każdy przesyłany pakiet danych musi zostać przeanalizowany a następnie przekierowany do właściwego odbiorcy.
+
+Czasem w celu rozwiązania problemu można nagiąć reguły translacji adresów używając IPautofw, ale ostrożnie bo może to narazić politykę bezpieczeństwa.
+
+Inne przykłady użycia
+
+- Zarządzanie ruchem (Load Balancing): docelowy NAT może przekierować połączenia wskazujące na określony serwer na przypadkowo wybrane serwery.
+- Serwis rezerwowy (Fail over): docelowy NAT może być użyty do ustawienia usługi wymagającej wysokiej dostępności, jeśli system zawiera krytyczny serwer dostępny przez ruter, który wykryje, że ten serwer przestał działać, może użyć przeznaczenia NAT do przekierowania ruchu na zastępczy serwer (_backup server_).
+- Przezroczyste proxy (Transparent proxying): NAT może przekierować połączenia HTTP skierowane w internet na specjalne HTTP proxy które może buforować zawartość i filtrować zapytania, niektórzy ISP używają tej techniki do zmiejszenia ruchu bez wymagania od swoich użytkowników by skonfigurowali swoje przeglądarki do użycia proxy.
+
+Można wyróżnić 2 podstawowe typy NAT:
+
+- SNAT (Source Network Address Translation) to technika polegająca na zmianie adresu źródłowego pakietu IP na jakiś inny. Stosowana często w przypadku podłączenia sieci dysponującej adresami prywatnymi do sieci Internet. Wtedy router, przez którego podłączono sieć, podmienia adres źródłowy prywatny na adres publiczny (najczęściej swój własny).
+Szczególnym przypadkiem SNAT jest maskarada mająca miejsce, gdy router ma zmienny adres IP (np. otrzymuje go w przypadku połączenia modemowego wdzwanianego). Wtedy router zmienia adres źródłowy na taki, jak adres interfejsu, przez który pakiet opuszcza router.
+- DNAT (Destination Network Address Translation) to technika polegająca na zmianie adresu docelowego pakietu IP na jakiś inny. Stosowana często w przypadku, gdy serwer mający być dostępny z Internetu ma tylko adres prywatny. W tym przypadku router dokonuje translacji adresu docelowego pakietów IP z Internetu na adres tego serwera.
+
+Funkcje NAT definiowane są za pomocą programów iptables lub ipchains.
+
+Basic NAT vs port number translation
+Istnieją dwa rodzaje translacji adresów, typ często nazywany NAT (czasem także NAPT "Network Address Port Translation") odnosi się do sieci, które używają mapowania numerów portów co pozwala wielu maszynom mieć ten sam IP.
+Inne - technicznie prostsze - zwane NAT lub "basic NAT" albo "static NAT" używają tylko translacji adresów a nie portów, wymaga to zewnętrznego adresu IP dla każdego równoczesnego połączenia.
+Szerokopasmowe rutery używają często tego trybu pracy, czasem określanej "DMZ host", aby pozwolić wyznaczonemu komputerowi na akceptowanie wszystkich zewnętrznych połączeń również jeśli sam ruter używa jedynego dostępnego zewnętrznego adresu IP.
+NAT z translacją portów ma dwa podtypy: translacja źródłowego adresu (źródłowy NAT) który przepisuje adres IP komputera inicjującego połączenie i przeciwieństwo: translacja adresu docelowego (docelowy NAT). W praktyce oba są używane równolegle w komunikacji dwukierunkowej.
+
+Bramki warstwy aplikacji (application layer gateways).
+Niektóre protokoły wysokiego poziomu (jak FTP, Quake i SIP) wysyłają informacje 3 warstwy wewnątrz danych (payloads) datagramu IP. FTP w trybie aktywnym używa innych portów dla kontroli ruchu (polecenia) a ruchu danych (transfer plików), kiedy żąda tansferu plików host określa także port na który chciałby otrzymać dane, jednakże jeśli jest za NAT-em mapowanie portów powoduje wysłanie nieprawdziwej informacji.
+Rozwiązaniem tego problemu jest ALG (Application Layer Gateway), moduł softwarowy działajacy na firewallu NAT. Uaktualnia informacje z zawartości pakietów (payload), i zamienia nieprawidłowe usuwajac skutki translacji adresów, oczywiście musi rozumieć protokoły wyższego rzędu, które naprawia i każdy protokół sprawiający te problemy potrzebuje oddzielnego ALG.
+Większość protokołów wyższego rzędu nie wysyła informacji kontaktowych w trzeciej warstwie i nie potrzebuje ALG.
+
+Różne typy NAT
+
+- Full cone NAT
+- Restricted cone NAT
+- Port restricted cone NAT
+- Symmetric NAT (aka Bi-directional NAT)
+
+#### DHCP (Dynamic Host Configuration Protocol)
+
+Protokół komunikacyjny sieci klient-serwer, umożliwiający komputerom uzyskanie od serwera danych konfiguracyjnych, np. adresu IP hosta, adresu IP bramy sieciowej, adresu serwera DNS, maski sieci.
+Protokół DHCP jest zdefiniowany w RFC 2131 i jest następcą BOOTP. DHCP został opublikowany jako standard w październiku 1993 - ostatnią definicją jest RFC 2131 z marca 1997.
+W kolejnej generacji protokołu IP czyli IPv6 jako integralną część dodano nową wersję DHCP czyli DHCPv6. Jego specyfikacja została opisana w opublikowanym w lipcu 2003 RFC 3315.
+
+Przydzielanie adresów IP
+Protokół DHCP opisuje trzy techniki przydzielania adresów IP:
+
+- Przydzielanie ręczne oparte na tablicy adresów MAC oraz odpowiednich dla nich adresów IP. Jest ona tworzona przez administratora serwera DHCP. W takiej sytuacji prawo do pracy w sieci mają tylko komputery zarejestrowane wcześniej przez obsługę systemu. Tylko zapytanie klienta z adresem MAC umieszczonym na liście da adres IP zgodny z tablicą.
+- Przydzielanie automatyczne, gdzie wolne adresy IP z zakresu ustalonego przez administratora są na stałe przydzielane kolejnym zgłaszającym się po nie klientom.
+- Przydzielanie dynamiczne, pozwalające na ponowne użycie adresów IP. Administrator sieci nadaje zakres adresów IP do rozdzielenia. Wszyscy klienci mają tak skonfigurowane systemy, że po starcie interfejsów sieciowych automatycznie pobierają swoje adresy. Każdy adres przydzielany jest na pewien okres czasu (dzierżawa z kontrolowanym czasem przydzielenia). Taka konfiguracja powoduje, że zwykły użytkownik ma ułatwioną pracę z siecią.
+
+Niektóre serwery DHCP dodatkowo przydzielają każdemu klientowi własny adres DNS, przekazywany na serwer nazw protokołem zgodnym ze specyfikacją RFC 2136.
+
+Parametry konfiguracji przekazywane do klienta
+Serwer DHCP może dostarczać swoim klientom dodatkowe dane pozwalające na konfigurację sieci. Zostały one opisane w specyfikacji RFC 2132.
+Lista konfigurowalnych opcji:
+
+- adresy IP serwerów DNS
+- nazwa DNS
+- adres IP bramy sieciowej (gateway)
+- adres rozgłoszeniowy (broadcast)
+- maska podsieci
+- maksymalny czas oczekiwania na odpowiedź (timeout) bufora ARP
+- MTU interfejsu (maksymalny rozmiar pakietu)
+- NIS lub NIS+ serwerów
+- NIS lub NIS+ domeny
+- adres serwera NTP
+- adres serwera SMTP
+- adres serwera TFTP
+- adres serwera nazw WINS
+- adres serwera nazw Netbios
+
+Najpopularniejsze serwery DHCP Fundacja Internet Software Consortium opracowała serwer DHCP w wersji 1.0.0. dla systemów Unix. ISC DHCP został wydany 6 grudnia 1997 roku, a w 1999 pojawiła się wersja 2.0 bardziej zgodna ze specyfikacją. Serwer ten jest dostępny na stronie: [www.isc.org/sw/dhcp/](http://www.isc.org/sw/dhcp/)
+
+DHCP oraz PPP
+Połączenie pomiędzy dostawcą Internetu (ISP) oraz klientem jest najczęściej realizowane poprzez protokół PPP. Jego częścią jest protokół IPCP, który pozwala na ustalenie adresów IP przydzielonych dla lokalnego komputera widocznego w sieci światowej oraz obsługującego go rutera dostawcy. Informacje te nie wystarczą do pełnej konfiguracji klienta. Aby automatycznie pobrać adresy serwerów DNS oraz inne dodatkowe dane konieczne jest wykorzystanie protokołu DHPC. Protokół PPP tworzy wirtualną podsieć, w której można przesyłać komunikaty DHCP. W ten sposób klient uzyskuje dodatkowe informacje niezbędne do automatycznej konfiguracji.
+
+Niektóre implementacje serwerów DHCP mogą uaktualniać nazwy DNS hostów klienckich, by odzwierciedlić nowy adres IP w sposób określony przez protokół uaktualniania DNS który został określony w RFC 2136.
+
+Parametry konfiguracji klienta
+Serwer DHCP może zapewnić opcjonalną konfigurację dla klienta - jest to określone w RFC 2132
+
+Implementacje
+Internet Software Consortium opublikowało oprogramowanie DHCP dla systemów uniksowych wersją 1.0.0 ISC DHCP Server (6 grudnia 1997) i bardziej zgodną z RFC wersję 2.0 (22 czerwca, 1999). [http://www.isc.org/sw/dhcp/](http://www.isc.org/sw/dhcp/)
+
+Anatomia protokołu
+DHCP używa tych samych dwóch przydzielonych przez IANA portów dla BOOTP: 67/UDP dla serwera i 68/UDP dla klienta.
+
+##### Poszukiwanie serwera DHCP (DHCP Discover)
+
+Klient chcący się połączyć z serwerem wysyła do sieci lokalnej pakiety zaadresowane do wszystkich odbiorników. Rozgłasza na lokalnej fizycznej podsieci, zeby znależć jakiś dostępny serwer. Lokalny ruter może być skonfigurowany by przekazać pakiet DHCP do serwera DHCP w innej podsieci. Ta implementacja klienta tworzy pakiet UDP z rozgłoszeniowym celem 255.255.255.255 i zawierają prośbę o ostatnio używany adres IP (np. 192.168.1.100). Może ona zostać zignorowana przez serwer.
+
+##### Oferta DHCP (DHCP Offer)
+
+Jest składana przez serwer, który określa konfigurację klienta na podstawie sprzętowego adresu urządzenia sieciowego określonego w polu CHADDR (w sieci lokalnej to adres MAC). W polu YIADDR serwer przekazuje klientowi jego adres IP.
+
+##### Żądanie DHCP (DHCP Request)
+
+Jest wysyłane przez klienta, który już rozpoznał serwer DHCP, ale chce uzyskać inne parametry konfiguracji. Dla przykładu może ponownie zażądać adresu IP 192.168.1.100.
+
+##### Potwierdzenie DHCP (DHCP Acknowledge)
+
+Jest wysyłane, jako potwierdzająca odpowiedź na żądanie i rozgłaszane w lokalnej sieci. Zakłada się, że reakcją klienta na potwierdzenie będzie odpowiednie skonfigurowanie interfejsu sieciowego zgodnie z przydzielonymi opcjami.
+
+Ponieważ część komputerów w sieci jest odłączona, bądź nie korzysta z protokołu TCP/IP serwer DHCP przydziela hostowi adres IP dopiero na żądanie. Jeśli komputer któremu przydzielono adres przez dłuższy czas nie korzysta z protokołu TCP/IP adres jest zwalniany i ponownie przekazywany do wykorzystania przez inne komputery.
+
+#### Ruting
+
+Internet nie ma struktury hierarchicznej, jest to kłębowisko kabli a adres IP nie ma nic wspólnego z położeniem komputera w tej sieci.
+Hosty łączące podsieci to gateway, ruter - jest to albo wyspecjalizowana maszyna albo oddzielny komputer z demonem rutingu (BIND).
+
+Ruting (trasowanie, routing) to wyznaczanie trasy dla pakietu danych w sieci komputerowej, a następnie wysłanie go tą trasą, czyli przekazywanie pakietów między sieciami. Odbywa się za pośrednictwem bramek (ang. gateway) łączących te sieci. Wyspecjalizowane urządzenia służące do tego celu to rutery (ang. router).
+
+Routing ma na celu możliwie najlepiej (optymalnie) dostarczyć pakiet do celu. Pierwotnie jedynym kryterium wyboru było podanie jak najkrótszej trasy do celu, ale obecnie protokoły routingu mogą uwzględniać podczas wyboru trasy również takie parametry jak priorytet pakietu (standardy ToS/DSCP), natężenie ruchu w poszczególnych segmentach sieci itp. W przypadku routingu brzegowego (wykorzystującego BGP) w Internecie wybór trasy jest silnie związany z polityką poszczególnych dostawców (i zawartymi między nimi umowami o wymianie ruchu) i bywa daleki od optymalnego.
+
+Pakiety przesyłane przez sieć opatrzone są adresem nadawcy i odbiorcy. Zadaniem routerów, jako węzłów pośrednich między nadawcą a odbiorcą, jest przesłanie pakietów do celu po jak najlepszej ścieżce. Typowy router bierze pod uwagę tylko informacje z nagłówka IP, czyli sprawdza tylko informacje z warstwy sieci (trzeciej) modelu OSI. Obowiązkiem routera IP przy przekazywaniu pakietu dalej do celu jest obniżenie o jeden wartości TTL (Time To Live, czas życia). Datagram IP, który trafia do routera z wartością 1 w polu TTL zostanie utracony, a do źródła router odsyła datagram ICMP z kodem TTL Exceeded.
+
+Bezpośrednia komunikacja pomiędzy komputerami możliwa jest tylko w obrębie tej samej podsieci. Jeśli pierwsza część docelowego adresu różni się od źródłowego trzeba skorzystać z rutera.
+Sprawdza się to przez nałożenie maski podsieci na adres docelowy i źródłowy i jeśli efekt nie jest ten sam - należą do różnych sieci.
+
+Każdy pakiet niepasujący do wysyłany jest do rutera, który kieruje go na domyślny adres w tablicy rutingu. Czyli jeśli w konfiguracji IP wpisze się źle ruter komunikacja będzie możliwa tylko w obrębie danej podsieci.
+Ruter po odebraniu przesyłki sprawdza do jakiej sieci jest ona przeznaczona, a następnie jeśli do takiej jest podłączony przesyła ją tam, jeśli nie wysyła ją do następnego rutera.
+Używając własnych protokołów rutery budują tablice routingu, będące czymś w rodzaju mapy sieciowej. Pozwala to skierować pakiety we właściwym kierunku. Rutery nie mają informacji o samym adresie docelowym a jedynie o innych ruterach, które być może będą wiedziały coś więcej.
+Za pomocą protokołów rutery wywołują się wzajemnie, sprawdzając czy sąsiednie rutery działają. W ten sposób internet samoczynnie się konfiguruje. Nie można przewidzieć, którą drogą pakiet dotrze do adresata, może się również zdarzyć, że pakiety należące do tej samej wiadomości zostaną dostarczone różnymi trasami i dotrą tam w innej kolejności niż zostały nadane.
+Przyczyną zatorów nie zawsze jest awaria łącza lub rutera. Może się zdarzyć, że następny komputer nie jest w stanie odebrać pełnego strumienia informacji, wtedy komputer węzłowy może zadecydować o przesłaniu jedynie części pakietu, po prostu dzieli pakiet na mniejsze, łatwiejsze do transmisji częsci, które jak normalne pakiety są wysyłane dalej.
+W nagłówku pakietu IP jest pole TTL (Time To Live) określające ilość skoków (hops) jakie może wykonać pakiet. Parametr ten pełni rolę licznika, któremu nadawca przypisuje pewną określoną wartość początkową, a każdy ruter przed wysłaniem pakietu dalej zmniejsza jego stan o jeden. Ruter, który sprowadzi licznik do zera unieważnia pakiet i wysyła informację zwrotną do nadawcy. Zostało to wykorzystane w programie traceroute, który wysyła serię pakietów z TTL ustawionym kolejno na 1, 2, 3, ....
+
+Routery utrzymują tablice routingu, na podstawie których kierują pakiety od określonych nadawców do odbiorców, bądź kolejnych routerów. Tablica może być budowana statycznie (routing statyczny) lub dynamicznie (protokoły routingu dynamicznego, takie jak RIP, IGRP, EIGRP, OSPF, BGP, IS-IS).
+
+Popularnym algorytmem służącym do wyznaczania tras w sieciach wewnętrznych jest algorytm Dijkstry wyznaczania najkrótszej ścieżki w grafie (np. OSPF). HMPTODO
+
+- ruting statyczny - przez zdefiniowanie tablic rutingu; niezbyt skomplikowana (dla prostych sieci) ale żmudna praca, którą trzeba ponawiać po każdej zmianie w sieci i jeśli sieć urośnie ciężko ustrzec się od błędów
+- ruting dynamiczny - ponieważ sam algorytm wyznaczania rutingu nie jest zbyt skomplikowany, rutery same mogą się orientować w topologii sieci i ustalać między sobą zasady optymalnych połączeń; powinny też zauważać zmiany w topologii sieci (np. awarie) i automatycznie się do nich dostosowywać; to nie tylko odciąża pracę administratora, ale umożliwia również autokonfiguracjię w razie awarii; pewną wadą jest dodatkowy ruch ale są pod tym względem optymalizowane i w większych sieciach ich używanie jest uzasadnione
+protokoły rutingu dynamicznego:
+- wewnętrzne _Interior Gateway Protocols_ - służą do wyznaczania dróg pakietów w ramach systemu autonomicznego (grupy sieci znajdujących się pod wspólną administracją)
+- zewnętrzne _Exterior Gateway Protocols_ - do rutingu pomiędzy systemami autonomicznymi; np. BGP (_Border Gateway Protocol_) lub EGP (_Exterior Gateway Protocol_)
+ze względu na sposób działania dzielą się na:
+- protokoły stanu łącz (_link state protocol_) - rutery stale tesują stan przyłączonych sieci, a listę wszystkich swoich sprawnych łącz (LSA - _Link State Adverisement_) wysyłają do swoich sąsiadów, którzy przesyłają je dalej, w ten sposób w całej sieci rozchodzi się informacja o łączach w otoczeniu każdego rutera, na podstawie otrzymanych LSA każdy ruter buduje tablicę stanu łącz (_Link State Database_), która zawiera obraz całej sieci, według niego ruter buduje drzewo najkrótszych połączeń między sieciami i te połączenia są następnie umieszczane w tablicy rutingu; przykładem protokołu stanu łącz jest OSPF (_Open Shortest Path First_ - nazwa pochodzi od algorytmu Dijkstry zastosownego do wyznaczania optymalnego drzewa połączeń)
+  1. wysłanie komunikatu "hello" do wszystkich bezpośrednich sąsiadów
+  2. rozsyłanie pakietów LSA na wszystkich interfejsach
+  3. wyznaczanie drzewa połączeń przy użyciu algorytmu Dijkstrynowo włączony ruter na pakiet "hello" otrzymuje w odpowiedzi aktualną tablicę stanu łącz swojego sąsiada, dzięki temu może szybko zbudować poprawną tablicę rutingu
+- protokoły z wektorem odległości (_distance vector protocols_) - wymiana informacji nie tylko o bezpośrednio dostępnych łączach rutera ale też o wszystkich znanych mu sieciach, ale informacje te przesyłane są nie do wszystkich hostów w danej sieci a tylko do sąsiadów; na tej podstawie uaktualniają oni swoje tablice rutingu (umieszczają w nich sieci o których istnieniu dotąd nie wiedzieli) i swoją tablicę rutingu przesyłają swoim bezpośrednim sąsiadom, w ten sposób buduje się obraz sieci; w porównaniu do protokołów stanu łącz pakiety wymieniane między ruterami są większe, ale krąży ich mniej; w tablicach rutingu każdej sieci przypisana jest, oprócz sposobu dotarcia do niej - jej metryka to znaczy miara odległości do tej sieci, miara kosztu i czasu dostarczenia do niej pakietu, metryka ta jest wykorzystywana przy wybieraniu najkorzystniejszej trasy pakietu, ruter, który otrzyma dwie tablice z rozmaitymi metrykami danej sieci za bardziej wiarygodne uzna informacje o mniejszej metryce czyli od rutera, który ma do danej sieci bliżej;
+przykładowe protokoły z wektorem odległości:
+- RIP (_Routing Information Protocol_) - stary i dość prymitywny; ruter rozgłasza tablice co 30 s, jeśli przerwa wynosi 180 s sąsiednie rutery oznaczają ścieżki przez niego przysłane jako nieużyteczne a po 120 sekundach usuwają te ścieżki z tablic; jako metryka używana jest liczba przeskoków między sieciami (hop counting), dla bezpośrednio przyłączonych sieci wynosi 0, maksymalna wartość to 15, 16 oznacza sieci niedostępne
+- IGRP (_Interior Gateway Routing Protocol_) - dużo bardziej zaawansowany protokół, rutery rozgłaszają swoje tablice co 90 s, jeśli milczą przez 3 okresy jego ścieżki uznawane są za nieużyteczne a po 7 okresach milczenia są usuwane; dużo doskonalsze wyznaczanie metryki sieci, jest ona 24-bitową liczbą określającą nie tylko odległość, ale także przepustowość łącz, opóźnień na trasie a nawet pewności i obciążenia łącz
+
+Tablica routingu.
+
+```
+$ netstat -rn
+Kernel IP routing table
+Destination Gateway Genmask Flags MSS Windowirtt Iface
+127.0.0.0 0.0.0.0 255.0.0.0 U 0 00 lo
+```
+
+- Destination: sieci przeznaczenia zawarte w tablicy routingu
+- Gateway: hosty w tablicy
+- Genmask:
+- Flags: adres docelowy dla danego wpisu; U: ruting działa
+- MSS: ile bajtów naraz jest przesyłane przez odpowiednie połączenie
+- Window: ile ramek może być przesłane zanim musi nadejść potwierdzenie
+- irtt: statystyki dotyczące używania tego rutingu
+- Iface: urządzenie sieciowe używane do tego rutingu
+
+Przed klasami
+Początkowo 32-bitowy adres IPv4 zawierał tylko 8 bitowe pole numeru sieci (które określało konkretną sieć do której był przyłączony host) i pole reszty, które dawało adres tego hosta w tej sieci (ten format był używany przed nadejściem LAN-ów, kiedy było tylko kilka dużych sieci takich jak ARPANET).
+Rezultatem tego była bardzo mała (256) liczba dostępnych sieci i bardzo wcześnie kiedy tylko pojawiły się LAN-y stało się oczywiste, że to nie wystarczy.
+
+Klasy
+Definicja znaczenia adresów IP zmieniła się pozwalając na istnienie trzech różnych rozmiarów pół wielkości sieci (i powiązanych pól reszt) jak to jest określone poniżej (w bitach):
+
+```
+Class Leading bitsNetwork number Rest
+Class A 0 724
+Class B 1014 16
+Class C 110 21 8
+Class D (multicast) 1110
+Class E (reserved)1111
+```
+
+- Sieci klasy A używają domyślnej maski podsieci 255.0.0.0, a ich pierwszy oktet należy do przedziału 0-127. Adres 10.52.36.11 to adres klasy A. Jego pierwszy oktet jest równy 10, czyli mieści się w przedziale od 1 do 127 włącznie.
+- Sieci klasy B używają domyślnej maski podsieci 255.255.0.0, a ich pierwszy oktet należy do przedziału 128-191. Adres 172.16.52.63 to adres klasy B. Jego pierwszy oktet jest równy 172, czyli mieści się w przedziale od 128 do 191 włącznie.
+- Sieci klasy C używają domyślnej maski podsieci 255.255.255.0, a ich pierwszy oktet należy do przedziału 192-223. Adres 192.168.123.132 to adres klasy C. Jego pierwszy oktet jest równy 192, czyli mieści się w przedziale od 192 do 223 włącznie.
+
+co pozwoliło na następujące populacji wielkości sieci (rzeczywista ilość jest mniejsza bo niektóre wartości są zabronione):
+
+```
+Class Leading bits Total # of network numbers # of addresses per network
+Class A 0 128 16,777,214
+Class B 1016,38465,534
+Class C 110 2,097,152 256
+```
+
+Większe pola numeru sieci pozwoliły na większą ilość sieci, tymczasowo pozwalajac na wzrost internetu.
+Maska sieci adresu IP która jest dzisiaj powszechnie wiązana z adresem IP nie była wymagana, ponieważ długość maski była wprost funkcją samego adresu. Każda urządzenie sieciowe mogło sprawdzić kilka pierwszych bitów z 32-bitowego adresu by zobaczyć do której klasy należał.
+Metoda określenia czy dany adres należy do tej samej fizycznej sieci co inny adres IP polegała na porównaniu częsci adresu zawierającej numer sieci a ponieważ część należąca do sieci byłą określona reszta byłą ignorowana - jeśli numery sieci pasowały dwa adresy były w tej samej sieci.
+
+Zamiast klas
+Pierwsze zmiany nastąpiły, ale było to zbyt mało na dłuższa metę, adresów IP zaczęło brakować. Problemem było to, że większość jednostek była zbyt duża na klasę C i zamiast tego dostawały klasę B, w wyniku czego - ponieważ internet rozwijał się bardzo szybko - zaczęło ich brakować. Sieci klasowe zostały zamienione przez bezklasowe rutowanie międzydomenowe (CIDR) około 1993 by rozwiązać ten (i parę innych) problem.
+Wczesne alokacje adresów IP dokonane przez IANA były w niektórych wypadkach niezbyt wydajne, co przyczyniło się do problemu. Jednakże jednakże powszechna opinia, że niektóre organizacje niesprawiedliwie lub niepotrzebnie dostały klasę A jest bzdurą ponieważ większość tych alokacji jest datowanych na okres przed wprowadzeniem klas adresowych, kiedy dostępne były tylko sieci znane potem jako klasa A.
+
+Koncepcja podsieci (subnetwork)
+Adresy IPv4 są podzielone na trzy części: sieci, podsieci (teraz często uważanej za część sieciową, ale oryginalnie była to część części hostowej) i hosta. Są trzy klasy adresów IP określające jak wiele która zajmuje.
+
+Subnetting jest procesem alokowania bitów z części hostowej do cześci sieciowej. Np. dając adresowi klasy A maskę podsieci 255.255.0.0 dzieli się ją na 255 podsieci. Wskazuje, że drugi oktet adresu IP pokazuje numer sieci a ostatnie dwa pokazują część hostową.
+Maska podzieci nie jest ograniczona do całych oktetów, np. 255.128.0.0 (lub /9) jest również prawidłową maską.
+
+Podsieć zero
+Technicznie nielegalna, ale nadal użyteczna jest pierwsza podsieć, np. podsieć 1.0.0.0 z maską podsieci 255.155.0.0 - problem z tą podsiecią jest to, że adres unicastowy jest ten sam co dla całej sieci klasy A.
+
+Użyteczne tabele
+Zasięgi adresów używane dla każdej klasy są podane w tej tabeli w standardowej notacji kropkowo dziesiętnej.
+
+```
+Class Start End Leading (first) bits Start End Mask in dotted decimal
+A 1.0.0.0 126.0.0.0 00.0.0.0 127.255.255.255 255.0.0.0
+B 128.0.0.0 191.255.0.0 10 128.0.0.0 191.255.255.255 255.255.0.0
+C 192.0.0.0 223.255.255.0 110192.0.0.0 223.255.255.255 255.255.255.0
+D (multicast) 1110 224.0.0.0 239.255.255.255
+E (reserved)1111 240.0.0.0 255.255.255.255
+```
+
+Niektóre adresy dla specjalnych zastosowań (RFC 3330).
+
+```
+Addresses CIDR Equivalent Purpose RFC ClassTotal # of addresses
+0.0.0.0 - 0.255.255.255 0.0.0.0/8 Zero AddressesRFC 1700A16,777,216
+10.0.0.0- 10.255.255.25510.0.0.0/8Private IP addressesRFC 1918A16,777,216
+127.0.0.0 - 127.255.255.255 127.0.0.0/8 Localhost Loopback AddressRFC 1700A16,777,216
+169.254.0.0 - 169.254.255.255 169.254.0.0/16Microsoft APIPA RFC 3330B65,536
+172.16.0.0- 172.31.255.255172.16.0.0/12 Private IP addressesRFC 1918B1,048,576
+192.0.2.0 - 192.0.2.255 192.0.2.0/24Documentation and ExamplesRFC 3330C256
+192.88.99.0 - 192.88.99.255 192.88.99.0/24IPv6 to IPv4 relay AnycastRFC 3068C256
+192.168.0.0 - 192.168.255.255 192.168.0.0/16Private IP addressesRFC 1918C65,536
+198.18.0.0- 198.19.255.255198.18.0.0/15 Network Device BenchmarkRFC 2544C131,072
+224.0.0.0 - 239.255.255.255 224.0.0.0/4 Multicast RFC 3171D268,435,456
+240.0.0.0 - 255.255.255.255 240.0.0.0/4 ReservedRFC 1700E268,435,456
+```
+
+Słowo podsieć ma dwa względne znaczenia, w starszym i bardziej ogólnym jest to fizyczna sieć należąca do internetu, w znaczeniu IP podsieć (subnetwork, subnet) jest podziałem sieci komputerowej, i o tym znaczeniu jest mowa poniżej.
+
+Podział sieci pozwala na utworzenie małych sieci z jednej dużej. Wprowadzony został, żeby pozwolić na podział jednej sieci na większą liczbę lokalnych sieci. Nawet po wprowadzeniu sieci klasowych, było to nadal pożyteczne, bo zmniejszało liczbę zapisów w tablicach rutingu o zasięgu internetu. Jako uboczna korzyść zmniejsza również przeciążenie sieci poprzez rozdzielenie stref rozgłoszeniowych (broadcast) IP.
+Każda maszyna musi mieć przydzieloną maskę podsieci, która definiuje jaka część adresu IP jest alokowana do ID podsieci a jaka część dla ID hosta w tej sieci. Fakt, że wszystkie hosty już używały masek pozwolił na łatwe wprowadzenie CIDR.
+
+Maska sieci znana także jako maska podsieci (network mask, subnet mask, netmask lub address mask) jest maską bitową używaną by wskazać jaka cześć adresu należy do podsieci, do której należy host, a jaka identyfikuje hosta.
+Maski podsieci są zwykle wyrażane w taki sam sposób jak adresy. W IPv4 w notacji dziesiętno kropkowej lub rzadziej jako ośmiocyfrowa liczba heksadecymalna.
+Krótsza forma, która jest znana jako notacja CIDR, daje numer sieci, za nim slasz i liczbę bitów jeden w binarnym zapisie maski (np. liczba znaczacych bitów w numerze sieci). Używając tej notacji w IPv4 podsieć może być wyrażona wprost jako 130.94.122.199/28.
+
+### Firewall
+
+Zapora sieciowa - jeden ze sposobów zabezpieczania sieci/komputera/serwera przed intruzami. Sprzęt komputerowy wraz ze specjalnym oprogramowaniem bądź samo oprogramowanie blokujące niepowołany dostęp do sieci komputerowej, komputera, serwera itp. Jego funkcja w sieci polega na zapobieganiu komunikacji zakazanej przez politykę bezpieczeństwa.
+Podstawowym zadaniem jest kontrola ruchu pomiędzy różnymi strefami zaufania, typowe strefy to internet (brak zaufania) i wewnętrzna sieć (duże zaufanie). Ostatecznym celem jest zapewnienie kontrolowanego połączenia pomiędzy strefami różnego zaufania poprzez wymuszenie polityki bezpieczeństwa i modelu połaczenia opartego na zasadzie najmniejszego przywileju (_connectivity model based on the least privilege principle_).
+
+Nazwa się wzięła od terminu określającego w budownictwie grubą, ognioodporną zaporę, zabezpieczającą część budynku przed rozprzestrzenianiem się ognia w przypadku pożaru (zapora przeciwogniowa). Według innej teorii nazwa pochodzi od instalacji zakładanej w samochodach, która w trakcie wypadku zabezpiecza pasażerów przed zgnieceniem przez silnik i/lub pożarem.
+
+Zapory sieciowe są zwykle stawiane na styku dwóch sieci komputerowych, np. internetu i sieci lokalnej (LAN) (wtedy zapora pracuje często dodatkowo jako router), oraz na ważnych serwerach (ich ochrona). Na zaporze można zdefiniować specjalna strefę DMZ, która izoluje od wewnętrznej sieci serwery udostępniające usługi na zewnątrz.
+
+Właściwa konfiguracja firewalla nie jest łatwa. Wymaga rozważnego rozumienia protokołów sieciowych i bezpieczeństwa, drobna pomyłka może sprawić, że firewall będzie bezwartościowy.
+
+Podział:
+
+filtrujące:
+
+Monitorują pakiety sieciowe i przepuszczają tylko zgodne z regułami ustawionymi na danej zaporze (zapora pracująca dodatkowo jako router). Zwykle w niewielkich sieciach jest zapora sprzętowa, bądź dedykowany komputer z systemem operacyjnym Linux. Obecnie najczęściej wykorzystywana metoda filtrowania w Linuksie to reguły oparte na iptables. Dostępne są także zamknięte komercyjne rozwiązania programowe, z których wiele posiada bardzo zaawansowane własności i rozbudowany system konfiguracji oraz wachlarz możliwych do zintegrowania rozwiązań, pozwalających nie tylko na analizę i filtrowanie pakietów IP, ale także na sprawdzanie poprawności pakietów z punktu widzenia wyższych warstw modelu ISO/OSI a nawet na prowadzenia ochrony antywirusowej.
+
+oprogramowanie komputerów stacjonarnych:
+
+Udostępnia wybrane porty do połączeń z zewnątrz monitorując ruch, udostępnia także połączenia na zewnątrz komputera wybranym usługom/programom. Często zintegrowane z ochroną antywirusową (na przykład Norton Internet Security)
+
+zapory pośredniczące (proxy):
+
+Wykonujące połączenie w imieniu użytkownika (przykład: zamiast uruchomienia sesji FTP do systemu zdalnego uruchamiamy sesję FTP na zaporze i dopiero stamtąd uruchamiany połączenie z systemem zdalnym). Zabezpieczające działanie proxy polega w tym wypadku na blokowaniu wszelkich pakietów niepoprawnych z punktu widzenia danego protokołu, które przy bezpośrednim połaczeniu mogłyby być może być obsłużone przez lokalny system, oraz na udostępnieniu możliwości zarządzania i kontroli kto i kiedy oraz w jaki sposób korzysta z danej usługi).
+
+Współcześnie często pracująca zapora sieciowa jest hybrydowym rozwiązaniem analizującym pakiety w każdej warstwie od poziomu protokołu IP, aż do poziomu aplikacji, oraz umożliwiającym realizację złożonych polityk bezpieczeństwa oraz integrację z systemami IDS.
+
+Podział według miejsca działania:
+
+- osobisty firewall (a personal firewall) oprogramowanie kontrolujące ruch na pojedynczym komputerze użytkownika
+- tradycyjny firewall (a traditional firewall) działający jako dedykowane urządzenie sieciowe lub komputer umiejscowiony na granicy dwóch lub więcej sieci lub DMZ-tów, filtruje cały ruch wychodzący i przychodzący.
+
+Są w nim dwa rodzaje:
+
+firewall poziomu sieci (Network layer firewalls)
+
+Operuje na (relatywnie niskim) poziomie stosu protokołów TCP/IP jako filtr pakietów IP, nie pozwalając pakietom przejść przez firewall jeśli nie pasują do reguł, zdefiniowanych przez administratora lub domyślnych, wbudowanych (w niektórych nieelastycznych sieciach); bardziej pozwalający firewall będzie przepuszczał wszystkie pakiety o ile nie będą pasowały do którejś z negatywnych reguł ("negative-rules", "deny rules").
+Proces filtrowania może też być oparty na źródle lub przeznaczeniu i porcie, oraz do którego z wyższego poziomu protokołu pakiet należy.
+Pracują bardzo szybko i przezroczyście dla użytkowników.
+Dzielą się generalnie na dwa rodzaje:
+
+- bezstanowe: wyłącznie filtr pakietów, nie mogą podejmować bardziej złożonych decyzji wynikających ze stanu komunikacji pomiędzy hostami i dlatego są mniej bezpieczne; przypominają trochę ruter w jego możliwości filtrowania pakietów
+- stanowe: przechowują pewne informacje o stanie połaczenia (np. ustanowione lub nie, inicjacja, handshaking, dane lub koniec połączenia) jako część swoich reguł (np. tylko host w firewallu może ustanowić pewne połączenie).
+
+Każdy komputer z systemem operacyjnym, który wspiera filtrowanie pakietów i rutowanie (Linux, BSD, Solaris) może funkcjonować jako firewall warstwy sieci.
+
+firewall warstwy aplikacji (Application-layer firewalls)
+
+Działają na poziomie stosu TCP/IP (np. ruch przeglądarki, telnetu lub ftp) i mogą przechwytywać wszystkie pakiety skierowane od i do aplikacji. Blokują inne pakiety (zwykle porzucając je bez informowania - _acknowledge_ - wysyłającego). Powinny móc zapobiec każdemu niepożądanemu ruchowi z zewnątrz do chronionych maszyn. Przez nadzorowanie wszystkich pakietów z niewłaściwą zawartością, firewalle mogą zapobiec rozprzestrzenianiu się wirusów. W praktyce jednakże staje się to tak trudne i skomplikowane (z powodu zróżnicowania aplikacji i różnorodnej zawartości pakietów), że raczej się tego nie stosuje.
+Ponieważ działa na poziomie warstwy aplikacji może przeglądać zawartość ruchu blokując to co widzi jako niewłaściwą zawartość, jak np. niektóre strony WWW, wirusy, próby wyzyskania znanych błędów oprogramowania itd.
+Nie rutuje ruchu na poziomie sieci, cały ruch zatrzymuje się na firewallu.
+
+Te dwa rodzaje nie są rozdzielne, niektóre systemy mają zaimplementowane jednocześnie oba.
+
+Podział według sposobu działania:
+
+bezstanowe (stateless firewall)
+
+Traktuje każdą ramkę (lub pakiet) w izolacji, nie ma żadnego sposobu sprawdzenia czy dany pakiet jest częścią istniejącego połączenia.
+Zanim nie pojawiły się stanowe firewalle było to normalne zachowanie. Współczesne firewalle używają informacji o połączeniu pozwalając administratorom sieci na bardziej precyzyjną kontrolę ruchu.
+Klasycznym przykładem sprawiającego problemy protokołu jest FTP ponieważ jest tak zaprojektowany, że otwiera nowe połączenia na przypadkowych portach. Np. pakiet TCP skierowany z jakiegoś hosta przeznaczony do maszyny w wewnętrznej sieci TCP numer portu 4970, ponieważ ten port nie jest żadnym z dobrze znanych usług, które bezpieczna sieć ma udostępniać (WWW. FTP, SSH) więc zostaje odrzucony - w ten sposób przerwano poprawne połączenie FTP. Jest to jeden z wielu protokołów potrzebujących do prawidłowego funkcjonowania możliwości otwarcia połączenia na dowolnym wysokim porcie. Ponieważ firewall nie ma żadnego sposobu by się sprawdzić, czy dany pakiet jest częścią poprawnej sesji FTP odrzuci pakiet. Problem ten rozwiązują dopiero firewalle stanowe przez utrzymywanie tablicy otwartych połączeń i powiązanie nowych żądań połączeń z istniejącymi poprawnymi połączeniami.
+
+stanowe (stateful firewall)
+
+Przechowuje ścieżkę stanu połączenia sieciowego (jak strumień TCP). Wie jakie pakiety są uprawnione i tylko pakiety, które pasują do znanego połączenia przejdą przez firewall, inne zostaną odrzucone.
+Wczesne firewalle operowały na poziomie aplikacji (w modelu OSI), ale wymagało to zbyt wiele prędkości CPU. Filtr pakietów operuje na poziomie warstwy sieci i działają bardziej wydajnie, bo sprawdzają tylko nagłówki pakietów. Jednakże czysty filtr pakietów nie zna koncepcji stanu połączenia.
+Bardziej zaawansowany stanowy firewall ma możliwość przechowywania w pamięci znaczących atrybutów każdego połączenia przez cały czas jego trwania. Te atrybuty które razem są znane jako stan połączenia mogą zawierać takie szczegóły jak adres IP i porty używane do połączenia, oraz sekwencja numerów pakietów. Najbardziej intensywne dla CPU sprawdzanie jest przeprowadzane w czasie ustanowienia połączenia. Później wszystkie pakiety (dla danej sesji) są przetwarzane szybko ponieważ w prosty i dokładny sposób można określić czy należą to do istniejącego połączenia. Kiedy sesja jest skończona jej pozycja w tabeli stanów (state-table) jest usuwana.
+Zależą od potrójnego uścisku dłoni protokołu TCP. Kiedy klient inicjuje nowe połączenie wysyła pakiet z bitem SYN w nagłówku pakietu, wszystkie pakiety z ustawionym bitem SYN są uważane przez firewall za nowe połączenia. Jeśli usługa której klient żąda jest dostępna na serwerze, to usługa odpowie pakietem z bitami SYN i ACK. Klient wtedy odpowie wyłącznie bitem ACK i połączenie wejdzie w ustanowioną fazę.
+W celu zapobieżenia przepełnienia tablicy stanu, sesje będą się kończyć jeśli nie nastąpi żaden ruch przez określony czas, te zużyte połączenia zostaną usunięte z tablicy stanów. Wiele aplikacji wysyła wiadomości _keepalive_ okresowo w celu powstrzymania firewalla przed porzucania połączenia podczas braku aktywności użytkownika. Warto zauważyć, że większość ataków DoS to SYN flood, czyli wysyłanie dużej ilości pakietów SYN do serwera w celu przepełnienia tablicy stanu. Blokuje to serwer przed akceptowaniem następnych połączeń.
+Filtry poziomu aplikacji
+Obecnie firewalle używają filtrów poziomu aplikacji zwanych proxy - ponieważ maszyny mają większą moc CPU i mogą przeprowadzić głęboką inspekcję w uzasadnionym czasie. Te proxy mogą czytać część danych każdego pakietu, żeby dokonać właściwej decyzji o połączeniu. Np. HTTP może zostać użyta jako tunel IRC lub P2P, tradycyjne stanowe firewalle nie mogą wykryć tego podczas kiedy firewall warstwy aplikacji może to wykryć i selektywnie zablokować połączenie HTTP kierując się informacją o zawartości.
+Firewalle sprawdzają każdy pakiet i decydują czy powinien trafić celu przeznaczenia, czy ma być odrzucony. Zazwyczaj pakiety są filtrowane według adresów lub portów źródła/przeznaczenia.
+Ale w większości przypadków są to informacje niewystarczające, administrator może chcieć kierować ruchem pakietów zgodnie z kontekstem połączenia, a nie tylko z charakterystyką indywidualnego pakietu. Zatem pakiet należący do istniejącego połączenia skierowany na port 22 (SSH) przejdzie, ale pakiet, który nie należy do żadnego istniejącego połączenia musi zostać porzucony.
+Dla tradycyjnych bezstanowych firewalli był to problem ponieważ firewall nie mógł dowiedzieć się, które pakiety należały do istniejącego połaczenia, a które nie. Stanowe firewalle rozwiązują ten problem przez monitorowanie połaczenia sieciowego i dopasowywanie pakietów do istniejących lub nowych połaczeń.
+Squid jest przykładem buforującego proxy, nie ma na celu zapewnienia bezpieczeństwa, jego głównym celem lokalne przechowywanie kopii często odwiedzanych stron WWW w celu zmniejszenia obciążenia.
+
+Firewalle często mają funkcję NAT, a hosty chronione za firewallem powszechnie używają tzw. "prywatnej przestrzeni adresowej" zdefiniowanej w RFC 1918. Administratorzy często używają tego w celu zamaskowania wewnętrznych adresów lub sieci.
+
+#### Proxy
+
+Serwer proxy
+Usługa sieciowa, która pozwala klientom na niebezpośrednie połączenie z innymi usługami sieciowymi, klient łączy się z serwerem proxy, wtedy żąda połączenia, pliku lub innego zasobu dostępnego na innym serwerze. Proxy zapewnia dostęp do zasobów łacząc się z określonym serwerem, albo z buforem. W niektórych sytuacjach proxy może zmienić żądanie klienta lub odpowiedź serwera z różnych powodów.
+
+Urządzenia proxy (działające albo na dedykowanym urządzeniu lub na oprogramowaniu maszyny ogólnego przeznaczenia) moga działać jako firewall odpowiadając na wejściowe pakiety (np. żądania połączenia) w taki sposób jak aplikacja i blokując inne pakiety.
+
+Proxies sprawiają, że podrabianie wewnętrznego systemu z zewnętrznej sieci jest trudniejsze, a nadużycie jednego wewnętrznego systemu nie powoduje wykorzystywalnego wyłomu bezpieczeństwa z zewnątrz firewalla (tak długo jak długo aplikacja proxy pozostaje nietknięta i poprawnie skonfigurowana). Istnieje również możliwość, że napastnik przechwyci publicznie dostępny system i użyje go jako proxy dla swoich własnych celów, proxy jest wtedy maskaradą dla innych wewnętrznych systemów.
+Podczas kiedy użycie wewnętrznej przestrzeni adresowej zwiększa bezpieczeństwo, napastnicy mogą użyć tej metody jako IP spoofing do próby przepuszczenia pakietów do docelowej sieci.
+
+Web proxy
+
+Powszechnie używaną aplikacją jest buforujące web proxy. Zapewnia bliski bufor stron www i plików dostępnych na odległych serwerach, pozwalając sieciowym klientom na dostęp szybciej lub bardziej wiarygodnie.
+Kiedy przychodzi żądanie zasobu WWW (określonego przez URL), buforujące proxy szuka go w swoim lokalnym buforze i jeśli go znajduje natychmiast go zwraca. W przeciwnym wypadku pobiera go ze zdalnego serwera zwraca żądającemu i zapisuje kopie w buforze. Bufor zwykle używa algorytmu expiracji, żeby usuwać dokumenty z bufora i zgodnie z ich wiekiem, rozmiarem i historią dostępu. Dwa proste algorytmy bufora:
+
+- Least recently used (LRU): usuwa najdłużej nieużywany dokument
+- Least Frequently Used (LFU): usuwa najrzadziej używany dokument
+
+Mogą być używane także jako filtry zawartości WWW, niektóre aplikacje _censorware_, które służą do blokowania niestosownej zawartości są zaimplementowane jako web proxy. Inne modyfikują strony WWW dla swoich celów, np. Skweezer przystosowuje je dla telefonów komórkowych i PDA. Operatorzy sieciowi mogą także zastosować web proxy do wyszukiwania wirusów komputerowych i innej wrogiej zawartości ze zdalnych stron WWW.
+
+NAT proxy
+
+Opisane wyżej.
+
+Transparent proxy
+
+Wiele organizacji - korporacje, szkoły i rodziny - używają proxy serwerów do wymuszenia polityki sieciowej (jak censorware) lub zapewnienia bezpieczeństwa i usług buforujących. Zwykle web lub NAT proxy nie jest transparentny dla klienckiej aplikacji, musi zostać skonfigurowany do używania proxy: ręcznie lub skryptem konfiguracyjnym. Tak więc użytkownik może ominąć proxy po prostu zmieniając konfigurację klienta. Transparent proxy (transproxy) łączy proxy serwer z NAT w taki sposób, że połączenie jest rutowane przez proxy bez konfiguracji po stronie klienta.
+Zarówno NAT jak i transproxy są trochę kontrowersyjne ponieważ łamią podstawową zasadę TCP/IP - "_end-to-end pryncypium_".
+
+Otwarte proxy, nadużycie i wykrywanie
+Zarówno web jak i inne sieciowe proxy są nadużywane przez spamerów i innych ludzi nadużywjących sieci. Otwarte proxy jest to proxy które akceptuje połączenie klienta z dowolnego adresu IP i łączy sie z dowolnym zasobem internetowym.
+Nadużycie otwartych proxy jest obecnie powszechne, np. spamerzy często instalują open proxy na komputerach nieświadomych użytkowników MS Windows używając do tego specjalnie zaprojektowanych wirusów.
+Ponieważ są często nadużywane, powstały metody, żeby odmawiać usług dla otwartych proxy. Operatorzy maila i IRC używaja DNSBL publikując listy adresów IP znanych otwartych proxy.
+
+Odwrotne proxy
+Jest to serwer, który jest zainstalowany w sąsiedztwie jednej lub większej ilości sieci, cały ruch idący z internetu do jednego z serwerów idzie przez proxy serwer. Jest kilka powodów do zainstalowania odwrotnego proxy:
+
+- Bezpieczeństwo: serwer proxy jest dodatkową warstwą obrony
+- Szyfrowanie / przyspiesznie SSL: kiedy tworzone są bezpieczne strony www, często szyfrowanie SSL jest robione nie przez sam serwer ale odwrotne proxy wyposażone w sprzętowe przyspieczenie SSL
+- Kierowanie obciążeniem (Load distribution): odwrotne proxy mogą dystrybuować kilka webserwerów, a każdy serwujący swoje własne usługi. W takim przypadku odwrotne proxy potrzebują przepisać URL każdej strony (translacja z zewnętrznych znanych URL-i na wewnętrzne położenia)
+- Bufor (Serve/cache static content): może rozładować webserwery przez buforowanie statycznej zawartości jak np. obrazy i inna graficzna zawartość.
+
+Popularne serwery proxy
+
+- Squid cache - popularny serwer proxy HTTP dla uniksów
+- Apache HTTP Server - może zostać skonfigurowany jako proxy serwer
+
+Termin proxy jest także używane w innym znaczeniu w SIP (Session Initiation Protocol) używanym w wielu wspólczensych systemach VoIP. SIP Proxy nie pracuje z zawartością danych klienta
+
+### URI, URL, FQDN
+
+#### URI (Uniform Resource Identifier)
+
+URI (Uniform Resource Identifier) jest standardem internetowym określonym w RFC 3986 umożliwiającym łatwą identyfikację zasobów w sieci.
+
+Element protokołu internetowego zawierający krótki ciąg znaków zgodnych z pewną składnią. Wyznacza nazwę lub adres, który może zostać użyty jako odniesienie do pewnego abstrakcyjnego lub fizycznego zasobu.
+Kodyfikacja IETF oparta jest na wcześniejszych propozycjach Tima Berners-Lee. Po rewizji w RFC 2732 a potem RFC 2396bis, najnowsza została opublikowana w styczniu 2005 jako RFC 3986.
+
+URI jest, zazwyczaj krótkim łańcuchem znaków, zapisanym zgodnie z określoną w standardzie składnią. Łańcuch ten określa nazwę lub adres zasobu.
+
+Składnia URI:
+
+- określenie protokołu: np. "http", "ftp", "urn"
+- dwukropek
+- część specyficzna dla danego schematu, jej semantyka jest określona przez specyfikacje które zarządzają schematem - składnia URI wprowadza tu pewne restrykcje dotyczące znaków, zarezerwowanych do specjalnych celów oraz hierarchicznej struktury
+
+URI może być rozumiany jako lokalizator, nazwa lub w obu tych znaczeniach.
+Szczególnym przypadkiem URI jest URL, który oprócz identyfikacji wskazuje również sposób dostępu do zasobu. URI jest nadzestawem bardziej znanego URL używanego do adresowania WWW.
+
+##### URI reference
+
+URI reference jest innym rodzajem ciągu reprezentującego URI i zasobu odentyfikowanego przez URI. Nie jest to zwykle rozróżniane, ale specyfikacja protokołu nie pozwala na taką dwuznaczność.
+Mogą mieć postać pełnego URI lub po prostu zależnej od schematu części jednego, lub nawet pojedynczego elementu - może to być nawet pusty ciąg.
+Opcjonalny identyfikator fragmentu, poprzedzony "#" może być obecny na końcu URI reference. Część reference przed "#" niebezpośrednio wskazuje na zasób a fragment identyfikujący wskazuje na jakąś część zasobu.
+W celu oddzielenia URI od URI reference, ten drugi jest konwertowany na "absolutną" postać przez łączenie z absolutną "bazą" URI zgodnie z wyznaczonym algorytmem. O ile nie jest to już absolutny URI, URI reference jest traktowany jako relatywny względem bazowego URI. Bazowy URI jest to zwykle URI, który identyfikuje dokument zawierający URI reference, chociaż może być wskazany przez deklaracje w dokumencie lub być częścią zewnętrznych danych protokołu transmisji.
+Jeśli identyfikator fragmentu jest obecny w bazowym URI jest ignorowany w czasie procesu łączenia, a jeśli jest obecny w URI reference jest zachowywany.
+W języku znaczników WWW, URI reference jest często używany w miejscach gdzie jest potrzeba wskazania do innego zasobu, takiego jak zewnętrzny dokument lub pewna część tego samego logicznego dokumentu.
+
+Przykłady URI reference w językach znacznikowych
+
+- w HTML: wartość atrybutu src elementu img i wartość atrybutu href elementu a
+- w XML, identyfikator systemowy pojawiający się po słowie kluczowym SYSTEM w DTD jest bezfragmentowym URI reference
+- w XSLT, wartość atrybutu href elementu/instrukcji xsl:import, jak w pierwszym argumencie funkcji document().
+
+Przykłady absolutnego URI
+
+- http://somehost/absolute/URI/with/absolute/path/to/resource.txt
+- ftp://somehost/resource.txt
+- urn:issn:1535-3613
+
+przykłady URI references
+
+- http://example/resource.txt#frag01
+- http://somehost/absolute/URI/with/absolute/path/to/resource.txt
+- /relative/URI/with/absolute/path/to/resource.txt
+- relative/path/to/resource.txt
+- ../../../resource.txt
+- resource.txt
+- /resource.txt#frag01
+- #frag01
+- [empty string]
+
+##### Rozwiązanie URI (URI resolution)
+
+"Rozwiązać URI" znaczy albo skonwertować relatywne URI reference na formę absolutną albo próbę otrzymania reprezentacji zasobu, który identyfikuje. Element rozwiązujący w oprogramowaniu przetwarzającym dokument zapewnia obie usługi.
+Zgodnie z RFC 2396 jeśli URI reference jest pustym ciągiem lub zawiera tylko znak "#" a po nim opcjonalny fragment wtedy reference jest uważany za reference tego samego dokumentu.
+
+URI składa się z URL i URN.
+
+##### URL i URN
+
+URN (Uniform Resource Name) oznacza zunifikowany format nazw zasobów (głównie książek). URN składa się z identyfikatora przestrzeni nazw (NID - ang. Namespace Identifier) i przestrzeni nazw specyficznego łańcucha (NSS - ang. Namespace Specific String). URN jest cześcią URI.
+Może byc używany do określenia zasobu bez wskazania jego lokalizacji albo rozwiązania go. Np. urn:ISBN:0-395-36341-1 jest to URN, który jak numer ISBN książki, pozwala mówic o książce, ale nie mówi ani gdzie ani jak otrzymać jej egzemplarz.
+Obecnie uważa się, że terminy URL i URN są zależnymi od kontekstu aspektami URI i rzadko muszą być rozróżniane, ponadto termin URL szybko staje się przestarzały (obsolete) i rozróżnianie pomiędzy URL i URI jest rzadko potrzebne.
+RFC 2141 mówi: URN ma służyć jako trwały, niezależny od lokalizacji identyfikator zasobu i jest zaprojektowany tak, żeby było łatwo mapować inne przestrzenie nazw (które współdzielą właściwości URN) w przestrzeń URN. Dlatego składnia zapewnia środki kodowania znaków danych w postać, która może być umieszczona w istniejących protokołach.
+
+Np. masz egzeplarz Cryptonomicon.
+
+- Jeśli mówi się komuś "moja książka jest na półce w sypialni" to jest URL - bo mowi się gdzie jest.
+- Jeśli mówi się komuś "czytałem fajną książkę, ma tytuł "Cryptonomicon"" to jest URN bo mówis się nazwę czegoś.
+- Osoba, która wie gdzie jest kopia może ją dostać lub powiedzieć gdzie jest (URL).
+- Osoba, która zna jej nazwę, może się zastanowić, powiedzieć czy ją widziała i może opowiedzieć treść.
+
+Niektóre wartości URN:
+
+- "urn:isbn:0451450523" - URN dla "The Last Unicorn", identyfikowane przez numer książki.
+- "urn:ietf:rfc:3187" - URN dla IETF RFC 3187.
+- "urn:oid:2.16.840" - URN odpowiadające OID dla USA.
+- "urn:sha1:YNCKHTQCWBTRNJIV4WNAE52SJUQCZO5C" - URN representujące konkretny plik MP3 dla przemówienia Martina Luthera Kinga.
+- "urn:uuid:6e8bc430-9c3a-11d9-9669-0800200c9a66" - URN używające 1 UUID.
+
+Można powiedzieć "Możesz znaleźć urn:ietf:rfc:3187 (URN) w http://www.faqs.org/rfcs/rfc3187.html (URL)."
+
+Rejestracja schematów nazw URI
+Najwyższym poziomem struktury nazw URI jest definicja schematów (URI schemes). RFC 2717 opisuje procedury rejestracji nowych schematów URI.
+
+#### URL (_Uniform Resource Locator_)
+
+URL (ang. Uniform Resource Locator) oznacza zunifikowany format odnośników do zasobów (głównie internetu).
+Jest to standaryzowany adres zasobu (dokument lub obraz) w internecie lub gdziekolwiek indziej. Stworzony przez Tima Berners-Lee dla użycia w WWW; obecna forma określona jest w standardzie RFC 1738.
+URL to jeden z podstawowych mechanizmów w internecie, składnia jest zaprojektowana w ogólnej postaci, jest roszerzalna i może wyrazić adresy w każdym zestawie znaków używającym ograniczonego podzestawu znaków ASCII (np. spacja nie jest nigdy używana w URL).
+
+Większości użytkowników sieci URL kojarzy się wyłącznie z adresami stron WWW, format ten jednak daje też możliwość odsyłania do wszelkich innych usług dostępnych w Internecie. Wpisując poprawny odnośnik do okna przeglądarki stron WWW możemy szybko wywołać określoną informacje w dostępnej sieci.
+
+URL są zdefiniowane przez RFC 1738 w następujący sposób:
+URL składa się z rodzaju zasobu (ang. scheme) dwukropka i części zależnej od rodzaju zasobu (ang. scheme-specific part). Nazwy rodzaju zasobu mogą składać się z małych liter, plusa, myślnika oraz kropki. Duże litery mogą być akceptowane, przy czym muszą być zamieniane na małe przez oprogramowanie.
+
+Część zależna od rodzaju usługi zwykle przybiera jedną z postaci:
+
+- W przypadku zasobów będących plikami:
+- //adres_serwera/sciezka_dostępu
+- //nazwa_uzytkownika@adres_serwera/sciezka_dostępu
+- //nazwa_uzytkownika:hasło@adres_serwera/sciezka_dostępu
+- W przypadku zasobów nie będących plikami (konta shellowe, adresy e-mail itd.)
+- nazwa_uzytkownika@adres_serwera
+
+Często oprogramowanie pozwala na różne niewłaściwe formy "urli", np. pomijanie //, lub formy typu adres_serwera/sciezka_dostepu
+
+niektóre przykłady schematów/systemów URL:
+
+- http - zasoby HTTP
+- https - HTTP przez SSL
+- ftp - File Transfer Protocol
+- mailto - E-mail adres
+- ldap - Lightweight Directory Access Protocol lookups
+- file - zasoby dostępne na lokalnym komputerze lub przez lokalną sieć współdzielenia plików
+- news - newsgrupy Usenet
+- gopher - protokół Gophera
+- telnet - protokół telnetu
+- nntp - NNTP
+
+Przykładowy URL: http://www.wikipedia.com/wiki/URL gdzie:
+
+- http: to protokół
+- //www.wikipedia.com to adres serwera
+- /wiki/URL to ścieżka dostępu
+
+URI a URL
+Każdy URL jest rodzajem URI (lub ściślej podzestawem URI). URI identyfikuje poszczególny zasób podczas kiedy URL zarówno identyfikuje zasób jak i wskazuje jego lokalizację.
+Np. URI urn:ietf:rfc:1738 identyfikuje IETF RFC 1738 nie określając gdzie znaleźć tekst tego RFC.
+A teraz trzy URL dla trzech oddzielnych dokumentów zawierających tekst tego RFC:
+
+- http://www.ietf.org/rfc/rfc1738.txt
+- http://www.w3.org/Addressing/rfc1738.txt
+- http://rfc.sunsite.dk/rfc/rfc1738.html
+
+Każdy URL unikalnie identyfikuje każdy dokument tak samo jak URI, ale składnia URL jest taka, że identyfikacja pozwala zlokalizować każdy z tych dokumentów.
+Historycznie, termin miał prawie to samo znaczenie bo prawie wszystkie URI były URL.
+
+Schemat URL URL zaczyna się od nazwy schematu po którym jest dwukropek a potem specyficzna dla danego schematu część.
+
+zobacz również http://www.iana.org/assignments/uri-schemes
+
+Ogólna składnia URI
+Składnia części specyficznej dla danego schematu zależy od wymagań schematu, schematy używające typowych połączeniowych protokołów używają wspólnej "ogólnej składni URI", zdefiniowanej poniżej:
+
+```
+scheme://authority/path?query
+```
+
+- źródło (authority) zawiera nazwę hosta lub adres IP serwera, opcjonalnie po niej dwukropek i numer portu, może także zawierać informacje o użytkowniku i hasło dla uwierzytelnienia dla serwera.
+- ścieżka która określa jakąć lokalizację hierarchicznej struktury przy użyciu slasza "/" jako delimitera pomiędzy składnikami.
+- ścieżka pytania (query part) jest zwykle określeniem parametrów dynamicznego pytania do wskazanych zasobów
+
+Kompletna autorytatywna składnia parametrów URI:
+
+```
+scheme://username@password:subdomain.domain.tld:port/directory/file.ext?parameter=value#anchor
+```
+
+Wielkość liter
+URL-e generalnie są wrażliwe na wielkość liter; jednakże ostatecznie zależy to od administratora serwera. Dla wygody niektóre serwery nie rozróżniają wielkości liter.
+
+URLe w codziennym użytku
+URL HTTP łączy w jeden prosty adres cztery podstawowe jednostki dla informacji potrzebnej do otrzymania zasobu z internetu:
+
+- protokół użyty w komunikacji
+- host (serwer) z którym nastąpi komunikacja
+- port sieciowy w serwerze na którym będzie połączenie
+- ścieżka do zasobu na serwerze (np. nazwa pliku).
+
+Typowy URL może wyglądać tak:
+
+```
+http://en.wikipedia.org:80/wiki/Special:Search?search=train&go=Go
+```
+
+gdzie
+
+- http jest protokołem
+- en.wikipedia.org jest hostem
+- 80 jest numerem sieciowego portu na serwerze (80 jest domyślną wartością dla protokołu HTTP, ta częśc może zostać ominięta),
+- /wiki/Special:Search jest ścieżką zasobu,
+- ?search=train&go=Go jest query string; ta częśc jest opcjonalna.
+
+Większość przegladarek nie wymaga od użytkownika wprowadzenia "http://" do adresu, ponieważ HTTP jest najczęstszym protokołem używanym przez przeglądarki. Podobnie jak 80 jest domyślnym portem dla http, więc zwykle nie jest wyszczególniony, można po prostu wprowadzić część URL taką jak www.wikipedia.org/wiki/Train, a żeby trafić na stronę główną wystarczy wpisać www.wikipedia.org.
+Ponieważ protokół HTTP pozwala serwerowi odpowiedzieć na żądanie przekierowaniem do innego URL wiele serwerów dodatkowo pozwala użytkownikom na opuszczenie części URL takiej jak www. lub końcowy slasz jeśli zasób jest katalogiem.
+
+Np. en.wikipedia.org/wiki/Train zawiera hierarchiczny porządek składników gdzie:
+
+- org (gTLD)
+- wikipedia (second-level domain)
+- en (subdomain)
+- wiki Train np. przed pierwszym slaszem od prawej do lewej potem reszta z lewej do prawej.
+
+Termin URL jest również używany poza kontekstem WWW. Serwery baz danych określają URL-e jako parametry połączeniowe. Podobnie każda aplikacja klient-serwer zgodnie z poszczególnym protokołem może określić format URL jako część swojego procesu komunikacji.
+Przykład URL-u bazy danych:
+
+```
+jdbc:datadirect:oracle://myserver:1521;sid=testdb
+```
+
+#### FQDN (Fully Qualified Domain Name)
+
+Jest to nazwa czytelna dla człowieka, która odpowiadaja adresowi TCP/IP interfejsu sieciowego. Zawiera nazwę hosta i nazwę domeny.
+Np. dla danej nazwy hosta "myhost" i nazwy domenowej "bar.com", FQDN to myhost.bar.com. Może być wiele hostów na świecie nazwanych "myhost" ale może być tylko jeden "myhost.bar.com".
+
+Wszędzie jest kropka na końcu nazwy domenowej, np. kończy się "com." a nie ".com" - oznacza to, że ta nazwa jest FQDN, np. "myhost.bar.com" mogłoby być niejednoznaczne ponieważ mógłby to być sufix dłuższej nazwy domenowej takiej jak "myhost.bar.com.gov" podczas kiedy "myhost.bar.com." jest FQDN.
+Technicznie kropka jest korzeniem hierarchii DNS i dlatego FQDN jest czasem nazywany zakorzenioną nazwą domenową (rooted domain name). W praktyce kropka jest najczęściej pomijana i wtedy nazwa domenowa - przynajmniej w teorii - jest niejednoznaczna.
+
+Najdłuższa dozwolona FQDN ma 255 bajtów, z dodatkowym ograniczeniem 63 bajtów na każdy poziom nazwy domenowej, składnia nazw domenowych jest omawiana w różnych RFC (RFC 1035, RFC 1123 i RFC 2181). Poziomy w FQDN są ograniczone do bardzo ograniczonego zestawu znaków, zawierającego litery ASCII od a do z i "-" i nie rozróżniają wielkości liter.
+_Internationalized domain names_ rozszerzają repertuar znaków nazw domenowych do zawierajacych znaki nie-ASCII przez kodowanie znaków unikodowych w strumień bajtów z normalnym zestawem znaków FQDN. W wyniku tego ograniczenie długości znaków nazw domenowych jest zależne od kontekstu.
+
+FQDN to nie to samo co URL ponieważ brakuje nazwy protokołu TCP/IP użytego do komunikacji z hostem.
+URL zwykle zaczyna się od "protocol://" i określa protokół komunikacyjny (jak "http://" lub "ftp://") i może też zdefiniować ścieżkę katalogową i numer portu.
+Ale czasem zamiast pełnych URL stosuje się tylko FQDN, w tym wypadku domyślnym protokołem jest HTTP a portem TCP 80.
+
+- RFC 1035: Domain names: implementation and specification
+- RFC 1123: Requirements for Internet Hosts - application and support
+- RFC 2181: Clarifications to the DNS specification

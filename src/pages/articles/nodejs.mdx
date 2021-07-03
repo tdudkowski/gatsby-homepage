@@ -1,0 +1,517 @@
+---
+title: "NodeJS"
+comment: ""
+section: "it"
+subsection: "js"
+---
+
+### Czym jest Node.js
+
+Środowisko uruchomieniowe JavaScript. Umożliwia uruchomienie kodu JavaScript poza przeglądarką. Ryan Dahl 2009.
+
+Jednowątkowe (tak jak JS), sterowane wydarzeniami. Open Source, napisane w C++, wieloplatformowe: Windows, Mac i Linux.
+
+W 2018 Dahl ogłosił powstanie alternatywy dla Node.js, z założenia nastawionej na bezpieczeństwo - V8, Rust i Tokio
+
+### Składniki
+
+- **Silnik V8*- produkt Googla, znany z przeglądarki Chrome; serce Node.js
+- **npm*- domyślny menedżer pakietów - i biblioteka [npm](https://www.npmjs.com); zarządza pakietami i zależnościami
+- **libuv*- biblioteka udostępniająca funkcje systemu operacyjnego, m in zapewnia asynchroniczność - [libuv | Cross-platform asynchronous I/O](http://libuv.org), operacje wejścia wyjścia, system plików, pętla zdarzeń
+- **REPL*- (Read - Eval - Print - Loop) interfejs poleceń Node.js interaktywny terminal, dostęp do modułów podstawowych, uruchamia go polecenie node; online: [Repl.it - Online Nodejs Editor and IDE](https://repl.it/languages/nodejs)
+- **moduły*- dzielimy je na podstawowe (wystarczy require) i dostępne w pakietach (trzeba zainstalować)
+    - **http*- jeden z wielu standardowych modułów, ten jest odpowiedzialny za obsługę protokołu HTTP
+- **nodemon*- nazwa to skrót od "Node.js monitor"; jest to osobny, nie będący częścią pakietu, program uruchamiany w trybie demona, niezbędny do dewelopingu; śledzi pliki i przy każdej modyfikacji restartuje Node.js. [nodemon](https://nodemon.io); trzeba go zainstalować osobno, wyjście ctrl+C
+
+Moduły podstawowe (core modules) niektóre nie wymagają nawet require: console, setTimeout. Działają jak w JS, implementacje się różnią, ale działanie jest identyczne. 124/86
+
+Innym popularnym menedżerem pakietów jest [yarn](https://yarnpkg.com/).
+
+Odpowiednikiem obiektu window w przeglądarce, w Node.js jest obiekt global. W REPLu this===global. Poza nim this === exports.
+
+Silnik V8, tak samo jak JS, jest synchroniczny, to Node zapewnia asynchroniczność, LibUV zarządza zdarzeniami asynchronicznym.
+
+- **synchroniczne*- (bieżące zadanie blokuje, reszta czeka); callstack stos wywołań obsługujący jednowątkowość.
+- **asynchroniczne*- (wykonywane są po kolei, część odsyłana do pętli zdarzeń i czeka aż stos wywołań będzie pusty), najczęściej związane z callbackiem teraz często również z promisami i async/await; zwykle err i to co zwraca wyniki: error first callback; mówimy o tym pętla zdarzeń i nieblokujący model wejścia wyjścia (event loop i non-blocking I/O)
+
+V8 JIT, w chwili wykonania JS jest optymalizowany i kompilowany do kodu maszynowego; zarządza pamięcią (garbage collection)
+
+Czego nie ma w Node.js a jest tylko w przeglądarce: DOM, element window, cookie, fetch, alert.
+
+Node pracuje z plikami (i systemem plików przez system operacyjny), bazami danych, backend, biblioteka modułów, praca z siecią.
+
+### Uruchomienie
+
+Przy uruchomieniu przez init generator tworzy packet.json z informacjami o zainstalowanych pakietach; packet.lock.json nie do edycji, dla instalacji na nowo przez install
+
+npm init
+
+Nie trzeba odpowiadać na pytania. Z ^ aktualizacja tylko do wersji zgodnej z pierwszym numerem.
+
+- y automatycznie
+- -S pojawia się w zależnościach
+- install odtwarza na podstawie jsona
+- save dev w zależnościach developmentu (odwrotność: npm install --only=prod)
+- -g globalnie flaga
+- npm uninstall nazwa_modułu odinstalowanie
+
+JSON: jak obiekt JS, ale klucz w cudzysłowie (nie apostrofie), a ostatni nie ma przecinka. Metody: parse i stringify.
+
+Architekturą różni się od przeglądarki, ale posiada te same funkcje. Można uruchomić JS bezpośrednio w linii poleceń:
+
+```
+ node App.js
+```
+
+Nazwa App.js jest domyślna, ale zwyczajowa.
+
+### Moduły
+
+Moduł to oddzielny program, element programu, który coś robi, wykonuje jakieś zadania. Może być plikiem, lub katalogiem z plikami. Jest używany wielokrotnie.
+
+Kontaktuje się z innymi elementami programu przez API, który jest interfejsem eksportowanym i importowanym. Bez eksportu i importu moduły są niezależne, nie widzą się nawzajem i mają izolowany scope, zasięg. Wynika to z faktu, że w momencie uruchomienia są przez Node.js owijane w funkcję (wrapper) i mają wszystkie cechy funkcji, czyli np. własny zasięg (prywatny).
+
+mod.wrapper
+
+```
+ (function (exports, require, module, __filename, __dirname) {
+  // kod modułu
+})()
+```
+
+Parametry dirname i filename są to dane lokalne. Zmieniają się zależnie od kontekstu, czyli miejsca w którym są wywoływane.
+
+To dzięki funkcji require() łączącej moduły były one dostępne w Node.js na wiele lat zanim wprowadzono je do JS w ES6 w 2015. Require jest synchroniczna, bo czekamy na rezultat. Tak jak w poniższym przykładzie bez ścieżki dostępu odnosimy się tylko do modułów podstawowych, które są zaimplementowane jako funkcje.
+
+```
+ const http = require('http');
+```
+
+Powyżej składnia CommonJS, można też stosować nowszą ES6 (ES Modules)
+
+```
+ import http from 'http';
+```
+
+Początkowo exports i module.exports to to samo, oba prowadzą do tego samego pustego obiektu. Dlatego każdy moduł domyślnie coś zwraca, ma return z wrappera; jeżeli nie zadeklarujemy co, to będzie to pusty obiekt: { }. Kiedy tworzymy moduły sami musimy określić co z nich zwracamy. Kiedy tworzymy przypisanie module.exports się zmienia.
+
+Moduły możemy podzielić na wbudowane (core modules), instalowane (z npm) i własne napisane przez nas. API to zbiór udostępnianych funkcji.
+
+### Niektóre moduły podstawowe
+
+```
+ fs.readFile('./file.txt', 'utf8', (err, file) => console.log(file))
+```
+
+```
+ fs.access('ścieżka i nazwa pliku', callback)
+
+ fs.rename('stara nazwa', 'nowa nazwa', callback)
+
+ fs.readdir('ścieżka', (err, files) => {callback})
+
+ fs.readfile('nazwa', 'kodowanie np utf8' domyslnie null czyli bufor, (err, data)=>{callback})
+
+ fs.writeFile('nazwa', 'tresc' (err)=>{callback})
+
+ fs.appendFile - jw
+```
+
+Domyślnie utf8 append write file
+
+```
+ path.join(__dirname, 'nazwapliku')
+
+ path.parse('__filename')
+
+ path.extname('nazwa pliku')
+
+ path.isAbsolute('ścieżka i nazwa pliku')
+
+ os.uptime()
+
+ os.homedir()
+```
+
+### Fetch
+
+Promisy, pozytywne rozwiązanie przez kolejne then. Błąd obsługiwany jest przez catch. Jeżeli jest tylko jeden wiersz funkcji return nie jest potrzebny. Moduł [node-fetch](https://www.npmjs.com/package/node-fetch)
+
+```
+const fetch = require("node-fetch");
+
+const year = process.argv[2] || Math.floor(Math.random() - 2020);
+
+fetch(\`http://numbersapi.com/$\{year}/year?json\`)
+  .then(response => {
+    console.log(response.status, response.ok);
+    return response.json();
+  })
+  .then(data => console.log(data.text))
+  .catch(error => console.log("Błąd", error));
+ ```
+
+Inne moduły tego typu: [request](https://www.npmjs.com/package/request) i [minimist](https://www.npmjs.com/package/minimist).
+
+### Serwer
+
+Żądanie zawiera: nazwę metody (domyślnie get), ścieżkę URL bez portu i hosta, wersję protokołu
+
+Obiekt żądania:
+
+- req.url ścieżka URL
+- req.methods domyślnie GET
+- req.headers obiekt składający się z par nazwa wartość; np. {host : 'localhost:3000', connection: 'keep-alive'}
+
+Obiekt odpowiedzi
+
+- res.writeHead() status odpowiedzi, i jej nagłówki (headers) w formie obiektu; np. writHead(200, {'Content-Type':'application/json'})
+- res.statusCode kod odpowiedzi
+- res.write(/- zawartość */) treść odpowiedzi
+- res.end() informacja dla serwera "możesz wysyłać", zakończenie odpowiedzi, można tam zawrzeć treść zastępując res.write().
+
+- [HTTP response status codes](https://developer.mozilla.org/de/docs/Web/HTTP/Status) \- kody odpowiedzi serwera
+- [HTTP request methods](https://developer.mozilla.org/de/docs/Web/HTTP/Methods) \- metody: GET, POST, ALL, DELETE itp
+
+Serwer w Node.js
+
+Najprościej
+
+```
+ const http = require("http");
+
+ http
+ .createServer((req, res) => {
+ res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
+ res.end("&lt;h1&gt;Hej, zażółć gęślą jaźń&lt;/h1&gt;");
+ })
+ .listen(3000, "127.0.0.1");
+```
+
+Podzielony na elementy
+
+```
+ const http = require("http");
+
+ const server = http.createServer();
+ server.addListener("request", (req, res) => {
+ res.writeHead(200, { "Content-Type": "text/plain; charset=utf-8" });
+ res.end("no elo, zażółć gęślą jaźń");
+ });
+ server.listen(3000, "127.0.0.1");
+```
+
+Port można zapisać do zmiennej ${port}.
+
+```
+ const port = process.env.PORT || 3000;
+```
+
+W środku odpowiedzi logika asynchroniczna żeby nie blokować serwera. Routing to rozdzielenie odpowiedzi/zasobów w zależności od charakteru żądania. Przykład routingu:
+
+```
+ const http = require("http");
+ const fs = require("fs");
+ const path = require("path");
+ const port = process.env.PORT || 3000;
+ 
+ const users = [{ name: "Adam", id: 1 }, { name: "Ewa", id: 2 }];
+ 
+ http
+   .createServer((req, res) => {
+     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
+     switch (req.url) {
+       case "/":
+         fs.readFile(path.join(__dirname, "index.html"), (err, page) => {
+           if (err) res.end("Nie ma pliku index");
+           else res.end(page);
+         });
+         break;
+       case "/users":
+         fs.readFile(path.join(__dirname, "users.html"), (err, page) => {
+           if (err) res.end("Nie ma pliku users");
+           else res.end(page);
+         });
+         break;
+       case "/api":
+         res.writeHead(200, {
+           "Content-Type": "application/json; charset=utf-8"
+         });
+         const usersJSON = JSON.stringify(users);
+         res.end(usersJSON);
+         break;
+       case "/code.js":
+         res.writeHead(200, {
+           "Content-Type": "application/javascript; charset=utf-8"
+         });
+         fs.readFile(path.join(__dirname, "./code.js"), (err, page) => {
+           if (err) res.end("Nie ma pliku");
+           else res.end(page);
+         });
+         break;
+       default:
+         res.end("strona nie istnieje");
+     }
+   })
+   .listen(port, "127.0.0.1", () => {
+    console.log(\`Serwer nasłuchuje na porcie: $\{port}\`);
+   });
+```
+
+### Odnośniki
+
+#### Strony
+
+- [Node.js](https://nodejs.org/en/) \- [NodeSchool](https://nodeschool.io/)
+- ["Node.js Course for Beginners"](https://www.freecodecamp.org/news/nodejs-course/) \- [Node.js Collection](https://medium.com/the-node-js-collection) | [Dillion Megida "6 Tools You Can Use to Check for Vulnerabilities in Node.js"](https://www.freecodecamp.org/news/6-tools-you-can-use-to-check-for-vulnerabilities-in-node-js/)
+- ["Basics of Node.js"](https://www.agiliq.com/blog/2019/01/basics-of-nodejs/)
+- [NodeSource : For mission-critical Node.js applications](https://nodesource.com) \- [Blog](https://nodesource.com/blog)
+- [Learning Node.js \[PDF\]](https://www.programmer-books.com/learning-node-js-pdf/)
+- scotch.io: [Holly Lloyd - Build Your First Node.js Website Courses](https://scotch.io/courses/build-your-first-nodejs-website) | [Ado Kukic - Getting Started with Node.js Courses](https://scotch.io/courses/getting-started-with-nodejs) | [Ryan Chenkie - Build a RESTful Node.js API Courses](https://scotch.io/courses/build-a-restful-nodejs-api) | [Chris on Code - Routing Node Applications Courses](https://scotch.io/courses/routing-node-applications)
+- [A complete guide to threads in Node.js](https://blog.logrocket.com/a-complete-guide-to-threads-in-node-js-4fa3898fe74f)
+- MDN: ["Node.js server without a framework"](https://developer.mozilla.org/en-US/docs/Learn/Server-side/Node_server_without_framework)
+- tutorialsteacher.com: [Node.js Tutorials](https://www.tutorialsteacher.com/nodejs/nodejs-tutorials)
+- [101node](https://101node.io)
+- Nerdjfpb Writings: [Node Series](https://blog.nerdjfpb.com/tag/node-series/)
+- Flavio Copes: [All the Node.js tutorials](https://flaviocopes.com/tags/node/)
+- [Flavio Copes "The definitive Node.js handbook"](https://www.freecodecamp.org/news/the-definitive-node-js-handbook-6912378afc6e/)
+- Cassandra Wilcox: ["Getting started with Node.js"](http://cassandrawilcox.me/getting-started-with-node-js/) | ["Setting up a Node.js Project with NPM"](http://cassandrawilcox.me/setting-up-a-node-js-project-with-npm/) | ["Writing a Simple Server with Node.js and Express"](http://cassandrawilcox.me/simple-server-node-js-express/) | ["Serving Dynamic Content with Node.js and Pug"](http://cassandrawilcox.me/serving-dynamic-content-node-js-pug/) | ["Serving Static Content with Node.js and Express"](http://cassandrawilcox.me/serving-static-content-node-js-express/)
+- [Node.js Interview Questions](https://www.cheaki.com/nodejs/nodejs-interview-questions)
+- [NodeJS Tutorials](https://www.tutorialslogic.com/node-js)
+- [FullStak - podcast i blog | FullStak](https://fullstak.pl)
+- [Node.js](https://softwareontheroad.com/tags/node-js/) \- Softwareontheroad: articles on node, react, angular, AWS
+- [Deploying nodejs](https://deployingnodejs.com/)
+- Codez Up [Node.js Archives](https://codezup.com/node-js-tutorial-series-examples/)
+- Mastering JS [Node Tutorials](https://masteringjs.io/node)
+- Microsoft [Developing with Node.js on Windows](https://docs.microsoft.com/en-us/windows/nodejs/setup-on-wsl2)
+- tutorialspoint [Node.js Tutorial](https://www.tutorialspoint.com/nodejs/index.htm)
+- [Flavio Copes "A brief history of Node.js"](https://flaviocopes.com/node-history/)
+- [NodeJS | www.thecodebarbarian.com](http://thecodebarbarian.com/tag/nodejs.html)
+
+#### Kursy
+
+- ["Top 5 Node.js Tutorials & Courses Online - Updated 2020"](https://thecodingpie.com/post/top-5-nodejs-tutorials-courses-online-updated-2020/)
+- freeCodeCamp.org ["Node.js and Express.js - Full Course" \[YT 8:16:47\]](https://www.youtube.com/watch?v=nJ2hIc62u-w)
+- Microsoft [Build JavaScript applications with Node.js](https://docs.microsoft.com/en-us/learn/paths/build-javascript-applications-nodejs/)
+- CoderOne ["Full MERN Website React Nodejs w/ GraphQL Tailwind and Docker From Zero To Deployment + GIVEAWAY" [YT 8:15:43]](https://www.youtube.com/watch?v=4ELH8CT4J0A)
+
+#### Narzędzia
+
+- Prisma's Data Guide [Top 11 Node.js ORMs, Query Builders & Database Libraries in 2020](https://dataguide.prisma.io/database-tools/top-nodejs-orms-query-builders-and-database-libraries-in-2020)
+- [report-toolkit](https://ibm.github.io/report-toolkit/) CLI & programmable API to help developers analyze & process Node.js Diagnostic Reports
+- [Sam Agnew "5 Ways to Make HTTP Requests in Node.js"](https://www.twilio.com/blog/2017/08/http-requests-in-node-js.html)
+- [jasongin / nvs](https://github.com/jasongin/nvs) Node Version Switcher - A cross-platform tool for switching between versions and forks of Node.js
+- [Prisma](https://www.prisma.io) an open-source database toolkit
+- [subnub / myDrive](https://github.com/subnub/myDrive) Node.js and mongoDB Google Drive Clone
+- [f0lg0 / node-webapp-template-1](https://github.com/f0lg0/node-webapp-template-1) beginner friendly NodeJS webapp template (REST API).
+- [For.io Studio](https://studio.for.io/v1/) Generate, customize, test & debug Node.js backends - in your browser
+
+#### Artykuły
+
+- ["11 Best NodeJs Tutorial, Course, Training and Certification"](https://www.jadirectives.com/best-nodejs-tutorial-course-training/) | ["7 Best Mobile Apps Development Courses, Tutorials and Training"](https://www.jadirectives.com/best-mobile-apps-development-courses-tutorials-training/)
+- ["How to Perform Web-Scraping using Node.js"](https://blog.bitsrc.io/https-blog-bitsrc-io-how-to-perform-web-scraping-using-node-js-5a96203cb7cb) | ["How to Perform Web-Scraping using Node.js- Part 2"](https://blog.bitsrc.io/how-to-perform-web-scraping-using-node-js-part-2-7a365aeedb43)
+- ["goldbergyoni / nodebestpractices"](https://github.com/goldbergyoni/nodebestpractices) The Node.js best practices list (December 2020)
+- ["Node.js and JS foundations are merging to form OpenJS"](https://venturebeat.com/2019/03/12/node-js-and-js-foundations-are-merging-to-form-openjs/amp/)
+- Adrian Mejia [Blog Tag: javascript](https://adrianmejia.com/tags/javascript/) | ["Getting started with Node.js modules: require, exports, imports and beyond"](https://adrianmejia.com/blog/2016/08/12/getting-started-with-node-js-modules-require-exports-imports-npm-and-beyond/)
+- Tania Rascia: [Posts tagged as node](https://www.taniarascia.com/tags/node/)
+- [Phil Nash: "How To Start A Node.Js Project"](https://philna.sh/blog/2019/01/10/how-to-start-a-node-js-project/)
+- [Shadid Haque "How to Architect a Node.Js Project from Ground Up?"](https://blog.soshace.com/how-to-architect-a-node-js-project-from-ground-up/)
+- Full stack javascript tutorial For beginners: [Part 1 \[The Backend\]](https://hassansaleh.info/p/5) | [Part 2 \[The Frontend\]](https://hassansaleh.info/p/6)
+- ["Getting started with Node.js: Introduction"](https://contextneutral.com/story/getting-started-with-nodejs-what-and-how/) | ["Creating an HTTPs server with Node.js and Express"](https://contextneutral.com/story/creating-an-https-server-with-nodejs-and-express)
+- Aditya Sridhar ["How to Easily use GRPC and Protocol Buffers with NodeJS"](https://adityasridhar.com/posts/how-to-easily-use-grpc-and-protocol-buffers-with-nodejs)
+- Medium: [TAGGED IN Nodejs](https://medium.com/javascript-in-plain-english/tagged/nodejs) | ["What are the best resources for learning Node.js"](https://medium.com/@willsentance/what-are-the-best-resources-for-learning-node-js-25eccdc42c14) | [Victor Ofoegbu "The only NodeJs introduction you’ll ever need."](https://codeburst.io/the-only-nodejs-introduction-youll-ever-need-d969a47ef219) | ["Node Express Pico-Tutorial Part 1: Hello World!"](https://picocoder.io/node-express-pico-tutorial-part1-hello-world/) | [Kevin Downs "Intro to Node.js"](https://dev.to/kjdowns/intro-to-node-js-32e8) | ["Node.js tips and tricks that can help you deliver a more secure and robust application"](https://www.inkoop.io/blog/nodejs-tips-tricks-that-can-help-you-deliver-more-secure-and-robust-application/) | [Lisa "Beginner's guide to creating a Node.js server"](https://dev.to/lisahjung/beginner-s-guide-to-creating-a-node-js-server-3d0j) | ["45 Amazing Node.js Open Source for the Past Year (v.2019)"](https://medium.mybridge.co/45-amazing-node-js-open-source-for-the-past-year-v-2019-c774d750e925) | ["Build Super Fast Apps in Node.js using Redis Cache"](https://blog.manifold.co/build-super-fast-apps-in-node-js-using-redis-cache-d3d55bbdc375) | ["5 common mistakes in every Node.js app"](https://medium.com/@a0viedo/5-common-mistakes-in-every-node-js-app-a4bea7ac05bc) | [Rich Trott "Using worker_threads in Node.js"](https://medium.com/@Trott/using-worker-threads-in-node-js-80494136dbb6) | ["Bulletproof node.js project architecture"](https://softwareontheroad.com/ideal-nodejs-project-structure/) | [Nikhil Rangpariya "Top 10 Node.Js Frameworks to Use in 2020"](https://medium.com/swlh/top-10-node-js-frameworks-to-use-in-2020-bf99628fd1dd) | ["Natural language processing for Node.js"](https://blog.logrocket.com/natural-language-processing-for-node-js/) | [Orel Balilti "NodeJS — Life changer or just a mess?"](https://medium.com/front-end-weekly/easy-development-with-nodejs-life-changer-or-is-it-just-a-mess-d3e8619b68e6) | [Jeremy Kithome "The best unit testing frameworks for Node.js"](https://blog.logrocket.com/the-best-unit-testing-frameworks-for-node-js/) | [Alexander Nnakwue "Going serverless with your Node.js apps"](https://blog.logrocket.com/going-serverless-with-your-node-js-apps/) | [Yogesh Chavan "How to generate PDF of a website page with Node.js"](https://medium.com/javascript-in-plain-english/generate-best-quality-pdf-of-any-webpage-html-page-in-nodejs-7b1223e1a3ac) | [Olutunmbi Banto "Writing Tests in your Node JS API Application"](https://itnext.io/writing-tests-in-your-node-js-api-application-cfb5592df466) | [Moorad Altamimi "How I made my own YouTube Downloader using JavaScript and Node.js"](https://blog.usejournal.com/how-i-made-my-own-youtube-downloader-using-javascript-and-node-js-160b172f6e10) | [Oliver Alonso "Scalability in NodeJS: Creating a Zero-downtime cluster"](https://itnext.io/creating-a-zero-downtime-cluster-in-nodejs-ad879ee3160) | [Sunny Sun "How to Resolve Certificate Errors in a Node.js App with SSL Calls"](https://levelup.gitconnected.com/how-to-resolve-certificate-errors-in-nodejs-app-involving-ssl-calls-781ce48daded) | [Abhishek Singh "Different types of dependencies in a Node.js application explained"](https://medium.com/javascript-in-plain-english/what-the-dependency-types-of-dependencies-in-a-node-js-application-explained-904a5424fbd3) | [Shahid "Microservice Architecture with Node.js"](https://levelup.gitconnected.com/microservice-architecture-with-node-js-6a9422bd2bb6) | [javinpaul "7 Free Courses to learn Node.js in 2020"](https://medium.com/javarevisited/7-free-courses-to-learn-node-js-in-2020-2f1dd6722b49) | [Gajus Kuizinas "Ultimate guide to concurrent logging in Node.js"](https://itnext.io/ultimate-guide-to-concurrent-logging-in-node-js-4e47bd2eae37) | [Node.js "Source maps in Node.js. Supporting the many flavors of JavaScript"](https://medium.com/@nodejs/source-maps-in-node-js-482872b56116) | [Idorenyin Obong "7 ways to improve Node.js performance at scale"](https://blog.logrocket.com/7-ways-to-improve-node-js-performance-at-scale/) | [Indrek Lasn "12 Useful Packages Every Node.js Developer Should Know"](https://medium.com/better-programming/12-useful-packages-every-node-js-developer-should-know-2746db760e) | [Shubham Chadokar "Email sending is fun in nodejs"](https://medium.com/@schadokar/how-to-send-emails-in-nodejs-ff0276405159)
+- blog.appsignal.com [Diogo Souza "Security Best Practices for Node.js"](https://blog.appsignal.com/2020/08/12/security-best-practices-for-nodejs.html) | [Andrei Gaspar "Node.js Resiliency Concepts: Recovery and Self-Healing"](https://blog.appsignal.com/2020/09/09/nodejs-resiliency-concepts-recovery-and-self-healing.html) | [Andrei Gaspar "Node.js Resiliency Concepts: The Circuit Breaker"](https://blog.appsignal.com/2020/07/22/nodejs-resiliency-concepts-the-circuit-breaker.html) | [Diogo Souza "Building APIs With GraphQL in Your Node.js Application"](https://blog.appsignal.com/2020/06/03/building-apis-with-graphql-in-your-node-application.html) | [Deepu K Sasidharan "Avoiding Memory Leaks in Node.js: Best Practices for Performance"](https://blog.appsignal.com/2020/05/06/avoiding-memory-leaks-in-nodejs-best-practices-for-performance.html) | [Diogo Souza "Exploring Node.js Async Hooks"](https://blog.appsignal.com/2020/09/30/exploring-nodejs-async-hooks.html)
+- Node.js Under The Hood: ["#1 - Getting to know our tools"](https://dev.to/khaosdoctor/node-js-under-the-hood-1-getting-to-know-our-tools-1465) | ["#2 - Understanding JavaScript"](https://dev.to/khaosdoctor/node-js-under-the-hood-2-understanding-javascript-48cn) | ["#3 - Deep Dive Into the Event Loop"](https://dev.to/khaosdoctor/node-js-under-the-hood-3-deep-dive-into-the-event-loop-135d)
+- ["What Really Makes Node.js Great?"](https://codersera.com/blog/what-really-makes-node-js-great/)
+- [David Hettler "Monitoring Node.js: Watch Your Event Loop Lag!"](https://davidhettler.net/blog/event-loop-lag/)
+- ["Create HTTP Web Server in Node.js: Complete Tutorial"](https://www.guru99.com/node-js-create-server-get-data.html)
+- [Noah Heinrich "Generating PDFs with Node"](https://buttercms.com/blog/generating-pdfs-with-node)
+- ["Github Login Implementation In Node.js Using Passport.js"](https://codesquery.com/github-login-implementation-in-node-js-using-passport-js/)
+- [GoogleCloudPlatform/nodejs-getting-started](https://github.com/GoogleCloudPlatform/nodejs-getting-started) A tutorial for creating a complete application using Node.js on Google Cloud Platform
+- morioh: [Dylan North "7 Tips for Mastering Node.js in 2020"](https://morioh.com/p/98914b10cf98) | [Nandu Singh "How to Use a SQL Like and Regex Search in MongoDB and Node.JS"](https://morioh.com/p/17b7f3cdc512) | ["Payment With Stripe in Node.js Application Example & Tutorial"](https://morioh.com/p/ce0cd03fce3d/payment-with-stripe-in-node-js-application-example-tutorial) | [Ruhan Khandakar "Introducing module.exports | How to export in Node.js"](https://morioh.com/p/877114da324e) | [Robert E. Hilton "How to building a stable Node.js project architecture"](https://morioh.com/p/6aad46c296a5) | [Chih- Yu Lin "Node.JS | Build a Command Line (CLI) Tool in NodeJS"](https://morioh.com/p/4f29cbf70f78) | ["Top Mistakes That Node.js Developers Make and Should be Avoided"](https://morioh.com/p/8e3b6ad8e6fb/top-mistakes-that-node-js-developers-make-and-should-be-avoided) | ["Top 5 Common Node.js mistakes in Lambda"](https://morioh.com/p/ffc9ab6c004a) | [Cristian Vasta "Social Login via Google & Facebook to Your Single-page App"](https://morioh.com/p/d13315369c31) | [Peter Andrews "Creating a simple CRUD app with NodeJS, GraphQL and React"](https://morioh.com/p/3d181297c7f3) | [Dylan North "How to avoiding callback hell in Node.js"](https://morioh.com/p/becc200404bf) | [Poppy Cooke "The Ultimate Node.js Beginner Tutorial"](https://morioh.com/p/75a3a8322751) | [Mikael Abehsera "Learn how to get Serverless running with Node.js"](https://morioh.com/p/eab9d4550859) | [Liam Hurst "Top 7 Most Popular Node.js Frameworks You Should Know"](https://morioh.com/p/e2ee1fa638bf) | [Ellis Herbert "Push Notifications Using Node.js and Firebase"](https://morioh.com/p/8e139d937058) | [Peter Andrews "Getting started with Elasticsearch and Node.js"](https://morioh.com/p/1d2117d5124f) | [Anda Lacacima "How to Build an Application with ReactJS and NodeJS"](https://morioh.com/p/145fa81ee70a)
+- [:78 NodeJS Interview Questions & Answers:](https://coderrocketfuel.com/article/node-js-interview-questions-and-answers) | [Joshua Rowe "Nodejs Full Stack App for User Authentication"](https://morioh.com/p/06a52bc3f2ea) | [Ellis Herbert "How to Build a social poll app with Node.js"](https://morioh.com/p/bf6d143fb834) | [Most Sara "How to build a Simple Beginner App with Node.js, Bootstrap and MongoDB"](https://morioh.com/p/4992b8208a1c) | [Sofia Kelly "Starting Node.js on Windows for Beginner"](https://morioh.com/p/a7360189ee6b) | [i18next "Node.js web frameworks like express or Fastify and also for Deno"](https://morioh.com/p/e368a540066d) | ["Node.js Everywhere with Environment Variables"](https://morioh.com/p/b9d74ff0eb67/node-js-everywhere-with-environment-variables)
+- ["You Can Now Write Google Cloud Functions with Node.js 8"](https://www.zesty.io/mindshare/marketing-technology/you-can-now-write-google-cloud-functions-with-node-js-8/)
+- alxolr: ["Learning asynchronous programming in node.js with callbacks"](https://www.alxolr.com/articles/learning-asynchronous-programming-in-node-js-with-callbacks) | ["How to fork a nodejs stream into many streams"](https://www.alxolr.com/articles/how-to-fork-a-nodejs-stream-into-many-streams)
+- ["Black Clouds and Silver Linings in NodeJS Security"](https://codequs.com/p/Hk6Jp4kDH/black-clouds-and-silver-linings-in-nodejs-security)
+- ["Get Started With Node: An Introduction To APIs, HTTP And ES6+ JavaScript"](https://www.smashingmagazine.com/2019/02/node-api-http-es6-javascript/)
+- LoginRadius Engineering [Vineeta Jain "Build A Twitter Bot Using NodeJS"](https://www.loginradius.com/engineering/blog/build-a-twitter-bot-using-nodejs/) | [Aman Agrawal "Facebook authentication using NodeJS and PassportJS"](https://www.loginradius.com/engineering/blog/facebook-authentication-using-node-and-passport/) | [Puneet Singh "Google authentication with Node.js and Passport.js"](https://www.loginradius.com/engineering/blog/google-authentication-with-nodejs-and-passportjs/)
+- ["Client-Side JavaScript to Node.js"](http://techslides.com/client-side-javascript-to-node-js)
+- CodeWall: [NodeJS Archives](https://www.codewall.co.uk/category/nodejs/) ["How To Secure Your Node.js Application With JSON Web Token Tutorial"](https://www.codewall.co.uk/secure-your-node-js-application-with-json-web-token/) | ["Setting Up a NodeJS Web Server On Your Android Phone or Tablet"](https://www.codewall.co.uk/setting-up-a-nodejs-web-server-on-your-android-phone-or-tablet/) | [Dan Englishby "Setting Up A Local Web Server With NodeJS & ExpressJS"](https://www.codewall.co.uk/setting-up-a-local-web-server-with-nodejs-expressjs/)
+- ["Automatic NodeJS API Generator from MySQL Database"](http://nishantverma.me/automatic-nodejs-api-generator-from-mysql-database/)
+- ["Using Strapi for Node.js Content Management with a React SPA"](https://school.geekwall.in/p/B10myJlNB/using-strapi-for-node-js-content-management-with-a-react-spa)
+- [Express Validator Tutorial](https://auth0.com/blog/express-validator-tutorial/) | [Dan Arias "Create a Simple and Stylish Node Express App"](https://auth0.com/blog/create-a-simple-and-stylish-node-express-app/)
+- ["Generating PDFs with Node"](https://buttercms.com/blog/generating-pdfs-with-node)
+- ["Generating PDF from HTML with Node.js and Puppeteer"](https://blog.risingstack.com/pdf-from-html-node-js-puppeteer/)
+- [Janith Kasun "Building a REST API with Node and Express"](https://stackabuse.com/building-a-rest-api-with-node-and-express/)
+- [Weiyuan Liu "Exploring Google Sheets API with Node.js — Going on a test drive"](https://levelup.gitconnected.com/exploring-google-sheets-api-with-node-js-going-on-a-test-drive-1a7a339005ed)
+- ["Build a Twitter Clone Server with Apollo, GraphQL, Nodejs, and Crowdbotics"](https://blog.crowdbotics.com/build-a-twitter-clone-server-with-apollo-graphql-nodejs-and-crowdbotics/)
+- ["Build Node.js RESTful APIs in 10 Minutes"](https://school.geekwall.in/p/QknYRgZf/build-node-js-restful-apis-in-10-minutes)
+- [Kapehe Jorgenson "Node.js v14: What's New?"](https://auth0.com/blog/nodejs-v-14-whats-new/)
+- [Ganeshmani P "How To Implement Worker Threads In Node.js"](https://www.codewall.co.uk/how-to-implement-worker-threads-in-node-js/)
+- ["Creating REST API in Node.js with Express and MySQL"](https://blog.pankaj.pro/creating-rest-api-in-nodejs-with-express-and-mysql-ck1qhricz00gb12s158i45k7q)
+- [majikarp/node-desktop-app-template](https://github.com/majikarp/node-desktop-app-template) Simple Template for Creating a Desktop Application powered by Node.js, Electron and Bootstrap
+- [tareksalem/grandjs](https://github.com/tareksalem/grandjs) A backend framework for solid web apps based on node.js
+- Bleeding Code [/NodeJS](http://bleedingcode.com/category/nodejs/)
+- Scott Moss: [Server-Side GraphQL in Node.js](https://frontendmasters.com/courses/server-graphql-nodejs/)
+- [Shenesh Perera "Web Scraping with Javascript and NodeJS"](https://www.scrapingbee.com/blog/web-scraping-javascript/)
+- [Eugene Stepnov "14+ Best Node Js Open Source Projects"](https://flatlogic.com/blog/14-best-node-js-open-source-projects/)
+- Aparna Joshi [Posts tagged as NodeJs](https://aparnajoshi.netlify.app/tags/node-js)
+- [Margo McCabe "Building a Database Written in Node.js from the Ground Up"](https://dev.to/harperdb/building-a-database-written-in-node-js-from-the-ground-up-2hgm)
+- Simon Plenderleith [Category: Node.js](https://simonplend.com/category/node-js/)
+
+#### Web Accessibility
+
+- [Jeremy Kithome "How to build an accessible date picker component in React"](https://blog.logrocket.com/how-to-build-an-accessible-date-picker-component-in-react/)
+
+#### Youtube
+
+- **Kanały*- [PedroTech \[YT (1)\]](https://www.youtube.com/channel/UC8S4rDRZn6Z_StJ-hh7ph8g/)
+- **Playlisty*- [Coders Life "Node.js Crash Course - Create Server - From Installation to Hosting with Database & CRUD operations" \[YT playlist 8 filmów\]](https://www.youtube.com/playlist?list=PL_ueAZVR7Mld33ZUWgn2JYRNqcKEX_ook) | [edureka!: Node.Js Tutorial Videos \[YT playlist 26 filmów\]](https://www.youtube.com/playlist?list=PL9ooVrP1hQOHDHAMA5egjL5MrbnNIuJqZ) | [Node.Js Tutorial Videos \[YT playlist 26 filmów\]](https://www.youtube.com/playlist?list=PL9ooVrP1hQOHDHAMA5egjL5MrbnNIuJqZ) | [productioncoder "Sessions in express.js | Node.js session implementation with Redis" \[YT playlist 9 filmów\]](https://www.youtube.com/playlist?list=PL1Nml43UBm6fPP7cW9pAFTdZ_9QX2mBn2) | [codedamn "NodeJS + ExpressJS Tutorials" \[YT playlist 26 filmów\]](https://www.youtube.com/playlist?list=PLYxzS__5yYQmHbpKMARP04F344zYRX91I) | [Web Dev Simplified "Introduction to Node.js" \[YT playlist 10 filmów\]](https://www.youtube.com/playlist?list=PLZlA0Gpn_vH_uZs4vJMIhcinABSTUH2bY) | [Stuy "Advanced NodeJS & JavaScript" \[YT playlista 3 filmy\]](https://www.youtube.com/playlist?list=PL_cUvD4qzbkw8N697iGKla9x-Iv-bUpYu) | [DmitriiKee Coding "react node js full stack" \[YT playlista 5 filmów\]](https://www.youtube.com/playlist?list=PLrpPyXsOjHyEzx_jaE3pUmB_sepT-xmmk) | [Codevolution "Node js Tutorial for Beginners" \[YT playlist 22 filmy\]](https://www.youtube.com/playlist?list=PLC3y8-rFHvwhco_O8PS1iS9xRrdVTvSIz) | [Classsed "Build a Chat app with NodeJS, React & GraphQL" \[YT playlist 13 filmów\]](https://www.youtube.com/playlist?list=PLMhAeHCz8S3_VYiYxpcXtMz96vePOuOX3) | [The Full Stack Junkie "Node Concepts" \[YT playlist 5 filmów\]](https://www.youtube.com/playlist?list=PLuGe-XRWqbNQur9IEvM3Hb3BslJgs8zbO)
+- The Net Ninja [The Net Ninja "Node.js Crash Course Tutorial" \[12 filmów\]](https://www.youtube.com/playlist?list=PL4cUxeGkcC9jsz4LDYc6kv3ymONOKxwBU) | [The Net Ninja "Node JS Tutorial for Beginners" \[YT playlist 37 filmów\]](https://www.youtube.com/playlist?list=PL4cUxeGkcC9gcy9lrvMJ75z9maRw4byYp) | [The Net Ninja "Node.js Auth Tutorial (JWT)" \[YT playlist 18 filmów\]](https://www.youtube.com/playlist?list=PL4cUxeGkcC9iqqESP8335DA5cRFp8loyp)
+- Bleeding Code [Bleeding Code "NodeJS" \[YT playlist 3 filmy\]](https://www.youtube.com/playlist?list=PLISqeoHsXJYD_at_AjeK6CDyifRpXcDae) \- [Bleeding Code "Node JS Performance Optimizations" \[YT playlist 5 filmów\]](https://www.youtube.com/playlist?list=PLISqeoHsXJYAIfu4-mgNY0tloWz2uut1t)
+- Coding Shiksha [Coding Shiksha: Node.js Project Videos \[YT playlist 10 filmów\]](https://www.youtube.com/playlist?list=PL3CDD0Jz5nVGrxCTEcLrPhQeqmUDMW5YN) | [NodeJS Tutorials \[YT playlist 2 filmy\]](https://www.youtube.com/playlist?list=PLREW9ZuU80uTwO5VYcenZD0IWdSMy_4N_)
+- Programming with Mosh [Programming with Mosh: Node.js Tutorials \[YT playlist 14 filmów\]](https://www.youtube.com/playlist?list=PLTjRvDozrdlydy3uUBWZlLUTNpJSGGCEm) | [Programming with Mosh: "Node.js Tutorial for Beginners: Learn Node in 1 Hour | Mosh" \[1:18:15\]](https://www.youtube.com/watch?v=TlB_eWDSMt4)
+- Academind [Academind "Node.js Basics" \[YT playlist 18 filmów\]](https://www.youtube.com/playlist?list=PL55RiY5tL51oGJorjEgl6NVeDbx_fO5jR) | [Academind "MERN Stack - React.js Node, Express & MongoDB Crash Course - Tutorial for Beginners" \[YT 1:35:42\]](https://www.youtube.com/watch?v=2yddJwL1Tpg)
+- Traversy Media [Traversy Media "Node.js & Express From Scratch" \[YT playlist 12 filmów\]](https://www.youtube.com/playlist?list=PLillGF-RfqbYRpji8t4SxUkMxfowG4Kqp) | [Traversy Media "Node.js Videos" \[YT playlist 31 filmów\]](https://www.youtube.com/playlist?list=PLillGF-RfqbZ2ybcoD2OaabW2P7Ws8CWu) \- ["Node.js REST API With Restify, Mongoose, JWT" \[YT playlista 2 filmy\]](https://www.youtube.com/playlist?list=PLillGF-RfqbbFSFYR_yJfDcdq6It6OqdO) ["Node.js & Pusher Real Time Polling App" \[YT playlista 3 filmy\]](https://www.youtube.com/playlist?list=PLillGF-RfqbZ_7QHHWnrhZW1NNoFzTtUp) | [Traversy Media - Node.js Tutorials \[YT playlist 4 filmy\]](https://www.youtube.com/playlist?list=PLillGF-Rfqbb786uDGaO8r9atpx1kt3iP) | [Traversy Media - Node.js Videos \[YT playlist 30 filmów\]](https://www.youtube.com/playlist?list=PLillGF-RfqbZ2ybcoD2OaabW2P7Ws8CWu)
+- Daily Tuition [Daily Tuition "The Complete Node - 2020" \[YT playlist 44 filmy\]](https://www.youtube.com/playlist?list=PLynWqC6VC9KMwdsbBIG68YEBMlUrTwed-) (["Basics Of MongoDb in 8 Minutes - MongoDB For Node Application - 45" \[YT 8:32\]](https://www.youtube.com/watch?v=HTqDyTXCe-w))
+- **Filmy*- [Twórca Stron "Node.js - kurs w 60 minut" \[YT 54:41\]](https://www.youtube.com/watch?v=Txu3DhbDLpk) | [Fireship "Node.js Ultimate Beginner’s Guide in 7 Easy Steps" \[16:19\]](https://www.youtube.com/watch?v=ENrzD9HAZK4) | [Devslopes "Node Beginner Tutorial - Learn To Build REST APIs In JavaScript - \[Full Course\]" \[YT 3:23:36\]](https://www.youtube.com/watch?v=gFDY8pxlEDU) | [Intellipaat "Node JS Course | Node JS Tutorial | Intellipaat" \[YT 6:59:37\]](https://www.youtube.com/watch?v=KE_wDYp-Xu8) | ["Getting Started with Node.js - Justin Reock, Rogue Wave Software" \[YT 35:42\]](https://www.youtube.com/watch?v=Qsu2QN2ss60) | ["Concurrency in NodeJS" \[YT 29:14\]](https://www.youtube.com/watch?v=724ECvenUyI) | ["Observing NodeJS" \[YT 25:42\]](https://www.youtube.com/watch?v=SULk05iqGIw&t=13s) | ["React.js and Node.js Project | Youtube Video Upload Project" \[YT 43:27\]](https://www.youtube.com/watch?v=xhiWEpU-h-A) ["Learn Node.js - Node.js API Development for Beginners" \[YT 2:50:04\]](https://www.youtube.com/watch?v=KtA5bggbP7I) | [TalkInCode "Node.js Streams: Stream Into the Future" \[YT 33:31\]](https://www.youtube.com/watch?v=sx16COy17MQ) | [The Life Of A Dev "How To Use The Google Calendar API In Node.js" \[44:58\]](https://www.youtube.com/watch?v=zrLf4KMs71E) | [JavaScript Mastery "How to Create PDFs With Node JS and React" \[YT 25:56\]](https://www.youtube.com/watch?v=bt1tOhUYxvM)
+- freeCodeCamp: [freeCodeCamp.org "Node.js Tutorials" \[YT playlist 8 filmów\]](https://www.youtube.com/playlist?list=PLWKjhJtqVAbmGQoa3vFjeRbRADAOC9drk) | [\[YT Express.js & Node.js Course for Beginners - Full Tutorial 2:28:13\]](https://www.youtube.com/watch?v=G8uL0lFFoN0) | ["Learn the MERN Stack - Full Tutorial (MongoDB, Express, React, Node.js)" \[YT 1:47:01\]](https://www.youtube.com/watch?v=7CqJlxBYj-M) | [edureka! "What is Node.js | Node.js Tutorial for Beginners | Node.js Modules | Node.js Training | Edureka" \[YT playlist 1:11:30\]](https://www.youtube.com/watch?v=nZRbnBBupBI) | [Traversy Media "Node.js Tutorial For Absolute Beginners" \[YT 24:45\]](https://www.youtube.com/watch?v=U8XF6AFGqlc)
+- **Deploying*- [Academind "Amazon Web Services Basics" \[YT playlist 9 filmów\]](https://www.youtube.com/playlist?list=PL55RiY5tL51pgPovJKg6HFMFqiGNSZtQ5) | [Huakun Shen "Deploy Nodejs Web app on AWS EC2 with SSL certificate" \[YT 25:55\]](https://www.youtube.com/watch?v=dMVy3BQB314) | [Caleb Curry "Node.js Deploy to Amazon Web Services (AWS) Tutorial (Elastic Beanstalk, Express, Git, CI/CD)" \[YT 25:46\]](https://www.youtube.com/watch?v=b0g-FJ5Zbb8) | [Cloud Path "AWS CodePipeline tutorial | Build a CI/CD Pipeline on AWS" \[YT 16:34\]](https://www.youtube.com/watch?v=NwzJCSPSPZs) | [Tech Primers "CICD using AWS CodePipeline and Elastic Bean Stalk | DevOps | Tech Primers" \[YT 34:42\]](https://www.youtube.com/watch?v=b50k35Dh4xc) | [Better Coding Academy "Build a CI/CD Pipeline for a React App | AWS CodePipeline Full Tutorial | Code With Me!" \[YT 16:31\]](https://www.youtube.com/watch?v=zkNdHv1iMgY) | [MartyAWS "GitLab CICD Pipelines with AWS EC2 and S3" \[YT 22:31\]](https://www.youtube.com/watch?v=ab3Fca1HeEI) | [Valentin Despa "Gitlab CI pipeline tutorial for beginners" \[YT 7:39\]](https://www.youtube.com/watch?v=Jav4vbUrqII) | ["Webinar: App Deployments on Amazon Web Services"](https://mediatemple.net/blog/web-development-tech/webinar-app-deployments-on-amazon-web-services/) | [Jack He "I Coded a Multiplayer Chess Game in React and Node.js" \[YT 17:12\]](https://www.youtube.com/watch?v=QwUZxCBtfLw)
+- Jak zacząć programować? ["Backend - Podstawy w Node.js i Express" \[YT 33:47\]](https://www.youtube.com/watch?v=Oc9hbOL0_nk) | ["Backend w Node.js - PATCH, DELETE. Darmowy hosting na Heroku i Github pages" \[YT 43:14\]](https://www.youtube.com/watch?v=TCjpRrIpZQ4)
+- [Twórca Stron "Projekt "Notatki". Node + MongoDB + React" \[YT playlist 8 filmów\]](https://www.youtube.com/playlist?list=PLAZsLPvWI5XBz8725dtYLTerPsIqDBKKJ)
+
+#### Deploying
+
+- [AWS Lambda Pricing](https://aws.amazon.com/lambda/pricing/)
+- Codenvy[Pricing & Packages](https://www.codenvy.com/product/index.php#pricing)
+- Oracle [Compute - Virtual Machine Instances](https://www.oracle.com/cloud/compute/pricing.html)
+- [openNode](https://www.openode.io)
+- [Glitch](https://glitch.com)
+- [ngrok](https://ngrok.com)
+- [Clever Cloud](https://www.clever-cloud.com/en/) an IT Automation platform
+- [Ghost](https://ghost.org) open source headless Node.js CMS
+- [Gatsby Cloud Docs](https://www.gatsbyjs.com/docs/)
+- [Stackery](https://www.stackery.io) delivery of serverless applications
+- [Courses with Frantz "Deploying node.js book - All solutions to projects and assignments" \[YT playlista 6 filmów\]](https://www.youtube.com/playlist?list=PLMm1r6FMEOujw796I0ZS1umZFjj5HDLEE)
+
+#### Typescript
+
+- [Elvis Miranda "Building a Node.js App with TypeScript Tutorial"](https://morioh.com/p/81536a4abbbd) | [Elvis Miranda "NodeJs Development with framework fortjs"](https://morioh.com/p/8b579f799ab9) | [Adam Rose "How to build a blogging engine using Node.js and TypeScript"](https://morioh.com/p/7e22904a2c39)
+- ["Building a Node.js API with TypeScript and GraphQL"](https://hashnode.com/post/building-a-nodejs-api-with-typescript-and-graphql-cjrrojjx200uqrxs1ngtitx9p)
+- [Zaiste "How to Quickly Build a REST API in Node.js with TypeScript (for Absolute Beginners) - PART 1 of 4"](https://dev.to/zaiste/how-to-quickly-build-a-rest-api-in-node-js-with-typescript-for-absolute-beginners-part-1-of-4-21de)
+- [Zaiste "TypeScript with Node.js" \[YT playlist 5 filmów\]](https://www.youtube.com/playlist?list=PLhXZp00uXBk72m_G7E2Bshzd7PDpaInE1)
+- [a7ul / esbuild-node-tsc](https://github.com/a7ul/esbuild-node-tsc) Build your Typescript Node.js projects using blazing fast esbuild
+
+#### Frameworki
+
+- [Contentful](https://www.contentful.com) Content Infrastructure: Beyond Headless CMS
+- [Netlify CMS](https://www.netlifycms.org) Open source content management for your Git workflow
+- [TinaCMS](https://tinacms.org) open-source site editing toolkit for React-based frameworks — Gatsby & Next.js
+- [NestJS](https://nestjs.com) \- A progressive Node.js web framework | ["NestJs: Modern ways to build APIs with Typescript and NestJs"](https://coursetto.com/course/build-apis-with-nestjs/) | ["NestJS – Your NodeJS empowered with best practices"](https://solidgeargroup.com/nestjs-your-nodejs-empowered-with-best-practices/) | [overment "Kurs Nest.js - framework backend dla Node.js (alternatywa Express.js) i TypeScript. MVC / REST API" \[YT playlist 7 filmów\]](https://www.youtube.com/playlist?list=PLjHmWifVUNMIy6w0l23VRunwZvMGMrRm9) | ["squareboat / nestjs-boilerplate" - A production-ready NestJS boilerplate](https://github.com/squareboat/nestjs-boilerplate) | [Fullstack Programmer "Fullstack Task Management with NestJs, NodeJs, React, TypeORM, Postgres & TypeScript" \[YT playlist 5 filmów\]](https://www.youtube.com/playlist?list=PLs1waz0ZKTGP_e-dgbhjP1oTOuFZdLwUy)
+- [Sails.js](https://sailsjs.com) \- Realtime MVC Framework for Node.js
+- [Material-UI](https://material-ui.com) React UI Framework
+- [Ant Design](https://ant.design) React UI Framework
+- [PrimeReact](https://www.primefaces.org/primereact/) UI Framework for React
+- [Semantic UI React](https://react.semantic-ui.com) The official Semantic-UI-React integration
+- [Blueprint](https://blueprintjs.com) React-based UI toolkit for the web
+- [Evergreen](https://evergreen.segment.com) React UI Framework
+- [Elemental UI](http://elemental-ui.com) UI Toolkit for React.js Websites and Apps
+- [grommet](https://v2.grommet.io) react-based framework
+- [Keystone 5](https://www.keystonejs.com)
+- [Carbon Design System](https://www.carbondesignsystem.com)
+- [Ember.js](https://emberjs.com) a productive, battle-tested JavaScript framework for building modern web applications
+
+#### Testy
+
+- Medium [Mostafa Moradian "Secure Code Review and Penetration Testing of Node.js and JavaScript Apps"](https://medium.com/swlh/secure-code-review-and-penetration-testing-of-node-js-and-javascript-apps-41485b1a9518)
+- morioh [Gizzy Berry "Top 4 Unit Testing Frameworks for Node.js"](https://morioh.com/p/ee642952d409) | [Mrinal Raj "How to write Tests for a Node.js TODO list Module"](https://morioh.com/p/23df2204d5d3)
+- [jest](https://jestjs.io) \- [Samuraj Programowania "Podstawy testowania z użyciem biblioteki Jest" \[YT 1:23:56\]](https://www.youtube.com/watch?v=jpV3WEi3shs)
+- [supertest](https://www.npmjs.com/package/supertest)
+- [puppeteer/puppetee](https://github.com/puppeteer/puppeteer) | [Google Developers - Puppeteer](https://developers.google.com/web/tools/puppeteer) | [pptr.dev - Puppeteer v2.0](https://pptr.dev)
+- [The Selenium Browser Automation Project](https://selenium.dev/documentation/en/)
+- freecodecamp.org ["The Best Automation Testing Tools For Developers"](https://www.freecodecamp.org/news/best-automation-testing-tools-for-developers/)
+- [SuperAgent](http://visionmedia.github.io/superagent/) light-weight progressive ajax API
+- Maciej Aniserowicz ["Mega piguła wiedzy o testach jednostkowych"](https://devstyle.pl/2020/06/25/mega-pigula-wiedzy-o-testach-jednostkowych/)
+- [Ioan L "The Best Automated Testing Tools in 2020 (detailed review)"](https://medium.com/@ioan_the_cto/the-best-automated-testing-tools-in-2020-detailed-review-b9f91b4cc3e6)
+- ["Building a backdoor in Node.js with 50 lines of code"](https://www.securecoding.com/building-a-backdoor-in-node-js-with-50-lines-of-code/)
+- [gulp.js](https://gulpjs.com) A toolkit to automate & enhance your workflow
+- [Grunt](https://gruntjs.com) The JavaScript Task Runner
+- [Yeoman](https://yeoman.io) The web's scaffolding tool for modern webapps
+- [Rollbar](https://rollbar.com)
+- [Testing Library](https://testing-library.com) Simple and complete testing utilities that encourage good testing practices
+- [Mostafa Moradian "Secure Code Review and Penetration Testing of Node.js and JavaScript Apps. Or why systems fail!"](https://medium.com/swlh/secure-code-review-and-penetration-testing-of-node-js-and-javascript-apps-41485b1a9518)
+
+#### Web Accessibility
+
+- [Inclusive Components](https://inclusive-components.design)
+
+#### Deno
+
+- [Deno](https://deno.land) \- a secure runtime for JavaScript and TypeScript built with V8, Rust, and Tokio
+- [Sean Robertson "What’s Deno, and how is it different from Node.js?"](https://morioh.com/p/f85641308a17/what-s-deno-and-how-is-it-different-from-node-js)
+- [Tech Jasmine "Best Deno Tutorials on YouTube"](https://techjasmine.com/best-deno-tutorials-on-youtube/)
+- ["Next gen JavaScript and TypeScript runtime – Deno"](https://blog.goyello.com/2019/10/14/next-gen-javascript-and-typescript-runtime-deno/)
+- [Flavio Copes "The Deno Handbook: a concise introduction to Deno"](https://flaviocopes.com/deno/)
+- [Samuraj Programowania "Deno - następca Node.js? Backend dla JavaScript developerów" \[29:50\]](https://www.youtube.com/watch?v=j5ufElsR7vc)
+- [Adrian Twarog "Deno Tutorial" \[YT playlista 9 filmów\]](https://www.youtube.com/playlist?list=PLsprmdocuVe8Lnni1fjouI2ylvSteunTf)
+- [Barely Coding "Deno tutorials" \[YT playlist 3 filmy\]](https://www.youtube.com/playlist?list=PLGMdx7aeJHvQqVBeqi-atX-JBdNhnwYAh)
+- [The Net Ninja "Deno Jump-start Tutorial" \[YT playlist 7 filmów\]](https://www.youtube.com/playlist?list=PL4cUxeGkcC9gnaJdxuGvEGYQ9iHb8mxsh)
+
+#### API
+
+- [Dan Englishby "How to use the Facebook Graph API Explorer"](https://www.codewall.co.uk/how-to-use-the-facebook-graph-api-explorer/)
+- [Adrian Hall "Build a GraphQL Weather API with OpenWeatherMap and AWS AppSync"](https://adrianhall.github.io/cloud/2018/07/20/build-a-graphql-weather-api-with-openweathermap-and-aws-appsync/)
+- [Silind / twitter-api-client](https://github.com/Silind/twitter-api-client) Node.js / JavaScript client for Twitter API
+- [Hade "Advanced Express JS REST API - JWT Refresh Tokens - Node.js"](https://dev.to/fullstackprogrammer/advanced-express-js-rest-api-jwt-refresh-tokens-node-js-4ooc)
+- [Aleksandar Vasilevski "How to Build Rest API with Node.js, Express.js and MongoDB"](https://www.codespot.org/how-to-build-rest-api-with-nodejs-and-expressjs/)
+- [Tapas Adhikary "10 lesser-known Web APIs you may want to use"](https://blog.greenroots.info/10-lesser-known-web-apis-you-may-want-to-use-ckejv75cr012y70s158n85yhn)
+- [public-apis/public-apis - A collective list of free APIs for use in software and web development.](https://github.com/public-apis/public-apis)
+- ["How to scrape data from a website with JavaScript"](https://sunilsandhu.com/posts/how-to-scrape-data-from-a-website-with-javascript) Use Node.js and Puppeteer to easily create a reusable tool for crawling, collecting, and scraping data
+- ["PHP and cURL: How WordPress makes HTTP requests"](https://deliciousbrains.com/php-curl-how-wordpress-makes-http-requests/)
+- [Sample APIs](https://sampleapis.com/) A simple, no fuss, no mess, no auth playground for learning RESTful or GraphQL APIs.
+- [OpenWeatherMap](https://openweathermap.org/price)
+- [Numbers API](http://numbersapi.com/)
+- [NBP Web API](http://api.nbp.pl)
+- [Random API](https://randomapi.com/)
+- [Random User Generator](https://randomuser.me)
+- [Dog API](https://dog.ceo/dog-api/)
+- [TheCatAPI](https://thecatapi.com)
+- [Cat as a service](https://cataas.com/#/)
+- [JSONPlaceholder - Fake Online REST API](https://jsonplaceholder.typicode.com)
+- [Big Heads · Easily generate avatars for your projects](https://bigheads.io)
+- [The Rick and Morty API](https://rickandmortyapi.com)
+- [micro-jaymock](https://jaymock.now.sh) Tiny API mocking microservice for generating fake JSON data.
+- [Punk API](https://punkapi.com)
+- [r-spacex / SpaceX-API](https://github.com/r-spacex/SpaceX-API) Open Source REST API for rocket, core, capsule, pad, and launch data; [GraphiQL Explorer](https://api.spacex.land/graphql/)
+- [Said Hayani "Here are the most popular ways to make an HTTP request in JavaScript"](https://www.freecodecamp.org/news/here-is-the-most-popular-ways-to-make-an-http-request-in-javascript-954ce8c95aaa/)
+- [Manish Shivanandhan "JavaScript Fetch API Tutorial with JS Fetch Post and Header Examples"](https://www.freecodecamp.org/news/javascript-fetch-api-tutorial-with-js-fetch-post-and-header-examples/)
+- [Ondrej Polesny "The Fetch API Cheatsheet: Nine of the Most Common API Requests"](https://www.freecodecamp.org/news/fetch-api-cheatsheet/)
+- medium [Sylwia Vargas "How to Hide Your API Keys"](https://betterprogramming.pub/how-to-hide-your-api-keys-c2b952bc07e6)
+
+#### API YT
+
+- Traversy Media ["Vanilla Node.js REST API | No Framework" \[YT 1:01:36\]](https://www.youtube.com/watch?v=_1xa8Bsho6A)
+- Kacper Sieradziński ["⚠️To absolutne minimum wiedzy o REST API i HATEOAS" \[YT 14:14\]](https://www.youtube.com/watch?v=pJAw2fPtChU)
+
+#### REST API
+
+- [REST API Tutorial](https://restfulapi.net)
+- [Paweł Dybcio "Testowanie aplikacji REST przy użyciu Postmana"](https://testuj.pl/blog/testowanie-aplikacji-rest-przy-uzyciu-postmana/)
+- Rishabh Mishra ["Building REST API with Express, TypeScript and Swagger"](https://rsbh.dev/blog/rest-api-with-express-typescript)
+- [overment "Kurs REST API od podstaw / Czym jest API / REST overment / HTTP / GraphQL / JWT / autoryzacja / HTTP status code / microservices / jak stworzyć API" \[YT playlista 10 filmów\]](https://www.youtube.com/playlist?list=PLjHmWifVUNMLjh1nP3p-U0VYrk_9aXVjE)
+- [The Net Ninja "REST API Tutorials (Node, Express & Mongo)" \[YT playlist 17 filmów\]](https://www.youtube.com/playlist?list=PL4cUxeGkcC9jBcybHMTIia56aV21o2cZ8)
+- [TheSkinnyCoder "RESTful-API Tutorial using Express, MongoDB and NodeJS | CRUD Functionality | REST API | MVC Design" \[YT 1:40:31\]](https://www.youtube.com/watch?v=QTA5AYLy93s)
+- [Kaustubh Ghadge "Building a RESTful API Using Node.JS and MongoDB"](https://nordicapis.com/building-a-restful-api-using-node-js-and-mongodb/)
+- [Digamber "React Axios Tutorial – Make HTTP GET and POST Requests"](https://www.positronx.io/react-axios-tutorial-make-http-get-post-requests/)
+- Fireship ["RESTful APIs in 100 Seconds // Build an API from Scratch with Node.js Express" \[YT 11:19\]](https://www.youtube.com/watch?v=-MTSQjw5DrM)
+
+#### Postman
+
+- [Postman](https://www.getpostman.com)
+- [Postman](https://www.postman.com) The Collaboration Platform for API Development
+- [Hoppscotch](https://hoppscotch.io) • A free, fast and beautiful API request builder
+- [Insomnia](https://insomnia.rest) | The API Design Platform and REST Client
+- SDET - QA Automation Techie ["Postman Beginners Crash Course - Part 1 | API Testing | Introduction | Postman GUI | HTTP Requests" \[YT 1:01:42\]](youtube.com/watch?v=95NBave0W_k) | ["Postman Beginners Crash Course - Part 2 | API Testing | HTTP Requests | Validations" \[YT 1:05:55\]](https://www.youtube.com/watch?v=OAvx5ttPO6A)
+- freeCodeCamp.org ["APIs for Beginners - How to use an API (Full Course / Tutorial)" \[YT 1:19:32\]](https://www.youtube.com/watch?v=GZvSYJDk-us) | ["Postman Beginner's Course - API Testing" \[YT 2:09:37\]](https://www.youtube.com/watch?v=VywxIQ2ZXw4)
+- Clever Programmer ["Postman API Crash Course for Beginners \[2020\] - Learn Postman in 1 hour" \[1:32:06\]](https://www.youtube.com/watch?v=Iq7eh6DhN6M)
+- Automation Step by Step - Raghav Pal ["Postman Beginners Crash Course - Part 1 | Postman Introduction, GUI, Request creation" \[YT 51:34\]](https://www.youtube.com/watch?v=J5l2fepRelk) | ["Postman Beginners Crash Course - Part 2 | Collection, Variables & Environments" \[YT 31:23\]](https://www.youtube.com/watch?v=5aMqyXZRvxg) | ["Postman Beginners Crash Course - Part 3 | Scripting & Testing | Debugging & Troubleshooting" \[YT 11:06\]](https://www.youtube.com/watch?v=6SzYhuVY8Jg) | ["Postman Beginners Crash Course - Part 4 | Command Line & Data Driven Testing" \[YT 23:22\]](https://www.youtube.com/watch?v=H_vaYNxmJWQ)

@@ -1,0 +1,78 @@
+---
+title: "React hooks"
+comment: ""
+section: "it"
+subsection: "js"
+---
+
+Wkrótce opisy i więcej hooków.
+
+#### useState
+
+```
+  const [counter, setCounter] = useState(0)
+
+  // const handleOnClick = () => setCounter(counter + 1)
+  const handleOnClick = () => setCounter(prevValue => prevValue + 1)
+
+  return (
+    <div>
+      <p>{counter}</p>
+      <button onClick={handleOnClick}>add</button>
+    </div>
+  )
+```
+            
+
+#### useEffect
+
+```
+   useEffect(() => {
+    window.addEventListener('mousemove', handleMouseMove)
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove)
+    }
+  }, [rerendercounter])
+```
+            
+
+#### useRef
+
+```
+   const textInput = useRef() // każdy rerender zwraca tę samą referencję
+   const numberRef = createRef() // tylko do przerendowania
+
+   return (
+    <div>
+      <input ref={textInput} type="text" />
+      <input ref={numberRef} type="number" />
+ //
+    </div>
+  )
+```
+
+#### Odnośniki
+
+- [Collection of React Hooks](https://nikgraf.github.io/react-hooks/)
+- [useHooks(🐠) Easy to understand React Hook recipes by Gabe Ragland](https://usehooks.com)
+- medium: ["The Definitive React Hooks Cheatsheet"](https://dev.to/antjanus/the-definitive-react-hooks-cheatsheet-2ebn) | [Ohans Emmanuel "React Hooks cheat sheet: Unlock solutions to common problems"](https://blog.logrocket.com/react-hooks-cheat-sheet-unlock-solutions-to-common-problems-af4caf699e70/) | ["A somewhat tricky hook usage"](https://dev.to/solkimicreb/a-somewhat-tricky-hook-usage-1l2j) | ["React Hooks broke my tests, now what? — Part 1"](https://medium.com/javascript-in-plain-english/react-hooks-broke-my-tests-now-what-part-1-a5a7783e777e) | [Daniel Afonso "Hooked on Hooks"](https://medium.com/swlh/hooked-on-hooks-637f53ba9323) | [Keke Arif "A Simple Guide to React Context with Hooks"](https://dev.to/keke_arif/a-simple-guide-to-react-context-with-hooks-34jj) | ["A React hook for asynchronous state"](https://medium.com/@Charles_Stover/a-react-hook-for-asynchronous-state-4dc24379be61) | [Tim Tan "States and componentDidMount() in functional components with Hooks."](https://medium.com/@timtan93/states-and-componentdidmount-in-functional-components-with-hooks-cac5484d22ad) | [Brian Neville-O'Neill "Use Hooks + Context, not React + Redux"](https://dev.to/bnevilleoneill/use-hooks-context-not-react-redux-1j08) | [Simon Trény "Replacing Redux with observables and React Hooks"](https://blog.betomorrow.com/replacing-redux-with-observables-and-react-hooks-acdbbaf5ba80) | ["Global state using only React Hooks with the Context API (No Redux)"](https://codeburst.io/global-state-with-react-hooks-and-context-api-87019cc4f2cf) | [Shane BD Delamore "How I Eliminated Redux Boilerplate with Hooks-for-Redux"](https://medium.com/@shanebdavis/how-i-eliminated-redux-boilerplate-with-hooks-for-redux-bd308d5abbdd) | [Amandeep Singh "How to write 90% cleaner code with Hooks"](https://dev.to/aman_singh/how-to-write-90-cleaner-code-with-hooks-1mmj) | [Ceci García García "React useEffect Hook"](https://medium.com/trabe/react-useeffect-hook-44d8aa7cccd0) | [Justin Travis Waith-Mair "How To Use an IntersectionObserver in a React Hook"](https://medium.com/the-non-traditional-developer/how-to-use-an-intersectionobserver-in-a-react-hook-9fb061ac6cb5) | [Somnath Musib "Fetch API data using useEffect React hook"](https://medium.com/thecodefountain/fetch-api-data-using-useeffect-react-hook-465809ca12c6)
+- morioh: [Radek From Duomly "React Hooks Tutorial with Examples"](https://morioh.com/p/63dd72509a20) | [Nina Diana "Making API Calls with React Hooks"](https://morioh.com/p/f195814f19ee) | [Zara Bryant "How to Replace Redux with React Hooks and the Context API"](https://morioh.com/p/6c81261ef884/how-to-replace-redux-with-react-hooks-and-the-context-api) | [Maksim Sudakov "Using the State Hook | Tutorial for Beginners"](https://morioh.com/p/af03d3c65fc6?f=5c21fb01c16e2556b555ab32) | [Ruben Leija "React useEffect hook with code examples"](https://linguinecode.com/post/getting-started-with-react-useeffect) | [wellyshen "React hook for highly-performant and manipulable animations using Web Animations API" (useWebAnimations)](https://morioh.com/p/da66e50163ce) | [Sveta Slepner "React Hooks: The Difference Between useMemo and useCallback"](https://hackernoon.com/react-hooks-the-difference-between-usememo-and-usecallback-5no3t0x) | [Aman Mittal "How to manage state in React apps with useReducer and useContext hooks"](https://dev.to/amanhimself/how-to-manage-state-in-react-apps-with-usereducer-and-usecontext-hooks-4eoc) | [Reinald Reynoso "React Hooks: useState and useEffect"](https://levelup.gitconnected.com/react-hooks-usestate-and-useeffect-2d0b870c654f)
+- [Kent C. Dodds "How to test custom React hooks"](https://kentcdodds.com/blog/how-to-test-custom-react-hooks)
+- ["Why Isn’t X a Hook?"](https://overreacted.io/why-isnt-x-a-hook/)
+- [William Kurniawan "Introduction to React Hooks"](https://www.williamkurniawan.com/blog/introduction-to-react-hooks)
+- [Saransh Kataria "How to write your own custom React hooks"](https://www.wisdomgeek.com/development/web-development/react/how-to-write-your-own-custom-react-hooks/)
+- ["Using Custom React Hooks to Simplify Forms"](https://upmostly.com/tutorials/using-custom-react-hooks-simplify-forms)
+- ["React Hooks - A deeper dive featuring useContext and useReducer"](https://testdriven.io/blog/react-hooks-advanced/)
+- Dmitri Pavlutin ["React Controlled Components — the Hooks Way"](https://dmitripavlutin.com/controlled-inputs-using-react-hooks/)
+- ["How to better use react hooks"](http://chafaiayman.com/how-to-better-use-react-hooks/)
+- ["React Hooks - How to Creat an App with Embedded Analytics"](morioh.com/p/ecab83fc6282)
+- school.geekwall.in: ["Build a movie search app using React Hooks"](https://school.geekwall.in/p/SyvG6qdwE/build-a-movie-search-app-using-react-hooks) | ["Build a movie search app using React Hooks"](https://school.geekwall.in/p/SyvG6qdwE/build-a-movie-search-app-using-react-hooks) | ["Beginner Guide to React Context API with Hook"](https://school.geekwall.in/p/Hkszk1lEr/beginner-guide-to-react-context-api-with-hook)
+- [Max Rozen "Stop useEffect from running on every render with useCallback"](https://maxrozen.com/stop-useeffect-running-every-render-with-usecallback/)
+- Nordschool: [State Management with React Hooks](https://nordschool.com/react-hooks-global-state/)
+- [Matt Stobbs "By the Hook: A Practical Introduction to React Hooks"](https://blog.scottlogic.com/2019/05/09/by-the-hook-a-practical-introduction-to-react-hooks.html)
+- [Ebenezer Don "Use Hooks + Context, not React + Redux"](https://blog.logrocket.com/use-hooks-and-context-not-react-and-redux/)
+
+#### Youtube
+
+- **Playlisty:** [productioncoder "React Hooks Tutorial | Build Yelp in React with React Hooks | React Hooks tutorial" [YT playlist 33 filmy]](https://www.youtube.com/playlist?list=PL1Nml43UBm6fmZZDeu-FDt5pozS2rSuff) | [codedamn "React Hooks" [YT playlist 4 filmy]](https://www.youtube.com/playlist?list=PLYxzS__5yYQnJEQoIfs14lGgy_kIsbR9S) | [Rostislav Futornoy "React Hooks for beginners" [YT playlist 8 filmów]](https://www.youtube.com/watch?v=V2b2yDcIETU&list=PLfSrzzhzss5IaAfQyRddoMd1eYet4iJ29) | [The Muratorium "Using React (Hooks) with D3" [YT playlist 11 filmów]](https://www.youtube.com/playlist?list=PLDZ4p-ENjbiPo4WH7KdHjh_EMI7Ic8b2B) | [The Net Ninja "React Context & Hooks Tutorial" [YT playlist 21 filmów]](https://www.youtube.com/playlist?list=PL4cUxeGkcC9hNokByJilPg5g9m2APUePI) | [Classsed "React Hooks Series" [YT playlist 5 filmów]](https://www.youtube.com/playlist?list=PLMhAeHCz8S3-q2TPHYhlppM3UcevsqFRf) | [Codevolution "React Hooks Tutorial" [YT playlist 33 filmy]](https://www.youtube.com/playlist?list=PLC3y8-rFHvwisvxhZ135pogtX7_Oe3Q3A) | [Marcin Mokrzan "React Hooks Tutorial" [YT playlist 4 filmy]](https://www.youtube.com/playlist?list=PL83p1dQtObtT7UySE4gn-d9whcPZ3NIc6)
+- **Filmy:** [freeCodeCamp.org "React Hooks Tutorial - A Crash Course on Styled Components, JSX, React Router, and HOC" [YT 1:55:20]](https://www.youtube.com/watch?reload=9&v=iVRO0toVdYM) | [Academind "React.js Hooks Crash Course" [YT 1:02:54]](https://www.youtube.com/watch?v=-MlNBTSg_Ww) | [Colt Steele "Beginner's Guide to React w/ Hooks (2020) Free Course" [YT 2:18:45]](https://www.youtube.com/watch?v=9U3IhLAnSxM) | [Traversy Media "Introducing React Hooks" [YT 20:49]](https://www.youtube.com/watch?v=mxK8b99iJTg) | [React 16.6 and Hooks [YT 30:47]](https://www.youtube.com/watch?v=nRQoduHpGcw) | [Fireship "10 React Hooks Explained // Plus Build your own from Scratch" [YT 13:14]](https://www.youtube.com/watch?v=TNhaISOUy6Q) | ["Intro to React Hooks Pt. 1: useState (Re-creating a class component)" [YT 13:27]](https://www.youtube.com/watch?v=fNF2PMB5GW0) | [DevTuts "Creating a Custom React Hook: Use Window Size" [YT 4:43]](https://www.youtube.com/watch?v=OHvJqOjToes) | [Dani Akash "Building nice & reusable custom hooks in React" [YT 38:36]](https://www.youtube.com/watch?v=BOY2n5WNlBw) | [Harry Wolff "React Hooks: A Complete Introduction" [YT 18:12]](https://www.youtube.com/watch?v=jd8R0a2Ur8Q) | [Ben Awad "React Hooks useEffect Tutorial" [YT 20:14]](https://www.youtube.com/watch?v=j1ZRyw7OtZs) | [Harry Wolff "React Hooks: Advanced Hooks" [YT 20:51]](https://www.youtube.com/watch?v=YKmiLcXiMMo) | [Web Dev Simplified "Learn useEffect In 13 Minutes" [13:37]](https://www.youtube.com/watch?v=0ZJgIjIuY7U) | [Web Dev Simplified "Learn useState In 15 Minutes - React Hooks Explained" [YT 15:44]](https://www.youtube.com/watch?v=O6P86uwfdR0) | [uidotdev "Guide to React's useRef Hook" [YT 10:20]](https://www.youtube.com/watch?v=ZGL9XiveFHs) | [codeSTACKr "Build A Goal Manager React App w/ Hooks & Airtable API | styled-components | embold.io Code Quality" [YT 36:06]](https://www.youtube.com/watch?v=FEoEvSmtmPQ)

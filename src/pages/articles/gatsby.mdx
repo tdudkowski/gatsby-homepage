@@ -1,0 +1,1012 @@
+---
+title: "GatsbyJS"
+comment: ""
+section: "it"
+subsection: "js"
+---
+
+### CRA, NextJS, Gatsby - różnice
+
+["React vs. Next vs. Gatsby – czym się różnią? ⌨️ hello roman #84" \[YT 18:19\]](https://www.youtube.com/watch?v=sip8r9PMbFQ) \- O związkach pomiędzy CRA, NextJS i Gatsbym, a przede wszystkim o różnicach pomiędzy nimi. Z grubsza rzecz biorąc:
+
+- **CRA**: aplikacja wrzucana na serwer w formie plików statycznych i pobierana z serwera; pobrana działa po stronie klienta. Strona to pusty HTML, wszystko jest w app (&lt;div id="app"&gt;&lt;/div&gt;), React wstrzykuje tam DOM i wszystkie funkcje. W procesie renderowania aplikacji pobierane są dane z jakiegoś API (może być CMS). Słabe SEO. Natychmiastowe przetwarzanie danych.
+- **Next.js**: Server Side Rendering, aplikacja Node.js działająca na serwerze, która renderuje zapytanie klienta i wysyła gotową stronę. Duże wymagania wobec dewelopera i serwera (nie wszędzie jest usługa Noe.js). Dobre SEO. Do elemetów strony można dodać w plikach JS reaktywność: walidacja formularza, ankieta. Tzw rehydration czyli wstrzyknięcie Reacta do HTML. Wydajność i łatwość indeksowania, ranking. Dane pobierane są na serwerze w czasie renderowania. Next renderuje zmiany z API natychmiast na serwerze.
+- **Gatsby**: Build time server rendering. Podczas builda wszystkie pliki są przygotowane do wysłania na serwer, wszystkie routy wyrenderowane, wtedy też pobierane są dane przez graphQL z API. Po wysłaniu na serwer dostęp do danych normalnie nie jest możliwy. Klient dostaje wyrenderowana strone statyczną z serwera oraz JS, który zapewnia mu reaktywność reactową, tak samo rehydration. To React z dodatkami, generator PWA. Dane moga byc pobierane w momencie wykonywania pliku JS [axios](https://github.com/axios/axios) w komponencie do API. Wszystko co jest mozliwe w Reaccie jest możliwe w Gatsbym. Gatsby [circleCI](https://circleci.com) buduje na nowo za każdą zmiana w API, trzeba chwilkę poczekać.
+
+Porównanie SSR i stron statycznych: [Next.js: Server-side Rendering vs. Static Generation](https://vercel.com/blog/nextjs-server-side-rendering-vs-static-generation)
+
+### Instalacja
+
+Wymagania:
+
+- Node.js (a więc i npm)
+- git
+
+Instalacja globalna Gatsby CLI. 70 MB node_modules.
+
+```
+ npm install -g gatsby-cli
+```   
+
+Utworzenie nowej strony i przejście tam (gatsby-site to przykładowa nazwa, może być z dużej litery). 250 MB
+
+```
+ gatsby new gatsby-site
+ cd gatsby-site
+```
+
+Ewentualnie z gotowego startera wg schematu: gatsby new \[SITE\_DIRECTORY\_NAME\] \[URL\_OF\_STARTER\_GITHUB\_REPO\].
+
+```
+ gatsby new hello-world https://github.com/gatsbyjs/gatsby-starter-hello-world
+```
+
+Poniższe polecenia Gatsby CLI uruchamia się z katalogu gatsby-site
+
+- Serwer deweloperski (http://localhost:8000)
+```
+    gatsby develop
+``` 
+- Produkcja
+``` 
+    gatsby build
+``` 
+- Produkcja lokalnie (http://localhost:9000)
+```
+    gatsby serve
+``` 
+- Pomoc
+``` 
+    gatsby --help
+``` 
+
+Instalacja najnowszej wersji Gatsby'ego
+
+```
+     $ npm i gatsby@latest
+```
+
+Instalacja pluginów
+
+```
+ $ npm i gatsby-source-filesystem gatsby-transformer-remark gatsby-plugin-catch-links
+```
+
+Dodanie do sekcji plugins w gatsby-config.js wg wzoru podanego na stronie pluginu.
+
+### Gatsby from Scratch
+
+```
+ $ npm init -y
+ $ git init
+```
+
+.gitignore:
+
+```
+ # Project dependencies
+ .cache
+ node_modules
+ # Build directory
+ public
+ # Other
+ .DS_Store
+ yarn-error.log
+```
+
+Instalacja
+
+```
+ npm i gatsby react react-dom
+```
+
+/src/pages/index.js
+
+```
+ import React from 'react'
+ export default () => {
+   return (
+ <h1>Hello World!</h1>)
+ }
+```
+
+package.json
+
+```
+  "scripts": {
+    "build": "gatsby build",
+    "develop": "gatsby develop",
+    "start": "npm run develop",
+    "serve": "gatsby serve",
+    "clean": "gatsby clean",
+  },
+```
+
+### MDX
+
+Generowanie stron przy użyciu plików .mdx. Uzywany bardzo często do mechanizmu blogowego. Tu zakładamy, że wszystkie wpisy w są w plikach .mdx w jednym katalogu.
+
+Można to zrobić na dwa sposoby
+
+- gatsby-node.js
+- File System Route API
+
+#### gatsby-node.js
+
+Wpis w gatsby-config.js, określający skąd mają być pobierane wpisy.
+
+```
+{ resolve: \`gatsby-source-filesystem\`,
+      options: {
+  name: \`posts\`,
+  path: \`$\{__dirname}/src/posts/\`,
+      },
+    },
+```
+
+To jest cała zawartość pliku gatsby-node.js, który automatycznie generuje strony wpisów na podanej ścieżce ze wskazanego szablonu na podstawie plików wpisów.
+
+```
+const path = require(\`path\`);
+
+exports.createPages = ({ graphql, actions }) => {
+  const { createPage } = actions
+  const postTemplate = path.resolve("./src/templates/postTemplate.js");
+  return graphql(\`	{
+    posts: allMdx(
+      filter: { fileAbsolutePath: { glob: "**/src/posts/*.mdx" } }
+      ) {
+    nodes {
+        frontmatter {
+  title
+  date
+ }
+ slug
+        }
+      }
+    }
+  \`).then((result) => {
+    if (result.errors) {
+      throw result.errors;
+    }
+    const posts = result.data.posts.nodes;
+    posts.forEach(post => {
+      createPage({
+        path: "/post/" + post.slug,
+        component: postTemplate,
+        ...post,
+        context: {
+...post.context,
+slug: post.slug,
+        },
+      });
+    });
+  });
+};
+```
+
+Każda zmiana w plikach gatsby-config.js i gatsby-node.js oznacza, że musimy zrestartować Gatsby'ego. To niestety trwa.
+
+Szablon wpisu: postTemplate.js
+
+```
+import { Link, graphql } from "gatsby"
+import { MDXRenderer } from "gatsby-plugin-mdx"
+import React from "react"
+import Layout from "../components/layout"
+
+const postTemplate = ({ data }) => {
+    const { frontmatter, body } = data.mdx;
+    return (
+        <Layout>
+ // content here
+        </Layout>
+    );
+};
+export default postTemplate
+
+export const query = graphql\`
+query PostBySlug($slug: String!) {
+    mdx(slug: { eq: $slug } ) {
+      body
+       frontmatter {
+        title
+        date(formatString: "YYYY-MM-DD")
+   }
+      }
+  }
+\`;
+```
+
+To jest strona listy wpisów - index.js
+
+```
+import * as React from "react"
+import { graphql, Link } from "gatsby"
+import Layout from "../components/layout"
+
+const PostPage = ({ data }) => {
+    return (
+        <Layout>
+  <p>Posts:</p>
+  <ul>
+      {data.allMdx.nodes.map(({ frontmatter, slug }) => (
+<li key={frontmatter.post}><Link to={\`/post/$\{slug}\`}>{frontmatter.post}</Link></li>
+      ))}
+  </ul>
+  </Layout>
+    )
+}
+
+export default PostPage
+
+export const query = graphql\`
+query AllPosts {
+  allMdx {
+        nodes {
+  id
+  frontmatter {
+    title
+    date(formatString: "YYYY-MM-DD")
+    published
+        }
+         slug
+  }
+pageInfo {
+  currentPage
+}
+    }
+  }
+\`;
+```
+
+Przykładowy wpis/post.
+
+```
+---
+title: "This is the title"
+date: 2021-01-21
+published: true
+---
+
+## secondary header
+
+content here
+
+```
+
+#### File System Route API
+
+Ten sam efekt można uzyskać używając wprowadzonego w listopadzie 2020 File System Route API. Wtedy cała ta komplikacja z gatsby-node.js nie jest potrzebna.
+
+pages/{`{mdx.slug}`}.js
+
+```
+import { graphql, Link } from 'gatsby'
+import { MDXRenderer } from 'gatsby-plugin-mdx'
+import React from 'react'
+import Layout from "../components/layout"
+
+export default function PostPage({ data }) {
+    const {
+        body,
+        frontmatter: { location },
+        frontmatter: { date },
+    } = data.mdx
+    return (
+        <Layout>
+            <h2>{title}</h2>
+            <p>This is File System Route API page</p>
+            <p>updated: {date}</p>
+            <MDXRenderer>{body}</MDXRenderer>
+                   </Layout>
+    )
+}
+export const query = graphql\`
+    query PostBySlug($slug: String) {
+            mdx(slug: {eq: $slug }) {
+            id
+        slug
+        body
+        frontmatter {
+            date
+          location
+        }
+      }
+    }
+  \`
+```
+
+- Gatsby [File System Route API](https://www.gatsbyjs.com/docs/reference/routing/file-system-route-api/)
+- [Stu Finn "Gatsby's awesome new File System Route API"](https://dev.to/stu/gatsby-s-awesome-new-file-system-route-api-50k9)
+- [Scott Spence "Gatsby File System Route API with MDX"](https://scottspence.com/2020/11/29/gatsby-file-system-route-api/)
+
+### CSS
+
+[Active classnames in menu on a one-page website using GatsbyJS](https://stackoverflow.com/questions/48595318/active-classnames-in-menu-on-a-one-page-website-using-gatsbyjs)
+
+#### Komponenty layoutu
+
+#### Global CSS
+
+W gatsby-browser.js:
+
+```
+ import "./src/styles/global.css"
+```
+
+#### CSS Modules
+
+- [css-modules / css-modules](https://github.com/css-modules/css-modules)
+- gatsbyjs / gatsby [using-css-modules](https://github.com/gatsbyjs/gatsby/tree/master/examples/using-css-modules)
+- CSS TRickd: [Robin Rendle "What are CSS Modules and why do we need them?"](https://css-tricks.com/css-modules-part-1-need/) | [Matija Marohnić "Bridging the Gap Between CSS and JavaScript: CSS Modules, PostCSS and the Future of CSS"](https://css-tricks.com/bridging-the-gap-between-css-and-javascript-css-modules-postcss-and-the-future-of-css/)
+- Glen Maddern ["CSS Modules Welcome to the Future"](https://glenmaddern.com/articles/css-modules)
+- React: ["Adding a CSS Modules Stylesheet"](https://create-react-app.dev/docs/adding-a-css-modules-stylesheet/)
+- [Harry Wolff "CSS Modules: Why are they great?" \[YT 12:02\]](https://www.youtube.com/watch?v=pKMWU9OrA2s)
+- [Fullstack Academy "CSS Modules in React and Webpack Tutorial" \[YT 8:42\]](https://www.youtube.com/watch?v=u9LBSeeJzXc)
+- [ReactiveConf "The case for CSS modules - Mark Dalgleish" \[YT 45:08\]](https://www.youtube.com/watch?v=zR1lOuyQEt8)
+- [Rushing Labs "CSS Modules + Create React App" \[YT 26:45\]](https://www.youtube.com/watch?v=XLUaq8Qhx_w)
+
+#### CSS-in-JS
+
+- [tuchk4 / awesome-css-in-js](https://github.com/tuchk4/awesome-css-in-js) Awesome CSS in JS
+- [JSS](https://cssinjs.org/)
+- [polished](https://polished.js.org) A lightweight toolset for writing styles in JavaScript
+- [Emotion](https://emotion.sh/docs/introduction) library designed for writing css styles with JavaScript
+- [Harry Wolff "CSS in JS: My favorite" \[YT 17:36\]](https://www.youtube.com/watch?v=rKz6cLXhpwA)
+
+#### Styled Components
+
+JSX
+
+```
+  <Icon primary border='solid 10px' progress='70%' day={2} />
+```
+
+Komponent
+
+```
+    import styled, { keyframes } from 'styled-components'
+
+    const fadeIn = keyframes\`
+    0% {opacity: 0;}
+    100% {opacity: 1;}
+  \`
+    const StyledIcon = styled.div\`
+    background-color: $\{({ primary }) => primary ? 'green' : 'yellow'};
+    width: 30px;
+    height: 30px;
+    border-radius: 15px;
+    margin: 5px;
+    border: $\{({ border }) => border || 0}
+    border-color: $\{({progress}) => {
+      let numeric =  progress.slice(0,-1)
+      let integer = parseInt(numeric)      
+      if (integer >= 80) return 'red';
+      else if (integer >= 60) return 'orange';
+      else if (integer >= 40) return 'yellow';
+      else return 'green';
+   }};
+   animation: 5s $\{fadeIn} ease-in;
+\`
+
+const TodayIcon = styled(Icon)\`
+    background-color: purple;
+\`
+const Icon = ({primary, border, day}) => {
+
+  let today = new Date()
+  let dayOfTheWeek = today.getDay()  
+  const isToday = day === dayOfTheWeek
+
+    return (
+      {isToday && <STodayIcon border={border} primary={primary} progress={progress} />}
+      {!isToday && <StyledIcon border={border} primary={primary} progress={progress} /}
+    )
+}
+```
+
+- [styled-components](https://styled-components.com)
+- [Wojciech Snopkowski "Gatsby Navigation using Styled Components and useState hook"](https://snopkowski.com/blog/gatsby-navigation-styled-components)
+- ScottSpence.com ["Globally Style the Gatsby Default Starter with styled-components v5"](https://scottspence.com/2020/02/06/globally-style-gatsby-styled-components/)
+- [Daniel Stout "Using styled-components in Gatsby"](https://www.digitalocean.com/community/tutorials/gatsbyjs-using-styled-components-in-gatsbyjs)
+- [hello roman "Styled components + Gatsby.js" [YT plylista 5 filmów]](https://www.youtube.com/playlist?list=PLKnxnWdLGM48DUzxZ1uSYBhgPNETsgWA_)
+- [Adrian Twarog "Styled Components" [YT playlist 3 filmy]](https://www.youtube.com/playlist?list=PLsprmdocuVe-tQy47UBnXjrZYu8QOCtnv)
+- [Hungry Turtle Code "What are Styled Components? - A Beginners Guide" [YT 20:10]](https://www.youtube.com/watch?v=JFE_UuHtHT4)
+- [Classsed "React Styled Components (Next Level CSS?)" [YT 18:27]](https://www.youtube.com/watch?v=3SpAg5tr7Ws)
+- [Academind "Why you should look into these React component styling options!" [YT 28:35]](https://www.youtube.com/watch?v=NMiEREulVLc)
+- [Ben Awad "React Styled Components Tutorial" [YT 13:27]](https://www.youtube.com/watch?v=syqw5UJrfoc)
+- [Better Coding Academy "Learn Styled Components In 15 Minutes! | React Tutorials" [YT 15:12]](https://www.youtube.com/watch?v=17AwVXg5lHk)
+- [Fidalgo "Styled Components Tutorial - Crash Course [2020]" YT 47:42]](https://www.youtube.com/watch?v=c5-Vex3ufFU)
+- [Wrong Akram "How To Code With Styled Components and React.js" [YT 24:25]](https://www.youtube.com/watch?v=TWODzlTeZUM)
+- [James Q Quick "Convert CSS in React To Styled Components" [YT 22:17]](https://www.youtube.com/watch?v=feYJ5D7VknE)
+- [Karl Hadwen "React Tutorial - Compound Components in React - Styled Components - React Tutorial 2020" [YT 23:48]](https://www.youtube.com/watch?v=nHMAMS38x-E)
+- [Adrian Twarog "Styled Components React Tutorial: CSS in JS! (React Styling with Javascript)" [YT 10:08]](https://www.youtube.com/watch?v=eQkkoUEVY-Q)
+- [ComScience Simplified "Styled Components with React | All you need to know" [YT 10:06]](https://www.youtube.com/watch?v=kClcUzAhz9g)
+
+#### Biblioteki i frameworki
+
+#### Font Awesome
+
+Najprostszy sposób na użycie glifów Font Awesome to ściągnięcie i rozpakowanie paczki np do /styles, potrzebujemy tylko katalogów css i fonts. Potem pobranie np. do /src/components/header.js
+
+```
+import "../styles/css/font-awesome.css"
+```
+
+Teraz można już używać Font Awesome. Trzeba tylko zmienić domyślne class, na className - bo to jest JavaScript. I działa, bez żadnych dodatków czy koniguracji.
+
+Pseudoelementy uzyskuje się wpisując w arkuszu stylów:
+
+```
+ ::before {
+  font-family: "FontAwesome";
+  display: block;
+  content: "\f18e";
+  position: absolute;
+  top: 0;
+  left: -8rem;
+  color: rgba(51, 51, 51, 0.5);
+```
+
+Inna możliwość: [React Icons / Font Awesome](https://react-icons.github.io/icons?name=fa)
+
+### Deploy na Githubie
+
+Instalacja gh-pages
+
+Ustawienie nazwy repozytorium w gatsby-config.js
+
+```
+ {
+  module.exports =
+    pathPrefix: "/reponame",
+  }
+```
+
+Utworzenie skryptu w package.json
+
+```
+ {
+  "scripts":
+      "deploy": "gatsby build --prefix-paths && gh-pages -d public"
+    }
+```
+
+Utworzenie origin remote na Githubie
+
+```
+ git remote add origin git@github.com:username/reponame.git
+```
+
+Najpierw tworzymy builda. Testujemy go poleceniem gatsby serve (port 9000). Potem wysłanie
+
+```
+ npm run deploy
+```
+
+I właśnie w takim cyklu odbywa się tworzenie stron w Gastbym.
+
+- budowanie witryny przy użyciu
+```
+    gatsby develop
+``` 
+- tworzenie builda, czyli wygenerowanej, zoptymalizowanej strony statycznej:
+``` 
+    gatsby build
+``` 
+- testowanie lokalne tej strony:
+``` 
+    gatsby serve
+``` 
+- npm run deploy
+``` 
+    i testy już online
+```
+
+### Integracja z NetlifyCMS
+
+Netlify: ["A Step-by-Step Guide: Gatsby on Netlify"](https://www.netlify.com/blog/2016/02/24/a-step-by-step-guide-gatsby-on-netlify/)
+
+### Google Analytics
+
+[gatsby-plugin-gtag](https://www.gatsbyjs.org/packages/gatsby-plugin-gtag/)
+
+### Headless Drupal
+
+- [Maciej Łukiański "Headless Drupal - What, When,How & Where -The Ultimate Guide To Decoupled Drupal"](https://www.droptica.com/blog/headless-drupal-what-whenhow-where-ultimate-guide-decoupled-drupal/)
+- [Ana "A Short Introduction to Headless Drupal"](https://www.agiledrop.com/blog/short-introduction-headless-drupal)
+- [ADCI Solutions "How to create a headless Drupal site"](https://hackernoon.com/how-to-create-a-headless-drupal-site-a88519f8ce7b)
+- [Dries Buytaert "How to decouple Drupal in 2019"](https://dri.es/how-to-decouple-drupal-in-2019)
+
+Instalacja Drupala z bazą danych.
+
+Włączenie wszystkich Usług Web
+
+```
+HAL
+ Serializacja encji przy użyciu formatu Hypertext Application Language.
+ 
+ HTTP Basic Authentication
+ Dostarcza uwierzytelnienie w trybie HTTP Basic authentication
+ 
+ JSON:API
+ Exposes entities as a JSON:API-specification-compliant web API.
+ 
+ RESTful Web Services
+ Udostępnia encje i inne zasoby w postaci RESTful web API
+ 
+ Serialization
+ Provides a service for (de)serializing data to/from formats such as JSON and XML.
+```
+
+Utworzenie nwego rodzaju zawartości, np. Blog.
+
+Utworzenie nwego widoku np. "Blog API"
+
+```
+ Ścieżka: /api/blog
+ Uwierzytelnianie: Bez autoryzacji
+ Dostęp: Rola | Użytkownik anonimowy
+```
+
+Sprawdzic w trybie anonimowym czy jest dostepny pod adresem /jsonapi
+
+Trzeba opublikować przynajmniej jeden wpis.
+
+Instalacja pluginu [gatsby-source-drupal](https://www.gatsbyjs.org/packages/gatsby-source-drupal/)
+
+```
+ {
+  resolve: \`gatsby-source-drupal\`,
+  options: {
+  baseUrl: \`http://api.domena/\`,
+  apiBase: \`jsonapi\`, // optional, defaults to \`jsonapi\` ; old 'api' - z każdą zmianą trzeba restartować Gatsby'ego
+  },
+```
+
+I dopiero teraz można znowu uruchomić Gatsbiego, tak żeby pociągnął dane z Drupala.
+
+graphQL
+
+```
+ query MyQuery {
+  allNodeBlog {
+  nodes {
+  id
+  title
+  body {
+  value
+  }
+  }
+  }
+  }
+```
+
+[Brian Perry "Understanding the Limitations of Gatsby-Source Drupal"](https://www.bounteous.com/insights/2018/08/17/understanding-limitations-gatsby-source-drupal/), [Andrew Larcombe "Gatsby, Drupal, inline images and friends"](https://www.andrewl.net/article/gatsby-drupal-inline-images)
+
+[Contenta CMS](https://www.contentacms.org) an API-First Drupal distribution
+
+### Headless Wordpress
+
+Pluginy
+
+- Headless Mode (jedno rozszerzenie działające w prosty sposób, które załatwia większość spraw)
+- WP Editor.md (albo klasyczny edytor)
+
+API
+
+```
+ adres/wp-json/
+```
+
+- [gatsby-source-wordpress](https://www.gatsbyjs.org/packages/gatsby-source-wordpress/)
+- Gatsby ["Why Gatsby Chose Headless WordPress for our Blog"](www.gatsbyjs.com/blog/gatsby-blog-wordpress/)
+
+login: domena/wp-login.php
+
+### Strapi
+
+[Cyril Lopez "How to change the WYSIWYG in Strapi"](https://strapi.io/blog/how-to-change-the-wysiwyg-in-strapi) - [Image upload on custom CKEditor #4369](https://github.com/strapi/strapi/issues/4369)
+
+[gatsby-source-strapi](https://www.gatsbyjs.org/packages/gatsby-source-strapi/)
+
+GraphGL i query i import. Potem {data} w propsie i mapowanie po wynikach zapytania. W gatsby-config podać typy importowanych danych.
+
+### Netlify CI
+
+Drupal: [Build Hooks](https://www.drupal.org/project/build_hooks) - [Drupal 9 compatibility](https://www.drupal.org/project/build_hooks/issues/3153199) (ta łata niestety stawia nadzwyczajne opory, więc trzeba pójść za radą [Hunk #1 FAILED at 1. What's that mean?](https://stackoverflow.com/questions/14282617/hunk-1-failed-at-1-whats-that-mean) i (zakładając, że jesteśmy w rozpakowanym /build_hooks a łata jest w tym samym katalogu co katalog modułu) zadać jej:
+
+```
+ patch --ignore-whitespace --fuzz 3 -p1 < ../3153199-5.patch
+```
+
+Potem zzipowanie i instalacja z pliku.
+
+["Deploy content changes for your Gatsby Drupal site on Netlify - Daily Dose of Gatsby Episode 9" [YT 12:45]](https://www.youtube.com/watch?v=RQydUpcjUPg)
+
+### PrismJS
+
+```
+ npm install --save gatsby-transformer-remark gatsby-remark-prismjs prismjs
+```
+
+- [Prism](https://prismjs.com)
+- [Fidel Sanchez-Bueno "The definitive guide for using PrismJs in Gatsby"](https://dev.to/fidelve/the-definitive-guide-for-using-prismjs-in-gatsby-4708)
+- [Jason Brown "Markdown Syntax Highlighting with PrismJS using Unified, Remark, and Rehype"](https://codedaily.io/tutorials/76/Markdown-Syntax-Highlighting-with-PrismJS-using-Unified-Remark-and-Rehype)
+- ["Code highlighting in React using Prism.js"](https://betterstack.dev/blog/code-highlighting-in-react-using-prismjs/)
+- Prince Wilson ["Migrating from gatsby-remark-prismjs to prism-react-renderer"](https://prince.dev/prism-react-renderer)
+- Niklas Metje ["Implement PrismJS in GatsbyJS"](https://niklasmtj.de/blog/prismjs-in-gatsbyjs)
+- [jason ewins "Get PrismJS working in React"](https://medium.com/get-it-working/get-prismjs-working-in-react-a6d989e59290)
+- ["Using the Prism.js syntax highlighter"](https://gomakethings.com/using-the-prism-js-syntax-highlighter/)
+
+### Odnośniki
+
+#### Strony
+
+- [GatsbyJS](https://www.gatsbyjs.org) - [Gatsby Youtube](https://www.youtube.com/channel/UCjnp770qk7ujOq8Q9wiC82w)
+- Yoast: [Michiel Heijmans "What is a slug and how to optimize it?"](https://yoast.com/slug/)
+- [Free & Open Source Gatsby Themes](https://themes.lekoarts.de)
+- Spectrum [Gatsby.js community](https://spectrum.chat/gatsby-js?tab=posts)
+- Scott Spence [Posts about gatsby](https://scottspence.com/tags/gatsby/)
+- Josh W Comeau [Gatsby articles](https://joshwcomeau.com/tutorials/gatsby)
+- T&S [GatsbyJS](https://thoughtsandstuff.com/category/gatsbyjs)
+- [Tutorials / Gatsby](https://www.digitalocean.com/community/tutorials?q=gatsby)
+- alligator.io [Posts About the Gatsby Static Site Generator](https://alligator.io/gatsbyjs/)
+- Josh W Comeau [Gatsby articles](https://joshwcomeau.com/tutorials/gatsby)
+- Ivan Storck [Gatsby](https://www.ivanstorck.com/tags/#gatsby)
+- Aparna Joshi [Posts tagged as Gatsby](https://aparnajoshi.netlify.app/tags/gatsby)
+- [Gatsby Tutorials and Courses - Thinkster](https://thinkster.io/topics/gatsby)
+- [Suprabha Blog / Gatsby](https://blog.suprabha.me/?tag=Gatsby)
+- Seifi.org [gatsby related posts](https://seifi.org/category/gatsby/)
+- [Gatsby - Hashnode Community](https://hashnode.com/n/gatsby)
+- Code-Boost ["3 posts tagged with "Gatsby"](https://www.code-boost.com/tag/gatsby/)
+
+#### Kursy, tutoriale
+
+- Przeprogramowani [Olaf Sulich "Gatsby - krok po kroku"](https://przeprogramowani.pl/darmowy-kurs-gatsby)
+- [Ibas "Gatsby Tutorial From Scratch: The Definitive Guide (2020)"](https://ibaslogic.com/gatsby-tutorial-from-scratch-for-beginners/)
+- [Nikola Đuza "Creating a Gatsby blog from scratch"](https://blog.logrocket.com/creating-a-gatsby-blog-from-scratch/)
+- [Konstantin Münster "How To Build A Portfolio With Gatsby — From Scratch To Deployment"](https://medium.com/@konstantin.muenster/how-to-build-a-portfolio-with-gatsby-from-scratch-to-deployment-cacbf7a1527)
+- freecodecamp.org [Scott Spence "How to Build Your Coding Blog From Scratch Using Gatsby and MDX"](https://www.freecodecamp.org/news/build-a-developer-blog-from-scratch-with-gatsby-and-mdx/)
+- ScottSpence.com ["Build a coding blog from scratch with Gatsby and MDX"](https://scottspence.com/2019/10/31/build-an-mdx-blog/) | ["Add a Table of Contents with Smooth scroll using Gatsby and MDX"](https://scottspence.com/2020/02/13/smooth-scroll-toc-gatsby/) | ["Globally Style the Gatsby Default Starter with styled-components v5"](https://scottspence.com/2020/02/06/globally-style-gatsby-styled-components/) | ["Convert the Gatsby default starter blog to use MDX"](https://scottspence.com/2019/04/09/convert-gatsby-default-blog-to-mdx/) | ["Creating a Custom React Hook for Gatsby Site Metadata"](https://scottspence.com/2019/03/24/custom-gatsby-metadata-hook/) | ["Get your GraphCMS data into Gatsby"](https://scottspence.com/2018/11/25/graphcms-to-gatsby/) | ["Use the React Context API with Gatsby"](https://scottspence.com/2018/05/22/react-context-api-with-gatsby/)
+- Sitepoint [Maria Antonietta Perna "Getting Started with Gatsby: Build Your First Static Site"](https://www.sitepoint.com/gatsby-guide/)
+- The Net Ninja ["Gatsby Tutorial" [YT playlist 22 filmy]](https://www.youtube.com/playlist?list=PL4cUxeGkcC9hw1g77I35ZivVLe8k2nvjB)
+
+#### Artykuły
+
+- ["Create a blog with Gatsby.js"](https://nosleepjavascript.com/gatsby-blog/)
+- [Patryk Jeziorowski "React & GraphQL blog Done & Deployed in 10 minutes"](https://talkoverflow.com/creating-gatsby-blog)
+- [Shaumik Daityari "Deploy a Gatsby Site on GitHub Pages for Free"](https://blog.bitsrc.io/deploy-a-gatsby-site-on-github-pages-for-free-f18853c1b7a9)
+- Shane O'Neill ["Deploying a Gatsby website to AWS S3 with HTTPS"](https://www.shaneoneill.io/2019/12/20/deploying-a-gatsby-site-to-aws-with-https/)
+- Medium: [Building Highly Performant Masonry Layouts with Gatsby.js](https://medium.com/@kripod/building-highly-performant-masonry-layouts-with-gatsby-js-54115acc3e72) | [Charles Stover "The difference between create-react-app, server-side rendering, and Gatsby"](https://medium.com/@Charles_Stover/the-difference-between-create-react-app-server-side-rendering-and-gatsby-da78c177a14e) | [Itguymax "Add a custom icon to your Gatsby site in just a few minutes"](https://medium.com/@itguymax/add-a-custom-icon-to-your-gatsby-site-in-just-a-few-a-minute-4e5b5f12ca40) | ["Getting started with Typescript on Gatsby"](https://medium.com/maxime-heckel/getting-started-with-typescript-on-gatsby-8544b47c1d27) | [Eden Ella "How to Share Components Between React Apps and Gatsby Websites"](https://levelup.gitconnected.com/how-to-share-components-between-react-apps-and-gatsby-websites-21c0541f8c78) | [Christopher Fitkin "How to Smooth Scroll Links in Gatsby"](https://medium.com/@chrisfitkin/how-to-smooth-scroll-links-in-gatsby-3dc445299558) | [Kyle Gill "Image Optimization Made Easy with Gatsby"](https://medium.com/@kyle.robert.gill/ridiculously-easy-image-optimization-with-gatsby-js-59d48e15db6e) | [David Quick "Dynamically loaded content with RSS and Gatsby"](https://dev.to/papabearcodes/dynamically-loaded-content-with-rss-and-gatsby-341k)
+- [freecodecamp.org #GATSBY](https://www.freecodecamp.org/news/tag/gatsby/) [David Good "Gatsby Starter Blog: How to Add Header Images to Posts with Support for Twitter Cards"](https://www.freecodecamp.org/news/gatsby-blog-header-image-twitter-card/)
+- ["Next.js Vs. Gatsby Vs. Create React App"](https://masteringnextjs.com/nextjs-gatsby-create-react-app/)
+- web.dev: [Houssein Djirdeh "Improved Next.js and Gatsby page load performance with granular chunking"](https://web.dev/en/granular-chunking-nextjs/)
+- ["How to Make Taxonomy Pages With Gatsby and Sanity.io"](https://css-tricks.com/how-to-make-taxonomy-pages-with-gatsby-and-sanity-io/)
+- freeCodeCamp.org: [#GATSBY](https://www.freecodecamp.org/news/tag/gatsby/)
+- [franleplant "Create a blog with Gatsby.js"](https://nosleepjavascript.com/gatsby-blog/)
+- Rodrigo Pinto ["Using your own server with Gatsby, ExpressJS and NGINX with a reverse proxy"](https://www.rodrigoplp.com/blog/using-your-own-server-with-gatsby) | ["Passing data between pages in GatsbyJS"](https://www.rodrigoplp.com/blog/passing-data-between-pages-in-gatsbyjs)
+- [peter r. white "Making an online store with Gatsby & Shopify: Part 1 - Building the Layout"](https://www.prwhite.io/blog/gatsby-shopify-part-1)
+- Sam Larsen-Disney [Articles Tagged With Gatsby](https://sld.codes/articles/tags/gatsby)
+- ["9 Excellent GatsbyJS Plugins I Use For My Niche Sites"](https://donovannagel.com/best-gatsbyjs-plugins)
+- ["Creating my dream tech blog with GatsbyJS"](https://www.faesel.com/blog/gatsby-tech-blog-starter)
+- [Pedro Brandão "i18n with Gatsby"](https://significa.co/blog/i18n-with-gatsby) | [Danilo Woznica "Advanced blog system in Gatsby"](https://significa.co/blog/advanced-blog-system-in-gatsby)
+- [Vicki Hawoldar "How-to : React Internationalization (i18n) with Gatsby"](https://www.locale.to/react-gatsby-i18n/)
+- [Jared Palmer "Gatsby vs. Next.js"](https://jaredpalmer.com/gatsby-vs-nextjs)
+- [Tapas Adhikary "How to build a serverless app with Gatsby, Netlify and FaunaDB - Part 1"](https://blog.greenroots.info/how-to-build-a-serverless-app-with-gatsby-netlify-and-faunadb-part-1-ckf2dpwy200idbns1fbgpg7kx)
+
+#### YT
+
+- [A Designer Who Codes [YT (1)]](https://www.youtube.com/c/ADesignerWhoCodes/)
+- Coding Addict ["Gatsby Tutorial" [5:30:11]](https://www.youtube.com/watch?v=5Mam9NuxwQc) | [Gatsby [YT Playlist 3 filmy]](https://www.youtube.com/playlist?list=PLnHJACx3NwAdCmDDPdCt6W6BJfRbatfnc)
+- Traversy Media "Gatsby JS Crash Course" [YT 1:04:33]
+- [Jason Lengstorf [YT (10)]](https://www.youtube.com/channel/UCnty0z0pNRDgnuoirYXnC5A/)
+- Andrew Mead ["Gatsby JS - The Great Gatsby Bootcamp [Full Tutorial]" [YT 4:38:37]](https://www.youtube.com/watch?v=8t0vNu2fCCM) | [freeCodeCamp.org: "The Great Gatsby Bootcamp - Full Gatsby.js Tutorial Course" [YT 4:38:37]](https://www.youtube.com/watch?v=kzWIUX3CpuI)
+- Classsed ["Create a GatsbyJS Blog Website Series" [YT playlista 17 filmów]](https://www.youtube.com/playlist?list=PLMhAeHCz8S3_x-jXerCYnl7jftCSxQkPV)
+- [LevelUpTuts "GatsbyJS Tutorials" [YT playlist 9 filmów]](https://www.youtube.com/playlist?list=PLLnpHn493BHHfoINKLELxDch4uJlSapxg) 2017
+- [Skillthrive "Gatsby JS: Build a Blog" [YT playlista 27 filmów]](https://www.youtube.com/playlist?list=PLW0RabRDhwwzVNhlOgQQgw6HJzXdM1MnT)
+- [Code Karate "GatsbyJS Videos" [YT playlist 10 filmów]](https://www.youtube.com/playlist?list=PL-Ve2ZZ1kZNT9BhQMMI9jUySfdnQ8-S3n)
+- [Wrong Akram "Gatsby.js" [YT playlista 4 filmy]](https://www.youtube.com/playlist?list=PLgcPxVODYXGLe7dherj91PRA0MyBvWswN)
+- [Zac Gordon "Gatsby Basics Course" [YT playlista 4 filmy]](https://www.youtube.com/playlist?list=PLruo2gSoqleiE1yUhdfC3QL7Xc5INTbN4)
+- [whatjackhasmade "Gatsby and WordPress Complete Guide" [YT playlista 27 filmów]](https://www.youtube.com/playlist?list=PL0TiIcOKyEAkDLsLsFc8BYzHXi3DEhKCe)
+- [Karl Hadwen "GraphQL Tutorials for Beginners - GraphQL Tutorials - GraphQL Crash Course" [YT playlist 5 filmów]](https://www.youtube.com/playlist?list=PLpP9FLMkNf5575QcEckdloh4jtyJAnOwn)
+- Guiding Digital ["GatsbyJS" [YT playlist 12 filmów]](https://www.youtube.com/playlist?list=PLlKF6nzQe39fzz4MHc19l8-PtSqyseqok) | ["GatsbyJS AWS Hosting" [YT playlist 5 filmów]](https://www.youtube.com/playlist?list=PLlKF6nzQe39egZP35AaBaSBDemO9lzlCK)
+- [Chris DeSilva "Gatsby Blog from Scratch" [YT playlist 5 filmów]](https://www.youtube.com/playlist?list=PL1FIFZraE9UHBPkhQBE6HMES0h4tWlijn) | ["How to Use Gatsby Image" [YT 23:54]](https://www.youtube.com/watch?v=gftba197LV4)
+- [GOTO 2019 • Fast by Default: Near Instant Load Times at Scale with GatsbyJS • Nicolas Goutay [YT 42:12]](https://www.youtube.com/watch?v=p14g-Sep7HY)
+- A Designer Who Codes ["Gatsby JS for Designers" [YT playlist 10 filmów]](https://www.youtube.com/playlist?list=PL8arivBPQWw0iuyjfp3BuWRnk0UfbqVnx) | [A Designer Who Codes "Gatsby JS and Images" [YT playlist 2 filmy]](https://www.youtube.com/playlist?list=PL8arivBPQWw2P_kBt4sST4NrQl-91EZDg) | [A Designer Who Codes "React Bootstrap & Gatsby JS" [YT playlist 7 filmów]](https://www.youtube.com/playlist?list=PL8arivBPQWw2IoYtM8mGgu6uZfwo_KY-4) | [A Designer Who Codes "React Bootstrap Cards" [YT playlist 3 filmy]](https://www.youtube.com/playlist?list=PL8arivBPQWw3xJdRNcRU-P6i8V1R5SHWh) | ["Web Fonts & Gatsby JS" [YT playlist 2 filmy]](https://www.youtube.com/playlist?list=PL8arivBPQWw3tPXuIb4j4w0fIOeB476Pz)
+- ["Gatsby Coffee Shop Website" [4:52:37]](https://www.youtube.com/watch?v=oAVhEPey_qA)
+- overment: ["#8 Migracja na Gatsby.js" [9:38]](https://www.youtube.com/watch?v=CyN2hm3TDVI) | ["#9 Headless CMS" [8:48]](https://www.youtube.com/watch?v=xfoppVOZ2BA) | ["#10 Blog w Gatsby.js" [YT 7:23]](https://www.youtube.com/watch?v=my6B7gwaFGE)
+- Artur Chmaro: ["GatsbyJS - Pobieranie danych z GraphQL (Pokedex 🦄)" [YT 16:50]](https://www.youtube.com/watch?v=JK18MoOlBOQ) | [Artur Chmaro "GatsbyJS - Generowanie podstron (Pokedex 🦄)" [YT 15:52]](https://www.youtube.com/watch?v=bpuUPXdEtjo)
+- hello roman: ["Gatsby.js + GraphCMS 😱 opowieści, skrypty #9" [YT 23:15]](https://www.youtube.com/watch?v=UQ0q_LTxhbo) | ["Gatsby.js + GraphCMS cz. II 😱 opowieści, skrypty #10" [YT 31:18]](https://www.youtube.com/watch?v=4Vce8NkOM24) | [hello roman: "Styled components + Gatsby.js" [YT playlist 6 filmów]](https://www.youtube.com/playlist?list=PLKnxnWdLGM48DUzxZ1uSYBhgPNETsgWA_)
+- [Deam "Resume/CV project" [YT playlist 7 filmów]](https://www.youtube.com/playlist?list=PLy3RjrA8UIYJZ08w6bmSDNX10ysI8JuDk)
+- [Will Ward "Build a Website With Gatsby" [YT playlist 3 filmy]](https://www.youtube.com/playlist?list=PLASldBPN_pkASjaDYtNEU_KSU2gksvFHg)
+- Bytesized ["BUILD YOUR FIRST PORTFOLIO SITE with Gatsby.js (TUTORIAL)" [45:26]](https://www.youtube.com/watch?v=afCjUsXtAtE)
+- Code Bushi: ["Gatsby Image Tutorial" [YT 24:11]](https://www.youtube.com/watch?v=kOrohVsq_kI) | ["Fetching Dynamic Data with Gatsby.js" [YT 13:16]](https://www.youtube.com/watch?v=hC9vVZKLKaw) | ["Gatsby.js Global State with React Context and useReducer Hooks [YT 23:50]](https://www.youtube.com/watch?v=ThCfN5WJ0cU) | ["Gatsby.js with Tailwind CSS and PurgeCSS" [23:14]](https://www.youtube.com/watch?v=d0v_ouu5mqU)
+
+#### Narzędzia
+
+- ["15 Best Gatsby Templates & Themes In 2020"](https://reactjsexample.com/15-best-gatsby-templates-themes-in-2020/)
+- [Reflex](https://reflexjs.org) A collection of themes and plugins
+- [haydn5 / Gatsby-Background-Image-Demo](https://github.com/haydn5/Gatsby-Background-Image-Demo)
+- [tdudkowski / gatsby-scrollspy](https://github.com/tdudkowski/gatsby-scrollspy)
+- [Theme UI:](https://theme-ui.com/) The Design Graph Framework; a library for creating themeable user interfaces based on constraint-based design principles
+- [Emulsify Design System](https://docs.emulsify.info) an open-source tool for creating design systems with reusable components and clear guidelines for teams
+- [unified](https://unifiedjs.com) provide the building blocks
+- [Gatsbylius](http://gatsbylius.com/) The fastest PWA e-commerce solution
+- [davidlunadeleon / gatsby-blog-template](https://github.com/davidlunadeleon/gatsby-blog-template) Template for a personal blog using gatsby
+- [mrmartineau / gatsby-theme-code-notes](https://github.com/mrmartineau/gatsby-theme-code-notes) A Gatsby theme for publishing code-related notes to your website
+- [gregberge / smooth-doc](https://github.com/gregberge/smooth-doc) Ready to use documentation theme for Gatsby.
+
+#### GraphQL
+
+- [GraphQL](https://graphql.org) - A query language for your API
+- [The Apollo Data Graph Platform](https://www.apollographql.com/)
+- [Relay](https://relay.dev) the production-ready GraphQL client for React
+- [urql](https://formidable.com/open-source/urql/) fast GraphQL client; supports React, Preact, and Svelte (alpha)
+- [Fullstack GraphQL Tutorial for Developers](https://hasura.io/learn/)
+- Frontlive: [Artykuły w GraphQL](https://www.frontlive.pl/tags/graph-ql/)
+- [How To Graphql](https://www.howtographql.com) The Fullstack Tutorial for GraphQL
+- CSS Tricks [Alex Lau "A Complete Walkthrough of GraphQL APIs with React and FaunaDB"](https://css-tricks.com/a-complete-walkthrough-of-graphql-apis-with-react-and-faunadb/)
+- Gatsby [GraphQL Query Options Reference](https://www.gatsbyjs.org/docs/graphql-reference/)
+- The Javascript Ninja [Graphcool](https://www.graph.cool) - GraphQL Backend Development Framework - [shared/swapi](https://api.graph.cool/simple/v1/swapi)
+- ["The Ultimate Beginner’s Guide to GraphQL"](https://thejavascriptninja.com/the-ultimate-beginners-guide-to-graphql/)
+- [Anup Aglawe "What is GraphQL? - A Basic Guide"](https://www.loginradius.com/blog/async/what-is-graphql/)
+- [Altair GraphQL Client](https://altair.sirmuel.design) debug GraphQL queries and implementations
+- Strapi ["GraphQL vs REST: How to make the right choice?"](strapi.io/blog/graph-ql-vs-rest-how-to-make-the-right-choice)
+- [prisma-labs / graphql-yoga](https://github.com/prisma-labs/graphql-yoga) Fully-featured GraphQL Server with focus on easy setup | [Gbolahan Olawuyi "Setting Up A Graphql Server With Node + Graphql-Yoga + Prisma"](https://medium.com/@gbolahanolawuyi/setting-up-a-graphql-server-with-node-graphql-yoga-prisma-a3f59d33dac0)
+- [Diogo Souza "Building APIs With GraphQL in Your Node.js Application"](https://blog.appsignal.com/2020/06/03/building-apis-with-graphql-in-your-node-application.html)
+- [Prisma](https://www.prisma.io) an open-source database toolkit
+- Fauna Documentation [GraphQL reference](https://docs.fauna.com/fauna/current/api/graphql/)
+- Flavio Copes: [All the GraphQL tutorials](https://flaviocopes.com/tags/graphql/) | [An introduction to GraphQL](https://flaviocopes.com/graphql/)
+- [GraphQL Cursor Connections Specification](https://relay.dev/graphql/connections.htm)
+- CodeWall: [/GraphQL](https://www.codewall.co.uk/category/graphql/) [Tomek Poniatowicz "GraphQL – hot trend or new standard?"](https://www.codewall.co.uk/graphql-hot-trend-or-new-standard/) | [Laura Weatherhead "GraphQL Pagination using React, Apollo and GraphCMS"](https://www.codewall.co.uk/graphql-pagination-using-react-apollo-and-graphcms/)
+- [GraphQL Editor](https://graphqleditor.com) schema designer, ide and online graph maker [Blog](https://blog.graphqleditor.com): ["Introduction to GraphQL"](https://blog.graphqleditor.com/introduction-to-graphql/); ["Boost your GraphQL development with GraphQL Zeus"](https://blog.graphqleditor.com/graphql-zeus/) | [Michal "GraphQL tools & libraries"](https://blog.graphqleditor.com/graphql-tools-partone/)
+- egghead.io: [GraphQL Query Language](https://egghead.io/courses/graphql-query-language)
+- [RdotSilva/React-GraphQL-AppSync-Blog](https://github.com/RdotSilva/React-GraphQL-AppSync-Blog) - Severless Blog web application built using React, GraphQL, AWS AppSync and AWS Amplify.
+- Medium: [Trey Huffine "Build a GraphQL + React App with TypeScript"](https://levelup.gitconnected.com/build-a-graphql-react-app-with-typescript-9661f908b26) | [Noorain Panjwani "REST to GraphQL in minutes"](https://medium.com/spaceuptech/rest-to-graphql-in-minutes-44f3b86cf79f)
+- morioh: [Castore DeRose "Make CRUD simple with Nodejs, GraphQL, and React"](https://morioh.com/p/c76d8fadc806) | ["Learn full about Crash course on REST, GraphQL and Graphback"](https://morioh.com/p/8ed3955ff7ca)
+- Charly Poly ["From REST to GraphQL"](https://charlypoly.com/publications/from-rest-to-graphql)
+- khalilstemmler.com [article(s) about "GraphQL"](https://khalilstemmler.com/articles/tags/graph-ql/) [Khalil Stemmler "GraphQL's Greatest Architectural Advantages"](https://khalilstemmler.com/articles/graphql/graphql-architectural-advantages/)
+- [Discogs - Music Database and Marketplace](https://www.discogs.com) - [/api.discogs.com](https://api.discogs.com)
+- [Norbert Cyran, Jakub Peczke "GraphQL from Django Developer Perspective"](https://www.ulam.io/blog/graphql-from-django-developer-perspective/)
+- [Danilo Woznica "Generating TypeScript types and React Hooks based on GraphQL endpoint"](https://significa.co/blog/generating-typescript-types-and-react-hooks-based-on-graphql-endpoint)
+- [kimera](https://www.lola.tech/kimera) GraphQL mocks with precision
+- [Tim Perry "GraphQL the Simple Way, or: Don't Use Apollo"](https://httptoolkit.tech/blog/simple-graphql-server-without-apollo)
+- [George Nance "Don’t use frontmatter to seperate your markdown files in Gatsby"](https://georgenance.com/dont-use-frontmatter-markdown-files-gatsby)
+- [Monika Venčkauskaitė "Implementing GraphQL with React and Node"](https://monika.ai/implementing-graphql-with-react-and-node)
+- [r/graphql "How can I merge 2 schemas?"](https://www.reddit.com/r/graphql/comments/im8uie/how_can_i_merge_2_schemas/)
+- [oslabs-beta / obsidian](https://github.com/oslabs-beta/obsidian) GraphQL, built for Deno - a native GraphQL caching client and server module
+- [Pragma](https://pragmalang.com) Build Beautiful GraphQL APIs In No Time
+- [GraphQL IDE](https://grepql.netlify.app) Generates every queries from the schema
+
+#### GraphQL - YT
+
+- **Playlisty**
+- [freeCodeCamp.org "GraphQL Full Course - Novice to Expert" [4:05:05]](https://www.youtube.com/watch?v=ed8SzALpx1Q) | [The Net Ninja "GraphQL Tutorial" [YT playlist 36 filmów]](https://www.youtube.com/playlist?list=PL4cUxeGkcC9iK6Qhn-QLcXCXPQUov1U7f)
+- Fun Fun Function ["GraphQL" [YT playlist 3 filmy]](https://www.youtube.com/playlist?list=PL0zVEGEvSaeEjIDdbK1KfR7V9XBCVAr0P)
+- Traversy Media [Build a GraphQL Server" [YT playlista 5 filmów]](https://www.youtube.com/playlist?list=PLillGF-RfqbYZty73_PHBqKRDnv7ikh68)
+- [Artur Chmaro "Podstawy GraphQL" [YT plalist 19 filmów]](https://www.youtube.com/playlist?list=PLOzzvlJKwOdVKI4hbPNG9dveAH6Njwhcc)
+- [overment "Kurs GraphQL od podstaw / API / alternatywa dla REST / Gatsby / Apollo Server / Prisma / Schema / Resolvers / Graphql Query / CRUD" [YT playlist 6 filmów]](https://www.youtube.com/playlist?list=PLjHmWifVUNMLivTPinla41NWyYf3pONIa) - [iceener / graphql-tutorial](https://github.com/iceener/graphql-tutorial)
+- Classed ["React GraphQL App series (MERNG)" [YT playlist 11 filmów]](https://www.youtube.com/playlist?list=PLMhAeHCz8S3_pgb-j51QnCEhXNj5oyl8n) | ["GraphQL Server Series (MERNG)" [YT playlist 5 filmów]](https://www.youtube.com/playlist?list=PLMhAeHCz8S3_CTiWMQhL6YxX7vZ7z84Zo)
+- [Will Ward "Full Stack Apollo GraphQL Tutorial" [YT playlist 9 filmów]](https://www.youtube.com/playlist?list=PLASldBPN_pkDUuOzyPotAkKmvwqyDoA0g)
+- **Filmy**
+- [Samuraj Programowania "GraphQL Pierwsze Starcie - Challenge z Mateuszem Domańskim" [3:14:46]](https://www.youtube.com/watch?v=W0IH0hNEpGI)
+- Honeypot ["GraphQL: The Documentary" [YT 27:57]](https://www.youtube.com/watch?v=783ccP__No8)
+- Program With Erik ["GraphQL vs REST - What is GraphQL and Why You Should Choose It" [18:59]](https://www.youtube.com/watch?v=6H7-3_Wgwu4)
+- Academind ["REST vs GraphQL - What's the best kind of API?" [YT 17:41]](https://www.youtube.com/watch?v=PeAOEAmR0D0)
+- LevelUpTuts ["What Is GraphQL?" [14:28]](https://www.youtube.com/watch?v=VjXb3PRL9WI)
+- Web Dev Simplified ["Learn GraphQL In 40 Minutes" [YT 39:42]](https://www.youtube.com/watch?v=ZQL7tL2S0oQ)
+- [Coding Tech "Moving Existing API From REST To GraphQL" [YT 23:40]](https://www.youtube.com/watch?v=broQmxQAMjM)
+- [Harry Wolff "Why I Don’t Use GraphQL Anymore" [YT 16:28]](https://www.youtube.com/watch?v=S1wQ0WvJK64)
+- [GraphQL Asia "The Case Against GraphQL - Robert Zhu" [YT 31:58]](https://www.youtube.com/watch?v=djKPtyXhaNE) | [Facebook Developers "Robert Zhu - Realtime React Apps with GraphQL - React Conf 2017" [YT 23:59]](https://www.youtube.com/watch?v=AYbVMNtO-ro)
+- [Keyhole Software "GraphQL - Why It's Cool & What You Can Do With It" [YT 33:48]](https://www.youtube.com/watch?v=k3uSjtTYjvA)
+
+#### GraphQL - API
+
+- [warrenday / graphql-network-inspector](https://github.com/warrenday/graphql-network-inspector) GraphQL Network Inspector
+- [api.spacex.land](http://api.spacex.land/graphql/)
+
+#### Headless CMS
+
+- [Przeprogramowani "Czym jest Headless CMS? | Przeprogramowani ft. code v0.0.4" [YT 13:25]](https://www.youtube.com/watch?v=c2pE3iG9nIQ) DatoCMS
+- [Strapi "Understanding Headless Architecture: What Is It?"](https://medium.com/strapi/understanding-headless-architecture-what-is-it-f02a0aaf999e)
+- [Erin Barth-Dwyer "5 Reasons To Use A Headless CMS"](https://dispatch.moonfarmer.com/5-reasons-to-use-a-headless-cms-eafdffa325aa) | [Blessing Krofegha "Understanding Webhooks in Headless CMS"](https://itnext.io/understanding-webhooks-in-headless-cms-71e62fdf365b)
+- [Sujit.Kumar "10 Headless CMSs (That Marketers Won't Hate!)"](https://www.valuebound.com/resources/blog/10-headless-cmss-marketers-wont-hate)
+- [headlessCMS | Top Content Management Systems for Jamstack sites](https://headlesscms.org)
+- [TinaCMS](https://tinacms.org) open-source site editing toolkit for React-based frameworks — Gatsby & Next.js
+- [Directus](https://directus.io) Headless CMS & API; Real-time Data Platform
+- [Prismic](https://prismic.io/) headless CMS
+- [GraphCMS](https://graphcms.com/) GraphQL Headless CMS with Content APIs
+- [Cosmic Headless CMS and API toolkit](https://www.cosmicjs.com) - [official JavaScript client](https://www.npmjs.com/package/cosmicjs)
+- [Syntax - Tasty Web Development Treats "Headless CMS Break Down & Roundup" June 3, 2020](https://overcast.fm/+JaI6BHe9U)
+- [Sanity](https://www.sanity.io) platform for delivering content to digital devices and products
+- [dotCMS](https://dotcms.com) Hybrid Headless CMS
+- [Agility CMS](https://agilitycms.com/)
+- [ButterCMS](https://buttercms.com) Headless CMS and Content API
+- [Contentstack](https://www.contentstack.com) Content Management System | Omnichannel Experiences
+- [Publii](https://getpublii.com) Static CMS with GUI; sprawdzić
+- [Prose](http://prose.io) content editor for GitHub
+- [Storyblok](https://www.storyblok.com) API-based & Headless CMS as a Service; The only Headless CMS with a Visual Editor
+- [Grav](https://getgrav.org) Flat-File CMS
+- [StaticGen](https://www.getlektor.com) A List of Static Site Generators for Jamstack Site
+- [The Google Drive CMS](https://www.drivecms.xyz)
+
+#### Strapi
+
+- [Strapi](https://strapi.io) headless CMS - [Strapi Documentation](https://strapi.io/documentation/v3.x/) | [Tutorials](https://strapi.io/tutorials) | [Blog](https://strapi.io/blog) | [Github: strapi / strapi](https://github.com/strapi/strapi) | [Strapi [YT (3)]](https://www.youtube.com/channel/UC2w6UgktMHgTS-PN4D0utNw/) | [gatsby-source-strapi](https://www.gatsbyjs.org/packages/gatsby-source-strapi/) | [Strapi Academy](strapi.teachable.com/) - [Strapi Fundamentals Training Course - Community Edition](https://strapi.teachable.com/courses/1104680/lectures/23648326)
+- **CKEditor*- ["Creating a new Field in the administration panel"](https://strapi.io/documentation/v3.x/guides/registering-a-field-in-admin.html) | [Alex the Entreprenerd "CKEditor in Strapi Admin with a Custom Strapi Plugin" [YT 17:03]](https://www.youtube.com/watch?v=e85AbbyARsA)
+- Strapi Blog [Maxime Castres "Build a static blog with Gatsby and Strapi"](https://strapi.io/blog/build-a-static-blog-with-gatsby-and-strapi) 2020
+- Strapi Blog [Pierre Burgy "Building a Static Blog using Gatsby and Strapi"](https://strapi.io/blog/building-a-static-website-using-gatsby-and-strapi) 2018
+- [Steven J. Vaughan-Nichols "Strapi introduces new open-source headless content management system"](https://www.zdnet.com/article/strapi-introduces-new-open-source-headless-content-management-system/)
+- Medium: [Idan Shoshana "You Should Use Strapi"](https://medium.com/@idanshoshana/you-should-use-strapi-8edcf34112df)
+- [Bartłomiej Dąbrowski "Strapi: Getting started with the Node.js headless CMS"](https://tsh.io/blog/strapi-node-js-headless-cms/)
+- [Somtochukwu Medua-Ugeh "Get Production-ready with Strapi + Gatsby"](https://blog.somto.dev/get-production-ready-with-strapi-gatsby)
+- [Jason Lengstorf "Create a Custom Back-End for Jamstack Apps with Strapi"](https://www.netlify.com/blog/2020/06/23/create-a-custom-back-end-for-jamstack-apps-with-strapi/)
+- [jaybanaticla / strapi-azure](https://github.com/jaybanaticla/strapi-azure) working Strapi v3.1.3; deployable as an Azure App Service
+- MongoDB [Ado Kukic "Use MongoDB as the Data Store for your Strapi Headless CMS"](developer.mongodb.com/how-to/strapi-headless-cms-with-atlas)
+
+#### Strapi YT
+
+- Strapi: [Strapi Tutorial and Introduction [YT 14:44]](https://www.youtube.com/watch?v=yH6cQRRWNFI) | [Strapi "Learn GatsbyJS with Strapi Headless CMS" [YT playlist 16 filmów]](https://www.youtube.com/playlist?list=PL7Q0DQYATmvgGiz0MbbsMA_aB1V0yLE7a)
+- Alex the Entreprenerd ["Strapi.io" [YT playlist 12 filmów]](https://www.youtube.com/playlist?list=PLjhq46XB5LWukdEt29lTaJl9XFG9CBMOp) | ["Learn Strapi.io - Fastest Way to build Node.js APIs" [YT playlist 16 filmów]](https://www.youtube.com/playlist?list=PLjhq46XB5LWtBDimrw54T72mqw5J79lb_)
+- [Artur Chmaro "Headless CMS" [YT playlista 4 filmy]](https://www.youtube.com/playlist?list=PLOzzvlJKwOdXDZuTb0ibTZ-_DvvAr0cZx)
+- [Alex the Entreprenerd [YT (1)]](https://www.youtube.com/channel/UCMguCMq25nEqlHlr17iINNw/)
+- [Dr. Shahin Rostami "Strapi" [YT playlista 5 filmów]](https://www.youtube.com/playlist?list=PLwWiU_ClpuYq34fRn63kcO7lTGjSMOBVc)
+- [CodingTheSmartWay.com "Getting Started With Strapi" [YT playlist 5 filmów]](https://www.youtube.com/playlist?list=PL2dKqfImstaROBMu304aaEfIVTGodkdHh)
+- [Chris on Code "Creating Custom APIs with Strapi - A Node Headless CMS" [YT 11:03]](https://www.youtube.com/watch?v=YsAjW4qVxPA)
+- [Jason Lengstorf "Set up Strapi as a CMS for Gatsby (with David Kartuzinski) — Learn WIth Jason" [YT 1:31:32]](https://www.youtube.com/watch?v=JkBxyurjeI8)
+- [Traversy Media "Strapi.js Crash Course | Headless CMS" [YT 25:05]](https://www.youtube.com/watch?v=6FnwAbd2SDY)
+- [Chris Hawkes "Why I Like Strapi" [YT 13:11]](https://www.youtube.com/watch?v=EBqRR8-Hd84)
+- [Tim Ermilov "BxJS - What is Strapi? Exploring headless CMS" [YT 1:26:35]](https://www.youtube.com/watch?v=M4ZV72fl0tI)
+
+#### ContentfulCMS
+
+- ["Build Content Rich Progressive Web Apps with Gatsby and Contentful"](https://egghead.io/courses/build-content-rich-progressive-web-apps-with-gatsby-and-contentful)
+- ["Gatsby And Contentful — The Headless CMS Approach"](https://medium.com/codingthesmartway-com-blog/gatsby-and-contentful-the-headless-cms-approach-5c7137145ace)
+- [Netlify Build Plugin: Persist the Gatsby Cache Between Builds](https://github.com/jlengstorf/netlify-plugin-gatsby-cache)
+- [freeCodeCamp.org "Build a blazing fast website with GatsbyJS and Contentful" [1:48:01]](https://www.youtube.com/watch?v=wlIdop5Yv_Y)
+- [Jason Lengstorf "Using Contentful and Gatsby Together (with Khaled Garbaya) — Learn WIth Jason" [1:23:04]](https://www.youtube.com/watch?v=T9hLWjIN-pY)
+
+#### Drupal
+
+- Gatsby: [Using Decoupled Drupal with Gatsby](https://www.gatsbyjs.org/blog/2018-08-13-using-decoupled-drupal-with-gatsby/) | [Getting started with Gatsby Cloud and Drupal](https://www.gatsbyjs.com/docs/drupal/getting-started/)
+- ["How to create a headless Drupal site"](https://hackernoon.com/how-to-create-a-headless-drupal-site-a88519f8ce7b)
+- [Robert Ngo "Decoupling Drupal with Gatsby"](https://evolvingweb.ca/blog/decoupling-drupal-gatsby)
+- Medium: [Sergey Linkin "How to quickly configure Drupal as a decoupled API-first system"](https://thebrainfiles.wearebrain.com/how-to-quickly-configure-drupal-as-a-decoupled-api-first-system-8730a3623388)
+- [Mike Crittenden "Decoupled Drupal 8 + GatsbyJS: a quickstart guide"](https://www.phase2technology.com/blog/drupal-8-gatsbyjs-quickstart)
+- ["Drupal 8 Rain & GatsbyJS Integration - Soup to Nuts Installation"](https://www.mediacurrent.com/blog/drupal-rain-gatsbyjs-integration-guide/)
+- [pvlatin / drupal-gatsby-ci](https://github.com/pvlatin/drupal-gatsby-ci) Ci / cd drupal gatsby
+
+#### WordPress
+
+- WP Astra: ["Everything You Need to Know About Headless WordPress"](https://wpastra.com/headless-wordpress-guide/)
+- Shane O'Neill ["How to Use Wordpress to Power Your Gatsby Site"](https://www.shaneoneill.io/2020/07/17/how-to-use-wordpress-to-power-your-gatsby-site/)
+- [GraphQL API for WordPress](https://www.wpgraphql.com)
+- Gatsby: [Amberley Romo "Getting Started with Gatsby and WordPress"](https://www.gatsbyjs.org/blog/2018-01-22-getting-started-gatsby-and-wordpress/) | Tim Smith "How To Build A Blog with WordPress and Gatsby.js" [Part 1](https://www.gatsbyjs.org/blog/2019-04-26-how-to-build-a-blog-with-wordpress-and-gatsby-part-1), [Part 2](https://www.gatsbyjs.org/blog/2019-04-30-how-to-build-a-blog-with-wordpress-and-gatsby-part-2), [Part 3](https://www.gatsbyjs.org/blog/2019-05-02-how-to-build-a-blog-with-wordpress-and-gatsby-part-3)
+- [Lam Tutorial "Gatsby + Wordpress Complete Course" [YT playlista 10 filmów]](https://www.youtube.com/playlist?list=PL0JHvIEWbYOApEB1o0lQY0HuRF_5Pf57Z)
+- [Zac Gordon "Gatsby WordPress Course Prep - Live Stream" [YT playlist 6 filmów]](https://www.youtube.com/playlist?list=PLruo2gSoqleh6mTX4UhR0kO0Odnw98bmS)
+- [Watch and Learn "Gatsby.js + WordPress - Part 01 - Getting Posts & Pages" [YT 34:19]](https://www.youtube.com/watch?v=etii9yp1J6s)
+- WPCasts ["Static WordPress Generation with Gatsby" [YT playlista 3 filmy]](https://www.youtube.com/playlist?list=PLxvoH8hcoFglVIC1blJUWnEaa7GQKJmcB) | [WPCasts "Headless WordPress" [YT playlista 6 filmów]](https://www.youtube.com/playlist?list=PLxvoH8hcoFgmlCawg0WydWGNoTaKLAPWr)
+
+#### CI/CD
+
+- [Buddy](https://buddy.works) effective way to build better apps faster - ["Czym jest Buddy? ⌨️ hello roman #55" [YT 28:36]](https://www.youtube.com/watch?v=clMcCwFZ7lQ)
+- ["What Is CI/CD—and Why Is It Important for Your Developers?"](https://mediatemple.net/blog/web-development-tech/what-is-cicd/) | ["Cloud-Native CI/CD Workflows in AWS: 3 Use Cases"](https://mediatemple.net/blog/cloud-hosting/cicd-workflows-aws-3-use-cases/)
+- [CircleCI](https://circleci.com/)
+- [Jenkins](https://www.jenkins.io)
+- [Travis CI](https://travis-ci.org) - [travis-ci / travis.rb](https://github.com/travis-ci/travis.rb)Travis CI Client (CLI and Ruby library)
+- [TeamCity: CI and Build Server for Developers and DevOps by JetBrains](https://www.jetbrains.com/teamcity/promo/free-ci/)
+- slant.to: ["What is the best alternative to CircleCI?"](https://www.slant.co/options/625/alternatives/~circleci-alternatives)
+- [Andrew Villazon "Automatically deploying a Gatsby site with Github Actions"](https://www.andrewvillazon.com/automatically-deploying-with-github-actions/)
+
+#### AWS
+
+- [Deep Dive with Security: AWS Identity and Access Management (IAM)](https://www.aws.training/Details/eLearning?id=53780) free course
+- ["AWS Application Deployment: Getting Started with AWS CodeDeploy & GitHub"](https://mediatemple.net/blog/web-development-tech/aws-application-deployment-getting-started-with-aws-codedeploy-github/)
+- [Julio Añoveros "How To Create an AWS S3 Bucket"](https://hackernoon.com/how-to-create-an-aws-s3-bucket-zr183u37)
+- [Sarah Drasner "Creating an API with AWS: Lambda, DynamoDB, and API Gateway"](https://www.netlify.com/guides/creating-an-api-with-aws-lambda-dynamodb-and-api-gateway/)
+- [omaidf / PrismX](https://github.com/omaidf/PrismX) Cloud Security Dashboard for AWS - based on ScoutSuite
+- [Roberto Frontado "Serverless: Simple CRUD Application in 10 minutes on AWS"](https://medium.com/dev-jam/serverless-simple-crud-application-in-10-minutes-on-aws-69e022298e80)
+- [AWS Icons](https://awsicons.dev)
+- [swyx "How to Design Almost Any Backend and Deploy It to AWS with No Code"](https://www.freecodecamp.org/news/design-and-deploy-backend-with-amplify-sandbox/)
+- freeCodeCamp.org ["AWS Basics for Beginners - Full Course" [YT 5:27:20]](https://www.youtube.com/watch?v=ulprqHHWlng) | ["AWS Certified Developer - Associate 2020 (PASS THE EXAM!)" [YT 11:58:36]](https://www.youtube.com/watch?v=RrKRN9zRBWs) | ["AWS Certified Solutions Architect - Associate 2020 (PASS THE EXAM!)" [YT 10:26:18]](https://www.youtube.com/watch?v=Ia-UEYYR44s)
+- [nessjs / ness](https://github.com/nessjs/ness) Deploy web sites and apps to your own cloud account effortlessly.
+
+#### Netlify
+
+- [Netlify](https://www.netlify.com) ([Community](https://community.netlify.com), [Docs](https://docs.netlify.com)) - [Netlify CMS](https://www.netlifycms.org)
+- [Start a Blog in 2019 with Gatsby.js and Netlify](https://daveceddia.com/start-blog-gatsby-netlify/)
+- ["Gatsby & Netlify CMS: a perfect pairing"](https://blog.logrocket.com/gatsby-netlify-cms-a-perfect-pairing-d50d59d16f67)
+- [Ravgeet Dhillon "Deploy a website on Netlify through Github Actions"](https://www.ravsam.in/blog/deploy-a-website-on-netlify-through-github-actions/)
+- Traversy Media ["Netlify Dev Crash Course | Easy Dev & Deploy" [YT 23:10]](https://www.youtube.com/watch?v=FMhVXOA54x8)
+- [Przeprogramowani "Strona internetowa w 15 min z Gatsby.js i Netlify | Przeprogramowani ft. code v0.0.2" [YT 15:41]](https://www.youtube.com/watch?v=e43gqXxwACU)
+- [rk development "Deploy a Gatsby JS Site & Netlify CMS in just 45 mins! (2019 - Full Walkthrough)" [YT 48:55]](https://www.youtube.com/watch?v=rjszBC8luHE)
+- [Web Dev Profesh "Gatsby With NetlifyCMS Tutorial" [YT 22:24]](https://www.youtube.com/watch?v=IWmVSm2KevY)
+
+#### Contact Form
+
+- Traversy Media ["Simple Contact Form Submission With Netlify" [YT 11:20]](https://www.youtube.com/watch?v=6ElQ689HRcY)
+- [Bobby Brennan "Simple Backends: Four ways to implement a “Contact Us” form on a static website"](https://medium.com/datafire-io/simple-backends-four-ways-to-implement-a-contact-us-form-on-a-static-website-10fc430984a4)
+- LevelUpTuts ["How to make a Contact Form in Gatsby with Netlify" [YT 13:24]](https://www.youtube.com/watch?v=hF7xJhzrr9s)
+- WPCasts ["How to Make a Contact Form in Gatsby | Headless WordPress Tutorial" [YT 21:38]](https://www.youtube.com/watch?v=ZRQ94PMNEcg)
+
+#### Axios
+
+- [axios / axios](https://github.com/axios/axios) Promise based HTTP client for the browser and node.js
+- [Traversy Media "Axios Crash Course | HTTP Library" [42:19]](https://www.youtube.com/watch?v=6LyagkoRWYA)
+- [Academind "Sending JavaScript Http Requests with Axios" [13:13]](https://www.youtube.com/watch?v=qM4G1Ai2ZpE)
+
+#### MDX
+
+- [MDX](https://mdxjs.com/)
+- Gatsby [Docs / Reference Guides / MDX](https://www.gatsbyjs.org/docs/mdx/)
+- [Docusaurus](https://docusaurus.io/en/)
+- [Theme UI](https://theme-ui.com) The Design Graph Framework
+- [Rebass](https://rebassjs.org) React Primitive Ui Components Built With Styled System
+- [remark - markdown processor powered by plugins](https://remark.js.org)
+- LekoArts Blog ["Language tabs for Gatsby's code blocks"](https://www.lekoarts.de/en/blog/language-tabs-for-gatsbys-code-blocks) | ["Adding line numbers and code highlighting to MDX code blocks"](https://www.lekoarts.de/en/blog/adding-line-numbers-and-code-highlighting-to-mdx-code-blocks)
+- [Niklas "Implement PrismJS in GatsbyJS"](https://dev.to/niklasmtj/implement-prismjs-in-gatsbyjs-fff)
+- ["styling markdown code snippets with prismjs"](https://stephenweiss.dev/blog/2020-01-15/syntax-highlighting-prismjs-gatsby/)
+- ["Syntax Highlighting in Gatsby MDX"](https://malikgabroun.com/blog/syntax-highlighting-in-gatsby-mdx)
+- [Sam Julien "Up and Running with Gatsby: Markdown & MDX"](https://thinkster.io/tutorials/up-and-running-with-gatsby-markdown/)
+- [Daniel Stout "Intro to MDX in Gatsby"](https://www.digitalocean.com/community/tutorials/gatsbyjs-mdx-in-gatsby)
+- [Brad Westfall "Blogging with Gatsby & MDX"](https://reacttraining.com/blog/gatsby-mdx-blog/)
+- using-remark [Daisy Buchanan"Code and Syntax Highlighting with PrismJS"](https://using-remark.gatsbyjs.org/code-and-syntax-highlighting/)
+- reckoning.dev ["Using Novela Theme with Modifications"](https://reckoning.dev/novela-theme-update)
+- [Highlight Code](https://docs.deckdeckgo.com/components/code/)
+- [Johno "Create a table of contents component for MDX in Gatsby"](https://johno.com/mdx-table-of-contents-components-in-gatsby/)
+- [Scott Spence "Convert the Gatsby default starter blog to use MDX" YT [19:26]](https://www.youtube.com/watch?v=gck4RjaX5D4)
+- [David Dal Busco "Stylish Cards and Syntax Highlighting With Gatsby"](https://medium.com/better-programming/stylish-cards-and-syntax-highlighting-with-gatsby-e2806b9cb987) | [Sebastien Lorber "Using React hooks in MDX"](https://dev.to/sebastienlorber/using-react-hooks-in-mdx-4ei6)
+- [gatsby-plugin-mdx with prismjs and MDXRenderer, how? #17361](https://github.com/gatsbyjs/gatsby/issues/17361)
+- Julian​Garamendy​.dev ["Adding custom OpenGraph images to Gatsby Starter Blog"](https://juliangaramendy.dev/custom-open-graph-images-in-gatsby-blog/)
+
+#### Storybook
+
+- [Storybook](https://storybook.js.org) an open source tool for developing UI components in isolation from framework
+- [Learn Storybook](https://www.learnstorybook.com) Storybook Tutorials
+- Brad Frost [Atomic Design](https://bradfrost.com/blog/post/atomic-web-design/)
+- GatsbyJS [Visual Testing with Storybook](https://www.gatsbyjs.org/docs/visual-testing-with-storybook/)
+- [Michael Shilman "Introducing Storybook Args"](https://medium.com/storybookjs/introducing-storybook-args-2dadcdb777cc)
+- [Katarzyna Kotyńska"Starting with GatsbyJS + Styled Components + Storybook"](https://pagepro.co/blog/getting-started-with-gatsby-with-styled-components-storybook/)
+- [Jake Trent "Global Styles In Storybook"](https://jaketrent.com/post/global-styles-in-storybook/) | [styled-components / createGlobalStyle](https://styled-components.com/docs/api#helpers)
+
+#### Inne
+
+- [Cloudinary](https://cloudinary.com/) - [strapi-provider-upload-cloudinary](https://www.npmjs.com/package/strapi-provider-upload-cloudinary)
+- [Nift](https://nift.dev) a cross-platform open source framework for managing and generating websites
+- [Notion](https://www.notion.so) All-in-one workspace
+- [Tippy.js](https://atomiks.github.io/tippyjs/) Tooltip, Popover, Dropdown, and Menu Library
+- [18F Aria-Accordion](https://www.npmjs.com/package/aria-accordion) [react-collapse](http://nkbt.github.io/react-collapse/) [copy-text-to-clipboard](https://www.npmjs.com/package/copy-text-to-clipboard)
+- [Bludit](https://www.bludit.com) Flat-File CMS - [themes for Bludit](https://themes.bludit.com)
+- [Hostman](https://hostman.com/pricing/static) - the easiest cloud hosting for developers
+- Francesco Di Lorenzo ["How I recreated the Hey "Feed" with AWS Lambda, SES and React"](https://francescodilorenzo.com/hey-feed-ses-lambda-react)
+- [Sam Smith "Enhance your web page transitions"](https://smth.uk/enhance-your-web-page-transitions/)
+- [Syntax Highlighting Theme Generator](http://k88hudson.github.io/syntax-highlighting-theme-generator/www/)
+
+#### Dark mode
+
+- [HasOne "How to add dark mode in Gatsby + React Project using CSS/SCSS #2"](https://dev.to/hasone/how-to-add-dark-mode-in-gatsby-react-project-2-4i7d)
+- [Yakko Majuri "Why Dark Mode Is Hard. And How You Can Implement It On Your React Website"](https://medium.com/swlh/why-dark-mode-is-hard-c6c382c88fcf)
+- [lifeeric / react-darkmode-toggler](https://github.com/lifeeric/react-darkmode-toggler) Dark Theme UI Button, Toggler
+- [Joy Bhai Codes "Scalable Dark/Light Theme Toggle button 2021🔥 || CSS JS" [YT 25:26]](https://www.youtube.com/watch?v=x0hGQ3blksE)
+- [Joy Shaheb CodePen Home - Dark-Light Theme](https://codepen.io/joyshaheb/pen/gOwOGQE)
+
+#### GSAP i animacja
+
+- [Wrong Akram "React & GSAP Tutorials" [YT playlist 12 filmów]](https://www.youtube.com/playlist?list=PLgcPxVODYXGIT9iX0uHBUYQSyqGvafwHT)
+- [CodeYouLike "GATSBY + GSAP + SCROLLTRIGGER - PODSTAWY" [YT 9:30]](https://www.youtube.com/watch?v=z4UWgHvUHY8)
+- [For Those Who Code "GreenSock3 with ScrollTrigger in React" [17:12]](https://www.youtube.com/watch?v=hFPqpYAwc_g)
+- [Kevin Powell "Animation with GSAP - the basics [ A beginners guide to SVG part 5 ]" [YT 50:59]](https://www.youtube.com/watch?v=4XJ8yS0zpa4&t=1718s)
+- DesignCourse [Adobe XD Prototyping to GSAP 3.0 Tutorial - Part 1 [YT 24:42]](https://www.youtube.com/watch?v=dnkWk_4UWOw) | ["GSAP 3.0 Crash Course - JavaScript Animation Library" [YT 23:00]](https://www.youtube.com/watch?v=YqOhQWbouCE) | ["GSAP TimelineMax Tutorial - Take Control of your JavaScript Animation" [YT 19:52]](https://www.youtube.com/watch?v=Elm9im3_uMQ) | ["Getting Started with GSAP TweenMax (Tutorial) - Animating a Landing Page" [YT 24:15]](https://www.youtube.com/watch?v=eY4sXczY5AQ) | ["GSAP's NEW ScrollTrigger Plugin! - Tutorial" [YT 18:24]](https://www.youtube.com/watch?v=ygcEKd0RIGg) | ["Creating Awesome UI's that Animate Only On Scroll" [YT 31:13]](https://www.youtube.com/watch?v=S18Wh9IELo0)
+- [Shape Shifter](https://shapeshifter.design) - [DesignCourse "Animating SVG Icons? UI Animations with ShapeShifter! (Tutorial)" [YT 26:11]](https://www.youtube.com/watch?v=P35hQOsW0xU)
+- [Keyframes](https://keyframes.app) - [DesignCourse "Create CSS Animations Easily with this Chrome Extension" [YT 13:03]](https://www.youtube.com/watch?v=H598jXvQhLw)
+- [Mikael Ainalem "Morphing SVG With react-spring"](https://css-tricks.com/morphing-svg-with-react-spring/)
+- [Joel Olawanle "Web animations with HTML, CSS, and JavaScript"](https://blog.logrocket.com/web-animation-with-html-css-and-javascript/)
+- [Franks laboratory "Creative Coding with Vanilla JavaScript and HTML Canvas" [YT playlist 25 filmów]](https://www.youtube.com/playlist?list=PLYElE_rzEw_siuo-kkHh5h7Sk--6IPYNh)
+- [Franks laboratory "Creative Coding with Vanilla JavaScript and HTML Canvas" [YT playlist 29 filmów]](https://www.youtube.com/playlist?list=PLYElE_rzEw_siuo-kkHh5h7Sk--6IPYNh)
+- [Radu Mariescu-Istodor "!BB - Ep3: Basic video editing in JavaScript" [YT 8:12]](https://www.youtube.com/watch?v=jPGFKrgFnEk)
+
+#### Animacja przykłady
+
+- [Moonfarmer](https://moonfarmer.com)

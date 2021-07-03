@@ -1,0 +1,143 @@
+---
+title: "Kryptografia asymetryczna"
+comment: ""
+section: "it"
+subsection: "kryptologia"
+---
+
+Zastosowanie kryptografii asymetrycznej
+
+### Zasada działania
+
+Kryptografię asymetryczną wynaleźli w 1976 Martin Hellman i Whitfield Diffie (do tego czasu znane były wyłącznie szyfry symetryczne).
+Polega na użyciu pary uzupełniających się kluczy: publicznego i prywatnego. Wykorzystuje się operacje matematyczne, które bardzo łatwo przeprowadzić w jedną stronę, ale trudno w drugą.
+Metoda zakłada, że każdy może zaszyfrować wiadomość przy użyciu klucza publicznego, ale by odrócić ten proces konieczny jest pasujący klucz prywatny.
+
+Założenia:
+
+- kluczem użytym do zaszyfrowania wiadomości nie można jej oszyfrować; w przeciwnym przypadku znając klucz publiczny i szyfrogram możliwe byłoby uzyskanie tekstu jawny, algorytm uznany za dobry to uniemożliwia
+- nie jest możliwe odtworzenie klucza prywatnego na podstawie publicznego (lub jest to nieopłacalne)
+- szyfr jest odporny na atak polegający na porównaniu jawnego tekstu z szyfrogramem
+
+### Zastosowania
+
+Istotną innowacją jaką wprowadziło szyfrowanie asymetryczne są zaawansowane funkcje kryptografii takie jak podpisy cyfrowe i uwierzytelnianie. Umożliwiło to całkiem nowe zastosowania kryptografii.
+
+### Szyfrowanie:
+
+```
+tekst jawny >--[klucz publiczny]--> szyfrogram >--[klucz prywatny]--> tekst jawny
+```
+
+1.  Bob chce, żeby Alice (i inni ludzie) mogli mu wysyłać zaszyfrowane wiadomości.
+W tym celu generuje parę powiązanych ze sobą kluczy: trzymany w ukryciu i dostępny tylko jemu klucz prywatny oraz klucz publiczny, który udostępnia (na swojej stronie internetowej, serwerze kluczy lub za pośrednictwem _key signing party_).
+2.  Alice pobiera klucz publiczny Boba i używając go, szyfruje wiadomość; ponieważ odszyfrować ją można tylko kluczem prywatnym Boba, może przesłać ją otwartym kanałem łączności i tylko Bob po otrzymaniu szyfrogramu używając swojego klucza prywatnego (utrzymywany w sekrecie od czasu utworzenia i znany tylko mu) może odszyfrować i przeczytać wiadomość.
+Dzięki temu wiadomość jest strzeżona przed nieautoryzowanymi osobami, a Bob i Alice nie potrzebują bezpiecznego tunelu do wymiany współdzielonego klucza.
+
+Ponieważ szyfrowanie asymetryczne jest dużo wolniejsze od symetrycznego prawie nigdy nie stosuje się go do przesyłania dłuższych wiadomości, natomiast dość często do przesyłania kluczy jakiegoś szyfru symetrycznego.
+Obecnie kryptografia asymetryczna jest szeroko stosowana do wymiany informacji poprzez kanały o niskiej poufności jak np. Internet. Stosowana jest także w systemach elektronicznego uwierzytelniania, obsługi podpisów cyfrowych, do szyfrowania poczty (OpenPGP), mechanizmów bezpieczeństwa sieci (Kerberos, VPN itp.) itd.
+
+### Podpis cyfrowy
+
+Podpis cyfrowy to dodatkowa informacja dołączona do wiadomości służąca do weryfikacji jej źródła.
+Podpisy cyfrowe korzystają z kryptografii asymetrycznej - tworzona jest para kluczy, klucz prywatny i klucz publiczny - klucz prywatny służy do podpisywania wiadomości, klucz publiczny natomiast do weryfikowania podpisu.
+Najważniejszymi kryptosystemami umożliwiającymi podpisywanie cyfrowe są RSA, ElGamal i DSA.
+Najpopularniejsze standardy pozwalające na złożenie podpisu elektronicznego to X.509 oraz PGP
+
+Wykorzystuje się tu tą samą właściwość, tylko, że w inny sposób. Wiadomość zaszyfrowana kluczem publicznym może zostać odszyfrowana tylko kluczem prywatnym, ale też na odwrót - jeżeli zostanie zaszyfrowana kluczem prywatnym tylko używając klucza publicznego będzie można ją odszyfrować. Jaka wyniknie korzyść z zastosowania szyfru, który każdy będzie mógł odczytać?
+Będzie można określić, którym kluczem prywatnym została zaszyfrowana wiadomość, a ściśle rzecz biorąc czy została zaszyfrowana konkretnym kluczem. Szyfrowanie kluczem prywatnym (a więc normalnie przezanczonym do odszyfrowania) staje się podpisem elektronicznym.
+
+```
+tekst jawny >-[klucz prywatny]-> szyfrogram >-[klucz publiczny]-> tekst jawny |
+                                                                              |-porównanie
+tekst jawny >-                 [kanał łączności]               -> tekst jawny |
+ ```
+
+1.  Bob chce wysłać wiadomość do Alice, tak, żeby zagwarantować, że wiadomość pochodzi od niego (ale nie przejmuje się czy ktoś inny będzie mógł ją przeczytać). Wysyła więc do Alice niezaszyfrowaną wiadomość razem z tą samą wiadomością zaszyfrowaną swoim kluczem prywatnym.
+2.  Dzięki temu Alice (lub ktokolwiek inny) będzie w stanie dowieść pochodzenia wiadomości, po prostu rozszyfrowując wiadomość kluczem publicznym i porównując ją z wiadomością niezaszyfrowaną. Jeśli obie będą identyczne oznacza to, że wiadomość rzeczywiście pochodzi od Boba, ponieważ do utworzenia tego podpisu był potrzebny prywatny klucz Boba a tylko on ma do niego dostęp.
+Zaszyfrowana wersja wiadomości jest cyfrowym podpisem Boba dom wiadomości ponieważ każdy może użyć klucza publicznego by potwierdzić, że rzeczywiście Bob jest jej autorem.
+
+Zazwyczaj jednak Bob po prostu stosuje funkcję haszującą do wiadomości i aby ją uwierzytelnić szyfruje otrzymany w ten sposób skrót używając klucza prywatnego, dzięki temu podpis jest dużo krótszy co oszczędza i czas (ponieważ haszowanie jest dużo szybsze niż szyfrowanie kluczem publicznym) i miejsce (ponieważ zaszyfrowany skrót wiadomości jest dużo mniejszy niż szyfrogram powstały z całej wiadomości).
+Potem jako swój podpis elektroniczny dołącza do oryginalnej wiadomości - dowolna osoba posiadająca klucz publiczny może sprawdzić autentyczność podpisu, poprzez odszyfrowanie hasza za pomoca klucza publicznego nadawcy, oraz porównanie go z osobiście wyliczonym na podstawie wiadomości.
+W tym przykładzie Alice odszyfrowuje skrót kluczem publicznym Boba i porównuje wynik z haszem odebranego jawnego tekstu.
+[Digital\_signature](http://en.wikipedia.org/wiki/Digital_signature)
+
+### Własności kluczy
+
+publiczny:
+
+mniej złożony; dostępny dla wszystkich; szyfrujący i weryfikujący podpis, skonstruowany tak, że stosunkowo łatwo wykryć jego podmianę
+
+prywatny:
+
+bardziej złożony; dostępny tylko dla właściciela; deszyfrujący i podpisujący; nie da się go odtworzyć na podstawie klucza publicznego
+
+#### Autentyczność klucza
+
+#### Certyfikat tożsamości
+
+Problem: Alice udostępniła swój klucz publiczny i każdy używając go może jej wysłać tajne wiadomości. Niestety Mallory również może udostępnić swój klucz publiczny (posiadając powiązany z nim klucz prywatny) twierdząc, że nalezy do Alice i jeśli wprowadzi kogoś w błąd będzie mógł odczytać część tajnych wiadomości wysłanych do niej. Ale jeśli Alice wbuduje swój klucz publiczny w certyfikat i jest tam podpis cyfrowy złożony przez zaufanego Trenta, każdy kto ufa Trentowi, będzie mógł w prosty sposób sprawdzić ten certyfikat, i zobaczyć czy Trent potwierdza, że ten wbudowany klucz należy do Alice.
+
+Certyfikat klucza publicznego (inaczej nazwany certyfikatem tożsamości) jest blokiem bitów w określonym formacie, zawierającym publiczną połowę algorytmu klucza asymetrycznego (klucza publicznego) razem z informacją o tożsamości (dane personalne, adres mailowy, tytuł, numer telefonu itp.), podpisane cyfrowo przez pewną osobę lub instytucję - przypisując/wiążąc w ten sposób klucz publiczny do osoby (lub instytucji) opisanej atrybutami.
+Certfikat zwykle zawiera: podpisany klucz publiczny, nazwa, określająca osobę, komputer lub organizację, termin ważności, lokację (URL) centrum odwołań (ang. _revocation center_).
+
+Istnieją dwa podstawowe mechanizmy uwierzytelniania kluczy: zcentralizowany PKI i zdecentralizowana sieć zaufania.
+W obu przypadkach autor podpisu zapewnia, że informacja o tożsamości i klucz publiczny odpowiadają sobie.
+[Public\_key\_certificate](http://en.wikipedia.org/wiki/Public_key_certificate)
+
+- PKI: podpis będzie pochodził od instytucji certyfikującej
+- sieć zaufania: podpis będzie pochodził od samego użytkownika (samopodpisany certyfikat) albo innych użytkowników (tzw. "wyrazy poparcia"; ang. _endorsements_),
+
+#### PKI (_Public Key Infrastructure_)
+
+Zcentralizowana, hierarchiczna infrastruktura niezbędna do świadczenia usług związanych z zarządzaniem certyfikatami kluczy publicznych. Jest konieczna w zastosowaniach biznesowych, gdzie nie ma czasu na niezależne potwierdzanie własnych kluczy. Wtedy muszą być potwierdzone przez niezależną instytucję, której ufają obie strony komunikacji.
+Konieczne stało się ujednolicenie wymagań i przepisów dotyczących certyfikatów, dostawców usług certyfikacyjnych oraz urządzeń służących do generowania i weryfikacji podpisu elektronicznego.
+Istnieje kilka standardów certyfikatów ale najpopularniejszy to X.509. Wszystkie zawierają takie pola jak: wersja, numer seryjny, nazwa wydawcy certyfikatu, data ważności, nazwa podmiotu, dla którego wystawiono certyfikat, jego klucz publiczny, oraz podpis cyfrowy organu wydającego certyfikat (CA - Certification Authority).
+Prawdziwość podpisu można zweryfikować, mając klucz publiczny urzędu certyfikującego, który znajduje się w kolei w certyfikacie wystawionym dla tego urzędu przez organ wyższej instacji. Weryfikacja certyfikatu polega na prześledzeniu ścieżki zaufania, na końcu której znajduje się główny organ nadrzędny (root CA). Certyfikat wystawia on sam dla siebie, a wszyscy powinni mieć swobodny dostęp do jego klucza publicznego.
+Duże firmy, chcące handlować i zawierać umowy poprzez sieć, potrzebują bardziej wiarygodnego potwierdzenia autentyczności używanych kluczy kryptograficznych. Odpowiedzią na te potrzeby jest infrastruktura klucza publicznego. Pozwala ona na zarządzanie certyfikatami przez ich generowanie, dystrybucję, aktualizację i unieważnianie oraz rejestrację wielu użytkowników dla różnych potrzeb. PKI opiera się na strukturze drzewa, głównym urzędom certyfikacji (Root CA) mogą podlegać inne CA, stworzone specjalnie dla różnych zastosowań (np. handel elektroniczny, bankowość, administracja publiczna). W drzewie danego Root CA może się znajdować dowolna liczba podległych urzędów oraz użytkowników.
+Większość najważniejszych standardów takich jak SSL/TLS, SSH, S/MIME, SET (Secure Electronic Transactions) czy IPSec została zaprojektowana z myślą o współdziałaniu w strukturach PKI.
+
+W typowym PKI Trent będzie CA (_Certificate Authority_), który jest zaufanym z konieczności przez wszystkich uczestników.
+W rozwiązaniach na większą skalę Alice może nie znać CA Boba, więc certyfikat Boba może zawierać także także certyfikat klucza publicznego jego CA podpisany przez CA2 "wyższego poziomu", który jest znany dla Alice. Taki proces prowadzi do hierarchi certyfikatów i jeszcze bardziej skomplikowanych zwiazków zaufania.
+PKI używa oprogramowania, które zarządza certyfikatami na wielką skalę, np. w systemie X.509 PKI hierarchia certyfikatów jest zawsze odwróconym drzewem z korzeniem certyfikacji na samej górze reprezentującym CA , który jest tak centralny dla całego systemu, że nie potrzebuje być uwierzytelniany przez kogoś trzeciego.
+
+Certyfikat może zostać odwołany jeśli okaże się, że powiązany prywatny klucz został skompromitowany, lub jeśli relacja (pomiędzy tożsamością a kluczem publicznym) wbudowana w certyfikat zostanie uznana za nieprawidłowa, lub zmieniona. Może to nastąpić jeśli np. osoba zmienia pracę lub dane personalne. Odwołanie (_revocation_) będzie najprawdopodobniej rzadko stosowane, ale oznacza, że użytkownik zawsze będzie mógł sprawdzić jego poprawność. Można to zrobić porównując z listą odwołań certfikatów (_CRL: certificate revocation list_) - listą odwołanych lub skasowanych certyfikatów. Podstawową funkcją scentralizowanego PKI jest zapewnienie, że ta lista jest aktualna i dokładna.
+Innym sposobem jest zapytanie przy użyciu (_OCSP: Online Certificate Status Protocol_) co pozwala poznać status danego certyfikatu.
+
+Rozwiązanie to pierwszy raz było zastosowane w PEM (Privacy Enhanced Mail), wcześniejszym od PGP systemie kryptograficznym dla poczty elektronicznej, który jednak nie zdobył większej popularności.
+
+#### Sieć zaufania (_web of trust_)
+
+Wszystkie zgodne z OpenPGP implementacje, zawierają mechanizm sprawdzający nazwany siecią zaufania. Służy do ustanowienia i sprawdzenia autentyczności powązania pomiędzy publicznym kluczem a użytkownikiem, jest to w pewnym sensie odpowiednik scentralizowanego PKI opierającego się wyłącznie na autorytecie certyfikującym (lub na hierarchii takich).
+
+W sieci komputerowej może istnieć wiele niezależnych sieci zaufania i każdy użytkownik (przez swój certyfikat tożsamości) może być częścią takiej sieci lub powiązaniem pomiędzy sieciami. W sieci zaufania Trent może być każdym użytkownikiem i to czy warto zaufać jego potwierdzeniu zależy od osoby chcącej wysłać wiadomość do Alice.
+Certyfikaty tożsamości (zawierające publiczne klucze i informacje o tożsamości użytkowników) mogą zostać cyfrowo podpisane przez innych użytkowników, którzy w ten sposób gwarantują powiązanie klucza publicznego i osoby wymienionej w certyfikacie. Służą do tego _keysigning parties_.
+
+Istnieje również mechanizm liczenia głosów powalający określić, które powiązanie klucz publiczny - właściciel będzie uważane za zaufane: np. jeśli trzech częsciowo zaufanych gwarantów uwierzytelnia certyfikat (a więc i powiązanie osoby z kluczem) lub zrobi to jeden w pełni zaufany gwarant to powiązanie osoby i klucza w tym certyfikacie zostanie uznane za poprawne.
+Mechanizm ten może zostać modyfikowany stosownie do potrzeb użytkowników, może też zostać wyłączony. Jest elastyczny i pozostawia decyzję o zaufaniu w rękach indywidalnego użytkownika, co wymaga zarówno uważności jak i inteligentnego nadzoru.
+
+Problemem w sieci zaufania jest sytuacja w której klucz prywatny został utracony, ponieważ nie może zostać odwołany wciąż jest traktowany jako prawidłowy, a wiadomości zaszyfrowane odpowiadającym mu kluczem publicznym nie mogą być odczytane (rozszyfrowane). Użytkownik powinien przygotować podpisany certyfikat odwołania na wypadek sytuacji utraty lub kompromitacji klucza prywatnego. Można również do tego celu zastosować datę wygaśnięcia.
+
+[Web\_of\_trust](http://en.wikipedia.org/wiki/Web_of_trust)
+
+### Wady
+
+Zagrożeniem dla klucza prywatnego są wirusy (głównie mailowe), trojany, spyware itd, które mogą spowodować wykradzenie, skopiowanie lub zniszczenie klucza prywatnego.
+Najbardziej prawdopodobny scenariusz takiego ataku polega na zdalnej instalacji trojana i keyloggera (może to być jeden wyspecjalizowany program), który kopiuje plik z kluczem prywatnym i wysyła go atakującemu, a dzięki możliwości rejestrowania zdarzeń systemowych (uruchomienie klienta PGP i naciskanie klawiszy) ujawnia również hasło.
+Podpis elektroniczny, w którym zostanie zastosowany słaby algorytm haszujący, albo zbyt krótki skrót, jest wrażliwy na atak (szczególnie urodzinowy).
+
+Podatność na atak MITM: chociaż wydawało się, że kryptografia asymetryczna jest rozwiązaniem problemu dystrybucji kluczy, szybko okazało się, że ktoś może się podszyć się pod tożsamość i wysłać podłożony klucz publiczny, wtedy oszust będzie mógł otrzymać informacje, odszyfrować je i czytać, potem zaszyfrować poprawnym kluczem publicznym i wysłać go do poprawnego celu. Oznacza to, że można spenetrować tajne dane bez łamania szyfru i właściwie nie angażując mocy obliczeniowej. Jest to poważne zagrożenie bo oznacza, że nawet użycie "niełamliwych" szyfrów nie wystarczy do zagwarantowania prywatności.
+Tego typu atak jest możliwy tylko w szyfrach asymetrycznych. By się przed tym ochronić klucze muszą być uwierzytelniane (poprzez sprawdzanie poprawności lub certyfikację) czy reprezentują tego kto twierdzi, że go reprezentują (PKI). Niestety może to być prawie tak trudne jak problem wymiany konwencjonalnych kluczy i wymaga złożonych protokołów. Błąd w tych protokołach może narazić nawet system, który używa "niełamliwych" szyfrów, dla kontrastu zwykłe użycie "niełamliwego" klucza szyfru symetrycznego (z ręcznie dostarczanymi kluczami) jest wystarczające do zapewnienia bezpieczeństwa.
+Złożone procedury uwierzytelniania kluczy publicznych, komplikują stosowanie kryptografii asymetrycznej i powodują dodatkowe problemy bezpieczeństwa.
+
+Z tego powodu zarówno przy weryfikacji podpisu jak i przy szyfrowaniu wiadomości bardzo istotne jest upewnienie się czy dany klucz publiczny rzeczywiście należy do adresata. PGP umożliwia umieszczenie w dystrybuowanych kluczach użytkowników 'certyfikatów tożsamości' tak skonstruowanych, że podmiana lub przypadkowe zniekształcenie jest łatwo wykrywalna. Ale samo fakt, że każde zniekształcenie certyfikatu jest ławe do wykrycia nie jest wystarczającym zabezpieczeniem, ponieważ zapobiega "kompromitacji" dopiero po utworzeniu certyfikatu a nie przedtem. Użytkownicy powinni użyć także innych metod by potwierdzić prawidłowość klucza, mechanizmem, który to umożliwia jest tzw. "sieć zaufania". PGP posiada również możliwość odwołania certyfikatu tożsamości, który stał się nieprawidłowy jak również daty wygaśnięcia.
+
+Siła obecnie używanych szyfrów asymetrycznych (np. RSA) polega na trudności przeprowadzenia faktoryzacji (czyli odnalezienia składników: dużych liczb pierwszych, których użyto do utworzenia klucza). Jak na razie nikt nie udowodnił, że faktoryzacja jest rzeczywiście trudna, po prostu nie są znane szybkie metody na jej przeprowadzenie.
+Możliwe, że ktoś takie metody wymyśli i wtedy wszystkie metody używające takich szyfrów będą zagrożone, a sam szyfr bezużyteczny. Możliwe również, że trudność przeprowadzenia faktoryzacji zostanie udowodniona i wtedy metoda uzyskałaby gwarancję bezpieczeństwa.
+
+### Znaczenie
+
+Istnienie tylko kryptografii symetrycznej - z jednym kluczem, który szyfruje i odszyfrowuje - ogranicza w istotny sposób możliwość stosowania tego rodzaju szyfrów do osób lub instytucji, które się nawzajem znają i posiadają niezależny, bezpieczny kanał wymiany kluczy. A nawet i w tym wypadku, przy większej ilości uczestników komunikacji i konieczności regularnej wymiany kluczy (np. systemy bankowe) dystrybucja kluczy staje się olbrzymim problemem logistycznym.
+Kryptografia asymetryczna pozwala na rozwiązanie tych problemów, nawiazanie szyfrowanej komunikacji między nieznającymi się uprzednio osobami oraz stworzenie całego systemu publicznie dostępnych rozwiązań kryptograficznych dodając do tego niemożliwe uprzednio zastosowania takie jak podpis cyfrowy czy niezaprzeczalność. Jest obecnie podstawą technik zabezpieczania zarówno kanałów wymiany danych jak i samych informacji.
+Inaczej mówiąc: bez kryptografii asymetrycznej nie byłoby większości współczesnych zastosowań technik kryptograficznych, bez których internet nie mógłby być miejscem wymiany poufnych informacji. Nawet jeśli sami nie używamy takich technik jak PGP, SSL czy SSH, to tak czy inaczej korzystamy z internetu gdzie te techniki mają fundamentalne znaczenie przy zastosowaniach biznesowych, w e-commerce i samym zarządzaniu serwerami.
+Czyli gdyby nie kryptografia asymetryczna nie byłoby internetu takim jakim go znamy.
