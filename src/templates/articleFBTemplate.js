@@ -35,6 +35,7 @@ export const query = graphql`
         title
         date(formatString: "YYYY-MM-DD")
              }
+      slug
     }
   }
 `;

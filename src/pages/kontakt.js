@@ -76,11 +76,11 @@ const ContactPage = () => {
             <section className="section-meta">
 
                 <StyledForm action=""
-                      className="form"
-                      name="contact"
-                      method="POST"
-                      data-netlify="true"
-                      netlify-honeypot="bot-field">
+                    className="form"
+                    name="contact"
+                    method="POST"
+                    data-netlify="true"
+                    netlify-honeypot="bot-field">
                     <h2>Kontakt</h2>
                     <input type="hidden" name="bot-field" aria-label="hidden field" />
                     <input type="hidden" name="form-name" value="contact" aria-label="hidden field" />

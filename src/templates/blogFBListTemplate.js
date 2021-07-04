@@ -18,7 +18,7 @@ const BlogFBList = ({ data }) => {
           <p>{frontmatter.date} - {frontmatter.relativeDate}</p>
           <div className="contentStream">
             <p>{excerpt}</p>
-            <figure className="figure" className="imgThumbnail">
+            <figure className="figure imgThumbnail">
               <GatsbyImage image={getImage(frontmatter.img)} alt="ilustracja" />
             </figure>
           </div>

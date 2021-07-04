@@ -29,7 +29,7 @@ blockquote {color: #443; font-style: oblique; position:relative;}
 `;
 
 const Layout = ({ children, section, subsection }) => {
-console.log("Z LAYOUTU " + subsection)
+
     return (
         <>
             <header>

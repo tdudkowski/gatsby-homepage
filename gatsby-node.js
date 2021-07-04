@@ -30,10 +30,11 @@ const getCurrentDate = () => {
 
 exports.createPages = ({ graphql, actions }) => {
   const { createPage } = actions
-  const blogTemplate = path.resolve("./src/templates/blogFBTemplate.js");
-  const articleTemplate = path.resolve("./src/templates/articleFBTemplate.js");
+  const fbBlogTemplate = path.resolve("./src/templates/blogFBTemplate.js");
+  const fbArticleTemplate = path.resolve("./src/templates/articleFBTemplate.js");
+  const pageArticleTemplate = path.resolve("./src/templates/articlePageTemplate.js");
   return graphql(`	{
-    blogs: allMdx(
+fbblogposts: allMdx(
       filter: { fileAbsolutePath: { glob: "**/src/pages/festung-breslau/posts/*.mdx" }, frontmatter: {published:{ eq: true} } }
       sort: { order: DESC, fields: frontmatter___date }
     ) {
@@ -52,7 +53,7 @@ exports.createPages = ({ graphql, actions }) => {
         }
       }
 
-      articles: allMdx(
+fbarticles: allMdx(
         filter: { fileAbsolutePath: { glob: "**/src/pages/festung-breslau/articles/*.mdx" } }
         sort: { order: DESC, fields: frontmatter___date }
       ) {
@@ -68,17 +69,55 @@ exports.createPages = ({ graphql, actions }) => {
             }
           }
         }
-    }
+
+pagearticles: allMdx(
+          filter: { fileAbsolutePath: { glob: "**/src/pages/articles/*.mdx" } }
+                  ) {
+                    nodes {
+                      slug
+                      frontmatter {
+                        title
+                        comment
+                        subsection
+                        section
+                      }
+                      body
+                      id
+                    }
+          }
+
+pageindexes: allMdx(
+            filter: { fileAbsolutePath: { glob: "**/src/pages/indexes/*.mdx" } }
+                    ) {
+                      nodes {
+                        slug
+                        frontmatter {
+                          title
+                          comment
+                          subsection
+                          section
+                        }
+                        body
+                        id
+                      }
+            }
+
+      }
   `).then((result) => {
     if (result.errors) {
       // throw result.errors;
       Promise.reject(result.errors);
     }
-    const posts = result.data.blogs.nodes;
+    const fbblogposts = result.data.fbblogposts.nodes;
     const currentDate = getCurrentDate();
     // const postFiltered = posts.filter(item => item.frontmatter.date <= currentDate)
-    const postFiltered = posts;
-    const articles = result.data.articles.nodes;
+    const postFiltered = fbblogposts;
+    const fbarticles = result.data.fbarticles.nodes;
+    const pagearticles = result.data.pagearticles.nodes;
+    const pageindexes = result.data.pageindexes.nodes;
+
+    // console.log(result.data.pagearticles.nodes)
+    // console.log(result.data.pageindexes.nodes)
 
     // const posts = result.data.allMarkdownRemark.edges
     const postsPerPage = 10
@@ -99,7 +138,7 @@ exports.createPages = ({ graphql, actions }) => {
     postFiltered.forEach(post => {
       createPage({
         path: "festung-breslau/blog" + post.fields.slug,
-        component: blogTemplate,
+        component: fbBlogTemplate,
         ...post,
         context: {
           ...post.context,
@@ -110,10 +149,10 @@ exports.createPages = ({ graphql, actions }) => {
       });
     });
 
-    articles.forEach(article => {
+    fbarticles.forEach(article => {
       createPage({
         path: "festung-breslau/article" + article.fields.slug,
-        component: articleTemplate,
+        component: fbArticleTemplate,
         ...article,
         context: {
           ...article.context,
@@ -122,6 +161,41 @@ exports.createPages = ({ graphql, actions }) => {
         },
       });
     });
+
+    pagearticles.forEach(article => {
+      createPage({
+        path: "/" + article.frontmatter.section + "/" + article.frontmatter.subsection + "/" + article.slug,
+        component: pageArticleTemplate,
+        ...article,
+        context: {
+          ...article.context,
+          slug: article.slug,
+          id: article.id,
+          body: article.body,
+          title: article.frontmatter.title,
+          section: article.frontmatter.section,
+          subsection: article.frontmatter.subsection,
+        },
+      });
+    });
+
+    pageindexes.forEach(article => {
+      createPage({
+        path: "/" + article.frontmatter.section + "/" + article.frontmatter.subsection,
+        component: pageArticleTemplate,
+        ...article,
+        context: {
+          ...article.context,
+          slug: article.slug,
+          id: article.id,
+          body: article.body,
+          title: article.frontmatter.title,
+          section: article.frontmatter.section,
+          subsection: article.frontmatter.subsection,
+        },
+      });
+    });
+
   });
 };
 

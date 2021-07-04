@@ -95,7 +95,7 @@ const TurystykaMenu = ({ subsection }) => {
             menu = <MenuTurystyka />
             break;
         default:
-            menu = <strong>ERR</strong>
+            menu = <MenuTurystyka />
     }
 
     return (

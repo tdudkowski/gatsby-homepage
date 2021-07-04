@@ -129,7 +129,7 @@ const IndexPage = ({ section }) => {
                                     <li><Link to="/it/js/">JavaScript</Link>: Node.js, React, Express.js, Next.js, MongoDB, GatsbyJS, git i Github, Markdown, Odnośniki JS</li>
                                     <li><Link to="/it/css">CSS</Link> w tej chwili głównie Flexbox</li>
                                     <li><Link to="/it/cms">CMS</Link>: Drupal, WordPress, Mediawiki</li>
-                                    <li><Link to="/it/wa">Web Accessibility</Link></li>
+                                    <li><Link to="/it/web-accessibility">Web Accessibility</Link></li>
                                     <li><Link to="/it/internet/internet-links">Odnośniki</Link></li>
                                 </ul>
                             </div>

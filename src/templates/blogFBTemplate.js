@@ -39,6 +39,7 @@ export const query = graphql`
         date1945
         tags
               }
+      slug
     }
   }
 `;

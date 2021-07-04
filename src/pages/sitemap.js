@@ -6,16 +6,16 @@ const Sitemap = ({ data }) => {
     return (
         <Layout>
             <section className="section-meta">
-            <h2>Mapa strony</h2>
+                <h2>Mapa strony</h2>
                 <p>To są wszystkie opublikowane tu artykuły, wkrótce to uporządkuję.</p>
-            <ul>
-                {data.allMdx.nodes.map(({ id, frontmatter, slug }) => (
-                    <li key={id}>
-                        <Link to={`/${frontmatter.section}/${frontmatter.subsection && frontmatter.subsection + "/"}${slug}`}>{frontmatter.title}</Link>
-                        {/*<span>{frontmatter.id} - {slug}</span>*/}
-                    </li>
-                ))}
-            </ul>
+                <ul>
+                    {data.allMdx.nodes.map(({ id, frontmatter, slug }) => (
+                        <li key={id}>
+                            <Link to={`/${frontmatter.section}/${frontmatter.subsection && frontmatter.subsection + "/"}${slug}`}>{frontmatter.title}</Link>
+                            {/*<span>{frontmatter.id} - {slug}</span>*/}
+                        </li>
+                    ))}
+                </ul>
             </section>
         </Layout>
     )

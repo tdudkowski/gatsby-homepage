@@ -153,6 +153,9 @@ word-wrap: break-word;
  display:list-item;
 }
 
+pre {box-shadow:4px 4px 8px rgba(250, 250, 200, .1);
+border:1px solid rgba(51,51,51,.9);}
+
 @media (min-width: 900px) {
    flex-direction:row;
    flex:1;

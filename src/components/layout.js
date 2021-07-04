@@ -11,11 +11,11 @@ import LayoutERR from "./layout-err"
 import SEO from "./seo"
 import "./layout.css"
 
-const Layout = ({ children, section, subsection }) => {
+const Layout = ({ data, children, section, subsection }) => {
 
     let Layout;
 
-     switch (section) {
+    switch (section) {
         case "turystyka":
             Layout = LayoutTurystyka
             break;
@@ -54,9 +54,10 @@ const Layout = ({ children, section, subsection }) => {
         case "web-accessibility":
             Layout = LayoutWebAccessibility
             break;
-            }
+    }
 
-    const headerTitle = `${section !== undefined ? section: " Strona główna"}`
+
+    const headerTitle = `${section !== undefined ? section : " Strona główna"}`
 
     return (
         <div className="container">
