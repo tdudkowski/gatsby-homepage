@@ -12,7 +12,7 @@ const articlePage = ({ data }) => {
 
     return (
         <LayoutPage section={frontmatter.section} subsection={frontmatter.subsection}>
-
+            <h2>{frontmatter.title}</h2>
             <MDXRenderer>{body}</MDXRenderer>
 
         </LayoutPage>

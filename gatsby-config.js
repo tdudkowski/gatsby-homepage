@@ -2,8 +2,6 @@ require("dotenv").config({
     path: `.env.${process.env.GA_ID}`,
 })
 
-const path = require(`path`)
-
 module.exports = {
     siteMetadata: {
         title: `Tadeusz Dudkowski Homepage :// `,
@@ -203,7 +201,7 @@ module.exports = {
             options: {
                 // You can add multiple tracking ids and a pageview event will be fired for all of them.
                 options: {
-                    trackingId: "process.env.GA_ID",
+                    trackingId: process.env.GA_ID,
                     head: true,
                     anonymize: true,
                 },
