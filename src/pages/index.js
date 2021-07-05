@@ -162,8 +162,8 @@ const IndexPage = ({ section }) => {
                             <div>
                                 <p>Oraz</p>
                                 <ul>
-                                    <li>Wiedza, nie panika. Główne źródła informacji: <Link to="/misc/koronawirus">Koronawirus</Link></li>
-                                    <li><Link to="/misc/wroclawscy-argonauci">"Wrocławscy Argonauci"</Link></li>
+                                    {/*<li>Wiedza, nie panika. Główne źródła informacji: <Link to="/misc/koronawirus">Koronawirus</Link></li>*/}
+                                    <li><Link to="/turystyka/dolny-slask/wroclawscy-argonauci">"Wrocławscy Argonauci"</Link></li>
                                 </ul>
                             </div>
                         </SectionHorizontal>
