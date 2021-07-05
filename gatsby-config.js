@@ -1,3 +1,7 @@
+require("dotenv").config({
+    path: `.env.${process.env.GA_ID}`,
+})
+
 const path = require(`path`)
 
 module.exports = {
@@ -14,6 +18,7 @@ module.exports = {
     },
     pathPrefix: "/gatsby-homepage",
     plugins: [
+        "dotenv",
         `gatsby-plugin-react-helmet`,
         `gatsby-plugin-catch-links`,
         `gatsby-plugin-styled-components`,
@@ -197,8 +202,13 @@ module.exports = {
             resolve: `gatsby-plugin-google-gtag`,
             options: {
                 // You can add multiple tracking ids and a pageview event will be fired for all of them.
+                options: {
+                    trackingId: "process.env.GA_ID",
+                    head: true,
+                    anonymize: true,
+                },
                 trackingIds: [
-                    "UA-2105423-9", // Google Analytics / GA
+                     // "GA-TRACKING_ID", // Google Analytics / GA
                     // "AW-CONVERSION_ID", // Google Ads / Adwords / AW
                     // "DC-FLOODIGHT_ID", // Marketing Platform advertising products (Display & Video 360, Search Ads 360, and Campaign Manager)
                 ],

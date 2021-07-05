@@ -285,8 +285,7 @@ const LayoutFB = ({ children, sub, data }) => {
             break;
         default:
             menu = <nav><ul><li><Link to="/festung-breslau">Festung Breslau - strona główna</Link></li></ul></nav>
-            console.log("sth another")
-    }
+             }
 
     const menuArticlesArray = [{ slug: "panstwo-hitlerowskie", title: "Państwo hitlerowskie" }, { slug: "ostfront", title: "O przyczynie wojny na wschodzie" }, { slug: "stan-wojny", title: "Stan wojny na początku 1945" }, { slug: "armia-czerwona", title: "Armia Czerwona 1945" }, { slug: "drezno-bombardowanie", title: "Drezno bombardowanie 13-15 lutego 1945" }, { slug: "depesza-eisenhowera", title: "Depesza Eisenhowera (SCAF 252)" }, { slug: "wojna-na-pacyfiku", title: "Wojna na Pacyfiku 1945" }]
 

@@ -116,9 +116,6 @@ pageindexes: allMdx(
     const pagearticles = result.data.pagearticles.nodes;
     const pageindexes = result.data.pageindexes.nodes;
 
-    // console.log(result.data.pagearticles.nodes)
-    // console.log(result.data.pageindexes.nodes)
-
     // const posts = result.data.allMarkdownRemark.edges
     const postsPerPage = 10
     const numPages = Math.ceil(postFiltered.length / postsPerPage)

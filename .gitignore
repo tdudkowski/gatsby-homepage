@@ -8,3 +8,5 @@ public
 yarn-error.log
 log.md
 .idea
+.env
+
