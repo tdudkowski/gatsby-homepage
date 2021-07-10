@@ -1,0 +1,90 @@
+# Enigma - mechanika
+
+## Wstęp
+
+Wyjaśnienie samej tylko mechaniki Enigmy, jej sposobu działania, bez wchodzenia w terminologię kryptologiczną, czy też opis matematyczny. Po kolei i dokładnie, z wszystkimi szczegółami.
+
+Dla jasności opis dotyczy pierwszej wojskowej wersji - Enigmy I wprowadzonej do Reichswehry w 1932. Posiada ona już wszystkie cechy tej maszyny i z nią zmagał się zespół Biura Szyfrów. Zmiany dokonane w późniejszych opisane są w osobnym rozdziale. Żadna z tych modyfikacji nie zmienia mechanizmu działania Enigmy.
+
+## Terminologia
+
+Używam tu pojęć za Bruce Schneider "Kryptografia dla praktyków".
+
+- **maszyna rotorowa** (ang. rotor machine; niem. die Rotor-Chiffriermaschine, die Rotor-Maschine)
+- **rotor** (wirnik, bębenek, walec; ang. rotor; niem. die Walze, der Rotor)
+- **rotor odbijający** (walec odwracający, bębenek odwracający; ang. reflector; niem. die Umkehrwalze)
+- **tablica przełączająca** (łącznica kablowa; ang. plugboard, niem. das Steckerbrett)
+- **klawiatura** (ang. keyboard, niem. die Tastatur)
+- ustawienie wirnika Ringstellung
+
+## Opis
+
+Interfejs użytkownika Enigmy składał się z czterech elementów:
+
+- tablica przełączająca: na frontowej ściance, służyła do wprowadzenia ustawień
+- klawiatura: u góry z przodu
+- panel z lampkami: u góry pośrodku, odczyt
+- karbowane pierścienie rotorów: u góry z tyłu, służyły do wprowadzenia ustawień
+
+Tekst jawny wprowadzano klawiaturą. Każde naciśnięcie jednego z 26 klawiszy uruchamiało szyfrowanie pojedynczego znaku. Rezultat pojawiał sie na panelu z lampkami - podświetlony znak był rezultatem procesu szyfrowania. Zatem każdy znak był szyfrowany osobno i rezultat zapisywano znak po znaku.
+
+Układ klawiatury:
+
+Q   W   E   R   T   Z   U   I   O
+   A   S   D   F   G   H   J   K
+P   Y   X   C   V   B   N   M   L
+
+Mechanizm szyfrujący Enigmy składa się z dwóch elementów: tablicy przełączającej i zespołu rotorów.
+
+### Zespół rotorów
+
+- klawiatura QWERTZUIOASDFGHJKPYXCVBNML
+- rotor wprowadzający ABCDEFGHIJKLMNOPQRSTUVWXYZ
+- rotor 1 (I) DMTWSILRUYQNKFEJCAZBPGXOHV
+- rotor 2 (II) HQZGPJTMOBLNCIFDYAWVEUSRKX
+- rotor 3 (III) UQNTLSZFMREHDPXKIBVYGJCWOA
+
+Mechanizm szyfrujący Enigmy składał się z trzech rotorów ruchomych. Ruchome rotory znajdowały się pomiędzy dwoma nieruchomymi: rotorem wprowadzającym i odbijającym. Rotor odbijający kierował sygnał z powrotem. Rotory były oznaczone cyframi rzymskimi.
+
+Proces szyfrowania wyglądał więc następująco: I, II, III, odbijający, III, II, I.
+
+Rotor wprowadzający miał zwykłą kolejność alfabetyczną znaków. Wszystkie rotory miały na powierzchni znaki w kolejności alfabetycznej, ale ich okablowanie zamieniało znaki wg sprzętowo wprowadzonego wzorca podstawieniowego. Każdy z trzech rotorów był okablowany inaczej, były więc ich trzy rodzaje. Tak jak widać na powyższej liście w pierwotnym ustawieniu rotor I zamieniał słowo ABBA na DMMD, II na HQQH, a III na UQQU.
+
+Rotory ustawiano tak samo u nadawcy i odbiorcy wg umówionego wzorca. Zmiany te odbywały się zwykle w cyklu dobowym. Po przesunięciu o dwie pozycje rotor I zamieniał ABBA na HVVH itd.
+
+Rotory obracały się automatycznie podczas szyfrowania. Po zaszyfrowaniu każdego znaku pierwszy rotor przesuwał się o jedną pozycję. Pełny obrót pierwszego rotora powodował obrót drugiego o jedną pozycję, pełny obrót drugiego rotora powodował obrót trzeciego rotora o jedną pozycję.
+
+Zapadki.
+
+### Tablica przełączająca
+
+## Rozwój
+
+Klawiatura Kriegsmarine (Funkschlüssel C) posiadała 29 znaków. Dodano: ÄÖÜ.
+
+Wprowadzono kolejne rodzaje rotorów, odcelowo 8.
+
+Ustawiano je w innej kolejności.
+
+Enigma-M4 z 1942 8 rotorów i drukarka taśmowa (niem. Schreibmax) eliminujacą potrzebę zapisywania znak po znaku.
+
+https://www.cs.cornell.edu/courses/cs3110/2015fa/a1/a1.html
+https://brilliant.org/wiki/enigma-machine/
+https://plus.maths.org/content/exploring-enigma
+https://github.com/benelsen/enigma
+
+
+<!-- Równolegle do Heberna podobną maszynę wynalazł holenderski uczony Hugo Aleksander Koch, a także niemiecki inżynier Artur Scherbius. Ten drugi zaproponował swój wynalazek armii niemieckiej już w 1918 roku, jednak wówczas nie spotkał się on z większym zainteresowaniem. Sytuacja zmieniła się po dojściu do władzy Hitlera. W ramach powszechnej modernizacji armii postanowiono wyposażyć niemieckie oddziały w maszyny szyfrujące. Wybór padł na maszynę Scherbiusa.
+
+Enigma oprócz układu wirników wyposażona była w tzw. walec odwracający. Dzięki niemu możliwe było wykorzystanie maszyny zarówno do szyfrowania, jak i do deszyfrowania wiadomości. Co ciekawe, o ile z praktycznego punktu widzenia była to niewątpliwa zaleta, o tyle kryptograficznie stanowiło to poważną wadę. Taka konstrukcja powoduje bowiem powstanie negatywnego wzorca, czyli innymi słowy, zbioru zasad ograniczających liczbę możliwych kryptogramów. W tym przypadku żadna litera tekstu jawnego nie mogła zostać zaszyfrowana jako ona sama (czyli A w A, B w B itd.). Wiedza o tym okazała się bardzo cenna dla polskich, a później angielskich kryptoanalityków.
+
+Wirniki Enigmy miały zdefiniowany układ połączeń, jednak można je było wkładać do urządzenia w różnej kolejności. Dodatkowo było ich więcej niż przeznaczonych na nie w maszynie gniazd (na początku wojny wirników było osiem). Każdy z nich można było ustawić na 26 sposobów. Podczas szyfrowania pierwszy z wirników obracał się o jedną pozycję z każdą szyfrowaną literą. Jego pełny obrót powodował przesunięcie o jedną pozycję drugiego wirnika, ten z kolei musiał wykonać pełny obrót, zanim o jedną pozycję przesunął się wirnik trzeci itd. Reasumując, o rodzaju zastosowanego przypisania decydowały następujące czynniki:
+
+wybór wirników szyfrujących,
+kolejność wirników w maszynie,
+początkowe pozycje wirników.
+Na rysunku 1.8 widać Enigmę z czterema gniazdami wirników. Po naciśnięciu klawisza odpowiadającego literze tekstu jawnego na znajdującym się powyżej panelu podświetlana była litera tekstu tajnego. Szyfrowanie oparte było na systemie kluczy dziennych determinujących ustawienie wirników. Często już pierwsza litera wiadomości powodowała przesunięcie nie tylko pierwszego, ale również drugiego, a nawet trzeciego wirnika. Szyfrant zapisywał tekst tajny, po czym przekazywał go radiotelegrafiście. Dla uzyskania dodatkowego bezpieczeństwa korzystano również z osobnych kluczy dla poszczególnych depesz. Klucz taki był szyfrowany kluczem dziennym na początku wiadomości. Dla pewności powtarzano go dwa razy. Odbiorca deszyfrował klucz depeszy, po czym zmieniał zgodnie z nim ustawienia maszyny i odczytywał przekaz.
+
+Wiedza na temat zasad stosowania kluczy dla poszczególnych wiadomości była kolejnym ułatwieniem dla polskich kryptoanalityków. Wiedzieli bowiem, iż na początku każdego kryptogramu znajduje się powtórzona dwukrotnie kombinacja liter, co pozwalało uzyskać cenne informacje na temat klucza dziennego oraz ustawienia wirników. Równie cenne okazało się lenistwo niemieckich szyfrantów, którzy wielokrotnie powtarzali ten sam klucz.
+
+Nie bez znaczenia była również niemiecka pedantyczność i sformalizowany charakter nadawanych depesz. Komunikaty zaczynały się i kończyły w identyczny sposób, zawierały również liczne powtórzenia samej treści. Innymi słowy, niemieccy szyfranci byli bardzo przewidywalni. Dawało to dodatkowe informacje na temat zawartych w depeszy wyrazów i zwrotów. -->

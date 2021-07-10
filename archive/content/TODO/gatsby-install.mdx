@@ -1,0 +1,457 @@
+# Gatsby
+
+## 1. Start
+
+- podstawowe informacje
+- Gatsby from scratch (git, npm, gatsby-cli)
+- struktura plików
+- home i about z Link
+
+### Podstawowe informacje
+
+JavaScript język programowania wprowadzony w przeglądarkach internetowych w 1995. Tylko client-side.
+
+- 2009 Node.js serwer JS, od tego czasu JS jest również server-side. Powstaje również pierwsza i do dziś najważniejsza baza danych NoSQL MongoDB.
+- 2013 React.js biblioteka tworzenia komponentów JS,
+- 2017 Gatsby.js kreator statycznych stron.
+
+### Instalacja
+
+Można zainstalować na kilka sposobów:
+
+- starter
+- interaktywnie
+- nieinteraktywnie
+- from scratch
+
+Potrzebujemy trzech narzędzi, wszystkie działają w konsoli.
+
+- system kontroli wersji, zawsze jest to Git
+- system zarządzania pakietami, zwykle npm (instalowany zawsze z Node.js), może być to też yarn
+- [gatsby-cli](https://www.gatsbyjs.com/docs/reference/gatsby-cli/) m in instalator Gatsby'ego
+
+Wszystkie powinny być zainstalowane w przestrzeni globalnej w kontekście użytkownika, tzn. jesli jest to twój komputer to #, a jesli jesteś jednym z uzytkowników i nie masz uprawnień administracyjnych to ~/user - chodzi o to, żebyś mógł aktualizować pakiety.
+
+Instalacja nieinteraktywna:
+
+```
+$ gatsby new hmp2
+info Creating new site from git: https://github.com/gatsbyjs/gatsby-starter-default.git
+
+Klonowanie do „hmp2”...
+remote: Enumerating objects: 28, done.
+remote: Counting objects: 100% (28/28), done.
+remote: Compressing objects: 100% (26/26), done.
+remote: Total 28 (delta 3), reused 8 (delta 0), pack-reused 0
+Pobieranie obiektów: 100% (28/28), 612.86 KiB | 1.93 MiB/s, gotowe.
+success Created starter directory layout
+info Installing packages...
+
+
+added 2362 packages, and audited 2363 packages in 37s
+
+44 vulnerabilities (36 moderate, 6 high, 2 critical)
+
+To address issues that do not require attention, run:
+  npm audit fix
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+info Initialising git in hmp2
+
+podpowiedź: Użycie „master” jako nawy początkowej gałęzi. Ta domyślna nazwa gałęzi
+podpowiedź: może się zmienić. Aby ustawić nazwę początkowej gałęzi do użycia we
+podpowiedź: wszystkich nowych repozytoriach, co uciszy ten komunikat, wykonaj:
+podpowiedź: 
+podpowiedź:     git config --global init.defaultBranch <nazwa>
+podpowiedź: 
+podpowiedź: Tradycyjnie było „master”, a inne popularne to „main”, „trunk”
+podpowiedź: i „development”. Nazwę właśnie utworzonej gałęzi można zmienić tym poleceniem:
+podpowiedź: 
+podpowiedź:     git branch -m <nazwa>
+info Create initial git commit in hmp2
+info
+Your new Gatsby site has been successfully bootstrapped. Start developing it by running:
+
+  cd hmp2
+  gatsby develop
+```
+
+a potem:
+
+```
+cd hmp2
+hmp2$ ls
+gatsby-browser.js  gatsby-config.js  gatsby-node.js  gatsby-ssr.js  LICENSE  node_modules  package.json  package-lock.json  README.md  src
+```
+
+git init
+npm i
+
+```
+hmp2$ ls
+gatsby-browser.js  gatsby-config.js  gatsby-node.js  gatsby-ssr.js  LICENSE  node_modules  package.json  package-lock.json  README.md  src
+```
+
+### From Scracth
+
+```
+ $ npm init -y
+ $ git init
+```
+
+gitignore:
+
+```
+# Project dependencies
+.cache
+node_modules
+# Build directory
+public
+# Other
+.DS_Store
+yarn-error.log
+```
+
+dokładnie to wygląda tak:
+
+```
+$ npm init -y
+Wrote to /media/tadek/shared/GitShared/Gatsby/hmp-archive/hmp-test/package.json:
+
+{
+  "name": "hmp-test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
+```
+
+potem
+
+```
+git init
+podpowiedź: Użycie „master” jako nawy początkowej gałęzi. Ta domyślna nazwa gałęzi
+podpowiedź: może się zmienić. Aby ustawić nazwę początkowej gałęzi do użycia we
+podpowiedź: wszystkich nowych repozytoriach, co uciszy ten komunikat, wykonaj:
+podpowiedź:
+podpowiedź:     git config --global init.defaultBranch <nazwa>
+podpowiedź:
+podpowiedź: Tradycyjnie było „master”, a inne popularne to „main”, „trunk”
+podpowiedź: i „development”. Nazwę właśnie utworzonej gałęzi można zmienić tym poleceniem:
+podpowiedź:
+podpowiedź:     git branch -m <nazwa>
+Zainicjowano puste repozytorium Gita w /media/tadek/shared/GitShared/Gatsby/hmp-archive/hmp-test/.git/
+```
+Instalacja
+
+```
+ npm i gatsby react react-dom
+```
+
+potem
+
+```
+t$ ls -lA
+razem 1297
+drwxrwxr-x 1 tadek tadek    4096 lip  7 20:37 .git
+-rw-rw-r-- 1 tadek tadek     109 lip  7 20:40 .gitignore
+-rw-rw-r-- 1 tadek tadek       0 lip  7 20:41 log.md
+drwxrwxr-x 1 tadek tadek     176 lip  7 20:46 node_modules
+-rw-rw-r-- 1 tadek tadek     322 lip  7 20:46 package.json
+-rw-rw-r-- 1 tadek tadek 1320422 lip  7 20:46 package-lock.json
+```
+
+250MB
+
+```
+ ls -lA
+razem 1461
+drwxrwxr-x 1 tadek tadek    4096 lip  7 20:37 .git
+-rw-rw-r-- 1 tadek tadek     109 lip  7 20:40 .gitignore
+drwxrwxr-x 1 tadek tadek       0 lip  7 20:54 .idea
+-rw-rw-r-- 1 tadek tadek       0 lip  7 20:41 log.md
+drwxrwxr-x 1 tadek tadek  167936 lip  7 20:46 node_modules
+-rw-rw-r-- 1 tadek tadek     322 lip  7 20:46 package.json
+-rw-rw-r-- 1 tadek tadek 1320422 lip  7 20:46 package-lock.json
+drwxrwxr-x 1 tadek tadek       0 lip  7 20:50 src
+
+```
+
+/src/pages/index.js
+
+```
+import React from 'react'
+
+const IndexPage = () => {
+    return (
+        <h1>Hello World!</h1>
+    )
+}
+
+export default IndexPage
+```
+
+```
+import * as React from "react"
+import { Link } from "gatsby"
+
+const PageNotFound = () => {
+    return (
+        <>
+            <h1>404</h1>
+            <Link to="/">main</Link>
+        </>
+    )
+}
+
+export default PageNotFound
+```
+
+package.json
+
+```
+  "scripts": {
+    "build": "gatsby build",
+    "develop": "gatsby develop",
+    "start": "npm run develop",
+    "serve": "gatsby serve",
+    "clean": "gatsby clean",
+  },
+```
+
+```
+$ mkdir hmp4
+tadek@tadek-Latitude-E6430:/media/tadek/shared/GitShared/Gatsby$ cd hmp4
+/hmp4$ npm init -y
+Wrote to /hmp4/package.json:
+
+{
+  "name": "hmp4",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
+
+
+/hmp4$ git init
+podpowiedź: Użycie „master” jako nawy początkowej gałęzi. Ta domyślna nazwa gałęzi
+podpowiedź: może się zmienić. Aby ustawić nazwę początkowej gałęzi do użycia we
+podpowiedź: wszystkich nowych repozytoriach, co uciszy ten komunikat, wykonaj:
+podpowiedź: 
+podpowiedź:     git config --global init.defaultBranch <nazwa>
+podpowiedź: 
+podpowiedź: Tradycyjnie było „master”, a inne popularne to „main”, „trunk”
+podpowiedź: i „development”. Nazwę właśnie utworzonej gałęzi można zmienić tym poleceniem:
+podpowiedź: 
+podpowiedź:     git branch -m <nazwa>
+Zainicjowano puste repozytorium Gita w hmp4/.git/
+```
+
+250 MB
+
+### Struktura plików
+
+W ten sposób mamy utworzoną następującą strukturę plików:
+
+- /.cache - bufor jak sama nazwa wskazuje
+- /.git - katalog gita
+- /node_modules - pakiety modułów, można go w przypadku niektórych problemów skasować i zainstalować je na nowo npm i
+- /public - powstaje dopiero w procesie buildowania, automatycznie; zawiera statyczny, wygenerowany przez Gatsby'ego build, można go bez strat skasować i wygenerować nowy build (gatsby -clean && gatsby -build)
+- /src - jedyny katalog, w którym mamy coś do zrobienia, to tu powstaje strona.
+  - /components - komponenty, czyli powtarzalne elementy strony: np. layout.js
+  - /images - pliki, może być assets
+  - /pages - podstrony, nazwy pozostałych katalogów to konwencja
+  - /styles - CSS jeżeli potrzebujemy osobnego katalogu
+  - /templates - szablony generowania stron jeżeli ich używamy
+- gatsby-browser.js - niekoniecznie
+- gatsby-config.js - plik konfiguracyjny
+- gatsby-node.js - niekoniecznie
+- .gitignore - plik gita
+- log.md - to moja propozycja, notatnik wszystkich ważnych działań administracyjnych, warto dodać do gitignora
+- package.json - informacja dla npm-a jakie moduły są zainstalowane, raczej nie zmieniać, jeżeli dokonujemy jakichś zmian to przedtem powinnismy zadbać o archiwizację, (najlepsza jest ta na Githubie)
+- package-lock.json - nie ruszać
+
+### home, about, Link
+
+/src/pages/
+
+- index.js - strona główna
+- about.js
+  
+```
+import React from 'react';
+
+const NazwaPodstrony = () => {
+  return (
+      ... treść strony
+  )}
+export default NazwaPodstrony
+```
+
+wg schematu
+
+```
+import React from 'react';
+import { Link } from "gatsby"
+
+const AboutPage = () => {
+  return (
+    <>
+      <Link to="/">Index</Link>
+Treść podstrony About
+    
+  )}
+
+export default AboutPage
+```
+
+350 MB
+
+## 2. Komponenty, CSS
+
+Omówię budowę na przykładzie mojej strony, bo 1) w sumie czemu nie 2) jest rozbudowana i zróźnicowana, składa się z wielu odmiennie zbudowanych elementów. Składa się z trzech głównych działów i dwóch blogów oraz - w perspektywie - dwóch kolejnych stron należacych do tej samej głównej hierarchii:
+
+- /IT - dział informatyki, jest to kilka zupełnie inaczej zbudowanych podstron, podsekcji, każda z innym layoutem i designem
+- /Turystyka - w tej chwili trzy podsekcje tematyczne, ten sam layout i design, ale dla każdego trochę inne elementy (obrazek tła, elementy kolorystyki, itd)
+- /Priv - wszystko co nie zmiesciło się powyżej, budowa podobna jak w przypadku /Turystyka
+- /Festung Breslau - blog mdx, budowa takiego bloga zostanie onówiona w kilku końcowych odcinkach bloga
+- /Blog - blog mdx
+- /Kartografia Terroru - strona, która powstanie
+- /T4 - jw
+
+npm i gatsby-plugin-styled-components styled-components babel-plugin-styled-components
+
+- komponenty (Layout.js, header, footer, nav)
+- struktura strony
+- CSS
+- spyscroll
+
+```
+Package                     Current  Wanted  Latest  Location                                 Depended by
+gatsby-plugin-gatsby-cloud    2.4.1   2.6.1   2.6.1  node_modules/gatsby-plugin-gatsby-cloud  hmp3
+gatsby-plugin-image           1.4.0   1.6.0   1.6.0  node_modules/gatsby-plugin-image         hmp3
+gatsby-plugin-manifest        3.4.0   3.6.0   3.6.0  node_modules/gatsby-plugin-manifest      hmp3
+gatsby-plugin-offline         4.4.0   4.6.0   4.6.0  node_modules/gatsby-plugin-offline       hmp3
+gatsby-plugin-react-helmet    4.4.0   4.6.0   4.6.0  node_modules/gatsby-plugin-react-helmet  hmp3
+gatsby-plugin-sharp           3.4.1   3.6.0   3.6.0  node_modules/gatsby-plugin-sharp         hmp3
+gatsby-source-filesystem      3.4.0   3.6.0   3.6.0  node_modules/gatsby-source-filesystem    hmp3
+gatsby-transformer-sharp      3.4.0   3.6.0   3.6.0  node_modules/gatsby-transformer-sharp    hmp3
+prettier                      2.2.1   2.2.1   2.3.0  node_modules/prettier                    hmp3
+react                        17.0.1  17.0.2  17.0.2  node_modules/react                       hmp3
+react-dom                    17.0.1  17.0.2  17.0.2  node_modules/react-dom                   hmp3
+```
+
+Layout 101
+
+```
+import * as React from "react"
+import "./layout.css"
+
+const Layout = ({ children }) => {
+
+    return (
+        <div className="container">
+            <header>Header</header>
+            <main>
+            {children}
+            </main>
+            <footer>footer</footer>
+        </div>)
+}
+
+export default Layout
+```
+
+Bardziej rozbudowany
+
+```
+import * as React from "react"
+import { Link } from "gatsby"
+import "./layout.css"
+
+const Layout = ({ children }) => (
+    <div className="container">
+        <header>
+            <nav>
+                <ul>
+                    <Link to="/">Main</Link>
+                    <Link to="/about">About</Link>
+                </ul>
+            </nav>
+        </header>
+        <main>{children}</main>
+        <footer></footer>
+    </div>
+)
+
+export default Layout
+```
+
+## 3. GraphQL
+
+- 404
+
+## 4. Rozszerzenia
+
+npm i gatsby-plugin-styled-components styled-components babel-plugin-styled-components
+
+Install gatsby-plugin-image and gatsby-plugin-sharp. Additionally install gatsby-source-filesystem if you are using static images, and gatsby-transformer-sharp if you are using dynamic images.
+
+npm i gatsby-plugin-image gatsby-plugin-sharp gatsby-source-filesystem gatsby-transformer-sharp
+
+- gatsby-source-filesystem
+- gatsby-plugin-styled-components
+- gatsby-plugin-image
+- gatsby-plugin-react-helmet
+- gatsby-plugin-gtag
+- gatsby-plugin-sitemap
+- gatsby-remark-vscode
+- gatsby-plugin-breadcrumb
+- search
+
+## 5. Deploy
+
+- Github
+- Gatsby Cloud
+- Netlify
+- Vercel
+
+## 6. Biblioteki i JS
+
+- Chakra UI
+- Bootstrap
+- FontAwesome
+
+## 7. Blog
+
+- mdx, frontmatter
+- template
+- gatsby-plugin-mdx
+- File System Route API vs gatsby-node.js
+
+## 8. Blog
+
+- paginacja
+- komentarze
+- tagi
+- lista wpisów
+- dodatkowe elementy
+- Headless CMS: WP i Strapi
+
+## 9. PWA SSR hydration
+
+## 10. Application, hooks, bazy danych (?)

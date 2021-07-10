@@ -287,18 +287,22 @@ const LayoutFB = ({ children, sub, data }) => {
             menu = <nav><ul><li><Link to="/festung-breslau">Festung Breslau - strona główna</Link></li></ul></nav>
              }
 
-    const menuArticlesArray = [{ slug: "panstwo-hitlerowskie", title: "Państwo hitlerowskie" }, { slug: "ostfront", title: "O przyczynie wojny na wschodzie" }, { slug: "stan-wojny", title: "Stan wojny na początku 1945" }, { slug: "armia-czerwona", title: "Armia Czerwona 1945" }, { slug: "drezno-bombardowanie", title: "Drezno bombardowanie 13-15 lutego 1945" }, { slug: "depesza-eisenhowera", title: "Depesza Eisenhowera (SCAF 252)" }, { slug: "wojna-na-pacyfiku", title: "Wojna na Pacyfiku 1945" }]
+    const menuArticlesArray = [{ slug: "panstwo-hitlerowskie", title: "Państwo hitlerowskie" }, { slug: "ostfront", title: "O przyczynie wojny na wschodzie" }, { slug: "stan-wojny", title: "Stan wojny na początku 1945" }, { slug: "armia-czerwona", title: "Armia Czerwona 1945" }, { slug: "drezno-bombardowanie", title: "Drezno bombardowanie 13-15 lutego 1945" }, { slug: "depesza-eisenhowera", title: "Depesza Eisenhowera (SCAF 252)" },]
+
+    const menuJapanArray = [{ slug: "japonia-opis", title: "Japonia" }, { slug: "japonia-1937-44", title: "1937-44" },  { slug: "japonia-1945", title: "1945" },  { slug: "japonia-bron", title: "Broń "}, { slug: "japonia-usa", title: "Podsumowanie" },]
 
     // , {slug: "waffen-ss", title: "Waffen SS"}
     // , {slug: "wroclaw-zydzi", title: "Wrocławscy Żydzi 1933-45"}
 
-    const menuArmeeArray = [{ slug: "front-niemiecki-1945", title: "Front niemiecki w Polsce w 1945" }, { slug: "armia-niemiecka", title: "Armia niemiecka 1918-45" }, { slug: "ss", title: "SS" }, { slug: "volkssturm", title: "Volkssturm" }, { slug: "wunderwaffe", title: "Wunderwaffe" }, { slug: "vergeltungswaffe", title: "Vergeltungswaffe: od V1 do V4" }, { slug: "kapitulacja", title: "Kapitulacja - Dzień Zwycięstwa" }]
+    const menuArmeeArray = [{ slug: "front-niemiecki-1945", title: "Front niemiecki w Polsce w 1945" }, { slug: "armia-niemiecka", title: "Armia niemiecka 1918-45" }, { slug: "ss", title: "SS" }, { slug: "volkssturm", title: "Volkssturm" }, { slug: "wunderwaffe", title: "Wunderwaffe" }, { slug: "vergeltungswaffe", title: "Vergeltungswaffe: od V1 do V4" }, { slug: "kapitulacja", title: "Kapitulacja - Dzień Zwycięstwa" },]
 
-    const menuSlaskArray = [{ slug: "wojsko-dlnslask", title: "Wojsko na Dolnym Śląsku 1740-1945" }, { slug: "groß-rosen", title: "Obóz koncentracyjny Groß-Rosen (1940-45)" }, { slug: "klasztor-augustianow", title: "Klasztor augustianów" }, { slug: "grupa-drobnera", title: "Grupa inicjatywna Drobnera" }, { slug: "zoo", title: "Wrocławski Ogród Zoologiczny (1865 - 1945)" }, { slug: "szczepin-bitwa", title: "Bitwa pancerna na Szczepinie 18 IV 1945" }]
+    const menuSlaskArray = [{ slug: "wojsko-dlnslask", title: "Wojsko na Dolnym Śląsku 1740-1945" }, { slug: "groß-rosen", title: "Obóz koncentracyjny Groß-Rosen (1940-45)" }, { slug: "klasztor-augustianow", title: "Klasztor augustianów" }, { slug: "grupa-drobnera", title: "Grupa inicjatywna Drobnera" }, { slug: "zoo", title: "Wrocławski Ogród Zoologiczny (1865 - 1945)" }, { slug: "szczepin-bitwa", title: "Bitwa pancerna na Szczepinie 18 IV 1945" },]
 
-    const menuBiosArray = [{ slug: "adolf-bertram", title: "Arcybiskup Adolf Bertram (1859-1945)" }, { slug: "hanna-reitsch", title: "Kapitan Hanna Reitsch (1912-79)" }, { slug: "iwan-polbin", title: "Generał Iwan Połbin (1905-45)" }, { slug: "sophie-scholl", title: "Sophie Scholl (1921-43)" }, { slug: "werner-molders", title: "Podpułkownik Werner Mölders (1913-41)" }]
+    const menuBiosArray = [{ slug: "adolf-bertram", title: "Arcybiskup Adolf Bertram (1859-1945)" }, { slug: "hanna-reitsch", title: "Kapitan Hanna Reitsch (1912-79)" }, { slug: "iwan-polbin", title: "Generał Iwan Połbin (1905-45)" }, { slug: "sophie-scholl", title: "Sophie Scholl (1921-43)" }, { slug: "werner-molders", title: "Podpułkownik Werner Mölders (1913-41)" },]
 
     const menuArticles = menuArticlesArray.map(article => (<li key={article.slug}><Link activeClassName="menuLinkActive" to={`/festung-breslau/article/${article.slug}`}>{article.title}</Link></li>))
+
+    const menuJapan = menuJapanArray.map(article => (<li key={article.slug}><Link activeClassName="menuLinkActive" to={`/festung-breslau/article/${article.slug}`}>{article.title}</Link></li>))
 
     const menuArmee = menuArmeeArray.map(article => (<li key={article.slug}><Link activeClassName="menuLinkActive" to={`/festung-breslau/article/${article.slug}`}>{article.title}</Link></li>))
 
@@ -338,6 +342,12 @@ const LayoutFB = ({ children, sub, data }) => {
 
                     <ul>
                         {menuArticles}
+                    </ul>
+
+                    <h3>Wojna na Pacyfiku</h3>
+
+                    <ul>
+                        {menuJapan}
                     </ul>
 
                     <h3>Armia niemiecka</h3>
