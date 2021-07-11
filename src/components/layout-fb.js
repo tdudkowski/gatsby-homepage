@@ -5,7 +5,7 @@ import { Helmet } from 'react-helmet'
 // import { MDXRenderer } from "gatsby-plugin-mdx"
 import "./layout-fb.css"
 // import 'gatsby-remark-vscode/styles.css'
-import background from "../pages/festung-breslau/img/header-blur.jpg"
+import background from "../content/img/header-blur.jpg"
 
 // bgcolor rgb(68, 21, 0) #441500
 // txt color rgb(255, 238, 204) #fec
@@ -285,11 +285,11 @@ const LayoutFB = ({ children, sub, data }) => {
             break;
         default:
             menu = <nav><ul><li><Link to="/festung-breslau">Festung Breslau - strona główna</Link></li></ul></nav>
-             }
+    }
 
     const menuArticlesArray = [{ slug: "panstwo-hitlerowskie", title: "Państwo hitlerowskie" }, { slug: "ostfront", title: "O przyczynie wojny na wschodzie" }, { slug: "stan-wojny", title: "Stan wojny na początku 1945" }, { slug: "armia-czerwona", title: "Armia Czerwona 1945" }, { slug: "drezno-bombardowanie", title: "Drezno bombardowanie 13-15 lutego 1945" }, { slug: "depesza-eisenhowera", title: "Depesza Eisenhowera (SCAF 252)" },]
 
-    const menuJapanArray = [{ slug: "japonia-opis", title: "Japonia" }, { slug: "japonia-1937-44", title: "1937-44" },  { slug: "japonia-1945", title: "1945" },  { slug: "japonia-bron", title: "Broń "}, { slug: "japonia-usa", title: "Podsumowanie" },]
+    const menuJapanArray = [{ slug: "japonia-opis", title: "Japonia" }, { slug: "japonia-1937-44", title: "1937-44" }, { slug: "japonia-1945", title: "1945" }, { slug: "japonia-bron", title: "Broń " }, { slug: "japonia-usa", title: "Podsumowanie" },]
 
     // , {slug: "waffen-ss", title: "Waffen SS"}
     // , {slug: "wroclaw-zydzi", title: "Wrocławscy Żydzi 1933-45"}

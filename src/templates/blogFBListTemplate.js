@@ -42,7 +42,7 @@ export default BlogFBList
 export const query = graphql`
 query AllListsArticles($skip: Int!=0) {
   allMdx(
-    filter: { fileAbsolutePath: { glob: "**/src/pages/festung-breslau/posts/*.mdx" }}
+    filter: { fileAbsolutePath: { glob: "**/src/content/fbposts/*.mdx" }}
     sort: { fields: [frontmatter___date], order: DESC }
     limit: 10
     skip: $skip

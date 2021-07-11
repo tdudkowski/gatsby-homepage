@@ -26,7 +26,7 @@ export default Sitemap
 export const query = graphql`
     query AllArticlesIndexQuery {
         allMdx(
-            filter: {fileAbsolutePath: {glob: "**/src/pages/articles/*.mdx" }} ) {
+            filter: {fileAbsolutePath: {glob: "**/src/content/pagearticles/*.mdx" }} ) {
                 nodes {
                 id
                 frontmatter {

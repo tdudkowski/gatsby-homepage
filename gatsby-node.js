@@ -35,7 +35,7 @@ exports.createPages = ({ graphql, actions }) => {
   const pageArticleTemplate = path.resolve("./src/templates/articlePageTemplate.js");
   return graphql(`	{
 fbblogposts: allMdx(
-      filter: { fileAbsolutePath: { glob: "**/src/pages/festung-breslau/posts/*.mdx" }, frontmatter: {published:{ eq: true} } }
+      filter: { fileAbsolutePath: { glob: "**/src/content/fbposts/*.mdx" }, frontmatter: {published:{ eq: true} } }
       sort: { order: DESC, fields: frontmatter___date }
     ) {
               nodes {
@@ -54,7 +54,7 @@ fbblogposts: allMdx(
       }
 
 fbarticles: allMdx(
-        filter: { fileAbsolutePath: { glob: "**/src/pages/festung-breslau/articles/*.mdx" } }
+        filter: { fileAbsolutePath: { glob: "**/src/content/fbarticles/*.mdx" } }
         sort: { order: DESC, fields: frontmatter___date }
       ) {
                 nodes {
@@ -71,7 +71,7 @@ fbarticles: allMdx(
         }
 
 pagearticles: allMdx(
-          filter: { fileAbsolutePath: { glob: "**/src/pages/articles/*.mdx" } }
+          filter: { fileAbsolutePath: { glob: "**/src/content/pagearticles/*.mdx" } }
                   ) {
                     nodes {
                       slug
@@ -87,7 +87,7 @@ pagearticles: allMdx(
           }
 
 pageindexes: allMdx(
-            filter: { fileAbsolutePath: { glob: "**/src/pages/indexes/*.mdx" } }
+            filter: { fileAbsolutePath: { glob: "**/src/content/pageindexes/*.mdx" } }
                     ) {
                       nodes {
                         slug

@@ -29,14 +29,14 @@ module.exports = {
             resolve: `gatsby-source-filesystem`,
             options: {
                 name: `article`,
-                path: `${__dirname}/src/pages/articles`,
+                path: `${__dirname}/src/content/pagearticles`,
             },
         },
         {
             resolve: `gatsby-source-filesystem`,
             options: {
                 name: `index`,
-                path: `${__dirname}/src/pages/indexes`,
+                path: `${__dirname}/src/content/pageindexes`,
             },
         },
         {
@@ -50,21 +50,21 @@ module.exports = {
             resolve: `gatsby-source-filesystem`,
             options: {
                 name: `post`,
-                path: `${__dirname}/src/pages/festung-breslau/posts`,
+                path: `${__dirname}/src/content/fbposts`,
             },
         },
         {
             resolve: `gatsby-source-filesystem`,
             options: {
                 name: `article`,
-                path: `${__dirname}/src/pages/festung-breslau/articles`,
+                path: `${__dirname}/src/content/fbarticles`,
             },
         },
         {
             resolve: `gatsby-source-filesystem`,
             options: {
                 name: `img`,
-                path: `${__dirname}/src/pages/festung-breslau/img`,
+                path: `${__dirname}/src/content/img`,
             },
         },
         {

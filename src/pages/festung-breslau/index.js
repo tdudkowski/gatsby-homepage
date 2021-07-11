@@ -65,7 +65,7 @@ export default FBIndexPage
 export const query = graphql`
 query AllArticles($skip: Int!=0 ) {
   allMdx(
-    filter: { fileAbsolutePath: { glob: "**/src/pages/festung-breslau/posts/*.mdx" }, frontmatter: {published:{ eq: true} } }
+    filter: { fileAbsolutePath: { glob: "**/src/content/fbposts/*.mdx" }, frontmatter: {published:{ eq: true} } }
     sort: { fields: [frontmatter___date], order: DESC }
     limit: 10
     skip: $skip   
