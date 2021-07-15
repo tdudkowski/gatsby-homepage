@@ -1,0 +1,331 @@
+---
+title: "Gatsby - komponenty"
+section: "blog"
+subsection: "it"
+date: 2021-07-02
+edited:
+image: ../images/Gatsby_Monogram.png
+tags: react, gatsby
+---
+
+### Przykład
+
+Omówię budowę na przykładzie mojej strony, bo 1) w sumie czemu nie 2) jest rozbudowana i zróźnicowana, składa się z wielu odmiennie zbudowanych elementów. To trzy główne działy, dwa blogi, oraz - w perspektywie - dwie kolejne strony nalężące do tej samej głównej hierarchii:
+
+- /IT - dział informatyki, jest to kilka zupełnie inaczej zbudowanych podstron, podsekcji, każda z innym layoutem i designem (docelowo)
+- /Turystyka - w tej chwili trzy podsekcje tematyczne, ten sam layout i design, ale dla każdego trochę inne elementy (obrazek tła, elementy kolorystyki, itd - to również docelowo)
+- /Priv - wszystko co nie zmiesciło się powyżej, budowa podobna jak w przypadku /Turystyka
+- /Festung Breslau - blog mdx, budowa takiego bloga zostanie onówiona w kilku końcowych odcinkach bloga
+- /Blog - blog mdx
+- /Kartografia Terroru - strona, która powstanie
+- /T4 - jw
+
+Ponieważ o stronach, które mają powstać pisać nie warto, a blog/blogi zostaną opisane w kolejnych częściach, tu przedstawię budowę części składającej się z /IT i /Turystyka. Różni je to, że w zamierzeniu pierwsza składa się ze zróżnicowanych podstron, a druga jest tak samo podwójnie zagnieżdżona, ale jest zunifikowana i ma spójną nawigację.
+
+Dla dalszego uproszczenia przyjmijmy, że /IT składa się z dwóch podstron: JS i CSS; tak samo /Turystyka: Brandenburgia i Saksonia. Przedstawię budowę takiej strony wyłącznie przy użyciu plików JSX. Obecnie mój Homepage używa plików MDX, co umożliwia trzymanie całej treści w jednym katalogu, w łatwej do edycji formie. Zacznijmy jednak od zwykłego JSX.
+
+Powyższe założenia wyglądają tak:
+
+- /index.js (design0)
+- /IT
+  - /index.js (design1)
+  - /CSS (design2)
+  - /JS (design3)
+- /Turystyka
+  - /index.js (design4)
+  - /Brandenburgia (design4, ver1)
+  - /Saksonia (design4, ver2)
+
+Czyli chcemy mieć pięć różnych wyglądów strony. Do zarządzania układem i wyglądem strony jest CSS, który zostanie omówiony w jednym z kolejnych wpisów, ale już tutaj mogę wspomnieć, że po pierwsze, jeżeli mamy więcej niż jeden wygląd to musimy unikać styli globalnych. Najlepszym rozwiązaniem to [Styled Components](https://styled-components.com/).
+
+W poprzednim wpisie uruchomiliśmy podstawową stronę Gatsby'ego w środowisku deweloperskim. Każda z nich była oddzielną całością. Jeżeli chcielibśmy mieć takie same nagłówki, stopki czy system nawigacji to trzeba by go w każdej podstronie powwielać co już samo w sobie nie ma sensu. A co jeżeli byśmy chcieli w tym layoucie coś zmienić?
+
+Gatsby to React, a React to system wyświetlania komponentów, co więc jest oczywiste to komponenty służą do tworzenia wspólnych wspólnych, powtarzających się elementów layoutu i samego layoutu.
+
+W tym odcinku:
+
+- komponent layoutu
+- zagnieżdżanie komponentów
+- tworzenie podstrony
+- sterowanie elementami strony przy użyciu propsów
+
+### Layout.js
+
+Komponenty umieszczamy w katalogu /src/components. Jest to tylko konwencja, ale nie warto od niej odchodzić. Plik komponentu składa się z trzech elementów:
+
+- importów
+- deklaracji komponentu
+- eksportu
+
+Wprawdzie od jakiegoś czasu w plikach Reacta nie trzeba importować samego Reacta, ale w Gatsbym ten wymóg jeszcze nie został usunięty. W poniższym pliku drugim importem jest layout.css, w którym zawieramy minimalną liczbę reguł obowiązujących dla całej strony.
+
+Deklaracja komponentu to funkcja, w której w tym wypadku propsem jest children przekazywany jako obiekt, który jest umieszczany w layoucie we wskazanym miejscu. Dobrą praktyką jest nazywanie komponentów analogicznie do nazwy pliku, po pierwsze w przypadku plików stron te nazwy nie powinny się powtarzać, po drugie lepiej widzieć w którym komponencie dokonujemy zmian. W tym wypadku dla globalnego/podstawowego layout właściwą nazwą jest - zero zaskoczeń - layout.js, wewnątrz którego komponent nazywa się Layout. Musi się zaczynać od dużej litery.
+
+- Jeśli importujemy moduł Node'a wystarczy podać jego nazwę. Katalog node_modules jest przeszukiwany automatycznie.
+- Importowane komponenty muszą zostać wskazane ścieżką względną.
+- Jeżeli importowany plik ma inne rozszerzenie niż .js trzeba je podać. Rozszerzenia .js nie podajemy.
+
+**/src/components/layout.js**
+
+```js
+import * as React from "react"
+import "./layout.css"
+
+const Layout = ({ children }) => {
+
+    return (
+        <div className="container">
+            <header>Header</header>
+            <main>
+            {children}
+            </main>
+            <footer>Footer</footer>
+        </div>)
+}
+
+export default Layout
+```
+
+A tu wzmiankowany powyżej layout.css, który zawiera podstawowe reguły:
+
+**/src/components/layout.css**
+
+```css
+body {padding:0; margin:0;}
+
+.container {
+    max-width: 1300px;
+    margin: 0 auto;
+    min-height: 100vh;
+    display:flex;
+    flex-direction: column;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+div.container > main {flex:1; max-width: 1300px;}
+
+header > nav ul {display:flex; list-style-type: none; padding-left:0;}
+header > nav ul a {display:block; padding:10px 2rem; margin: 0 1rem;}
+
+main {display:flex; flex-direction: column;}
+
+p, li, a { word-wrap: break-word; }
+pre {max-width: 100%; width:100%;}
+
+@media(min-width:800px) {
+    main {flex-direction: row;}
+    aside {flex-basis: 20rem; width: 20rem;}
+    article {flex:1; width:calc(1300px - 20rem)}
+}
+```
+
+Aplikacja layoutu do dowolnego pliku:
+
+**/src/pages/any-page-in-this-folder.js**
+
+```js
+import * as React from "react"
+import Layout from "../components/layout"
+
+const IndexPage = () => {
+    <Layout>
+    // ... tutaj treść strony
+    </Layout>
+}
+
+export default IndeXPage
+```
+
+### Komponenty
+
+Poszczególne elementy layputu, powtarzalne, albo pełniące odrębne funkcje dobrze jest wydzielić w oddzielne komponenty. Poniżej przykład listy nawigacyjnej, która znajduje się i w nagłówku i w stopce.
+
+Wprowadziłem tutaj dwie rzeczy:
+
+- import komponentu Link
+- Styled Components, najpierw trzeba zainstalować pakiet i deklarację umieścić w pliku gatsby-config, dokładniej to zostanie opisane w oddzielnym wpisie, tutaj chciałem tylko pokazac jak to wygląda w kodzie. Stworzony tu element StyledNav nadpisuje zwykły element nav i ma dokładnie te same reguły CSS, które zawarte były w layout.css.
+
+**/src/components/navlist.js**
+
+```js
+import * as React from "react"
+import { Link } from "gatsby"
+import styled from "styled-components"
+
+const StyledNav = styled.nav`
+& ul {display: flex; list-style-type: none; padding-left: 0;}
+& ul li a {display: block; padding: 10px 2rem; margin: 0 1rem;}
+`;
+
+const NavList = () => {
+
+    return (
+        <StyledNav>
+           <ul>
+               <li><Link to="/">Home</Link></li>
+               <li><Link to="/about">About</Link></li>
+               <li><Link to="/contact">Contact</Link></li>
+           </ul>
+        </StyledNav>)
+}
+
+export default NavList
+```
+
+Taka lista nawigacyjna może zostać umieszczona w komponencie nagłówka (i footera), które z kolei w ten sam sposób mogą zostać umieszczone w komponencie layoutu.
+
+Jak widać w przypadku zainstalowanych modułów wystarczy podać nazwę, natomiast do napisanych komponentów trzeba się odwołać ścieżką względną, napisana tutaj nazwa z "./" jest znanym wszystkim użytkownikom konsoli wskazówką "tak, to tutaj w tym samym katalogu". Do sąsiedniego katalogu odwołujemy się "../sąsiedni_katalog/plik".
+
+**/src/components/header.js**
+
+```js
+import * as React from "react"
+import StyledNav from "./navlist"
+
+const Header = () => {
+    <header>
+    <h1>Tytuł strony</h1>
+    <StyledNav />
+    </header>
+}
+
+export default Header
+```
+Ok, tyle podstaw. Przejdźmy do przykładu.
+
+### Strona i propsy
+
+Po pierwsze trzeba zaznaczyć, że podstawowym narzędziem tworzenia layoutu jest CSS. Czasem przy tym samym pliku layotu wystarczy zastosować różne CSS-y, żeby uzyskać zupełnie różne układy strony. Pierwszą popularną prezentacją możliwości CSS była strona [CSS Zen Garden](http://www.csszengarden.com/). Ponadto pamiętajmy, że typowy układ strony jest prosty i przewidywalny. Patrząc od góry strona zaczyna się od nagłówka, potem mamy treść a na samym dole stopka. menu nawigacyjne może być częścią nagłówka lub może zostać umiezczone w pasku bocznym. Ten układ ma odzwieciedlenie w nowych, wprowadzonych z HTML5 tagach semantycznych: header, aside, main, article, footer, oraz nav.
+
+Załóżmy jednak, że potrzebujemy różnych plików layoutu. Zresztą lepiej jest tak zrobić od razu, bo dzięki temu od razu mamy oddzielone składniki strony i jest to łatwiejsze do kontroli.
+
+Wobec tego sam layout.js aplikowany jest tylko do pliku /index.js czyli strony głównej oraz innych plików bezpośrednio w katalogu głównym, takich jak: about, contact.
+
+Layouty podstron można zagnieżdżać w layoucie głównym. Tu jest przykładowy plik layoutu dla działu IT. Na samej górze widać znane już i przewidywalne importy, najpierw Reacta, potem główny plik layoutu a na końcu Styled Components.
+
+Proszę zwrócić uwagę na importy menu oraz komponent ToC (Table o Content):
+
+- Zawarty w komponencie switch odbiera prop od pliku strony i zależnie od jego wartości wybiera odpowiednie menu. W defaulcie mamy zgłoszenie błędu, jeśli default jest możliwy i nie oznacza błędu to można dac null.
+- Spis treści: [tdudkowski / gatsby-scrollspy](https://github.com/tdudkowski/gatsby-scrollspy), to dlatego StyledArticle ma klasę "content-container".
+
+**/src/components/layout-it.js**
+
+```js
+import * as React from "react"
+import Layout from "./layout"
+import MenuCSS from "./menu-css"
+import MenuJS from "./menu-js"
+import MenuIT from "./menu-it"
+import ToC from "./toc"
+import styled from "styled-components"
+
+const StyledArticle = styled.article`
+// style dla article
+`;
+
+const LayoutIT = ({ children, section }) => {
+
+  let menu
+
+  switch (section) {
+    case 'css':
+      menu = <MenuCSS />
+      break;
+    case 'js':
+      menu = <MenuJS />
+      break;
+    case 'it':
+      menu = <MenuIT />
+      break;
+    default:
+      menu = <p>Error in layout-it</p>
+  }
+
+  return (
+    <Layout>
+      <aside>
+        {menu}
+        <ToC />
+      </aside>
+      <StyledArticle className="content-container">{children}</StyledArticle>
+    </Layout>
+  )
+}
+
+export default LayoutIT
+```
+
+Ma to pewną formalną elegancję, ale wygodniej jest stworzyć niezalezny od niego plik layoutu, który będzie korzystał z tego samego arkusza stylów. Poniżej przykład takiego rozwiązania.
+
+Tutaj widzimy import tylko jednego komponentu menu, który dostaje props od strony za pośrednictwem layoutu. Taki komponent może zawierać w sobie deklaracje wszystkich menu i przedstawionego powyżej switcha. Dzięki temu mamy prostszy plik layoutu i mniej plików w katalogu /components.
+
+**/src/components/layout-it.js**
+
+```js
+import * as React from "react"
+import styled from "styled-components"
+import Navigation from "./navigation"
+import Footer from "./footer"
+import MenuIT from "./menu-it"
+import ToC from "./toc"
+import "./layout.css"
+
+const StyledMain = styled.main`
+// style dla main
+`;
+
+const LayoutIT = ({ children, section }) => {
+
+  return (
+    <>
+      <header>
+        <Navigation />
+      </header>
+      <StyledMain>
+        <aside>
+          <MenuIT section={section} />
+          <ToC />
+        </aside>
+        <article className="content-container">
+          {children}
+        </article>
+      </StyledMain>
+      <Footer />
+    </>)
+}
+
+export default LayoutIT
+```
+
+Plik strony wygląda tak jak oniżej. Najważniejszy jest import pliku layoutu i umieszczenie w jego komponencie parametru propsa.
+
+**/src/pages/js/any-page-in-this-folder.js**
+
+```js
+import * as React from "react"
+import LayoutIT from "../../components/layout-it"
+
+const PageOfJS = () => {
+ 
+    return (
+        <LayoutIT section="js">
+
+            <h2>Tytuł podstrony</h2>
+
+            // ...treść podstrony
+
+        </LayoutIT>)
+}
+
+export default PageOfJS
+```
+
+### Podsumowanie
+
+Powyższe powinno pozwolić na stworzenie stwony w Gatsby'm o dowolnej złożoności. Przedstawiłem tu genaralną ideę komponetów jako wielkokrotnie używanych elementów strony, oraz komponentu layoutu.
+
+Na podstawie treści tego wpisu proponuje przećwiczenie odpowiedniego zagnieżdżania komponentów, ustalenia architektury strony i użycie lokalnych parametrów propsów w komponentach.
+
+Można też przećwiczyć tworzenie strony na przykładzie ścieżki treningowej na stronie [Create a Next.js App](https://nextjs.org/learn/basics/create-nextjs-app), NextJS jest to oczywiście inne rozwiązanie, ale sama idea budowania stron i komponentów bardzo podobna.
+
+Czym jednak jest strona WWW bez ilustracji i CSS? O tym w kolejnych wpisach.

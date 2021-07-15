@@ -31,22 +31,22 @@ flex-direction: column;
 
 const Layout = ({ children, section, subsection }) => {
 
-    return (
-        <>
-                      <header>
-                <Navigation />
-            </header>
-            <StyledMain>
-                <aside>
-                    <MenuIT subsection={subsection} />
-                    <ToC />
-                </aside>
-                <article className="content-container">
-                    {children}
-                </article>
-            </StyledMain>
-            <Footer />
-        </>)
+  return (
+    <>
+      <header>
+        <Navigation />
+      </header>
+      <StyledMain>
+        <aside>
+          <MenuIT subsection={subsection} />
+          <ToC />
+        </aside>
+        <article className="content-container">
+          {children}
+        </article>
+      </StyledMain>
+      <Footer />
+    </>)
 }
 
 export default Layout

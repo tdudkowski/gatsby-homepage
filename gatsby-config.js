@@ -42,28 +42,42 @@ module.exports = {
         {
             resolve: `gatsby-source-filesystem`,
             options: {
-                name: `image`,
+                name: `blogpost`,
+                path: `${__dirname}/src/content/blogposts`,
+            },
+        },
+        {
+            resolve: `gatsby-source-filesystem`,
+            options: {
+                name: `blogimage`,
+                path: `${__dirname}/src/content/images`,
+            },
+        },
+        {
+            resolve: `gatsby-source-filesystem`,
+            options: {
+                name: `pageimage`,
                 path: `${__dirname}/src/images`,
             },
         },
         {
             resolve: `gatsby-source-filesystem`,
             options: {
-                name: `post`,
+                name: `fbblogpost`,
                 path: `${__dirname}/src/content/fbposts`,
             },
         },
         {
             resolve: `gatsby-source-filesystem`,
             options: {
-                name: `article`,
+                name: `fbblogarticle`,
                 path: `${__dirname}/src/content/fbarticles`,
             },
         },
         {
             resolve: `gatsby-source-filesystem`,
             options: {
-                name: `img`,
+                name: `fbblogimage`,
                 path: `${__dirname}/src/content/img`,
             },
         },

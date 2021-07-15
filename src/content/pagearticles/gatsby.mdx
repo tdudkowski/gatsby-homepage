@@ -136,10 +136,10 @@ Można to zrobić na dwa sposoby
 Wpis w gatsby-config.js, określający skąd mają być pobierane wpisy.
 
 ```
-{ resolve: \`gatsby-source-filesystem\`,
+{ resolve: `gatsby-source-filesystem`,
       options: {
-  name: \`posts\`,
-  path: \`$\{__dirname}/src/posts/\`,
+  name: `posts`,
+  path: `$\{__dirname}/src/posts/`,
       },
     },
 ```
@@ -147,12 +147,12 @@ Wpis w gatsby-config.js, określający skąd mają być pobierane wpisy.
 To jest cała zawartość pliku gatsby-node.js, który automatycznie generuje strony wpisów na podanej ścieżce ze wskazanego szablonu na podstawie plików wpisów.
 
 ```
-const path = require(\`path\`);
+const path = require(`path`);
 
 exports.createPages = ({ graphql, actions }) => {
   const { createPage } = actions
   const postTemplate = path.resolve("./src/templates/postTemplate.js");
-  return graphql(\`	{
+  return graphql(`	{
     posts: allMdx(
       filter: { fileAbsolutePath: { glob: "**/src/posts/*.mdx" } }
       ) {
@@ -165,7 +165,7 @@ exports.createPages = ({ graphql, actions }) => {
         }
       }
     }
-  \`).then((result) => {
+  `).then((result) => {
     if (result.errors) {
       throw result.errors;
     }
@@ -205,7 +205,7 @@ const postTemplate = ({ data }) => {
 };
 export default postTemplate
 
-export const query = graphql\`
+export const query = graphql`
 query PostBySlug($slug: String!) {
     mdx(slug: { eq: $slug } ) {
       body
@@ -215,7 +215,7 @@ query PostBySlug($slug: String!) {
    }
       }
   }
-\`;
+`;
 ```
 
 To jest strona listy wpisów - index.js
@@ -231,7 +231,7 @@ const PostPage = ({ data }) => {
   <p>Posts:</p>
   <ul>
       {data.allMdx.nodes.map(({ frontmatter, slug }) => (
-<li key={frontmatter.post}><Link to={\`/post/$\{slug}\`}>{frontmatter.post}</Link></li>
+<li key={frontmatter.post}><Link to={`/post/$\{slug}`}>{frontmatter.post}</Link></li>
       ))}
   </ul>
   </Layout>
@@ -240,7 +240,7 @@ const PostPage = ({ data }) => {
 
 export default PostPage
 
-export const query = graphql\`
+export const query = graphql`
 query AllPosts {
   allMdx {
         nodes {
@@ -257,7 +257,7 @@ pageInfo {
 }
     }
   }
-\`;
+`;
 ```
 
 Przykładowy wpis/post.
@@ -302,7 +302,7 @@ export default function PostPage({ data }) {
                    </Layout>
     )
 }
-export const query = graphql\`
+export const query = graphql`
     query PostBySlug($slug: String) {
             mdx(slug: {eq: $slug }) {
             id
@@ -314,7 +314,7 @@ export const query = graphql\`
         }
       }
     }
-  \`
+  `
 ```
 
 - Gatsby [File System Route API](https://www.gatsbyjs.com/docs/reference/routing/file-system-route-api/)
@@ -368,11 +368,11 @@ Komponent
 ```
     import styled, { keyframes } from 'styled-components'
 
-    const fadeIn = keyframes\`
+    const fadeIn = keyframes`
     0% {opacity: 0;}
     100% {opacity: 1;}
-  \`
-    const StyledIcon = styled.div\`
+  `
+    const StyledIcon = styled.div`
     background-color: $\{({ primary }) => primary ? 'green' : 'yellow'};
     width: 30px;
     height: 30px;
@@ -388,11 +388,11 @@ Komponent
       else return 'green';
    }};
    animation: 5s $\{fadeIn} ease-in;
-\`
+`
 
-const TodayIcon = styled(Icon)\`
+const TodayIcon = styled(Icon)`
     background-color: purple;
-\`
+`
 const Icon = ({primary, border, day}) => {
 
   let today = new Date()
@@ -558,10 +558,10 @@ Instalacja pluginu [gatsby-source-drupal](https://www.gatsbyjs.org/packages/gats
 
 ```
  {
-  resolve: \`gatsby-source-drupal\`,
+  resolve: `gatsby-source-drupal`,
   options: {
-  baseUrl: \`http://api.domena/\`,
-  apiBase: \`jsonapi\`, // optional, defaults to \`jsonapi\` ; old 'api' - z każdą zmianą trzeba restartować Gatsby'ego
+  baseUrl: `http://api.domena/`,
+  apiBase: `jsonapi`, // optional, defaults to `jsonapi` ; old 'api' - z każdą zmianą trzeba restartować Gatsby'ego
   },
 ```
 
@@ -668,7 +668,7 @@ Potem zzipowanie i instalacja z pliku.
 - [Ibas "Gatsby Tutorial From Scratch: The Definitive Guide (2020)"](https://ibaslogic.com/gatsby-tutorial-from-scratch-for-beginners/)
 - [Nikola Đuza "Creating a Gatsby blog from scratch"](https://blog.logrocket.com/creating-a-gatsby-blog-from-scratch/)
 - [Konstantin Münster "How To Build A Portfolio With Gatsby — From Scratch To Deployment"](https://medium.com/@konstantin.muenster/how-to-build-a-portfolio-with-gatsby-from-scratch-to-deployment-cacbf7a1527)
-- freecodecamp.org [Scott Spence "How to Build Your Coding Blog From Scratch Using Gatsby and MDX"](https://www.freecodecamp.org/news/build-a-developer-blog-from-scratch-with-gatsby-and-mdx/)
+- freecodecamp.org [Scott Spence "How to Build Your Coding Blog From Scratch Using Gatsby and MDX"](https://www.freecodecamp.org/news/build-a-developer-blog-from-scratch-with-gatsby-and-mdx/) | ["Gatsby - Full Tutorial for Beginners" [1:11:15]](https://www.youtube.com/watch?v=mHFAM0CXviE)
 - ScottSpence.com ["Build a coding blog from scratch with Gatsby and MDX"](https://scottspence.com/2019/10/31/build-an-mdx-blog/) | ["Add a Table of Contents with Smooth scroll using Gatsby and MDX"](https://scottspence.com/2020/02/13/smooth-scroll-toc-gatsby/) | ["Globally Style the Gatsby Default Starter with styled-components v5"](https://scottspence.com/2020/02/06/globally-style-gatsby-styled-components/) | ["Convert the Gatsby default starter blog to use MDX"](https://scottspence.com/2019/04/09/convert-gatsby-default-blog-to-mdx/) | ["Creating a Custom React Hook for Gatsby Site Metadata"](https://scottspence.com/2019/03/24/custom-gatsby-metadata-hook/) | ["Get your GraphCMS data into Gatsby"](https://scottspence.com/2018/11/25/graphcms-to-gatsby/) | ["Use the React Context API with Gatsby"](https://scottspence.com/2018/05/22/react-context-api-with-gatsby/)
 - Sitepoint [Maria Antonietta Perna "Getting Started with Gatsby: Build Your First Static Site"](https://www.sitepoint.com/gatsby-guide/)
 - The Net Ninja ["Gatsby Tutorial" [YT playlist 22 filmy]](https://www.youtube.com/playlist?list=PL4cUxeGkcC9hw1g77I35ZivVLe8k2nvjB)

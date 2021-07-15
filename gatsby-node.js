@@ -33,6 +33,8 @@ exports.createPages = ({ graphql, actions }) => {
   const fbBlogTemplate = path.resolve("./src/templates/blogFBTemplate.js");
   const fbArticleTemplate = path.resolve("./src/templates/articleFBTemplate.js");
   const pageArticleTemplate = path.resolve("./src/templates/articlePageTemplate.js");
+  const postTemplate = path.resolve("./src/templates/blogPostTemplate.js");
+  const tagTemplate = path.resolve("./src/templates/blogTagListTemplate.js");
   return graphql(`	{
 fbblogposts: allMdx(
       filter: { fileAbsolutePath: { glob: "**/src/content/fbposts/*.mdx" }, frontmatter: {published:{ eq: true} } }
@@ -101,7 +103,24 @@ pageindexes: allMdx(
                         id
                       }
             }
-
+  blogposts: allMdx(
+              filter: { fileAbsolutePath: { glob: "**/src/content/blogposts/*.mdx" } }
+               sort: { order: DESC, fields: frontmatter___date }
+              ) {
+                      nodes {
+                          frontmatter {
+                    title
+                    section
+                    subsection
+                    date
+                    edited
+                    tags
+                             }
+                             slug
+                             id
+                             body
+                }
+              }
       }
   `).then((result) => {
     if (result.errors) {
@@ -115,7 +134,16 @@ pageindexes: allMdx(
     const fbarticles = result.data.fbarticles.nodes;
     const pagearticles = result.data.pagearticles.nodes;
     const pageindexes = result.data.pageindexes.nodes;
-
+    const blogposts = result.data.blogposts.nodes;
+    const tags = []
+    for (let i = 0; i < blogposts.length; i++) {
+      const arrOfTags = blogposts[i].frontmatter.tags.split(",")
+      for (let j = 0; j < arrOfTags.length; j++) {
+        if (!tags.includes(arrOfTags[j].trim())) {
+          tags.push(arrOfTags[j].trim())
+        }
+      }
+    }
     // const posts = result.data.allMarkdownRemark.edges
     const postsPerPage = 10
     const numPages = Math.ceil(postFiltered.length / postsPerPage)
@@ -167,11 +195,6 @@ pageindexes: allMdx(
         context: {
           ...article.context,
           slug: article.slug,
-          id: article.id,
-          body: article.body,
-          title: article.frontmatter.title,
-          section: article.frontmatter.section,
-          subsection: article.frontmatter.subsection,
         },
       });
     });
@@ -184,11 +207,30 @@ pageindexes: allMdx(
         context: {
           ...article.context,
           slug: article.slug,
-          id: article.id,
-          body: article.body,
-          title: article.frontmatter.title,
-          section: article.frontmatter.section,
-          subsection: article.frontmatter.subsection,
+        },
+      });
+    });
+
+    blogposts.forEach(post => {
+      createPage({
+        path: "/blog/" + post.slug,
+        component: postTemplate,
+        ...post,
+        context: {
+          ...post.context,
+          slug: post.slug,
+        },
+      });
+    });
+
+    tags.forEach(tag => {
+      createPage({
+        path: "/blog/tag/" + tag,
+        component: tagTemplate,
+        ...tag,
+        context: {
+          ...tag.context,
+          slug: tag,
         },
       });
     });

@@ -30,7 +30,7 @@ const blogFBPost = ({ data }) => {
 export default blogFBPost
 
 export const query = graphql`
-  query PostBySlug($slug: String!) {
+  query FBPostBySlug($slug: String!) {
     mdx(fields: { slug: { eq: $slug } }) {
       body
       frontmatter {
