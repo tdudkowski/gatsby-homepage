@@ -6,7 +6,7 @@ import Footer from "./footer"
 import ToC from "./toc"
 import "./layout-fb.css"
 import "./layout.css"
-import {Helmet} from "react-helmet";
+import { Helmet } from "react-helmet";
 import SEO from "../components/seo";
 
 const StyledHeader = styled.header`
@@ -28,7 +28,7 @@ flex-direction: column;
     top:-1rem;
     font-size: 5rem;
     width:50px;}
-  & article {background: url(${props => props.background}) no-repeat top center;}
+  & article {background: url(${props => props.background}) no-repeat top center; background-size:200px;}
   & article h2 { font-family:Alegreya, sans-serif; font-size:2.5rem; color:#333;}
   & article h3 { font-family:Alegreya, sans-serif; border-bottom:1px solid #ddc; margin: 2rem 0; font-size:2rem; color:#444;}
   & p > code, & li > code {border:1px solid rgba(200,200,200, .4); padding:2px 4px; white-space: nowrap;}
@@ -65,7 +65,7 @@ const LayoutBlog = ({ children, data, path }) => {
                     {path === "/blog/" || path === "/blog" ? null : <section>
                         <h3>Menub</h3>
                         <Link to="/blog">powrót na stronę główną bloga</Link>
-                    </section> }
+                    </section>}
                     {data === undefined ? null :
                         <>
                             <section>
