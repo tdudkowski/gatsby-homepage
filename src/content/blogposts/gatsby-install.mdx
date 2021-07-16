@@ -34,6 +34,8 @@ Założeniem każdego odcinka serii jest bycie success-complete, chodzi o to, ż
 
 Zakładam, że czytelnik dobrze zna podstawy JS, rozumie jak działa React i JSX, używa gita, umie poruszać się w konsoli i wie jak działa strona WWW. Pisząc o konsoli mam na myśli konsolę linuksową i naprawdę tylko podstawowe polecenia typu cd, mkdir, rm, ls.
 
+Postaram się też odróżniać kiedy używamy mechanizmów Gatsby'ego, kiedy samego Reacta, a kiedy jest to sam JS.
+
 ### Start!
 
 Plan tego odcinka jest następujący:
@@ -124,7 +126,7 @@ Można zainstalować na kilka sposobów:
 
 Instalacja nieinteraktywna - używa domyślnego startera:
 
-```bash
+```
 $ gatsby new gatsbysite
 info Creating new site from git: https://github.com/gatsbyjs/gatsby-starter-default.git
 
@@ -187,7 +189,7 @@ Najpierw trzeba utworzyć katalog, w którym powstanie strona (w tym przykładzi
 
 Przechodzimy do tego katalogu głównego strony i wydajemy trzy polecenia, pierwsze tworzy package.json zawierający kompletną informację o zainstalowanych pakietach Node'a (na razie nie ma żadnych), drugie inicjalizuje repo gita, trzecie instaluje Reacta i Gatsby'ego:
 
-```shell
+```
 $ mkdir gfs
 $ cd gfs
 gfs$ npm init -y

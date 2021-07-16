@@ -16,7 +16,6 @@ nav.breadcrumb ol a {display: block; padding: 10px 1rem; }
 nav.breadcrumb ol span {padding: 10px;}
 nav.breadcrumb ol li:last-of-type a {pointer-events: none; color: rgba(51, 51, 51, .3); text-shadow: 1px 1px rgba(51, 51, 51, .3); text-decoration: none; }
 
-code.language-shell:before {content: '$ '; font-weight: bold;}
 
 @media (min-width:800px) {
     nav.breadcrumb ol {

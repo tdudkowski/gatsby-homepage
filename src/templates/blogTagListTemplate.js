@@ -1,15 +1,19 @@
 import * as React from "react";
 import { Link, graphql } from "gatsby";
+import { Helmet } from 'react-helmet'
 import LayoutBlog from "../components/layout-blog"
 
 const blogPage = ({ data, location }) => {
 
     const tag = location.pathname.slice(10)
+    const path = location.pathname
+    const headerTitle = `dygresje.info / blog: tag: ${tag}`
 
     const filteredPosts = [...data.allMdx.nodes].filter(item => item.frontmatter.tags.includes(tag))
 
     return (
-        <LayoutBlog>
+        <LayoutBlog path={path}>
+            <Helmet title={headerTitle} defer={false} />
             <article>
                 <h2>Posty z tagiem <span>{tag}</span></h2>
                 <section>

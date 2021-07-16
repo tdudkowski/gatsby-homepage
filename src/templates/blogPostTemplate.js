@@ -1,17 +1,22 @@
 import React from "react";
 import { Link, graphql } from "gatsby";
+import { Helmet } from 'react-helmet'
 import { MDXRenderer } from "gatsby-plugin-mdx"
 import { GatsbyImage, getImage } from "gatsby-plugin-image"
 import LayoutBlog from "../components/layout-blog"
 
-const blogPage = ({ data }) => {
+const blogPage = ({ data, location }) => {
 
+   const path = location.pathname
    const { frontmatter, id, body, slug } = data.mdx;
+   const { title: pageTitle, date, update, image } = frontmatter;
+   const headerTitle = `dygresje.info / blog: ${frontmatter.title}`
 
    const tagsArray = [...frontmatter.tags.split(",")]
 
    return (
-      <LayoutBlog data={data}>
+      <LayoutBlog data={data} path={path}>
+         <Helmet title={headerTitle} defer={false} />
          <h2>{frontmatter.title}</h2>
          {frontmatter.date ? <p>Data publikacji: {frontmatter.date}</p> : null}
          {frontmatter.edited ? <p>Ostatnia edycja: {frontmatter.edited}</p> : null}

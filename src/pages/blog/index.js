@@ -2,7 +2,7 @@ import * as React from "react"
 import { Link, graphql } from "gatsby"
 import styled from "styled-components"
 import LayoutBlog from "../../components/layout-blog"
-import { StaticImage, GatsbyImage, getImage } from "gatsby-plugin-image"
+import { Helmet } from 'react-helmet'
 
 const StyledSection = styled.section`
 display:flex;
@@ -22,9 +22,13 @@ const StyledDiv = styled.div`
   & a {background-color: rgba(51,51,51,.8); color:#ddd; display:block; font-size:1.2rem; text-align:center; padding: .5rem; margin:auto 0; vertical-align:middle; }
 `;
 
-const IndexBlog = ({ data }) => {
+const IndexBlog = ({ data, location }) => {
 
-  return (<LayoutBlog>
+  const headerTitle = `dygresje.info / blog - wpisy`
+  const path = location.pathname
+
+  return (<LayoutBlog path={path}>
+    <Helmet title={headerTitle} defer={false} />
     <article>
 
       <h3>Lista wpisów:</h3>
