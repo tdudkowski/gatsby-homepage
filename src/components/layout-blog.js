@@ -6,6 +6,8 @@ import Footer from "./footer"
 import ToC from "./toc"
 import "./layout-fb.css"
 import "./layout.css"
+import {Helmet} from "react-helmet";
+import SEO from "../components/seo";
 
 const StyledHeader = styled.header`
     background-color: rgba(51,51,51,.9);
@@ -48,9 +50,12 @@ const LayoutBlog = ({ children, data, path }) => {
         const { frontmatter, id, body, slug } = data.mdx
         tagsArray = [...frontmatter.tags.split(",")]
     }
-console.log(path)
+    const headerTitle = `blog - strona główna`
+
     return (
         <div className="container">
+            <SEO title={headerTitle} defer={false} />
+
             <StyledHeader>
                 <Navigation />
                 <Link to="/blog"><h2>Blog</h2></Link>
