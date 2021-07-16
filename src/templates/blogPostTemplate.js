@@ -18,7 +18,7 @@ const blogPage = ({ data, location }) => {
 
    return (
       <LayoutBlog data={data} path={path}>
-          <SEO title={headerTitle} image={image.childImageSharp.gatsbyImageData.images.fallback.src} defer={false} />
+         <SEO title={headerTitle} image={image.childImageSharp.gatsbyImageData.images.fallback.src} defer={false} />
          <Helmet title={headerTitle} image={image} defer={false} />
          <h2>{frontmatter.title}</h2>
          {date ? <p>Data publikacji: {date}</p> : null}
@@ -46,7 +46,7 @@ export const query = graphql`
         image {
            childImageSharp {
               gatsbyImageData(
-                 width: 600
+                 width: 1200
                  placeholder: BLURRED
                  formats: [AUTO, WEBP]
                  )
