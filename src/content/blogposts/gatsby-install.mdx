@@ -1,9 +1,9 @@
 ---
-title: "Gatsby instalacja"
+title: "Gatsby cz. 1 - instalacja"
 section: "blog"
 subsection: "it"
-date: 2021-07-16
-edited: 2021-07-16
+date: 2021-07-19
+edited: 2021-07-19
 image: ../images/Gatsby_Monogram.png
 tags: react, gatsby
 ---
@@ -15,24 +15,25 @@ Bloga rozpoczynam serią wpisów o [Gatsby'm](https://www.gatsbyjs.com/), popula
 - Informacja, podstawy, metody instalacji i własny, Gatsby From Scratch, hierarchia katalogów, konfiguracja, pierwsza działająca strona.
 - Komponenty, layout.js i komponenty layoutu. Budowa struktury strony. Komponent Link.
 - Pluginy, instalacja pluginów, lista podstawowych i konfiguracja; plik konfiguracyjny gatsby-config.js.
-- GraphQL, idea i na przykładzie gatsby-node.js oraz pluginu od obsługi obrazków: gatsby-image-plugin.
 - CSS: wszystkie metody aplikacji CSS.
+- GraphQL, idea i na przykładzie pluginu od obsługi obrazków: gatsby-image-plugin.
 - Deploy: Github, Netlify, Gatsby Cloud
-- Blog cz 1. MDX, programistyczne tworzenie stron z gastby-node.js i File System Route API, automatyczne generowanie tagów
-- Blog cz 2, Headless CMS
+- Blog cz. 1. MDX, programistyczne tworzenie stron z gastby-node.js i File System Route API
+- Blog cz. 2, automatyczne generowanie tagów
+- Headless CMS
 - PWA, SSR
 
-Plan ten, szczególnie od odcinka o deployu jest dość płynny, ale większość treści jest już napisana, więc zostanie zrealizowany. Kolejne odcinki powinny być publikowane przynajnmniej raz w tygodniu.
+Plan ten, szczególnie od odcinka o deployu jest dość płynny, ale większość treści jest już napisana, więc zostanie zrealizowany. Kolejne odcinki powinny być publikowane przynajmniej raz w tygodniu.
 
 Nie tylko plan jest płynny, sama seria wpisów również będzie podlegać zmianom i uaktualnieniom. Jako osobny odcinek powstanie aktualizowany spis treści z dokładnym opisem zawartości - więc ostatecznie będzie to też kurs rozciągnięty na wiele odcinków bloga.
 
 Polecam darmowy kurs Przeprogramowanych: [Gatsby - krok po kroku, od zera do gotowej aplikacji](https://przeprogramowani.pl/darmowy-kurs-gatsby), jest to seria, w tej chwili siedmiu artykułów, na pewno wartych przeczytania. Lektura obowiązkowa.
 
-Co zaś do formuły treści: mnie najbardziej interesuje nie teoria a konkretny sposób budowania rzeczy. Więcej się nauczyłem z analizy kodu niż kilobajtów dokumentacji (ma to też wiele wad, więc nie zalecam; niech każdy robi tak jak lubi/chce/musi, w tej kolejności). Dlatego czasem będzie to prezentacja większych fragmentów kodu z kilkoma ważnymi elementami i w miarę dokładnym opisem tego co się tam dzieje. Uważam, że jest to szybsze niż składanie działajacej maszyny z drobnych porozrzucanych po całym artykule kawałków. Mając od razu działający kod szybko można przejść do eksperymentów i łatwiej zapamiętać to co się udało zrozumieć.
+Co zaś do formuły treści: mnie najbardziej interesuje nie teoria a konkretny sposób budowania rzeczy. Więcej się nauczyłem z analizy kodu niż kilobajtów dokumentacji (ma to też wiele wad, więc nie zalecam; niech każdy robi tak jak lubi/chce/musi, w tej kolejności). Dlatego czasem będzie to prezentacja większych fragmentów kodu z kilkoma ważnymi elementami i w miarę dokładnym opisem tego co się tam dzieje. Uważam, że jest to szybsze niż składanie działającej maszyny z drobnych porozrzucanych po całym artykule kawałków. Mając od razu działający kod szybko można przejść do eksperymentów i łatwiej zapamiętać to, co się udało zrozumieć.
 
-Założeniem każdego odcinka serii jest bycie success-complete, chodzi o to, żeby po przeczytaniu można było coś zbudować. W tym odcinku zobaczysz własną stronę w Gatsby'm.
+Założeniem każdego odcinka serii jest bycie success-complete, chodzi o to, żeby po przeczytaniu można było coś zbudować. W tym odcinku zobaczysz własną stronę w Gatsbym.
 
-Zakładam, że czytelnik dobrze zna podstawy JS, rozumie jak działa React i JSX, używa gita, umie poruszać się w konsoli i wie jak działa strona WWW. Pisząc o konsoli mam na myśli konsolę linuksową i naprawdę tylko podstawowe polecenia typu cd, mkdir, rm, ls.
+Zakładam, że czytelnik dobrze zna podstawy JS, rozumie jak działa React i zna [JSX](https://reactjs.org/docs/introducing-jsx.html), używa gita, umie poruszać się w konsoli i wie jak działa strona WWW. Pisząc o konsoli, mam na myśli konsolę linuksową i naprawdę tylko podstawowe polecenia typu cd, mkdir, rm, ls.
 
 Postaram się też odróżniać kiedy używamy mechanizmów Gatsby'ego, kiedy samego Reacta, a kiedy jest to sam JS.
 
@@ -50,7 +51,7 @@ A więc do dzieła!
 
 ### Podstawowe informacje
 
-JavaScript to język programowania wprowadzony w przeglądarkach internetowych w 1995. Bardzo długo prymitywne narzędzie do uzyskania irytujacych użytkownika, tanich efektów na stronach typu padający śnieg. Ograniczeniem był fakt, że jedynym środowiskiem uruchomienionym był silnik przeglądarki, więc kod JS można było powiązać ze stroną internetową. Po jej uruchomieniu w przeglądarce mógł się wykonywać lokalnie, nie mając żadnej łączności z serwerem. Rozwiązanie tylko client-side. Do poważnych zastosowań używano PHP, który z kolei był i wciąż jest serwer-side.
+JavaScript to język programowania wprowadzony w przeglądarkach internetowych w 1995. Bardzo długo prymitywne narzędzie do uzyskania irytujących użytkownika, tanich efektów na stronach typu padający śnieg. Ograniczeniem był fakt, że jedynym środowiskiem uruchomieniowym był silnik przeglądarki, więc kod JS można było powiązać ze stroną internetową. Po jej uruchomieniu w przeglądarce mógł się wykonywać lokalnie, nie mając żadnej łączności z serwerem. Rozwiązanie tylko client-side. Do poważnych zastosowań używano PHP, który z kolei był i wciąż jest serwer-side.
 
 Zmieniło się to w końcu pierwszej dekady XXI wieku.
 
@@ -64,17 +65,17 @@ Zmieniło się to w końcu pierwszej dekady XXI wieku.
 - 2017 [Gatsby.js](https://www.gatsbyjs.com/) kreator statycznych stron, framework Reacta.
 - 2020 [Deno](https://deno.land/) 1.0 - Ryan Dahl, twórca Node'a niezadowolony z kierunku jego rozwoju, stworzył jego alternatywę. Czy osiągnie sukces? Zobaczymy.
 
-Bo dobrze. Ale czym własciwie jest Gatsby i dlaczego warto się nim zainteresować? Przecież jest WordPress...
+Bo dobrze. Ale czym właściwie jest Gatsby i dlaczego warto się nim zainteresować? Przecież jest WordPress...
 
-Wcale nie ironizuję. Worpress jest i pozostanie najważniejszym system publikacji treści. Szacunki są różne, nie jest to łatwo policzyć, ale na pewno ponad połowa stron WWW to WordPress. Największa i najlepsza konkurencja nic tu nie zmieni.
+Wcale nie ironizuję. WordPress jest i pozostanie najważniejszym system publikacji treści. Szacunki są różne, nie jest to łatwo policzyć, ale na pewno ponad połowa stron WWW to WordPress. Największa i najlepsza konkurencja nic tu nie zmieni.
 
-Wciąż jest wiele zastosowań, w których dobrze znane i sprawdzone w boju CMS-y takie jak WordPress są najlepszym rozwiązaniem. Ale jest ogromny sektor rynku, w którym już są i zawsze będą gorszą opcją. To wcale nie jest przypadek, ani fanaberia, że witryny wielu wielkich brandów są zbudowane na Reaccie (oj jak to się źle odmienia!)... dobrze, przy użyciu Reacta, Nexta czy Gatsby'ego. Dlaczego tak postąpili to jest temat na osobną dyskusję i tu zapraszam zarówno na znakomity film Adama Romańskiego ["React vs. Next vs. Gatsby – czym się różnią? ⌨️ hello roman #84" [YT 18:19]](https://www.youtube.com/watch?v=sip8r9PMbFQ), jak i wstęp w mocno już w tej chwili przestarzałym i wymagającym poprawy moim [artykule o Gatsby'm](/it/js/gatsby). Jego początek może być wprowadzeniem w tę tematykę.
+Wciąż jest wiele zastosowań, w których dobrze znane i sprawdzone w boju CMS-y takie jak WordPress są najlepszym rozwiązaniem. Jest jednak ogromny sektor rynku, w którym już są i zawsze będą gorszą opcją. To wcale nie jest przypadek, ani fanaberia, że witryny wielu wielkich brandów są zbudowane na Reaccie (oj jak to się źle odmienia!)... dobrze, przy użyciu Reacta, Nexta czy Gatsby'ego. Dlaczego tak postąpili, to jest temat na osobną dyskusję i tu zapraszam zarówno na znakomity film Adama Romańskiego ["React vs. Next vs. Gatsby – czym się różnią? ⌨️ hello roman #84" [YT 18:19]](https://www.youtube.com/watch?v=sip8r9PMbFQ), jak i wstęp w mocno już w tej chwili przestarzałym i wymagającym poprawy moim [artykule o Gatsby'm](/it/js/gatsby). Jego początek może być wprowadzeniem w tę tematykę.
 
-W skrócie: React jest diablo szybkim i relatywnie łatwym (przynajmniej w podstawach) do poznania prawie-frameworkiem (formalnie to biblioteka) JS. I można w nim tworzyć strony. Ale mają słabe SEO. Gatsby opakowuje wszystkie dobre właściwości Reacta dodając - no właśnie - framework wyspecjalizowany do tworzenia stron i aplikacji WWW. Gatsby to też React i wszystko co możesz zrobić w Reaccie, możesz zrobić w Gatsby'm. W każdym razie prawie wszystko, ponieważ jest to głównie generator stron statycznych, nie zawsze jest to dobry pomysł.
+W skrócie: React jest diablo szybkim i relatywnie łatwym (przynajmniej w podstawach) do poznania prawie-frameworkiem (formalnie to biblioteka) JS. I można w nim tworzyć strony. Wadą jest słabe SEO. Gatsby opakowuje wszystkie dobre właściwości Reacta dodając - no właśnie - framework wyspecjalizowany do tworzenia stron i aplikacji WWW. Gatsby to też React i wszystko co możesz zrobić w Reaccie, możesz zrobić w Gatsbym. W każdym razie prawie wszystko, ponieważ jest to głównie generator stron statycznych, nie zawsze jest to dobry pomysł.
 
-Gatsby najlepiej sprawdza się tam gdzie aktualizacje treści nie są zbyt częste. Na przykład na mojej stronie nie przewiduję częstszej aktualizacji niż raz dziennie i tu Gatsby sprawdza się doskonale. Jest szybki, jest zoptymalizowany, nie potrzebuje bazy danych, jest też elastyczny - bo to JavaScirpt i można w nim napisać wszystko. Nawet jeśli by mi padł komputer, całe archiwum strony mam na GitHubie. Hosting zapewnia Netlify, który jest zupełnie za darmo do 300 minut buildu miesięcznie i nigdy tego limitu nie przekroczyłem, a mam tam wiele stron. Netlify daje świetny, skutecznie filtrujący spam formularz kontaktowy.
+Gatsby najlepiej sprawdza się tam, gdzie aktualizacje treści nie są zbyt częste. Na przykład na mojej stronie nie przewiduję częstszej aktualizacji niż raz dziennie i tu Gatsby jest świetnym rozwiązaniem. Jest szybki, jest zoptymalizowany, nie potrzebuje bazy danych, jest też elastyczny - bo to JavaScirpt i można w nim napisać wszystko. Nawet jeśli by mi padł komputer, całe archiwum strony mam na GitHubie. Hosting zapewnia [Netlify](https://www.netlify.com/), który jest zupełnie za darmo do 300 minut buildu miesięcznie i nigdy tego limitu nie przekroczyłem, a mam tam wiele stron. Netlify daje świetny, skutecznie filtrujący spam formularz kontaktowy oraz SSL, również gratis. Inną opcją jest [Gatsby Cloud](https://www.gatsbyjs.com/products/cloud/).
 
-Treść stron Gatsby'ego to znany z Reacta JSX lub pliki Markdowna (albo .md, albo .mdx). Ale można skonfigurować go tak, żeby nową treść można było dodawać z innych źródeł tzw. Headless CMS-ów. Czyli edytor loguje się na WordPressa, tam pisze artykuł w znanym sobie środowisku edycyjnym, klika i - cyk! - Gatsby na serwerze budzi się, pobiera nową treść, kompiluje się na nowo i po pewnym czasie (tyle ile zajmuje build, u mnie jest to zwykle 6 minut), nowy artykuł pojawia się online.
+Treść stron Gatsby'ego to znany z Reacta JSX lub pliki Markdown (albo .md, albo .mdx). Dodatkowo można skonfigurować go tak, żeby nową treść dodawać z innych źródeł tzw. Headless CMS-ów. Czyli edytor loguje się na WordPressa, tam pisze artykuł w znanym sobie środowisku edycyjnym, klika i - cyk! - Gatsby na serwerze budzi się, pobiera nową treść, kompiluje się na nowo i po pewnym czasie (tyle ile zajmuje build, u mnie jest to zwykle 6 minut), nowy artykuł pojawia się online.
 
 Ma to tę zaletę, że zbuildowana strona statyczna jest odporna na atak, a edycji i dodawania treści można dokonywać w osobnym środowisku. Natomiast wadą jest to, że dodanie wymaga kompilacji, której czas wciąż jest największą bolączką Gatsby'ego.
 
@@ -84,25 +85,25 @@ Potrzebujemy zainstalować trzy rzeczy:
 
 - System kontroli wersji [Git](https://git-scm.com/).
 - [Node.js](https://nodejs.org/en/), z którym domyślnie dostajemy system zarządzania pakietami [npm](https://www.npmjs.com/), alternatywnie może być to też [yarn](https://yarnpkg.com/).
-- [gatsby-cli](https://www.gatsbyjs.com/docs/reference/gatsby-cli/) jak sama nazwa wskazuje CLI (Command Line Interface) Gatsby'ego. Instalowany poleceniem `npm install -g gatsby-cli`.
+- [gatsby-cli](https://www.gatsbyjs.com/docs/reference/gatsby-cli/) jak sama nazwa wskazuje CLI (Command Line Interface) Gatsby'ego. Instalowany poleceniem `npm i -g gatsby-cli`.
 
-Wszystkie powinny być zainstalowane w przestrzeni globalnej w kontekście użytkownika, tzn. jesli jest to twój komputer to #, a jesli jesteś jednym z uzytkowników i nie masz uprawnień administracyjnych to ~/user - chodzi o to, żebyś mógł aktualizować pakiety.
+Wszystkie powinny być zainstalowane w przestrzeni globalnej w kontekście użytkownika, tzn. jesli jest to twój komputer to #, a jeśli jesteś jednym z użytkowników i nie masz uprawnień administracyjnych to ~/user - chodzi o to, żebyś mógł aktualizować pakiety.
 
 Opcjonalnie do zarządzania różnymi wersjami Node'a - [nvm-sh / nvm](https://github.com/nvm-sh/nvm)
 
 ### Deweloping
 
-Jeszcze zanim przjedziemy do instalacji, trzeba wyjasnić jedną rzecz - jak wygląda tworzenie i publikacja strony w Gatsby'm.
+Jeszcze zanim przejedziemy do instalacji, trzeba wyjaśnić jedną rzecz - jak wygląda tworzenie i publikacja strony w Gatsbym.
 
 - **Instalacja** - opisana poniżej - trzeba mieć świadomość, że cały katalog ze środowiskiem deweloperskim zajmuje od 250 do ponad 500 MB.
 - **Uruchomienie środowiska deweloperskiego** poleceniem `gatsby develop`, na tym etapie dokonuje się wlaściwe tworzenie strony. Efekt widoczny jest pod adresem `localhost:8000`. środowisko zapewnia hot-loading, co znaczy że reaguje na dokonane zmiany, zapisuje je i od razu przerysowuje stronę, ale trzeba mieć świadomość, że każda zmiana w którymś z plików konfiguracyjnych /gatsby-*.js wymaga restartu środowiska, a to zajmuje zależnie od wielkości strony od minuty do ponad 10 minut. Wiec od razu przygotuj sobie jakąś książkę do poczytania na boku ;-)
-- **Build**, ciężko to przetłumaczyć na polski, bo "budowanie" niewiele tu mówi. Samo środowisko deweloperskie zapewnia serwer i działanie strony, ale jest to bardzo nieoptymalne, strony są generowane w locie i jak już pisałem wszystko wymaga ponad 200 MB miejsca oraz dość sporej mocy obliczeniowej. Natomiast Build kompiluje to co napisaliśmy, łącznie z udostępnionymi zasobami w zoptymalizowany, statyczny produkt końcowy. Build uruchamia się poleceniem `gatsby build`. Zajmuje to - takie mam wrażenie - trochę krócej niż uruchomienie środowiska deweloperskiego. Ponieważ rysuje od razu cała stronę, jest też bardziej wymagające. Build potrafi wywalić się na kodzie, który dla środowiska deweloperskiego był OK. Więc po każdej poważniejszej zmianie, przed wysłaniem na serwer dobrze jest sprawdzić czy działa build lokalny. Żeby zobaczyć stronę tak zbudowaną uruchamiany serwer poleceniem `gatsby serve` i po chwili możemy zobaczyć pod adresem `localhost:9000`. To co zobaczymy to statyczny efekt, który nie podlega zmianom.
-- **Deploy** czyli wysłanie na serwer zewnętrzny, publikacja strony online. O tym będzie w osobnym wpisie.
+- **Build**, ciężko to przetłumaczyć na polski, bo "budowanie" niewiele tu mówi. Samo środowisko deweloperskie zapewnia serwer i działanie strony, ale jest to bardzo nieoptymalne, strony są generowane w locie i jak już pisałem, wszystko wymaga ponad 200 MB miejsca oraz dość sporej mocy obliczeniowej. Natomiast Build kompiluje to, co napisaliśmy, łącznie z udostępnionymi zasobami w zoptymalizowany, statyczny produkt końcowy. Build uruchamia się poleceniem `gatsby build`. Zajmuje to - takie mam wrażenie - trochę krócej niż uruchomienie środowiska deweloperskiego. Ponieważ rysuje od razu cała stronę, jest też bardziej wymagające. Build potrafi wywalić się na kodzie, który dla środowiska deweloperskiego był OK. Więc po każdej poważniejszej zmianie, przed wysłaniem na serwer dobrze jest sprawdzić, czy działa build lokalny. Żeby zobaczyć stronę tak zbudowaną uruchamiany serwer poleceniem `gatsby serve` i po chwili możemy zobaczyć pod adresem `localhost:9000`. To, co zobaczymy to statyczny efekt, który nie podlega zmianom.
+- **Deploy** czyli wysłanie na serwer zewnętrzny, publikacja strony online. O tym będzie w osobnym wpisie. Jeżeli kod się nie skompiluje na serwerze, poprzednia wersja strony pozostaje.
 
 Najkrócej mówiąc:
 
 - `gatsby develop` to jest wersja deweloperska, zmienia się na bieżąco.
-- `gatsby build` to jest wersja produkcyjna, statyczna
+- `gatsby build` to jest wersja produkcyjna, statyczna.
 
 Tak więc podstawowe polecenia:
 
@@ -111,7 +112,7 @@ Tak więc podstawowe polecenia:
 - `gatsby serve` - uruchomienie serwera dla buildu
 - `gatsby clean` - czyszczenie bufora, kasuje katalogi .cache i public
 - `npm outdated` - sprawdzenie czy mamy jakieś pakiedy Node'a do aktualizacji
-- `npm update` - update wszyskich pakietów
+- `npm update` - update wszystkich pakietów
 
 Więcej o pakietach w osobnym wpisie im poświęconym.
 
@@ -176,14 +177,14 @@ Zawsze czytajcie komunikaty, szczególnie komunikaty błędów.
 
 ### Gatsby From Scratch
 
-Żeby utworzyć działającą stronę w trybie instalacji od zera potrzebne są następujące działania:
+Żeby utworzyć działającą stronę w trybie instalacji od zera, potrzebne są następujące działania:
 
 - utworzenie katalogu
 - inicjalizacja npm
 - inicjalizacja gita
 - instalacja Reacta i Gatby'ego
 - utworzenie pliku konfiguracyjnego gatsby-config.js
-- utworzenie plików stron w /src/pages; potrzebujemy przynajmniej dwóch: index.js i 4404.js
+- utworzenie plików stron w /src/pages; potrzebujemy przynajmniej dwóch: index.js i 404.js
 
 Najpierw trzeba utworzyć katalog, w którym powstanie strona (w tym przykładzie: gfs). Będzie to katalog główny strony.
 
@@ -197,11 +198,11 @@ gfs$ git init
 gfs$ npm i gatsby react react-dom
 ```
 
-Dokładnie wygląda tak.
+Dokładnie wygląda to tak:
 
 1. Utworzenie npm
 
-```bash
+```
 $ npm init -y
 Wrote to /media/tadek/shared/GitShared/Gatsby/hmp-archive/hmp-test/package.json:
 
@@ -262,11 +263,11 @@ $ ls -A
 .git .gitignore node_modules package.json package-lock.json
 ```
 
-Całość zajmuje ok 250 MB.
+Całość zajmuje ok. 250 MB.
 
 Ponieważ w tego typu instalacji nie używamy żadnego startera, wszystkie katalogi i pliki konfiguracyjne trzeba stworzyć samemu. Są dwa plusy takiego postępowania: 1) nie powstaną żadne niepotrzebne 2) nie jest ich wiele.
 
-Przede wszystkim jest to główny katalog, w którym powstaje strona, czyli /src oraz główny katalog konfiguracyjny czyli /gatsby-config.js.
+Przede wszystkim jest to główny katalog, w którym powstaje strona, czyli /src oraz główny katalog konfiguracyjny, czyli /gatsby-config.js.
 
 Plik gatsby-config.js na starcie może wyglądać tak:
 
@@ -298,16 +299,16 @@ module.exports = {
 
 ### Struktura katalogów i plików
 
-Uwaga, poniżej przedstawiona jest docelowa struktura, część z nich tworzona jest w procesie buildowania, część z nich nie beðzie nam potrzebna. Cała nasza praca ogranicza się do katalogu /src oraz plików konfiguracyjnych w katalogu głównym: przede wszystkim gatsby-config.js, czasem też gatsby-node.js, dużo rzadziej gatsby-browser.js i gatsby-ssr.js.
+Uwaga, poniżej przedstawiona jest docelowa struktura, część z nich tworzona jest w procesie buildowania, część z nich nie będzie nam potrzebna. Cała nasza praca ogranicza się do katalogu /src oraz plików konfiguracyjnych w katalogu głównym: przede wszystkim gatsby-config.js, czasem też gatsby-node.js, dużo rzadziej gatsby-browser.js i gatsby-ssr.js.
 
-- /.cache - jak sama nazwa wskazuje jest to bufor, tworzony jest podczas buildu
+- /.cache - jak sama nazwa wskazuje, jest to bufor, tworzony jest podczas buildu
 - /.git - katalog gita
 - /node_modules - pakiety NodeJS, można go w przypadku niektórych problemów skasować (`rm -rf node_modules`) i zainstalować je na nowo poleceniem `npm i`
-- /public - powstaje dopiero w procesie builu, automatycznie; zawiera statyczny, wygenerowany przez Gatsby'ego build, można go bez strat skasować i wygenerować nowy build (`gatsby -clean && gatsby -build`)
+- /public - powstaje dopiero w procesie buildu, automatycznie; zawiera statyczny, wygenerowany przez Gatsby'ego build, można go bez strat skasować i wygenerować nowy build (`gatsby -clean && gatsby -build`)
 - /src - oprócz plików konfiguracyjnych w katalogu głównym, jedyny katalog, w którym mamy coś do zrobienia, to tu powstaje strona.
   - /components - komponenty, czyli powtarzalne elementy strony: np. layout.js
-  - /images - pliki, może być /assets
-  - /pages - podstrony - jest to jedyny katalog w /src którego obecność i nazwa jest obligatoryjna, używanie i nazwy pozostałych katalogów to konwencja
+  - /images - pliki, może być /assets szczególnie jeśli mamy kilka rodzajów mediów: obrazki, pliki dźwiękowe, svg...
+  - /pages - podstrony - jest to jedyny katalog w /src, którego obecność i nazwa jest obligatoryjna, używanie i nazwy pozostałych katalogów to konwencja
   - /styles - CSS jeżeli potrzebujemy osobnego katalogu dla stylów
   - /templates - szablony stron generowanych programistycznie
 - gatsby-browser.js - opcjonalny; globalny wrapper dla komponentów [Gatsby Browser APIs](https://www.gatsbyjs.com/docs/reference/config-files/gatsby-browser/)
@@ -315,12 +316,29 @@ Uwaga, poniżej przedstawiona jest docelowa struktura, część z nich tworzona 
 - gatsby-node.js - opcjonalny; programistyczne tworzenie stron [Gatsby Node APIs](https://www.gatsbyjs.com/docs/reference/config-files/gatsby-node/)
 - .gitignore - plik gita
 - log.md - to moja propozycja, notatnik wszystkich ważnych działań administracyjnych, trzeba dodać do gitignora
-- package.json - informacja dla npm-a jakie moduły są zainstalowane, raczej nie zmieniać, czasem trzeba dokonać zmian w ograniczeniach update, powinnismy zadbać o archiwizację, (najlepsza jest ta na Githubie)
+- package.json - informacja dla npm-a jakie moduły są zainstalowane, raczej nie zmieniać, czasem trzeba dokonać zmian w ograniczeniach update, powinniśmy zadbać o archiwizację, (najlepsza jest ta na Githubie)
 - package-lock.json - kompletne info dla npm, nie do edycji
 
 ### Uruchamiamy stronę - home, about, Link
 
 W katalogu /src tworzymy katalog pages (obie nazwy są obowiązkowe), w którym znajdują się pliki strony, to właśnie tam Gatsby szuka pliku index.js, który jest domyślnym plikiem strony głównej.
+
+Schemat plików stron w /src/pages/
+
+```js
+import React from 'react';
+
+const NazwaPodstrony = () => {
+  return (
+      ... treść strony w JSX
+  )}
+  
+export default NazwaPodstrony
+```
+
+Jak widać, jest to typowa strona Reacta: zaczyna się od importów, potem jest utworzenie modułu i na końcu jego eksport. Nie powinien to być anonimowy moduł (od pewnego czasu Gatsby traktuje to jako błąd, nie wywala to strony, ale dostajemy zgłoszenie błędu). Treść to znany z Reacta JSX.
+
+Poniżej najprostszy przykład strony Gatsby'ego.
 
 **/src/pages/index.js**
 
@@ -336,16 +354,7 @@ const IndexPage = () => {
 export default IndexPage
 ```
 
-Czyli, jak widać, jest to typowa strona Reacta: zaczyna się od importów, potem jest utworzenie modułu i na końcu jego eksport. Nie powinien to być anonimowy moduł (od pewnego czasu Gatsby traktuje to jako błąd - nie wywala to strony, ale dostajemy zgłoszenie błędu). Treść to znany z Reacta JSX.
-
 Oprócz pliku index.js, wymagany jest domyślny 404.
-
-Proszę zwrócić uwagę na import wbudowanego komponentu Link ([Gatsby Link API](https://www.gatsbyjs.com/docs/reference/built-in-components/gatsby-link/)). Używamy go do linków wewnętrznych strony. Do linków zewnętrznych, oraz kotwic wewnątrz podstrony używamy zwykłych odnośników.
-
-Stosowanie komponentu Link oprócz wewnętrznej optymalizacji zapewnia dwie rzeczy:
-
-- ładowanie nowej treści bez przeładowywania strony
-- możliwość znana z komponentu Reacta NavLink, można dodać do Link parametr `activeClassName="active"` definiujący nazwę klasy automatycznie nadawanej aktywnym linkom.
 
 **/src/pages/404.js**
 
@@ -365,21 +374,14 @@ const PageNotFound = () => {
 export default PageNotFound
 ```
 
-Teraz już możemy uruchomić środowisko deweloperskie poleceniem `gatsby develop` i jak zakończy się powodzeniem zobaczyć stronę pod adresem `localhost:8000`.
+Tu dodatkowo pojawia się import wbudowanego komponentu Link ([Gatsby Link API](https://www.gatsbyjs.com/docs/reference/built-in-components/gatsby-link/)). Używamy go do linków wewnętrznych strony. Do linków zewnętrznych oraz kotwic wewnątrz podstrony używamy zwykłych odnośników.
 
-Schemat plików stron w /src/pages/
+Stosowanie komponentu Link oprócz wewnętrznej optymalizacji zapewnia dwie rzeczy:
 
-```js
-import React from 'react';
+- ładowanie nowej treści bez przeładowywania strony
+- możliwość znana z komponentu Reacta NavLink, można dodać do Link parametr `activeClassName="active"` definiujący nazwę klasy automatycznie nadawanej aktywnym linkom.
 
-const NazwaPodstrony = () => {
-  return (
-      ... treść strony
-  )}
-export default NazwaPodstrony
-```
-
-Trzeba pamiętać, że tak jak każdy komponent Reacta, treść strony musi być zawarta w jednym obejmującym wszystko tagu. Jeżeli nie chcemy dokładać kolejnego znacznika możemy zastosować React Fragments ([Fragments](https://reactjs.org/docs/fragments.html)). Według tego schematu przykładowa strona About z komponentem Link i React Fragment:
+Trzeba pamiętać, że tak jak każdy komponent Reacta, treść strony musi być zawarta w jednym obejmującym wszystko tagu. Jeżeli nie chcemy dokładać kolejnego znacznika, możemy zastosować React Fragments ([Fragments](https://reactjs.org/docs/fragments.html)). Według tego schematu przykładowa strona About z komponentem Link i React Fragment:
 
 **/src/pages/about.js**
 
@@ -398,6 +400,8 @@ const AboutPage = () => {
 
 export default AboutPage
 ```
+
+Teraz już możemy uruchomić środowisko deweloperskie poleceniem `gatsby develop` i jak zakończy się powodzeniem zobaczyć stronę pod adresem `localhost:8000`.
 
 ### Podsumowanie
 

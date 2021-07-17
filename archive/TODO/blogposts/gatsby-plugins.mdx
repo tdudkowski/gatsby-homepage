@@ -1,0 +1,301 @@
+---
+title: "Gatsby - pluginy"
+section: "blog"
+subsection: "it"
+date: 2021-07-03
+edited:
+img: ../images/gatsby.jpg
+tags: react, gatsby
+---
+
+### Wstęp
+
+W tym wpisie omówię kilka podstawowych pluginów, w większości przypadków są niezbędne, lub przynajmniej bardzo potrzebne. Szczegóły dotyczące instalacji i umieszczenia deklaracji w pliku /gatsby-config.js są w podanych linkach do pluginów.
+
+W kilku przypadkach dla jasności pokażę ja powinna wyglądać konfiguracja.
+
+Pakiety instaluje się z promptem umieszczonym w katalogu głównym strony.
+
+- gatsby-source-filesystem / dostęp do plików
+- gatsby-plugin-image / obrazki
+- gatsby-plugin-react-helmet / SEO, tagi meta w nagłówku
+- gatsby-plugin-google-gtag / Analityka Google'a
+- gatsby-plugin-styled-components / CSS styled-components
+- gatsby-remark-vscode / prezentacja kodu
+- gatsby-plugin-sitemap / sitemap.xml
+- gatsby-plugin-breadcrumb / breadcrumbs
+
+### Dostęp do plików - gatsby-source-filesystem
+
+To jest plugin do tego stopnia niezbędny, że w sumie dziwi mnie, że nie jest zintegrowany z frameworkiem. W przypadku niektorych pluginów w ogóle się nie wspomina, że "a i weź jeszcze zainstaluj source-filesystem", raczej zakłada się, że już jest.
+
+Wskazuje on Gatsby'emu ścieżki dostępu do plików poza katalogiem pages i jak widać poniżej dwie podstawowe opcje to nazwa i ścieżka dostępu. Dla każdej ścieżki wypisuje się osobny resolve. Wskazane katalogi muszą istnieć.
+
+Najczęsciej dotyczy to katalogu z obnrazkami, jeżeli mamy jakies inne pliki medióœ, np filmy, pliki dźwiękowe, .svg to zaleca się stworzenie katalogu /assets, który zawiera je wszystkie.
+
+**/gastby-config.js**
+
+```js
+        {
+            resolve: `gatsby-source-filesystem`,
+            options: {
+                name: `article`,
+                path: `${__dirname}/src/articles`,
+            },
+        },
+        {
+            resolve: `gatsby-source-filesystem`,
+            options: {
+                name: `image`,
+                path: `${__dirname}/src/images`,
+            },
+        },
+```
+
+- [gatsby-source-filesystem](https://www.gatsbyjs.com/plugins/gatsby-source-filesystem/)
+
+
+### Obrazki - gatsby-plugin-image
+
+Plugin, który zastąpił przedtem używany gatsby-image. Dokładny opis używania będzie w następnym wpisie o GraphQL.
+
+W zasadzie jest możliwe umieszczanie obrazków bez żadnego z tych pluginów, ale - najkrócej mówiąc - nie warto.
+
+```
+npm i gatsby-plugin-image gatsby-plugin-sharp gatsby-source-filesystem gatsby-transformer-sharp
+```
+
+- [gatsby-plugin-image](https://www.gatsbyjs.com/plugins/gatsby-plugin-image/)
+
+### SEO - gatsby-plugin-react-helmet
+
+Użytkownicy Reacta znają dobrze pakiet react-helmet, który umożliwia wpisanie tagów meta i innych parametrów do nagłówka strony. To jest wersja dla Gatsby'ego.
+
+```
+npm i gatsby-plugin-react-helmet react-helmet
+```
+
+- [gatsby-plugin-react-helmet](https://www.gatsbyjs.com/plugins/gatsby-plugin-react-helmet/)
+
+### Analityka Google Analytics - gatsby-plugin-google-gtag
+
+To jest plugin, który zastąpił dotychczasowe, poprzednie pluginy Google Analytics.
+
+```
+npm i gatsby-plugin-google-gtag
+```
+
+Tutaj mam okazję zaprezentować większy kawałek pliku gatsby-config.js. Identyfikator usługi Analytics lepiej jest ukryć w pliku .env.
+
+- Na początku pliku mamy wskazanie ścieżki do pliku .env.
+- Niżej w eksporcie modułów zadeklarowany jest moduł dotenv.
+- Na końcu zadekklarowany identyfikator usługi jako zmienna środowiskowa.
+
+**/gatsby-config.js**
+
+```js
+require("dotenv").config({
+    path: `.env`,
+})
+
+module.exports = {
+    siteMetadata: {
+// sitemetadata
+    },    
+    plugins: [
+        "dotenv",
+        {
+            resolve: `gatsby-plugin-google-gtag`,
+                 trackingIds: [
+                    process.env.GA_ID,  // Google Analytics / GA
+                ],
+                gtagConfig: {                    
+                    anonymize_ip: true,
+                    cookie_expires: 0,
+                },
+            },
+        },
+    ],
+}
+```
+
+- [gatsby-plugin-google-gtag](https://www.gatsbyjs.com/plugins/gatsby-plugin-google-gtag/)
+
+### CSS: Styled Components - gatsby-plugin-styled-components
+
+W przypadku małych stron wystarczą style globalne, lub po prostu importowane do layoutu. Ale przy większych projektach prawie zawsze najlepszym rozwiązaniem jest Styled Components.
+
+```
+npm i gatsby-plugin-styled-components styled-components babel-plugin-styled-components
+```
+
+- [gatsby-plugin-styled-components](https://www.gatsbyjs.com/plugins/gatsby-plugin-styled-components/)
+- [styled-components](https://styled-components.com/)
+
+### Prezentowanie kodu - gatsby-remark-vscode
+
+Tutaj jest wiele możliwości. Po pierwsze zależy to od tego czy treść strony umieszczamy w plikach JSX, czy w Markdownie.
+
+W przypadku JSX wygląda to tak:
+
+- PrismJS
+- Highlight
+- Backtiki i nawiasy wąsate wymagają znaku ucieczki.
+
+**/src/pages/any-page-with-code.js**
+
+```js
+import * as React, { useEffect } from 'react'
+import Prism from "prismjs"
+import "../../../styles/prism.css"
+
+const PageWithCode = () => {
+
+  useEffect(() => {
+    Prism.highlightAll()
+  }, [])
+
+  return (
+    <LayoutJS>
+      <p>treść:</p>
+
+      <pre>
+        <code className="language-javascript">
+          {`
+ npm i express -S
+  `}
+        </code>
+      </pre>
+```
+
+W przypadku Markdowna najlepszym rozwiązaniem jest wzmiankowany tu gatsby-remark-vscode.
+
+```
+npm i gatsby-plugin-styled-components styled-components babel-plugin-styled-components
+```
+
+Ale co jeżeli zdecydowaliśmy się na MDX? Jak sama nazwa wskazuje gatsby-remark-vscode jest pluginem Remarka i jego konfiguracja wg instrukcji nie zadziała. To są dwa oddzielne procesory.
+
+Rozwiązanie jest proste, wystarczy zadeklarować ten moduł wewnątrz deklaracji MDX, tak jak to jest zaprezentowane poniżej:
+
+**/gastby-config.js**
+
+```js
+       {
+            resolve: `gatsby-plugin-mdx`,
+            options: {
+                extensions: [".mdx", ".md"],
+                gatsbyRemarkPlugins: [
+                       {
+                        resolve: `gatsby-remark-vscode`,
+                        options: {
+                            theme: {
+                                default: 'Default Dark+',
+                            },
+                            inlineCode: {
+                                marker: '•',
+                                theme: {
+                                    default: 'Default Light+',
+                                }
+                            }
+                        },
+                    },
+                ],
+            },
+        },
+```
+
+- [gatsby-remark-vscode](https://www.gatsbyjs.com/plugins/gatsby-remark-vscode/)
+- [MDX](https://mdxjs.com/)
+- [remark - markdown processor powered by plugins](https://remark.js.org/)
+
+### Sitemap - gatsby-plugin-sitemap
+
+- [gatsby-plugin-sitemap](https://www.gatsbyjs.com/plugins/gatsby-plugin-sitemap/) | [Creating a Sitemap](https://www.gatsbyjs.com/docs/how-to/adding-common-features/creating-a-sitemap/)
+
+### Breadcrumb - gatsby-plugin-breadcrumb
+
+Instalacja
+
+```
+npm i gatsby-plugin-breadcrumb
+```
+
+Konfiguracja dla układu treści opisanego w pierwszym wpisie.
+
+**/gastby-config.js**
+
+```js
+        {
+            resolve: `gatsby-plugin-breadcrumb`,
+            options: {
+                useAutoGen: true,
+                autoGenHomeLabel: `Strona główna`,
+                exclude: [
+                    `/404/`,
+                    `/blog/`,
+                ],
+                // crumbLabelUpdates: optional, update specific crumbLabels in the path
+                crumbLabelUpdates: [
+                    {
+                        pathname: '/turystyka',
+                        crumbLabel: 'Turystyka'
+                    },
+                    {
+                        pathname: '/turystyka/brandenburgia',
+                        crumbLabel: 'Brandenburgia'
+                    },
+                    {
+                        pathname: '/turystyka/saksonia',
+                        crumbLabel: 'Saksonia'
+                    },
+                    {
+                        pathname: '/it',
+                        crumbLabel: 'IT'
+                    },
+                                        {
+                        pathname: '/it/js',
+                        crumbLabel: 'JavaScript'
+                    },
+                                        {
+                        pathname: '/it/css',
+                        crumbLabel: 'CSS'
+                    },
+                ],
+                trailingSlashes: false,
+            },
+        },
+```
+
+W przypadku JSX:
+
+**/src/pages/any-page-with-breadcrumb.js**
+
+```js
+import * as React from 'react'
+import { Breadcrumb } from 'gatsby-plugin-breadcrumb'
+
+const PageWithBreadcrumb = ({ pageContext }) => {
+	const {
+		breadcrumb: { crumbs },
+	} = pageContext
+
+	return (
+		<Layout>
+			<Breadcrumb
+				location={location}
+				crumbs={crumbs}
+				crumbSeparator=" / "
+				crumbLabel="Tytuł do wrzucenia w breadcrumb"
+			/>
+```
+
+Jeżeli używamy MDX wygląda to identycznie tyle że w pliku szablonu strony /src/templates/articleTemplate.js z tą różnicą, że crumbLabel najlepiej jest zadeklarować z frontmattera:
+
+```js
+        crumbLabel={frontmatter.title}
+```
+
+- [gatsby-plugin-breadcrumb](https://www.gatsbyjs.com/plugins/gatsby-plugin-breadcrumb/)
+
+### Search - search

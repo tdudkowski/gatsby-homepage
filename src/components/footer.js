@@ -8,6 +8,7 @@ const StyledFooter = styled.footer`
 & ul li {list-style-type:none; flex:1;}
 & ul li a {display:block; text-align:center; text-decoration:none; padding:10px 2rem;}
 & ul li a:hover {text-decoration:underline;}
+& div {text-align:center; margin:0; padding:1rem; background-color: #eec;}
   @media (min-width: 900px) {& ul { flex-direction:row;}}
 `;
 
@@ -34,6 +35,9 @@ const Footer = () => {
 
                 </ul>
             </nav>
+            <div>
+                Strona wykonana w <a href="https://www.gatsbyjs.com/">Gatsby</a> @2021; hosting <a href="https://www.netlify.com/">Netlify</a>
+            </div>
         </StyledFooter>)
 }
 export default Footer

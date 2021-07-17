@@ -3,7 +3,7 @@ import { Link, graphql } from "gatsby";
 import { MDXRenderer } from "gatsby-plugin-mdx";
 import { Helmet } from 'react-helmet'
 import LayoutFB from "../components/layout-fb"
-// import SEO from "react-seo-component";
+import SEO from "../components/seo";
 // import { useSiteMetadata } from "../hooks/useSiteMetadata";
 
 const articleFB = ({ data }) => {
@@ -12,7 +12,7 @@ const articleFB = ({ data }) => {
   const headerTitle = `Festung Breslau 1945 | ${pageTitle}`
   return (
     <LayoutFB sub="article">
-      <Helmet title={headerTitle} defer={false} />
+      <SEO title={headerTitle} defer={false} />
       <h2 className="post-header">{pageTitle}</h2>
       <p>Aktualizacja: {frontmatter.date}</p>
       <p><Link to="../../">Powrót do strony głównej Bloga</Link></p>

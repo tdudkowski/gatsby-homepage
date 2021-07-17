@@ -1,0 +1,143 @@
+---
+title: "Enigma - mechanika"
+section: "blog"
+subsection: "historia"
+date: 2021-07-12
+edited:
+img: ../images/Enigma-logo.jpg
+tags: enigma, kryptologia, wwii
+---
+
+### Wstęp
+
+Wyjaśnienie samej tylko mechaniki Enigmy, jej sposobu działania, bez wchodzenia w terminologię kryptologiczną, czy też opis matematyczny. Po kolei i dokładnie, z wszystkimi szczegółami.
+
+Dla jasności opis dotyczy pierwszej wojskowej wersji - Enigmy I wprowadzonej do Reichswehry w 1932. Posiada ona już wszystkie cechy tej maszyny i z nią zmagał się zespół Biura Szyfrów. Zmiany dokonane w późniejszych opisane są w osobnym rozdziale. Żadna z tych modyfikacji nie zmienia mechanizmu działania Enigmy.
+
+### Terminologia
+
+Używam tu pojęć za Bruce Schneider "Kryptografia dla praktyków".
+
+- **maszyna rotorowa** (ang. rotor machine; niem. die Rotor-Chiffriermaschine, die Rotor-Maschine)
+- **rotor** (wirnik, bębenek, walec; ang. rotor; niem. die Walze, der Rotor)
+- **rotor odbijający** (walec odwracający, bębenek odwracający; ang. reflector; niem. die Umkehrwalze)
+- **tablica przełączająca** (łącznica kablowa; ang. plugboard, niem. das Steckerbrett)
+- **klawiatura** (ang. keyboard, niem. die Tastatur)
+- ustawienie wirnika Ringstellung
+
+### Opis
+
+Interfejs użytkownika Enigmy składał się z czterech elementów:
+
+- tablica przełączająca: na frontowej ściance, służyła do wprowadzenia ustawień
+- klawiatura: u góry z przodu
+- panel z lampkami: u góry pośrodku, odczyt
+- karbowane pierścienie rotorów: u góry z tyłu, służyły do wprowadzenia ustawień
+
+Tekst jawny wprowadzano klawiaturą. Każde naciśnięcie jednego z 26 klawiszy uruchamiało szyfrowanie pojedynczego znaku. Rezultat pojawiał sie na panelu z lampkami - podświetlony znak był rezultatem procesu szyfrowania. Zatem każdy znak był szyfrowany osobno i rezultat zapisywano znak po znaku.
+
+#### Klawiatura
+
+Układ klawiatury:
+
+```
+Q   W   E   R   T   Z   U   I   O
+   A   S   D   F   G   H   J   K
+P   Y   X   C   V   B   N   M   L
+```
+
+Mechanizm szyfrujący Enigmy składa się z dwóch elementów: tablicy przełączającej i zespołu rotorów.
+
+#### Tablica przełączająca
+
+#### Zespół rotorów
+
+- klawiatura QWERTZUIOASDFGHJKPYXCVBNML
+- rotor wprowadzający ABCDEFGHIJKLMNOPQRSTUVWXYZ
+- rotor 1 (I) DMTWSILRUYQNKFEJCAZBPGXOHV
+- rotor 2 (II) HQZGPJTMOBLNCIFDYAWVEUSRKX
+- rotor 3 (III) UQNTLSZFMREHDPXKIBVYGJCWOA
+
+Mechanizm szyfrujący Enigmy składał się z trzech rotorów ruchomych. Ruchome rotory znajdowały się pomiędzy dwoma nieruchomymi: rotorem wprowadzającym i odbijającym. Rotor odbijający kierował sygnał z powrotem. Rotory były oznaczone cyframi rzymskimi.
+
+Proces szyfrowania wyglądał więc następująco: I, II, III, odbijający, III, II, I.
+
+Rotor wprowadzający miał zwykłą kolejność alfabetyczną znaków. Wszystkie rotory miały na powierzchni znaki w kolejności alfabetycznej, ale ich okablowanie zamieniało znaki wg sprzętowo wprowadzonego wzorca podstawieniowego. Każdy z trzech rotorów był okablowany inaczej, były więc ich trzy rodzaje. Tak jak widać na powyższej liście w pierwotnym ustawieniu rotor I zamieniał słowo ABBA na DMMD, II na HQQH, a III na UQQU.
+
+Rotory ustawiano tak samo u nadawcy i odbiorcy wg umówionego wzorca. Zmiany te odbywały się zwykle w cyklu dobowym. Po przesunięciu o dwie pozycje rotor I zamieniał ABBA na HVVH itd.
+
+Rotory obracały się automatycznie podczas szyfrowania. Po zaszyfrowaniu każdego znaku pierwszy rotor przesuwał się o jedną pozycję. Pełny obrót pierwszego rotora powodował obrót drugiego o jedną pozycję, pełny obrót drugiego rotora powodował obrót trzeciego rotora o jedną pozycję.
+
+Zapadki.
+
+16,900
+
+### Inne wersje
+
+### Odnośniki
+
+- Crypto Museum [Enigma Cipher Machines](https://www.cryptomuseum.com/crypto/enigma/)
+- cs.cornell.edu [# A1: Enigma](https://www.cs.cornell.edu/courses/cs3110/2015fa/a1/a1.html)
+- Brilliant [Enigma Machine](https://brilliant.org/wiki/enigma-machine/)
+- plus.maths.org [Exploring the Enigma](https://plus.maths.org/content/exploring-enigma)
+- [ENIGMA](https://www.codeproject.com/Articles/831015/ENIGMA)
+- Guardian ["How did the Enigma machine work?"](https://www.theguardian.com/technology/2014/nov/14/how-did-enigma-machine-work-imitation-game)
+
+#### YT
+
+- World Science Festival ["The Enigma Machine Explained" [YT 7:58]](https://www.youtube.com/watch?v=ASfAPOiq_eQ)
+- Talks at Google ["Enigma Cipher Machine History | Ralph Simpson | Talks at Google" [YT 1:16:06]](https://www.youtube.com/watch?v=lsv_Li2FXzw)
+- Numberphile ["158,962,555,217,826,360,000 (Enigma Machine) - Numberphile" [YT 11:51]](https://www.youtube.com/watch?v=G2_Q9FoD-oQ) | ["Flaw in the Enigma Code - Numberphile" [YT 10:58]](https://www.youtube.com/watch?v=V4V2bpZlqx8) | ["Enigma Extra Footage - Numberphile" [YT 8:23]](https://www.youtube.com/watch?v=BdrrJ7qd4HA)
+- Perimeter Institute for Theoretical Physics ["The Inner Workings of an Enigma Machine" [YT 14:03]](https://www.youtube.com/watch?v=mcX7iO_XCFA)
+- UC Davis ["The Enigma Code" [YT 1:05:15]](https://www.youtube.com/watch?v=ncL2Fl6prH8)
+- Corvus ["How the Enigma machine works | Animation" [YT 5:31]](https://www.youtube.com/watch?v=QwQVMqfoB2E)
+- Doyle New York ["Enigma Machine Demonstration" [YT 3:03]](https://www.youtube.com/watch?v=-mdSvGUd0_c)
+- ajpitv ["Jak działa Enigma?" [YT 6:26]](https://www.youtube.com/watch?v=hMBXHSEi9b8)
+- [TechLving "How does the ENIGMA MACHINE work in the IMITATION GAME | MOVIE TECH" [YT 13:00]](https://www.youtube.com/watch?v=GcI-YlFSGYo)
+- PolisMultimedia ["IGF 2011: Jak łamie się szyfry - omówienie na przykładzie maszyny rotorowej Enigma" [YT 2:22]](https://www.youtube.com/watch?v=YU6GXeXji1c)
+- Code Bullet ["Building an Enigma Machine" [YT 12:07]](https://www.youtube.com/watch?v=2D2bJWHvqJo)
+- Dave Janelle ["Enigma II Encryption Machine & Puzzle - encode & decode cipher" [YT 9:22]](https://www.youtube.com/watch?v=hiOjqskDlS0) | ["Enigma Slide Rule Iinear Cipher Encryption machine" [YT 9:18]](https://www.youtube.com/watch?v=NbF_l7gss_A) | ["Enigma V Encryption machine with $150 solution challenge" [YT 6:17]](https://www.youtube.com/watch?v=E016UyT-eUU)
+- VilleKoo Virtanen ["How Enigma Works" [YT 0:20]](https://www.youtube.com/watch?v=uMPw0ObNJbQ)
+- Gazeta Olsztyńska ["Oryginalna maszyna szyfrująca Enigma w Olsztynie." [YT 4:42]](https://www.youtube.com/watch?v=T6nGGQXmOEs)
+- Wirtualna Polska ["Sekrety maszyn szyfrujących [Enigma]" [YT 16:50]](https://www.youtube.com/watch?v=N9sLPtJDcbY)
+- ledermueller ["Enigma Machine Mechanism (feat. a 'Double Step')" [YT 0:39]](https://www.youtube.com/watch?v=hcVhQeZ5gI4)
+- Gideon Samid ["The ENIGMA of Modern Cryptography" [YT 8:05]](https://www.youtube.com/watch?v=ShOnhOGRXHk)
+
+#### YT Bletchley Park i Alan Turing
+
+- The Centre for Computing History ["Colossus - The Greatest Secret in the History of Computing" [YT 1:00:26]](https://www.youtube.com/watch?v=g2tMcMQqSbA)
+- Stanford ["Turing: Pioneer of the Information Age" [YT 1:36:38]](https://www.youtube.com/watch?v=p7Lv9GxigYU)
+- Computerphile ["Turing's Enigma Problem (Part 1) - Computerphile" [YT 18:59]](https://www.youtube.com/watch?v=d2NWPG2gB_A) | ["Tackling Enigma (Turing's Enigma Problem Part 2) - Computerphile" [YT 22:48]](https://www.youtube.com/watch?v=kj_7Jc1mS9k) | ["Cracking Enigma in 2021 - Computerphile" [YT 21:19]](https://www.youtube.com/watch?v=RzWB5jL5RX0)
+- [CBS Sunday Morning "The enigma of WWII codebreaker Alan Turing" [YT 7:30]](https://www.youtube.com/watch?v=nEomYB94TTI)
+- World War Two ["The Battle to Crack Enigma - The real story of 'The Imitation Game' - WW2 Special" [YT 9:40]](https://www.youtube.com/watch?v=zALecS762ME)
+- Skeptic ["Dr. Andrew Hodges — Alan Turing: The Enigma" [YT 1:39:22]](https://www.youtube.com/watch?v=3NODW5sok5U)
+- tnmoc ["The real story of how Enigma was broken - Sir Dermot Turing" [YT 1:07:49]](https://www.youtube.com/watch?v=qn_BBQEjCxI)
+- Bletchley Park ["The Enigma Machine - Bletchley Park takes a closer look at how it works" [YT 17:29]](https://www.youtube.com/watch?v=3Ux03qPgYVY)
+- G B ["How Alan Turing Cracked the Enigma Code Using Statistics" [YT 6:56]](https://www.youtube.com/watch?v=QIrC-8T_hqk)
+- PA3DMI ["Bletchley Park Tour [docu in full]" [YT 1:13:51]](https://www.youtube.com/watch?v=OuEHcJ7CCzg)
+- Living History ["Bletchley Park: Decoding Enigma" [YT 25:32]](https://www.youtube.com/watch?v=JDlda6K_XmI)
+- The People Profiles ["Alan Turing - The Enigma Machine & Imitation Game Documentary" [YT 46:00]](https://www.youtube.com/watch?v=XQMXOCTG2Gw)
+
+#### Symulatory i rekonstrukcje
+
+- [The Enigma machine: Encrypt and decrypt online — Cryptii](https://cryptii.com/pipes/enigma-machine)
+- [Enigma machine emulator](http://enigma.louisedade.co.uk)
+- [benelsen / enigma (Mechanical) implementation of an enigma machine](https://github.com/benelsen/enigma)
+- [miandoli/enigma-simulator](https://github.com/miandoli/enigma-simulator)
+- Henry Hollingworth [Enigma machine videos [YT playlist 3 filmy]](https://www.youtube.com/playlist?list=PLBHQNO2azpeLzJUI4K_t8ynGfHIpXkwtF)
+- Shaun Durrani ["Paper Enigma Machine - CS430" [YT 14:59]](https://www.youtube.com/watch?v=cVdjxMjSQNo)
+- I Attenborough ["Building Enigma Machine using pringles tube" [YT 4:07]](https://www.youtube.com/watch?v=z1ehM1pHrIU)
+- asciimation ["3D printed Enigma rotors." [YT 17:53]](https://www.youtube.com/watch?v=ncVOl6DNg88)
+- Sergio Morales ["Arduino 3D printed Enigma Machine" [YT 4:59]](https://www.youtube.com/watch?v=k2SRl5kKgS8)
+- Videos By Kevin ["Pringles Can Enigma Machine" [8:38]](https://www.youtube.com/watch?v=pZsuxZXN33g)
+- Videos By Kevin ["Paper Enigma Machine" [YT 17:08]](https://www.youtube.com/watch?v=UKbP3Rjxhy0)
+- opensources [Building an Enigma emulator and a Bombe](https://opensourc.es/blog/enigma-and-bombe/) | ["Enigma: Endless possibilities is not enough" [YT 9:09]](https://www.youtube.com/watch?v=4cf7dc_8u44) | ["How to crack the Enigma cipher?" [YT 11:22]](https://www.youtube.com/watch?v=bRT5YKez8m4)
+
+#### Inne
+
+- The Front ["Why the Toughest Code to Break in WW2 WASN'T Enigma - The Story of the Lorenz Cipher" [YT 10:57]](https://www.youtube.com/watch?v=RCWgOaDOzpY)
+- tnmoc ["Lorenz, Colossus and the Dream of a Universal Machine for Cryptanalysis" [YT 36:40]](https://www.youtube.com/watch?v=VnzjPmNDom4)
+- Computerphile ["Turing, Tutte & Tunny - Computerphile" [YT 37:33]](https://www.youtube.com/watch?v=pCAKq0JCcdI)
+- The Centre for Computing History ["Colossus - The Greatest Secret in the History of Computing" [YT 1:00:26]](https://www.youtube.com/watch?v=g2tMcMQqSbA)
+- [Autoencoder](https://www.npmjs.com/package/@softnami/autoencoder)
+- [alichtman / deadbolt - file encryption tool](https://github.com/alichtman/deadbolt)

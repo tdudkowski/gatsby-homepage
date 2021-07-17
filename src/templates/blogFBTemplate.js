@@ -1,19 +1,18 @@
 import * as React from "react"
 import { Link, graphql } from "gatsby"
 import { MDXRenderer } from "gatsby-plugin-mdx"
-import { Helmet } from 'react-helmet'
 import LayoutFB from "../components/layout-fb"
 import 'gatsby-remark-vscode/styles.css';
-// import SEO from "react-seo-component";
+import SEO from "../components/seo";
 // import { useSiteMetadata } from "../hooks/useSiteMetadata";
 
 const blogFBPost = ({ data }) => {
   const { frontmatter, body, fields, excerpt } = data.mdx;
-  const { title: pageTitle, date, date1945, cover } = frontmatter;
+  const { title: pageTitle, date, date1945, img } = frontmatter;
   const headerTitle = `Festung Breslau, ${frontmatter.date1945} | ${frontmatter.title}`
   return (
     <LayoutFB sub="post">
-      <Helmet title={headerTitle} defer={false} />
+      <SEO title={headerTitle} image={img.childImageSharp.gatsbyImageData.images.fallback.src} defer={false} />
       <h2 className="post-header"><div>{frontmatter.date1945}</div><br /> {pageTitle}</h2>
       <p>Aktualizacja: {frontmatter.date}</p>
       <p><Link to="../../">Powrót do strony głównej Bloga</Link></p>
@@ -38,7 +37,16 @@ export const query = graphql`
         date(formatString: "YYYY-MM-DD")
         date1945
         tags
-              }
+        img {
+          childImageSharp {
+             gatsbyImageData(
+                width: 1200
+                placeholder: BLURRED
+                formats: [AUTO, WEBP]
+                )
+             }
+          }
+       }
       slug
     }
   }

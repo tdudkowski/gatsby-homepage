@@ -28,18 +28,21 @@ flex-direction: column;
     top:-1rem;
     font-size: 5rem;
     width:50px;}
-  & article {background: url(${props => props.background}) no-repeat top center; background-size:200px;}
-  & article h2 { font-family:Alegreya, sans-serif; font-size:2.5rem; color:#333;}
+  & article {background: url(${props => props.background}) no-repeat 80% 3rem; background-size:50px;}
+  & article h2 { font-family:Alegreya, sans-serif; font-size:2.5rem; color:#333; background-color: rgba(255,255,255,.9)}
   & article h3 { font-family:Alegreya, sans-serif; border-bottom:1px solid #ddc; margin: 2rem 0; font-size:2rem; color:#444;}
+
   & p > code, & li > code {border:1px solid rgba(200,200,200, .4); padding:2px 4px; white-space: nowrap;}
+
+aside > section {padding: .5rem; }
+aside .tagsDiv {padding:.5rem; margin:1rem 0; background-color: #ffd;}
+aside .tagsDiv ul {list-style-type:none; display:flex; padding-left:0;}
+aside .tagsDiv ul a {display:block; margin: 0 1rem; padding:.5rem;}
+
   @media (min-width:900px) {
     flex-direction: row-reverse;
-    aside {flex-basis: 22rem}
-    aside > section {padding: .5rem; }
-    aside .tagsDiv {padding:.5rem; margin:1rem 0; background-color: #ffd;}
-    aside .tagsDiv ul {list-style-type:none; display:flex; padding-left:0;}
-    aside .tagsDiv ul a {display:block; margin: 0 1rem; padding:.5rem;}
-    article {flex:1; padding:1rem;}
+& aside {flex-basis: 22rem}
+& article {flex:1; padding:1rem; width:calc(100vw - 23rem);  background-size:200px;}
 }
 `;
 
@@ -63,7 +66,7 @@ const LayoutBlog = ({ children, data, path }) => {
             <StyledMain background={data ? data.mdx.frontmatter.image.childImageSharp.gatsbyImageData.images.fallback.src : null}>
                 <aside>
                     {path === "/blog/" || path === "/blog" ? null : <section>
-                        <h3>Menub</h3>
+                        <h3>Menu</h3>
                         <Link to="/blog">powrót na stronę główną bloga</Link>
                     </section>}
                     {data === undefined ? null :

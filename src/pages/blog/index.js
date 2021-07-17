@@ -19,7 +19,7 @@ const StyledDiv = styled.div`
   display:flex;
   flex-direction:column;
   justify-content: flex-end;
-  & a {background-color: rgba(51,51,51,.8); color:#ddd; display:block; font-size:1.2rem; text-align:center; padding: .5rem; margin:auto 0; vertical-align:middle; }
+  & a {background-color: rgba(51,51,51,.8); color:#ddd; display:block; font-size:1.2rem; text-align:center; padding: .5rem; margin:auto 0;}
 `;
 
 const IndexBlog = ({ data, location }) => {

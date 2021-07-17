@@ -1,0 +1,244 @@
+---
+title: "Enigma cz 1 - kryptografia pomiędzy wojnami"
+section: "blog"
+subsection: "historia"
+date: 2021-07-10
+edited:
+img: ../images/Enigma-logo.jpg
+tags: enigma, kryptologia, wwii
+---
+
+Cykl artykułów o najsłynniejszej maszynie szyfrującej, znanej z WWII niemieckiej Enigmie.
+
+- Ogólna historia kryptologii w okresie WWI do WWII, maszyny rotorowe.
+- Historia Enigmy, opis wszystkich wersji i wpływ. Kryptoanaliza Enigmy.
+- Opis działania mechanizmu szyfrującego Enigmy, z kontekstem matematycznym i kryptologicznym
+- JS
+
+### WWI
+
+#### Wstęp
+
+Wielka Wojna zmieniła oblicze kryptologii prawdopodobnie bardziej niż druga.
+
+W 1914 w powszechnym użyciu były metody kryptograficzne mające kilkaset lat, powszechnie znane i z powszechnie znanymi słabościami. Podstawową przyczyną było to, że jak dotąd sprawdzały się całkiem dobrze. Prawdopodobieństwo, że przeciwnik przyłączy się do kabla telegraficznego albo przechwyci posłańca, było niewielkie. Marynarka w coraz większym stopniu używała łączności radiowej, ale za zupełnie wystarczające uważano książki kodowe. Większe zainteresowanie kryptografią wykazywały placówki dyplomatyczne, handlowe i zamorskie bazy wojskowe.
+
+Przełom w kryptografii wynikał z tego, że był to pierwszy poważny konflikt wojenny, w którym na tak dużą skalę używano łączności radiowej. Radio przeciwnik mógł podsłuchiwać bez problemu. Kryptografia była tu o krok z tyłu.
+
+Do tej pory wszystkie stosowane techniki utajniania jawnej wiadomości można było podzielić na trzy rodzaje:
+
+- książki kodowe: stosowane jako standard w marynarce wojennej i służbach dyplomatycznych, były trudne w opracowaniu, dystrybucji i użyciu, ponadto w warunkach wojennych szybko wpadały w ręce nieprzyjaciela.
+- rozmaite szyfry przestawieniowe: w łączności telegraficznej i radiowej, podatne na analizę statystyczną, najbardziej zaawansowany był dwuznakowy szyfr Playfaira.
+- dyski Vigenère'a: mechaniczne urządzenie stosujące szyfr Vigenère'a, bardzo długo uważany za odporny na atak, nawet jeszcze w 1917 potwierdzał to Scientific American, ale już w 1863 rozwiązanie podał pruski kryptograf wojskowy Friedrich Wilhelm Kasiski "Die Geheimschriften und die Dechiffrir-Kunst". Nazwa bierze się od Blaise de Vigenère, ale rzeczywistym wynalazcą był Leon Battista Alberti 1467. Były to pierścienie na jednej osi. Obracały się zgodnie ze słowem kluczowym, jeżeli komunikat jest dłuższy od klucza, klucz się powtarza, co stanowi słabość. Mając kilka wiadomosci zaszyfrowanych tym samym kluczem, łatwo można złamać. [Vigenère Cipher Disk](https://ciphermachines.com/vigenere)
+
+Istotnym wkładem Wielkie Wojny były:
+
+- ostateczna kompromitacja tych starych, niewygodnych i podatnych na atak metod.
+- wprowadzenie nowych mechanicznych metod szyfrowania
+- znaczenie matematyki
+- W wyniku tego swoistego wyścigu zbrojeń dotychczasowe metody kryptoanalizy straciły znaczenie, by to kres dotychczasowej kryptologii opartej na lingwistyce i szaradach, matematyka, teoria cyfr
+
+Te nowe urządzenia to np: koder impulsów stosowany razem z magnetofonem drutowym, dalekopis z jednorazową taśmą, oraz - i to jest tu najważniejsze - elektromechaniczne maszyny rotorowe. Po raz pierwszy urządzenia elektryczne zostały użyte do szyfrowania.
+
+W 2003 okazało się, że historia wynalezienia maszyny rotorowej wyglądała inaczej niż przedtem uważano. Latem 1915 dwóch oficerów marynarki Holenderskich Indii Wschodnich, Theo van Hengel i Rudolf Spengler, przedstawiło prototyp takiego urządzenia. Kompania nie była zainteresowana wdrożeniem, ale na wszelki wypadek, żeby nie wpadło w ręce wroga zabroniło wynalazcom publikacji. Urzędnik patentowy, którego wynajęli był szwagrem Hugo Kocha. Otóż tenże Koch sam opatentował takie urządzenie w 1919, a jeszcze wcześniej powiadomił o idei Arthura Scherbiusa... konstruktora Enigmy.
+
+Równoległym wynalazcą maszyny rotorowej był Amerykanin Edward Hebern (pierwszy patent 1917), jednak jego urządzenie było wadliwe i było komercyjną porażką. Analiza słabości tego urządzenia i informacje o europejskich urządzeniach sprawiły, że William F. Freedman skonstruował SIGABA.
+
+#### Niemcy
+
+Dla armii cesarskich Niemiec WWI od początku do końca była serią katastrof. Już w sierpniu 1914 sierpniu 1914 Rosjanie znaleźli na niemieckim wraku rozbitym w Estonii niezniszczoną książkę kodową marynarki wojennej (niem. Signalbuch der Kaiserlichen Marine, SKM) i co gorsza przekazali ją Brytyjczykom. To był dopiero początek. Jeszcze w 1914 Brytyjczycy pozyskali także Handelsschiffsverkehrsbuch (HVB) oraz dyplomatyczny Verkehrsbuch (VB).
+
+Flota cesarska używała łączności radiowej bardzo często. W łączności z ubootami używali kodera impulsów (burst encoder), który kompresował sygnał Morse'a i magenotofonu drutowego (protoplasta taśmowego; patent Duńczyk Valdemar Poulsen 1898) do zapisania wiadomości, którą potem odsłuchiwali na zwolnionych obrotach. Taki rozkaz dostał uboot, który zatopił Lusitanię.
+
+W 1916 powołali Abhorchdienst złożony głównie z matematyków.
+
+Armia dokładnie określiła zasady bezpieczeństwa, w odległości do 3 km od linii frontu (strefa ryzyka) można było używać tylko trójcyfrowego kodu, dalej dozwolony był trójliterowy kod.
+
+W komunikacji na wyższym stopniu od marca 1918 (ofensywa wiosenna) wprowadzili ADFGVX, który był rozwinięciem szyfru ADFGX. Opierał się na zmodyfikowanej szachownicy Polibiusza i pojedynczej transpozycji. Mimo częstej zmiany klucza bardzo szybko został złamany przez francuskiego krypotanalityka Georgesa Painvina.
+
+Efekty powyższych wpadek były katastrofalne w skali strategicznej.
+
+- Wszystkie operacje floty cesarskiej były znane z wyprzedzeniem. W połączeniu z przewagą floty brytyjskiej zapewniło to zwycięstwo Brytyjczykom, zadecydowało m in o przebiegu bitwy jutlandzkiej.
+- Brytyjczykom udało się również odczytać Telegram Zimmermanna, co odegrało kluczową rolę we włączeniu USA do wojny.
+- Francuzi wiedzieli o transportach zaopatrzenia, wiedzieli kiedy i gdzie nastąpi uderzenie ofensywy wiosennej (niem. Kaiserschlacht) - Radiogram Zwycięstwa (ang. The Radiogram of Victory).
+
+W Niemczech już po wojnie uświadomiono sobie, że alianci czytali ich szyfry, więc postanowiono, że nigdy się to nie powtórzy. Reichswehra poszukiwała skutecznego rozwiązania i po kilku latach prób postawili na system Enigmy.
+
+#### Wielka Brytania
+
+Brytyjczycy na początku wojny nie posiadali w ogóle oddziału kryptoanalizy, powołali go szybko jeszcze w 1914. Ich głównym celem była komunikacja cesarskiej Hochseeflotte.
+
+W 1914 pozyskali Signalbuch der Kaiserlichen Marine (SKM) Handelsschiffsverkehrsbuch (HVB) oraz dyplomatyczny Verkehrsbuch (VB). Jesienią tego roku powołali komórkę kryptograficzną Admiralicji Room 40 - nazwa pochodzi od numeru pokoju w budynku Admiralicji. Była podporządkowana Brytyjskiego Departamentu Wywiadu Marynarki Wojennej.
+
+Drugim oddziałem zajmującym się krytpologią był wywiad armii MI1 (Military Intelligence, Section 1).
+
+- MI1b: nasłuch i kryptoanaliza
+- MI1d: bezpieczeństwo łączności
+
+Przedstawiona powyżej praca Room 40 była wielkim sukcesem.
+
+Jeden z jego pracowników komandor porucznik Alastair Denniston został pierwszym szefem powstałej w listopadzie 1919 Governement Code and Cypher School (GC&CS). Powstała ona z połączenia NID25 i armijnej MI1b.
+
+Playfair (czasem nazywany też szyfrem Playfaira, lub Wheatstone'a) wymyślony przez sir Charlesa Wheatstone'a w 1854 i spopularyzowany przez barona Lyona Playfaira. Szyfruje się dwuznaki, czyli parę znaków zamienia się na inną parę znaków zgodnie z opracowanym wcześniej wzorcem. W przypadku alfabetu angielskiego zamiast 26 liter mamy 600 dwuznaków, co nadal jest podatne na analizę statystyczną, ale dużo trudniejsze.
+
+#### USA
+
+1914 porucznik US Army Joseph O. Maubourgne opisał metodę ataku na szyfr Playfaira. Była to pierwsza publikacja w armii amerykańskiej o kryptologii. Później został US Chief Signals Officer and a Major General.
+
+6 kwietnia 1917 USA wypowiedziały wojnę Niemcom.
+
+W 1912 pułkownik Parker Hitt i major Joseph Mauborgne skonstruowali proste mechaniczne urządzenia szyfrujące - military attachés w WWI. Urządzenie Mauborgne'a składało się z krążków z literami, miało formę cylindra. Hitt skonstruował tablet z przesuwanymi paskami.
+W 1890 (1891) takie urządzenie zostało skonstruowane przez francuskiego kryptologa Étienne Bazeriesa
+W 1922 decyzją Williama Friedmana, głównego kryptologa Signal Corps, wprowadzono do użytku w amerykańskich siłach zbrojnych. Liczba krążków. Używano go do roku 1942 w wojskach lądowych jako M-94, a w marynarce wojennej jako CSP-488. Został zastąpiony przez elektromechaniczne maszyny rotorowe np M-209.
+Dysk Jeffersona 1795 (Wheel Cypher) urządzenie szyfrujące składające się z 26 krążków, wokół których w losowy sposób rozłożone są litery alfabetu. Nie osiągnęło wtedy zbyt dużej popularności.
+
+1917 Gilbert S. Vernam z Bell Telephone Laboratories przedstawił projekt dalekopisu szyfrowego (teleprinter cipher, one-time tape teletype). Uprzednio przygotowany przypadkowy klucz na taśmie papierowej służy do szyfrowania tekstu jawnego przez alternatywę rozłączną (XOR). Proces szyfrowania był w pełni automatyczny, wolny od błędów i błyskawiczny. US Patent #1,310,719 w 1919 "Secret Signaling System" - pierwszy patent na dalekopis. Skuteczność OTP w artykule Claude'a Shannona w Bell Labs Technical Journal w 1949. Doprowadziło to do rozwinięcia elektromechanicznych urządzeń szyfrujących oraz OTP (one time pad).
+
+1917 Herbert Yardley urzędnik Departamentu Stanu po wybuchu wojny stanął na czele sekcji kryptograficznej Military Intelligence Section (MI-8) i uczestniczył w American Expeditionary Force w Signals Corps jako oficer kryptologiczny we Francji. Później został szefem powstałego w 1919 Cipher Bureau, z inicjatywy State Department i US Army.
+
+Kryptografią zajmował się również Riverbank Laboratory, gdzie pracowali Elizebeth Friedman, William F. Friedman i Agnes Meyer Driscoll worked. Prywatne przedsiębiorstwo pułkownika George Fabyana.
+
+US Navy używała kodu A-1. Oddział kryptograficzny US Navy OP-20-G powstał w 1922.
+
+Edward Hebern, Hebern Rotor Machine. Freedman przeprowadził krytyczna aanalizę tego urządzenia, dlatego armia nie go nie kupiła. Hebern nigdy nie został powiadomiony o przyczynie i wyprodukował ich tylko ok 100.
+
+William F. Freedman skonstruował SIGABA, nieregularny ruch walców, użyta WWII i nie złamana.
+
+W niewielkim zakresie używano języków indiańskich. Na szerszą skalę 400 żołnierzy Navajo WWII. Nie złamane, choć schwytali niebędącego szyfrantem Navajo.
+
+#### Rosja
+
+Armia rosyjska używała przekomnbinowanego szyfru Vigenère'a. Kryptoanalityk CK Austrii Hermann Pokorny złamał go w trzy dni.
+
+Najważniejszym rosyjskim specjalistą od szyfrów był Ernst Fetterlein od 1896 pracujący w MSZ. Udało mu się złamać szyfry brytyjskie i państw osi. Podczas wojny był głównym wojskowym kryptologiem w randze admirała. Po rewolucji z 1917 uciekł do Wielkiej Brytanii. W czerwcu 1918 zaczął pracę dla Room 40, gdzie zajmował się szyframi CK Austrii, sowietów i Gruzji.
+
+Klęska Armii Czerwonej w bitwie warszawskiej w 1920 w ogromnym stopniu wynikała z kompromitacji sowieckiej kryptologii i łączności.
+
+#### Polska
+
+Już w styczniu 1919 przy Sztabie Generalnym powstała sekcja spraw organizacyjnych i szyfrów pod dowództwem kapitana Eugeniusza Chilarskiego. 11 maja 1919 została przemianowana na Oddział II Informacyjny, w którym była m in Sekcja Szyfrowa.
+
+Latem 1931 nastąpiła reorganizacja i z połączenia Referatu Radiowywiadu i Referatu Szyfrów Własnych powstało Biuro Szyfrów. Jego pierwszym i głównym zadaniem było złamanie Enigmy.
+
+### Okres międzywojenny
+
+Okres międzywojenny został zdominowany elektromechanicznymi maszynami rotorowymi.
+
+Istniały trzy linie rozwojowe:
+
+#### Hebern Rotor Machine
+
+Edward Hugh Hebern (USA, patent 1917) słaba maszyna bez sukcesu komercyjnego, udało się sprzedać US Navy 12 maszyn, ogólnie sprzedano ok 100 maszyn.
+
+#### Hagelin
+
+Arvid Gerhard Damm (Szwecja, 1917 pierwsza działająca i sprzedana maszyna: Mecano Cryptographer).
+
+Z powodu kłopotów finansowych i prawnych musiał sprzedać swoje przedsiębiorstwo Aktiebolaget Cryptograph.
+
+Karl Wilhelm Hagelin, pracujący dla Nobla w Baku. Po rewolucji bolszewickiej wrócił do Szwecji. Jego syn w 1925 wszedł do zarządu przedsiębiorstwa i w rezultacie przejął je. Damm zmarł w 1928.
+
+Kiedy zaczęła się wojna, Hagelin przez Niemcy z dokumentacją najnowszych konstrukcji pojechał do Szwajcarii i tam założył późniejsze Crypto AG planując współpracę z USA.
+
+#### Enigma
+
+Arthur Scherbius i Richard Ritter Niemcy wniosek patentowy 23 lutego 1918 (opisana osobno). Scherbius & Ritter
+
+Obaj przedstawili projekt maszyny zarówno niemieckiej Kriegsmarine, jak i Ministerstwu Spraw Zagranicznych, ale nie uzyskali zainteresowania żadnej z tych instytucji. W tym wypadku przekazali prawa patentowe firmie Gewerkschaft Securitas, z której 9 lipca 1923 powstało Chiffriermaschinen Aktien-Gesellschaft (Maszyny Szyfrujące Spółka Akcyjna) w której Scherbius i Ritter zostali członkami zarządu.
+
+Scherbius w 1928 wykupił nieużywany komercyjnie patent Holendra Hugo Kocha.
+
+Jak widać na rynku europejskim (a innego w zasadzie nie było) rywalizowały dwie konstrukcje: Hagelin i Enigma.
+
+### WWII
+
+#### Sowieci
+
+- 1938 W-4 pierwsza sowiecka maszyna szyfrująca.
+- 1939 M-100 "Spiektr" udoskonalona W-4
+- 1939 K-37 "Kristał"
+
+Do wybuchu wojny wyprodukowano ponad 150 zestawów K-37 i 96 zestawów W-4/M-100. Według stanu na maj 1945 roku na uzbrojeniu znajdowało się 396 zestawów sprzętu szyfrowego. Sprzęt szyfrujący w latach 1940-1941 był produkowany w leningradzkiej Fabryce nr 209, a w latach 1942-1945 w swierdłowskiej Fabryce nr 707.
+
+- 1942 M-101 "Izumrud"
+- 1945 M-102 "Małachit"
+- 1946 M-150 "Rubin"
+
+Więcej:
+
+- [K-37](https://www.cryptomuseum.com/crypto/ussr/k37/index.htm)
+- [Soviet cipher teleprinters of WWII](http://chris-intel-corner.blogspot.com/2012/08/soviet-cipher-teleprinters-of-wwii.html)
+- [Шифровальные устройства](http://kryptography.narod.ru/mashiny.html)
+- Sprzęt armii sowieckiej i rosyjskiej od 1917 roku do dnia dzisiejszego [W trakcie pisania o Enigmie zorientowałem się](https://www.facebook.com/groups/343904839303373/posts/1416005662093280)
+- [Шифровальные машины СССР 1931-1991 гг. (Обзор)](http://prizmablog.ru/shifrovalnye-mashiny-sssr-1931-1991-gg-obzor/)
+- [Создание шифровальной службы СССР](http://prizmablog.ru/shifrsluzhba-sssr-rossii-ch1/)
+- [Шифровальная служба СССР/России в годы войны и послевоенный период](http://prizmablog.ru/shifrsluzhba-sssr-rossii-ch2/)
+- [Шифры и СУВ](http://prizmablog.ru/shifry-i-suv/)
+- [Шифровальная техника Советского Союза. Русские «Энигмы». Часть 5](https://topwar.ru/151854-shifrovalnaja-tehnika-sovetskogo-sojuza-russkie-jenigmy-chast-5.html)
+- [Шифровальные устройства | СССР](https://wwii.space/shifrovalnyie-ustroystva-sssr/)
+- [Русские шифровальные «Энигмы»: загадки советской криптографии](https://novate.ru/blogs/040119/48984/)
+- [Сокровищница отечественной криптографии](https://habr.com/ru/company/ua-hosting/blog/368663/)
+- [Прочти меня, если сможешь](https://www.polkmoskva.ru/articles/machines/prochti-menya-esli-smozhesh/)
+- «Анализ состояния и деятельности шифровальной службы СССР»
+
+Szyfry/kody jednorazowe. Oczywiście na poziomie strategicznym.
+
+Na poziomie taktycznym, Sołonin w swoich książkach twierdzi, że w 1941/42, brak łączności radiowej to było nieuctwo kadry oficerskiej. Niektórzy dowódcy CELOWO zostawiali radiostacje w garnizonach. Z kolei Bieszanow, podkreśla brak procedur łączności i jej utajniania.
+
+U Wołoszańskiego chyba było, że Sowieci zrobili błąd i po wykończeniu kodów jednorazowych zaczęli jechać z nimi od początku. W czasie wojny mieli problemy (z drukiem, dostarczaniem ?) więc zdublowali książeczki. Dzięki temu Amerykanie mogli wdrożyć program "Venona" - czyli dekryptaż komputerowy.
+
+#### Wielka Brytania
+
+Typex - brytyjska Enigma
+
+Bletchley Park, Turing, Colossus
+
+#### USA
+
+William Friedman
+
+SIGABA
+
+Amerykańską służbą kryptologiczną był Signal Intelligence Service (SIS). Od 1943 do września 1945 Signal Security Agency. Potem przemianowane na Army Security Agency.
+
+Jeszcze przed wojną potrafili czytać japońskie szyfry, sowiecki system złamali dopiero w grudniu 1946 (Venona project).
+
+#### Niemcy
+
+Enigma
+
+Lorenz SZ40, SZ42a and SZ42b aka Schlüssel-Zusatz
+
+#### Japonia
+
+Teiji Takagi główny japoński kryptograf.
+
+- 1930 "Red" Type A Cipher Machine / System 91 Typewriter for European Characters - Maszyna Do Pisania Europejskich Znaków Systemu 91 (nazwa ta bierze się z roku wprowadzenia do służby, 1931 to w japońskim kalendarzu 2591)
+- 1939 "Purple" Type B Cipher Machine / System 97 Typewriter for European Characters /
+
+"Red" Była prosta i nieskuteczna. Została złamana już w 1935.
+
+Po nawiązaniu bliższych kontaktów z Niemcami stworzyli własną wersję Enigmy. Nazwali ją Maszyną Szyfrującą Typ B (aka System 97), Amerykanie dali jej nazwę kodową Purple. Odziedziczyła błędy Typu A, co znakomicie ułatwiło jej złamanie. Co interesujące Amerykanie dokonali tego, nie mając żadnych danych wywiadowczych co do konstrukcji. Na podstawie samego tylko szyfru pod koniec 1940 skonstruowali odwrotną inżynierią własną maszynę - analog. Takim właśnie analogiem dysponowała jednostka Cast.
+
+Czytali japoński szyfr dyplomatyczny. W zaledwie 4 dni złamali nowy szyfr wojskowy wprowadzony po ataku na Pearl Harbor.
+
+#### Podsumowanie
+
+Kryptografia miała ogromny wpływ na przebieg WWII - widzimy przede wszystkim zdecydowaną asymetrię. Brytyjczycy i Amerykanie czytali niemieckie i japońskie szyfry, o czym, ani Niemcy, ani Japończycy do końca wojny nie wiedzieli.
+
+Sowieci złamali japoński system rok po Amerykanach, pod koniec 1941, dzięki czemu (plus Sorge) wiedzieli, że Japonia ich nie zaatakuje. Umożliwiło to w decydującym momencie w grudniu 1941 przesunięcie z Syberii jednostek pancernych do obrony Moskwy.
+
+Niemcy ostrzegali Japończyków, że ich kryptosystem został ujawniony. W kwietniu 1941 niemiecka ambasada w Waszyngtonie poinformowała Ribbentropa, że z absolutnie pewnego źródła dowiedziała się, że Amerykanie czytają japońskie meldunki. Tym źródłem prawdopodobnie był ówczesny sowiecki ambasador, który doszedł do tego drogą dedukcji. Japończycy jednak uznali, że ich system nie ma słabości i nawet nie próbowali go udoskonalać.
+
+### Odnośniki
+
+- [Crypto Museum](https://www.cryptomuseum.com/index.htm)
+- [dCode - Solvers, Ciphers, Calculators, Decoders, Online](https://www.dcode.fr/en)
+- [Cipher Machines](https://ciphermachines.com/)
+- [Crypto Corner](https://crypto.interactive-maths.com/)
+- [Christos military and intelligence corner](http://chris-intel-corner.blogspot.com/)
+- NSA [German Cipher Machines of World War II](https://www.nsa.gov/Portals/70/documents/about/cryptologic-heritage/historical-figures-publications/publications/wwii/german_cipher.pdf)
+- [Cryptography Visualization Tools: A Tutorial | Dr. C.-K. Shene](https://pages.mtu.edu/~shene/NSF-4/Tutorial/index.html)
+- [On the history of cryptography during WW2, and possible new](https://link.springer.com/content/pdf/10.1007%2F3-540-39805-8_2.pdf)
+- [Cryptology, the Secret Battlefield of World War I: Dawn of the Crypto Arms Race Ralph Simpson](https://www.worldwar1centennial.org/images/California/pdf/ww1cryptology_paper.pdf)
+- Britannica.com [Developments during World Wars I and II](https://www.britannica.com/topic/cryptology/Developments-during-World-Wars-I-and-II)

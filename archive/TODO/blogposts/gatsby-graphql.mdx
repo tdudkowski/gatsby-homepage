@@ -1,0 +1,149 @@
+---
+title: "Gatsby - GraphQL"
+section: "blog"
+subsection: "it"
+date: 2021-07-04
+edited:
+img: ../images/gatsby.jpg
+tags: react, gatsby
+---
+
+### 404
+
+Pzykładowy plik 404.
+
+- Najpierw mamy import dwóch wbudowanych komponentów Gatsby'ego: grapql i Link
+- Na końcu przy pomocy requestu graphql pobieramy potrzebne dane
+- Jako promt w postaci obiektu data przekakzujemy go do strony
+- Otrzymane dane są mapowane na listę
+
+**/src/pages/404.js**
+
+```js
+//
+import { graphql, Link } from "gatsby";
+
+const NotFoundPage = ({ data }) => {
+//
+
+                <ul>
+                    {data.allMdx.nodes.map(({ id, frontmatter, slug }) => (
+                        <li key={id}>
+                            <Link to={`/${frontmatter.section}/${frontmatter.subsection && frontmatter.subsection + "/"}${slug}`}>
+                            {frontmatter.title}
+                            </Link>
+                        </li>
+                    ))}
+                </ul>
+
+//
+
+export default NotFoundPage
+
+export const query = graphql`
+    query AllArticles404IndexQuery {
+        allMdx(
+            filter: {fileAbsolutePath: {glob: "**/src/content/pagearticles/*.mdx" }} ) {
+                nodes {
+                id
+                frontmatter {
+                    title
+                    section
+                    subsection
+                }
+            slug
+        }
+     }
+     mdx {
+        slug
+        frontmatter {section}}
+  }
+`;
+```
+
+### Obrazki
+
+Poniżej mamy przykład zastosowania pluginu gatsby-plugin-image na kilka możliwych sposobów.
+
+- Import modułu
+- Komponent StaticImage - odpowiednik normalnego taga img.
+- Komponent GatsbyImage - odpowiednik dawnego komponentu Img (znanego z gatsby-image), tutaj korzystamy z danych pobranych przez graphql i szeregu optymalizacji, element img musi zostać zadeklarowany we frontmatterze
+- Te same dane z graphql możemy przesłać w propsie do komponentu Styled Components jako obrazek tła
+
+**/src/pages/any-page-with-images.js**
+
+```js {numberLines}
+import * as React from 'react'
+import { Link, graphql } from "gatsby";
+import styled from "styled-components"
+import Layout from "../components/layout"
+import { StaticImage, GatsbyImage, getImage } from "gatsby-plugin-image"
+
+const StyledSection = styled.section`
+  display:flex;
+  flex-wrap: wrap;
+`;
+
+const StyledDiv = styled.div`
+  margin:1rem;
+  width: 300px;
+  height: 5rem;
+  border:1px solid #eed;
+  background: url(${props => props.background}) no-repeat top center;
+`;
+
+const BlogPage = ({ data }) => {
+
+    return (
+        <Layout>
+
+                <StaticImage src="../images/gatsby.jpg" alt="Gatsby logo" />
+
+                <StyledSection>
+                    {data.allMdx.nodes.map(({ id, frontmatter, slug }) => (
+                        <StyledDiv key={id}  background={frontmatter.img.childImageSharp.gatsbyImageData.images.fallback.src}>
+                            <Link to={`/blog/${slug}`}>{frontmatter.title}</Link>
+                            <figure className="figure imgThumbnail">
+                                <GatsbyImage image={getImage(frontmatter.img)} alt="ilustracja" />
+                            </figure>
+                        </StyledDiv>
+                    ))}
+                </StyledSection>
+
+        </Layout>
+    )
+}
+
+export default BlogPage
+
+export const query = graphql`
+query AllPosts {
+  allMdx(
+      filter: { fileAbsolutePath: { glob: "**/src/blogposts/*.mdx" } }
+      sort: { order: ASC, fields: frontmatter___date }
+      ) {
+  nodes {
+      frontmatter {
+            title
+            section
+            subsection
+            img {
+                childImageSharp {
+                  gatsbyImageData(
+                    width: 200
+                    placeholder: BLURRED
+                    formats: [AUTO, WEBP]
+                  )
+                }
+              }
+            }
+      slug
+      id
+      body
+      }
+    }
+  }
+`;
+```
+
+- [gatsby-plugin-image](https://www.gatsbyjs.com/plugins/gatsby-plugin-image/)
