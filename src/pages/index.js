@@ -47,7 +47,7 @@ const IndexPage = ({ section }) => {
             <IndexSubHeader>
                 <ul>
                     <li>
-                        <Link to="/blog">Blog (wkrótce!)</Link>
+                        <Link to="/blog">Blog</Link>
                     </li>
                     <li>
                         <Link to="/festung-breslau">Festung Breslau 1945 täglich / ostatnie 120 dni wojny</Link>

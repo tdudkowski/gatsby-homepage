@@ -107,22 +107,22 @@ pageindexes: allMdx(
               filter: { fileAbsolutePath: { glob: "**/src/content/blogposts/*.mdx" } }
                sort: { order: DESC, fields: frontmatter___date }
               ) {
-                      nodes {
-                          frontmatter {
+                nodes {
+                  frontmatter {
                     title
                     section
                     subsection
                     date
                     edited
                     tags
-                             }
-                             slug
-                             id
-                             body
+                    }
+                slug
+                id
+                body
                 }
               }
       }
-  `).then((result) => {
+`).then((result) => {
     if (result.errors) {
       // throw result.errors;
       Promise.reject(result.errors);

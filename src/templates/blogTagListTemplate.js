@@ -14,18 +14,15 @@ const blogPage = ({ data, location }) => {
     return (
         <LayoutBlog path={path}>
             <Helmet title={headerTitle} defer={false} />
-            <article>
-                <h2>Posty z tagiem <span>{tag}</span></h2>
-                <section>
-                    {filteredPosts.map(({ id, frontmatter, slug }) => (
-                        <li key={id}>
-                            <Link to={`/blog/${slug}`}>{frontmatter.title}</Link>
-                            <span> - {frontmatter.subsection}</span>
-                        </li>
-                    ))}
-                </section>
-            </article>
-
+            <h2>Posty z tagiem <span>{tag}</span></h2>
+            <section>
+                {filteredPosts.map(({ id, frontmatter, slug }) => (
+                    <li key={id}>
+                        <Link to={`/blog/${slug}`}>{frontmatter.title}</Link>
+                        <span> - {frontmatter.subsection}</span>
+                    </li>
+                ))}
+            </section>
         </LayoutBlog>
     );
 };

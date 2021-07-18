@@ -51,7 +51,7 @@ A więc do dzieła!
 
 ### Podstawowe informacje
 
-JavaScript to język programowania wprowadzony w przeglądarkach internetowych w 1995. Bardzo długo prymitywne narzędzie do uzyskania irytujących użytkownika, tanich efektów na stronach typu padający śnieg. Ograniczeniem był fakt, że jedynym środowiskiem uruchomieniowym był silnik przeglądarki, więc kod JS można było powiązać ze stroną internetową. Po jej uruchomieniu w przeglądarce mógł się wykonywać lokalnie, nie mając żadnej łączności z serwerem. Rozwiązanie tylko client-side. Do poważnych zastosowań używano PHP, który z kolei był i wciąż jest serwer-side.
+JavaScript to język programowania wprowadzony w przeglądarkach internetowych w 1995. Bardzo długo prymitywne narzędzie do uzyskania efektów na stronach typu padający śnieg, czy przesuwający się napis. Ograniczeniem był fakt, że jedynym środowiskiem uruchomieniowym był silnik przeglądarki. Kod JS można było umieścić na stronie WWW. Po jej uruchomieniu w przeglądarce mógł się wykonywać tylko lokalnie, nie mając żadnej łączności z serwerem. Rozwiązanie tylko client-side. Do poważnych zastosowań używano PHP, który z kolei był i wciąż jest serwer-side.
 
 Zmieniło się to w końcu pierwszej dekady XXI wieku.
 
@@ -87,8 +87,6 @@ Potrzebujemy zainstalować trzy rzeczy:
 - [Node.js](https://nodejs.org/en/), z którym domyślnie dostajemy system zarządzania pakietami [npm](https://www.npmjs.com/), alternatywnie może być to też [yarn](https://yarnpkg.com/).
 - [gatsby-cli](https://www.gatsbyjs.com/docs/reference/gatsby-cli/) jak sama nazwa wskazuje CLI (Command Line Interface) Gatsby'ego. Instalowany poleceniem `npm i -g gatsby-cli`.
 
-Wszystkie powinny być zainstalowane w przestrzeni globalnej w kontekście użytkownika, tzn. jesli jest to twój komputer to #, a jeśli jesteś jednym z użytkowników i nie masz uprawnień administracyjnych to ~/user - chodzi o to, żebyś mógł aktualizować pakiety.
-
 Opcjonalnie do zarządzania różnymi wersjami Node'a - [nvm-sh / nvm](https://github.com/nvm-sh/nvm)
 
 ### Deweloping
@@ -97,7 +95,7 @@ Jeszcze zanim przejedziemy do instalacji, trzeba wyjaśnić jedną rzecz - jak w
 
 - **Instalacja** - opisana poniżej - trzeba mieć świadomość, że cały katalog ze środowiskiem deweloperskim zajmuje od 250 do ponad 500 MB.
 - **Uruchomienie środowiska deweloperskiego** poleceniem `gatsby develop`, na tym etapie dokonuje się wlaściwe tworzenie strony. Efekt widoczny jest pod adresem `localhost:8000`. środowisko zapewnia hot-loading, co znaczy że reaguje na dokonane zmiany, zapisuje je i od razu przerysowuje stronę, ale trzeba mieć świadomość, że każda zmiana w którymś z plików konfiguracyjnych /gatsby-*.js wymaga restartu środowiska, a to zajmuje zależnie od wielkości strony od minuty do ponad 10 minut. Wiec od razu przygotuj sobie jakąś książkę do poczytania na boku ;-)
-- **Build**, ciężko to przetłumaczyć na polski, bo "budowanie" niewiele tu mówi. Samo środowisko deweloperskie zapewnia serwer i działanie strony, ale jest to bardzo nieoptymalne, strony są generowane w locie i jak już pisałem, wszystko wymaga ponad 200 MB miejsca oraz dość sporej mocy obliczeniowej. Natomiast Build kompiluje to, co napisaliśmy, łącznie z udostępnionymi zasobami w zoptymalizowany, statyczny produkt końcowy. Build uruchamia się poleceniem `gatsby build`. Zajmuje to - takie mam wrażenie - trochę krócej niż uruchomienie środowiska deweloperskiego. Ponieważ rysuje od razu cała stronę, jest też bardziej wymagające. Build potrafi wywalić się na kodzie, który dla środowiska deweloperskiego był OK. Więc po każdej poważniejszej zmianie, przed wysłaniem na serwer dobrze jest sprawdzić, czy działa build lokalny. Żeby zobaczyć stronę tak zbudowaną uruchamiany serwer poleceniem `gatsby serve` i po chwili możemy zobaczyć pod adresem `localhost:9000`. To, co zobaczymy to statyczny efekt, który nie podlega zmianom.
+- **Build**, ciężko to przetłumaczyć na polski, bo "budowanie" niewiele tu mówi. Samo środowisko deweloperskie zapewnia serwer i działanie strony, ale jest to bardzo nieoptymalne, strony są generowane w locie i jak już pisałem, wszystko wymaga ponad 200 MB miejsca oraz dość sporej mocy obliczeniowej. Natomiast build kompiluje to, co napisaliśmy, łącznie z udostępnionymi zasobami w zoptymalizowany, statyczny produkt końcowy. Build uruchamia się poleceniem `gatsby build`. Zajmuje to - takie mam wrażenie - trochę krócej niż uruchomienie środowiska deweloperskiego. Ponieważ rysuje od razu cała stronę, jest też bardziej wymagające. Build potrafi wywalić się na kodzie, który dla środowiska deweloperskiego był OK. Więc po każdej poważniejszej zmianie, przed wysłaniem na serwer dobrze jest sprawdzić, czy działa build lokalny. Żeby zobaczyć stronę tak zbudowaną uruchamiany serwer poleceniem `gatsby serve` i po chwili możemy zobaczyć pod adresem `localhost:9000`. To, co zobaczymy to statyczny efekt, który nie podlega zmianom.
 - **Deploy** czyli wysłanie na serwer zewnętrzny, publikacja strony online. O tym będzie w osobnym wpisie. Jeżeli kod się nie skompiluje na serwerze, poprzednia wersja strony pozostaje.
 
 Najkrócej mówiąc:
@@ -247,7 +245,7 @@ node_modules
 public
 # Other
 .DS_Store
-yarn-error.log
+*.log
 ```
 
 3. Instalacja Reacta i Gatsby'ego:
@@ -280,12 +278,12 @@ module.exports = {
         description: `opis strony`,
     },
     plugins: [
-// tu umieszczamy wpisy zainstalowanych modułów
+// tu umieszczamy deklaracje zainstalowanych pluginów
     ],
 }
 ```
 
-**package.json**
+przykładowy **package.json**
 
 ```json
   "scripts": {
@@ -312,18 +310,30 @@ Uwaga, poniżej przedstawiona jest docelowa struktura, część z nich tworzona 
   - /styles - CSS jeżeli potrzebujemy osobnego katalogu dla stylów
   - /templates - szablony stron generowanych programistycznie
 - gatsby-browser.js - opcjonalny; globalny wrapper dla komponentów [Gatsby Browser APIs](https://www.gatsbyjs.com/docs/reference/config-files/gatsby-browser/)
-- gatsby-config.js - plik konfiguracyjny
+- gatsby-config.js - plik konfiguracyjny [Gatsby Config API](https://www.gatsbyjs.com/docs/reference/config-files/gatsby-config/)
 - gatsby-node.js - opcjonalny; programistyczne tworzenie stron [Gatsby Node APIs](https://www.gatsbyjs.com/docs/reference/config-files/gatsby-node/)
-- .gitignore - plik gita
+- gatsby-ssr.js - opcjonalny; jeżeli używamy SSR [Gatsby Server Rendering APIs](https://www.gatsbyjs.com/docs/reference/config-files/gatsby-ssr/)
+- .gitignore - plik gita [Git - gitignore Documentation](https://git-scm.com/docs/gitignore)
 - log.md - to moja propozycja, notatnik wszystkich ważnych działań administracyjnych, trzeba dodać do gitignora
-- package.json - informacja dla npm-a jakie moduły są zainstalowane, raczej nie zmieniać, czasem trzeba dokonać zmian w ograniczeniach update, powinniśmy zadbać o archiwizację, (najlepsza jest ta na Githubie)
-- package-lock.json - kompletne info dla npm, nie do edycji
+- package.json - informacja dla npm-a jakie moduły są zainstalowane, raczej nie zmieniać, czasem trzeba dokonać zmian w ograniczeniach update, powinniśmy zadbać o archiwizację, (najlepsza jest ta na Githubie) [package.json](https://docs.npmjs.com/cli/v7/configuring-npm/package-json)
+- package-lock.json - kompletne info dla npm, nie do edycji [package-lock.json](https://docs.npmjs.com/cli/v7/configuring-npm/package-lock-json)
 
-### Uruchamiamy stronę - home, about, Link
+Na tę chwilę sytuacja jest dużo prostsza i przedstawia się następująco:
 
-W katalogu /src tworzymy katalog pages (obie nazwy są obowiązkowe), w którym znajdują się pliki strony, to właśnie tam Gatsby szuka pliku index.js, który jest domyślnym plikiem strony głównej.
+- /.git
+- /node_modules
+- /src
+  - /pages - tu będziemy tworzyć stronę
+- gatsby-config.js
+- .gitignore
+- package.json
+- package-lock.json
 
-Schemat plików stron w /src/pages/
+### Komponenty stron
+
+W katalogu /src tworzymy katalog pages (obie nazwy są obowiązkowe), w którym znajdują się pliki strony, to właśnie tam Gatsby szuka pliku index.js, który jest domyślnym plikiem strony głównej. Inaczej mówiąc - wszystkie elementy stron w Gatsbym to komponenty Reacta, a te które znajdują się w katalogu /src/pages automatycznie traktowane są jako strony i dla nich rysowane są ścieżki tworzone na podstawie ich nazwy. Więcej: [Building with Components](https://www.gatsbyjs.com/docs/conceptual/building-with-components/)
+
+Schematycznie zawartość plików stron w **/src/pages/** wygląda tak:
 
 ```js
 import React from 'react';
@@ -336,7 +346,13 @@ const NazwaPodstrony = () => {
 export default NazwaPodstrony
 ```
 
-Jak widać, jest to typowa strona Reacta: zaczyna się od importów, potem jest utworzenie modułu i na końcu jego eksport. Nie powinien to być anonimowy moduł (od pewnego czasu Gatsby traktuje to jako błąd, nie wywala to strony, ale dostajemy zgłoszenie błędu). Treść to znany z Reacta JSX.
+Jak widać, jest to typowy komponent Reacta:
+
+- zaczyna się od importów
+- potem jest przypisanie funkcji strzałkowej z treścią komponentu w returnie
+- na końcu jego eksport
+
+Nie powininna to być anonimowa funkcja. Gatsby traktuje to jako błąd, nie wywala to strony, ale dostajemy zgłoszenie błędu. Treść to znany z Reacta JSX.
 
 Poniżej najprostszy przykład strony Gatsby'ego.
 
@@ -354,19 +370,22 @@ const IndexPage = () => {
 export default IndexPage
 ```
 
+### React Fragments
+
 Oprócz pliku index.js, wymagany jest domyślny 404.
+
+Trzeba pamiętać, że tak jak każdy komponent Reacta, treść strony musi być zawarta w jednym obejmującym wszystko tagu. Jeżeli nie chcemy dokładać kolejnego znacznika, możemy zastosować React Fragments ([Fragments](https://reactjs.org/docs/fragments.html)). Według tego schematu przykładowa strona 404 z React Fragment:
 
 **/src/pages/404.js**
 
 ```js
-import * as React from "react"
-import { Link } from "gatsby"
+import React from 'react';
 
 const PageNotFound = () => {
     return (
         <>
             <h1>404</h1>
-            <Link to="/">main</Link>
+            <p>Strona, której szukasz nie została znaleziona</p>
         </>
     )
 }
@@ -374,32 +393,34 @@ const PageNotFound = () => {
 export default PageNotFound
 ```
 
-Tu dodatkowo pojawia się import wbudowanego komponentu Link ([Gatsby Link API](https://www.gatsbyjs.com/docs/reference/built-in-components/gatsby-link/)). Używamy go do linków wewnętrznych strony. Do linków zewnętrznych oraz kotwic wewnątrz podstrony używamy zwykłych odnośników.
+### Komponent Link
+
+Podstawowym narzędziem nawigacji znanym z Reacta są komponenty [Link](https://reactrouter.com/web/api/Link) i [NavLink](https://reactrouter.com/web/api/NavLink). W Gatsbym mamy tylko ten pierwszy, ale ma on własciwości obydwu: [Gatsby Link API](https://www.gatsbyjs.com/docs/reference/built-in-components/gatsby-link/). Używamy go do linków wewnętrznych strony. Do linków zewnętrznych oraz kotwic wewnątrz podstrony używamy zwykłych odnośników.
 
 Stosowanie komponentu Link oprócz wewnętrznej optymalizacji zapewnia dwie rzeczy:
 
 - ładowanie nowej treści bez przeładowywania strony
 - możliwość znana z komponentu Reacta NavLink, można dodać do Link parametr `activeClassName="active"` definiujący nazwę klasy automatycznie nadawanej aktywnym linkom.
 
-Trzeba pamiętać, że tak jak każdy komponent Reacta, treść strony musi być zawarta w jednym obejmującym wszystko tagu. Jeżeli nie chcemy dokładać kolejnego znacznika, możemy zastosować React Fragments ([Fragments](https://reactjs.org/docs/fragments.html)). Według tego schematu przykładowa strona About z komponentem Link i React Fragment:
-
 **/src/pages/about.js**
 
 ```js
-import React from 'react';
+import * as React from "react"
 import { Link } from "gatsby"
 
 const AboutPage = () => {
   return (
     <>
-      <Link to="/">Index</Link>
-<h2>About</h2>
-<p>Treść podstrony About</p>
+      <Link to="/">Strona główna<Link>
+      <h2>About</h2>
+      <p>Treść podstrony About</p>
     </>
   )}
 
-export default AboutPage
+export default PageNotFound
 ```
+
+Punktem odniesienia jest katalog stron czyli /src/pages. Więc analogicznie, link to strony About, jeżeli plik jest zatytułowany about.js będzie `/about`, a do 404.js `/404`. 
 
 Teraz już możemy uruchomić środowisko deweloperskie poleceniem `gatsby develop` i jak zakończy się powodzeniem zobaczyć stronę pod adresem `localhost:8000`.
 
