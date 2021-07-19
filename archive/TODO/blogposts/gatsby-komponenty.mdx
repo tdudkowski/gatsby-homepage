@@ -53,12 +53,27 @@ W tym odcinku:
 
 Wprawdzie CSS będzie poświęcony odrębny wpis, ale tutaj będzie mowa o tworzeniu layoutu, a tego się nie da zrobić bez CSS.
 
-Jest to podstawowe narzędzie tworzenia layoutu.
-
 Czasem przy tym samym pliku layotu wystarczy zastosować różne CSS-y, żeby uzyskać zupełnie różne układy strony. Pierwszą popularną prezentacją możliwości CSS była strona [CSS Zen Garden](http://www.csszengarden.com/). Na tym etapie wystarczy użycie pliku layout.css i importowanie go do pliku strony, lub pliku layoutu. Trzeba tylko pamiętać że właściwością klasy w JS jest [className](https://developer.mozilla.org/en-US/docs/Web/API/Element/className).
 
-Ponadto pamiętajmy, że typowy układ strony jest prosty i przewidywalny. Patrząc od góry strona zaczyna się od nagłówka, potem mamy treść a na samym dole stopka. menu nawigacyjne może być częścią nagłówka lub może zostać umiezczone w pasku bocznym. Ten układ ma odzwieciedlenie w nowych, wprowadzonych z HTML5 tagach semantycznych: header, aside, main, article, footer, oraz nav.
+Ponieważ na tym etapie interesuje nas tylko layout, a ten będzie - jeżeli chodzi o układ - taki sam, więc jeden plik CSS wystarczy. Ponadto pamiętajmy, że typowy układ strony jest prosty i przewidywalny. Patrząc od góry strona zaczyna się od nagłówka, potem mamy treść a na samym dole stopka. menu nawigacyjne może być częścią nagłówka lub może zostać umiezczone w pasku bocznym. Ten układ ma odzwieciedlenie w nowych, wprowadzonych z HTML5 tagach semantycznych: header, aside, main, article, footer, oraz nav.
 
+W HTML-u układ ten może być wyrażony tak:
+
+```html
+<html>
+<head>...</head>
+<body>
+<div class="container">
+<header>...</header>
+<main>
+<aside>...<aside>
+<article>...<article>
+</main>
+<footer>...</footer>
+</div>
+</body>
+</html>
+```
 
 A tu wzmiankowany powyżej layout.css, który zawiera podstawowe reguły:
 
@@ -80,7 +95,6 @@ div.container > main {flex:1; max-width: 1300px;}
 header > nav ul {display:flex; list-style-type: none; padding-left:0;}
 header > nav ul a {display:block; padding:10px 2rem; margin: 0 1rem;}
 main {display:flex; flex-direction: column;}
-p, li, a { word-wrap: break-word; }
 
 @media(min-width:800px) {
     main {flex-direction: row;}
@@ -94,7 +108,7 @@ p, li, a { word-wrap: break-word; }
 
 ### Layout.js
 
-Komponenty umieszczamy w katalogu /src/components. Jest to tylko konwencja, ale nie warto od niej odchodzić. Plik komponentu składa się z trzech elementów:
+Komponenty umieszczamy w katalogu /src/components. Jest to tylko konwencja i lepiej jest się jej trzymać. Plik komponentu składa się z trzech elementów:
 
 - importów
 - deklaracji komponentu jako przypisanej do zmiennej funkcji strzałkowej
